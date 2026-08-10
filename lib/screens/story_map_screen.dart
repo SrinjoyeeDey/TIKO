@@ -9,6 +9,7 @@ import '../widgets/steampunk_chains_painter.dart';
 import '../widgets/steampunk_gear_node_widget.dart';
 import '../widgets/steampunk_scroll_treasure_node.dart';
 import 'chapter_detail_screen.dart';
+import 'explore_india_screen.dart';
 
 class StoryMapScreen extends StatefulWidget {
   const StoryMapScreen({super.key});
@@ -305,6 +306,66 @@ class _StoryMapScreenState extends State<StoryMapScreen>
                               // Exact Rolled Parchment Counter Badge from Reference Image (e.g. "0/9")
                               _RolledParchmentCounterBadge(
                                 text: '${_chapters.where((c) => c.isCompleted).length}/9',
+                              ),
+
+                              const SizedBox(width: 8),
+
+                              // EXPLORE INDIA Button
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    PageRouteBuilder(
+                                      pageBuilder: (context, animation, _) =>
+                                          const ExploreIndiaScreen(),
+                                      transitionsBuilder:
+                                          (context, animation, _, child) =>
+                                              FadeTransition(
+                                                  opacity: animation, child: child),
+                                      transitionDuration:
+                                          const Duration(milliseconds: 350),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      colors: [Color(0xFFD4A843), Color(0xFF8B6914)],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        color: const Color(0xFFFFF176), width: 1.5),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          color: Colors.black38,
+                                          blurRadius: 4,
+                                          offset: Offset(0, 2))
+                                    ],
+                                  ),
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.map_rounded,
+                                          size: 14, color: Color(0xFF2C1C0F)),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        'EXPLORE\nINDIA',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontFamily: 'Outfit',
+                                          fontSize: 9,
+                                          fontWeight: FontWeight.w900,
+                                          letterSpacing: 0.8,
+                                          color: Color(0xFF2C1C0F),
+                                          height: 1.2,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ],
                           ),

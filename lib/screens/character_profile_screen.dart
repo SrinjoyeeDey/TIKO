@@ -4,6 +4,8 @@ import '../widgets/wooden_back_button.dart';
 import '../widgets/wooden_next_button.dart';
 import '../widgets/animated_rope_menu.dart';
 
+import 'onboarding_screen.dart';
+
 class CharacterProfileScreen extends StatefulWidget {
   const CharacterProfileScreen({super.key});
 
@@ -90,6 +92,16 @@ class _CharacterProfileScreenState extends State<CharacterProfileScreen>
   void _safePop() {
     if (Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
+    } else {
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const OnboardingScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              FadeTransition(opacity: animation, child: child),
+          transitionDuration: const Duration(milliseconds: 350),
+        ),
+      );
     }
   }
 

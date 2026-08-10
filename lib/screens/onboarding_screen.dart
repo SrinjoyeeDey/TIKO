@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'stone_gate_welcome_screen.dart';
-import 'story_map_screen.dart';
+import 'auth_mode_selection_screen.dart';
+import '../journey/screens/map_journey_intro_screen.dart';
 import '../widgets/animated_rope_menu.dart';
 import '../widgets/wooden_next_button.dart';
 import '../widgets/wooden_back_button.dart';
@@ -42,14 +42,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            const StoryMapScreen(),
+            const MapJourneyIntroScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(
             opacity: animation,
             child: child,
           );
         },
-        transitionDuration: const Duration(milliseconds: 400),
+        transitionDuration: const Duration(milliseconds: 600),
       ),
     );
   }
@@ -99,8 +99,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ),
 
-                // Page 2: Ancient Stone Gate, Animated Waterfall & [ BEGIN JOURNEY ] Button
-                StoneGateWelcomeScreen(
+                // Page 2: Authentication & Mode Selection Page (Child Mode / Parent Mode)
+                AuthModeSelectionScreen(
                   onBeginJourney: _openMainMenu,
                 ),
               ],

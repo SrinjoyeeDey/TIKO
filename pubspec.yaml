@@ -64,6 +64,10 @@ flutter:
     - assets/images/nimo_splash.png
     - assets/images/wooden_next_btn.png
     - assets/images/japanese_garden_bg.png
+    - assets/maps/historical_world_map_parchment.png
+    - assets/maps/
+    - assets/exploration/
+    - assets/audio/
 
 
 
