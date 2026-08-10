@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'auth_mode_selection_screen.dart';
-import '../journey/screens/map_journey_intro_screen.dart';
+import 'explore_india_screen.dart';
 import '../widgets/animated_rope_menu.dart';
 import '../widgets/wooden_next_button.dart';
 import '../widgets/wooden_back_button.dart';
@@ -42,7 +42,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            const MapJourneyIntroScreen(),
+            const ExploreIndiaScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(
             opacity: animation,
@@ -156,15 +156,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
 
-          // 5. Wooden Next Arrow Button (Top Z-Index at Bottom-Right)
-          Positioned(
-            bottom: 30,
-            right: 24,
-            child: WoodenNextButton(
-              size: 64,
-              onTap: _nextPage,
+          // 5. Wooden Next Arrow Button (Only on Page 1)
+          if (_currentPage < 0.5)
+            Positioned(
+              bottom: 30,
+              right: 24,
+              child: WoodenNextButton(
+                size: 64,
+                onTap: _nextPage,
+              ),
             ),
-          ),
         ],
       ),
     );

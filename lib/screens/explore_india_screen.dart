@@ -6,7 +6,9 @@ import '../widgets/wooden_back_button.dart';
 
 import 'story_map_screen.dart';
 import 'onboarding_screen.dart';
+import 'state_story_collection_screen.dart';
 import '../journey/widgets/proceed_button.dart';
+import '../services/app_asset_preloader.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // EXPLORE INDIA SCREEN (Red Pin & Ultra-Smooth Leisurely Animations)
@@ -74,12 +76,10 @@ class _ExploreIndiaScreenState extends State<ExploreIndiaScreen>
   void initState() {
     super.initState();
     _pulseAnim.repeat();
-    if (widget.initialStateId != null) {
-      _selectedStateId = widget.initialStateId;
-      _cardAnim.value = 1.0;
-      _colorAnim.value = 1.0;
-      _pinAnim.value = 1.0;
-    }
+    // STEP 3 & 14: Always reset selection to clean neutral state on entry
+    _selectedStateId = null;
+    _previousSelectedStateId = null;
+    _hoveredStateId = null;
   }
 
   @override
@@ -104,6 +104,19 @@ class _ExploreIndiaScreenState extends State<ExploreIndiaScreen>
     );
   }
 
+  void _openStateStories(String stateId) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            StateStoryCollectionScreen(stateId: stateId),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+        transitionDuration: const Duration(milliseconds: 500),
+      ),
+    );
+  }
+
   void _safePop() {
     if (Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
@@ -122,6 +135,10 @@ class _ExploreIndiaScreenState extends State<ExploreIndiaScreen>
 
   void _selectState(String stateId) {
     if (_selectedStateId == stateId) return;
+
+    // Instantly trigger parallel staged asset precaching for selected state stories
+    AppAssetPreloader.precacheStateAssets(context, stateId);
+
     setState(() {
       _previousSelectedStateId = _selectedStateId;
       _selectedStateId = stateId;
@@ -316,9 +333,11 @@ class _ExploreIndiaScreenState extends State<ExploreIndiaScreen>
 
     return Stack(
       children: [
-        // 1. Map Container (100% Full Canvas Size, ZERO Map Shrinking)
+        // 1. Map Container (100% Full Canvas Size, Isolated in RepaintBoundary)
         Positioned.fill(
-          child: _buildMapArea(),
+          child: RepaintBoundary(
+            child: _buildMapArea(),
+          ),
         ),
 
         // 2. Floating Info Card positioned at bottom-right (Bay of Bengal ocean space)
@@ -518,6 +537,58 @@ class _ExploreIndiaScreenState extends State<ExploreIndiaScreen>
                           ),
                           const SizedBox(height: 4),
                           _buildDidYouKnowTile(data.fact),
+                          const SizedBox(height: 10),
+
+                          // Step 4: Thematic "LET'S EXPLORE" Discovery Button
+                          Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () => _openStateStories(data.id),
+                              borderRadius: BorderRadius.circular(14),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Color(0xFFEF6C6C),
+                                      Color(0xFFE55353),
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(14),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(0xFFE55353).withValues(alpha: 0.4),
+                                      blurRadius: 6,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Text('🌸', style: TextStyle(fontSize: 13)),
+                                    SizedBox(width: 6),
+                                    Text(
+                                      "LET'S EXPLORE",
+                                      style: TextStyle(
+                                        fontFamily: 'Outfit',
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white,
+                                        letterSpacing: 1.0,
+                                      ),
+                                    ),
+                                    SizedBox(width: 4),
+                                    Icon(
+                                      Icons.chevron_right_rounded,
+                                      color: Colors.white,
+                                      size: 18,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
