@@ -2,6 +2,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import 'child_profile_selection_screen.dart';
+import '../qa_pipeline/screens/parent_dashboard.dart';
+import '../qa_pipeline/database/child_repository.dart';
 
 /// Japanese-Inspired Authentication & Mode Selection Screen
 /// Matching the exact reference mockup (Image 2):
@@ -184,6 +186,7 @@ class _AuthModeSelectionScreenState extends State<AuthModeSelectionScreen>
                             if (enteredPin.length == 4) {
                               Navigator.of(context).pop();
                               _showParentDashboardSnackBar();
+                              _openParentDashboard();
                             }
                           }
                         }),
@@ -196,6 +199,7 @@ class _AuthModeSelectionScreenState extends State<AuthModeSelectionScreen>
                           if (enteredPin.length == 4) {
                             Navigator.of(context).pop();
                             _showParentDashboardSnackBar();
+                            _openParentDashboard();
                           }
                         }
                       }),
@@ -280,6 +284,25 @@ class _AuthModeSelectionScreenState extends State<AuthModeSelectionScreen>
         duration: const Duration(seconds: 3),
       ),
     );
+  }
+
+  void _openParentDashboard() async {
+    await Future.delayed(const Duration(milliseconds: 1000));
+    if (!mounted) return;
+    
+    var child = await ChildRepository.getActiveChild();
+    // The profile picker in the main app starts with Tinna. Create the linked
+    // analytics profile once so the Parent section never falls back to Unknown.
+    child ??= await ChildRepository.createChild(name: 'Tinna');
+    final childId = child.id;
+    
+    if (mounted) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => ParentDashboard(childId: childId),
+        ),
+      );
+    }
   }
 
   void _showPrivacyInfoModal() {

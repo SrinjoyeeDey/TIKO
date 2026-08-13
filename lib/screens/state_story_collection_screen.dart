@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import '../data/west_bengal_stories_database.dart';
 import '../models/interactive_story_models.dart';
 import 'interactive_story_screen.dart';
+import '../qa_pipeline/screens/intro_screen.dart';
+import '../qa_pipeline/models/learning_content.dart';
+import '../qa_pipeline/services/content_discovery_service.dart';
+import '../qa_pipeline/screens/level_selection_screen.dart';
 
 /// 80s Showa Retro Worn Explorer Postcard Carousel Screen
 /// Features:
@@ -27,7 +31,7 @@ class StateStoryCollectionScreen extends StatefulWidget {
 class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
     with SingleTickerProviderStateMixin {
   late PageController _pageController;
-  late final StateStoriesCollection _collection;
+  late StateStoriesCollection _collection;
   int _selectedStoryIndex = 1; // Default center featured story
   int? _animatingIndex;
   bool _isTransitioningToStory = false;
@@ -44,14 +48,64 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
     0,      0,      0,      1, 0,
   ];
 
+  bool _isLoadingDynamic = false;
+
   @override
   void initState() {
     super.initState();
-    _collection = IndianStoriesDatabase.getCollectionForState(widget.stateId)!;
+    debugPrint("StateStoryCollectionScreen: initState called for stateId: ${widget.stateId}");
+    _collection = IndianStoriesDatabase.getCollectionForState(widget.stateId) ?? 
+        StateStoriesCollection(stateId: widget.stateId, stateName: widget.stateId, tagline: '', atmosphericImage: 'assets/images/nimo_splash.png', stories: []);
+    
+    // For Calcutta (West Bengal), use dynamic QA pipeline chapters instead of static stories
+    if (widget.stateId == 'west_bengal') {
+      debugPrint("StateStoryCollectionScreen: Setting up dynamic chapters for West Bengal");
+      _isLoadingDynamic = true;
+      _loadQAChaptersAsStories();
+    }
+
     _pageController = PageController(
       viewportFraction: 0.46, // Increased spacing between cards
-      initialPage: _selectedStoryIndex.clamp(0, _collection.stories.length - 1),
+      initialPage: _selectedStoryIndex.clamp(0, _collection.stories.isNotEmpty ? _collection.stories.length - 1 : 0),
     );
+  }
+
+  Future<void> _loadQAChaptersAsStories() async {
+    final chapters = await ContentDiscoveryService.discoverContent();
+    final List<StoryData> mappedStories = [];
+    
+    for (final chapter in chapters) {
+      final coverPath = await ContentDiscoveryService.findCoverImage(chapter.id) ?? 'assets/images/nimo_splash.png';
+      mappedStories.add(
+        StoryData(
+          id: chapter.id, // e.g. "Netaji"
+          stateId: 'west_bengal_dynamic', // special flag
+          title: chapter.name,
+          subtitle: 'QA Challenge',
+          taglineOrQuote: 'Explore the learning levels of ${chapter.name}',
+          imagePath: coverPath,
+          scenes: [], // No scenes needed, we intercept onTap
+        )
+      );
+    }
+    
+    if (mounted) {
+      setState(() {
+        _collection = StateStoriesCollection(
+          stateId: widget.stateId,
+          stateName: widget.stateId,
+          tagline: 'Explore QA Chapters',
+          atmosphericImage: 'assets/images/nimo_splash.png',
+          stories: mappedStories,
+        );
+        _isLoadingDynamic = false;
+        _selectedStoryIndex = 0;
+        _pageController = PageController(
+          viewportFraction: 0.46,
+          initialPage: 0,
+        );
+      });
+    }
   }
 
   @override
@@ -116,10 +170,22 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
 
     final selectedStory = _collection.stories[index];
 
+    Widget nextScreen;
+    if (selectedStory.stateId == 'west_bengal_dynamic') {
+      // Dynamic QA Chapter selected
+      final allChapters = await ContentDiscoveryService.discoverContent();
+      final chapter = allChapters.firstWhere((c) => c.id == selectedStory.id);
+      nextScreen = LevelSelectionScreen(childId: 'child_1', chapter: chapter);
+    } else if (selectedStory.id == 'british_power') {
+      nextScreen = const IntroScreen(childId: 'child_1');
+    } else {
+      nextScreen = InteractiveStoryScreen(story: selectedStory);
+    }
+
     Navigator.of(context).push(
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            InteractiveStoryScreen(story: selectedStory),
+        settings: RouteSettings(name: nextScreen is LevelSelectionScreen ? 'level_selection' : null),
+        pageBuilder: (context, animation, secondaryAnimation) => nextScreen,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
@@ -137,6 +203,20 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
 
   @override
   Widget build(BuildContext context) {
+    if (_collection.stories.isEmpty) {
+      return Scaffold(
+        backgroundColor: const Color(0xFFC5AE79),
+        body: Center(
+          child: _isLoadingDynamic 
+              ? const CircularProgressIndicator(color: Color(0xFF8B4513))
+              : const Text(
+                  'No stories found for this state.',
+                  style: TextStyle(fontFamily: 'Outfit', fontSize: 24, color: Color(0xFF5C3A21)),
+                ),
+        ),
+      );
+    }
+
     final activeStory = _collection.stories[_selectedStoryIndex.clamp(0, _collection.stories.length - 1)];
 
     return Scaffold(
@@ -231,7 +311,9 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
                     alignment: Alignment.center,
                     children: [
                       // Scrollable PageView Carousel
-                      ScrollConfiguration(
+                      _isLoadingDynamic 
+                        ? const CircularProgressIndicator(color: Color(0xFF8B6914))
+                        : ScrollConfiguration(
                         behavior: _MouseAndTouchScrollBehavior(),
                         child: PageView.builder(
                           controller: _pageController,
@@ -265,7 +347,31 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
                                   scale: scale,
                                   child: Transform.rotate(
                                     angle: rotation,
-                                    child: _buildPostcardStampCard(story, index, isSelected, isAnimating),
+                                    child: InkWell(
+                                      onTap: () async {
+                                        final chapters = await ContentDiscoveryService.discoverContent();
+                                        final chapter = chapters.where((c) => c.id == story.id).firstOrNull;
+                                        
+                                        if (chapter != null && mounted) {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (_) => LevelSelectionScreen(
+                                                childId: 'default_child',
+                                                chapter: chapter,
+                                              ),
+                                            ),
+                                          );
+                                        } else if (mounted) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text('Starting ${story.title}...'),
+                                              backgroundColor: const Color(0xFF8B4513),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      child: _buildPostcardStampCard(story, index, isSelected, isAnimating),
+                                    ),
                                   ),
                                 );
                               },
@@ -321,11 +427,15 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
             ),
           ),
 
-          // Dimming Overlay when transitioning to story
-          AnimatedOpacity(
-            opacity: _isTransitioningToStory ? 0.6 : 0.0,
-            duration: const Duration(milliseconds: 300),
-            child: Container(color: Colors.black),
+          // A transparent overlay still receives taps unless it is excluded
+          // from hit testing.
+          IgnorePointer(
+            ignoring: !_isTransitioningToStory,
+            child: AnimatedOpacity(
+              opacity: _isTransitioningToStory ? 0.6 : 0.0,
+              duration: const Duration(milliseconds: 300),
+              child: Container(color: Colors.black),
+            ),
           ),
         ],
       ),
@@ -405,33 +515,22 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
                           child: Stack(
                             alignment: Alignment.center,
                             children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.crop_original_rounded,
-                                    size: isSelected ? 42 : 28,
-                                    color: isSelected
-                                        ? const Color(0xFFEF6C6C).withValues(alpha: 0.90)
-                                        : const Color(0xFF6E6053).withValues(alpha: 0.60),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    'STORY ARTWORK SPACE',
-                                    style: TextStyle(
-                                      fontFamily: 'Outfit',
-                                      fontSize: isSelected ? 11.5 : 9.0,
-                                      fontWeight: FontWeight.w800,
-                                      letterSpacing: 1.4,
-                                      color: isSelected
-                                          ? const Color(0xFFEF6C6C).withValues(alpha: 0.90)
-                                          : const Color(0xFF6E6053).withValues(alpha: 0.65),
+                              Positioned.fill(
+                                child: Image.asset(
+                                  story.imagePath,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Center(
+                                    child: Icon(
+                                      Icons.broken_image_outlined,
+                                      color: Color(0xFF6E6053),
+                                      size: 36,
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
 
-                              // Vintage 80s Showa Japan Watermark Accent (昭和80s)
+                              // Vintage 80s Showa Japan Watermark Accent (æ˜­å’Œ80s)
                               Positioned(
                                 bottom: 8,
                                 right: 8,
@@ -447,7 +546,7 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
                                       borderRadius: BorderRadius.circular(3),
                                     ),
                                     child: Text(
-                                      '昭和80s · 旅',
+                                      'æ˜­å’Œ80s Â· æ—…',
                                       style: TextStyle(
                                         fontSize: 9,
                                         fontWeight: FontWeight.w900,
@@ -614,9 +713,9 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // CAROUSEL ARROW BUTTON (Tap to scroll one story, press-&-hold to keep scrolling)
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 class _CarouselArrowButton extends StatefulWidget {
   final IconData icon;
   final String label;
@@ -748,9 +847,9 @@ class _CarouselArrowButtonState extends State<_CarouselArrowButton> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // MOUSE, TOUCH, TRACKPAD & STYLUS SCROLL BEHAVIOR
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 class _MouseAndTouchScrollBehavior extends MaterialScrollBehavior {
   @override
   Set<PointerDeviceKind> get dragDevices => {
@@ -761,9 +860,9 @@ class _MouseAndTouchScrollBehavior extends MaterialScrollBehavior {
       };
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // 80s WORN TEA-STAINED PAPER EDGE PAINTER
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 class _WornPaperEdgePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -796,9 +895,9 @@ class _WornPaperEdgePainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // CUSTOM SCRAPED POSTAGE STAMP CLIPPER
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 class _PostageStampClipper extends CustomClipper<Path> {
   final double toothRadius;
   final double toothSpacing;
@@ -868,9 +967,9 @@ class _PostageStampClipper extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // METALLIC SILVER PAPERCLIP PAINTER
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 class _PaperclipPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -902,9 +1001,9 @@ class _PaperclipPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // 3D FOLDED WHITE RIBBON BANNER PAINTER (Swallow-tail notched ends)
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 class _RibbonBannerPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {

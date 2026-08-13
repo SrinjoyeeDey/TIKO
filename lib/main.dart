@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:media_kit/media_kit.dart';
 import 'screens/sego_concept_screen.dart';
 import 'services/app_asset_preloader.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
   runApp(const NimoApp());
 }
 
@@ -18,9 +20,7 @@ class NimoApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         fontFamily: 'Outfit',
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF4CAF50),
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4CAF50)),
       ),
       home: const BootStrapWrapper(),
     );

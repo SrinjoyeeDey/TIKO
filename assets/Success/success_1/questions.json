@@ -1,0 +1,191 @@
+{
+  "title": "Secrets of Success in 8 Words",
+  "section": {
+    "start": "00:00",
+    "end": "00:30",
+    "description": "Questions based only on the transcript provided for this 30-second section."
+  },
+  "target_age": 12,
+  "question_pattern": {
+    "main_questions": "5 MCQs followed by 2 descriptive questions.",
+    "descriptive_evaluation": "The learner may answer in their own words. Compare the learner answer with the reference answer using cosine similarity.",
+    "sequence_test": "After the main questions, ask multiple-choice questions that test whether the learner remembers the events in the correct order."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "question": "How long was the original presentation that the speaker usually gives to high school students?",
+      "options": {
+        "A": "30 minutes",
+        "B": "One hour",
+        "C": "Two hours",
+        "D": "Three hours"
+      },
+      "answer": "C",
+      "answer_text": "The original presentation was two hours long.",
+      "difficulty": "easy"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "question": "Where did the story that led to this presentation begin?",
+      "options": {
+        "A": "At a school",
+        "B": "On a plane",
+        "C": "At TED",
+        "D": "At a university"
+      },
+      "answer": "B",
+      "answer_text": "The story began one day on a plane while the speaker was traveling to TED.",
+      "difficulty": "easy"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "question": "Who was sitting next to the speaker on the plane?",
+      "options": {
+        "A": "A teacher",
+        "B": "A TED speaker",
+        "C": "A high school student",
+        "D": "A business owner"
+      },
+      "answer": "C",
+      "answer_text": "A high school student, who was a teenager, was sitting next to the speaker.",
+      "difficulty": "easy"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "question": "What did the speaker say about the student's family?",
+      "options": {
+        "A": "She came from a very wealthy family.",
+        "B": "She came from a famous family.",
+        "C": "She came from a really poor family.",
+        "D": "Her family worked at TED."
+      },
+      "answer": "C",
+      "answer_text": "The student came from a really poor family.",
+      "difficulty": "easy"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "question": "What question did the student ask the speaker?",
+      "options": {
+        "A": "How can I become a TED speaker?",
+        "B": "What leads to success?",
+        "C": "How can I become rich?",
+        "D": "Why do people go to TED?"
+      },
+      "answer": "B",
+      "answer_text": "She asked, \"What leads to success?\"",
+      "difficulty": "easy"
+    },
+    {
+      "id": 6,
+      "type": "descriptive",
+      "question": "Why do you think the student wanted to make something of her life?",
+      "reference_answer": "The student came from a really poor family, but she wanted to improve her life and become successful.",
+      "key_concepts": [
+        "poor family",
+        "improve her life",
+        "become successful",
+        "make something of her life"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "medium"
+    },
+    {
+      "id": 7,
+      "type": "descriptive",
+      "question": "Why did the speaker feel bad when the student asked what leads to success?",
+      "reference_answer": "The speaker felt bad because he could not give the student a good answer to her question about what leads to success.",
+      "key_concepts": [
+        "student asked about success",
+        "speaker could not answer",
+        "no good answer",
+        "felt bad"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "medium"
+    }
+  ],
+  "sequence_test": {
+    "description": "These questions test whether the learner understood the events in the correct order. The learner should watch the complete section before answering.",
+    "questions": [
+      {
+        "id": 8,
+        "type": "sequence_mcq",
+        "question": "What happened first?",
+        "options": {
+          "A": "The student asked about success.",
+          "B": "The speaker came to TED.",
+          "C": "The speaker met a high school student on a plane.",
+          "D": "The speaker interviewed successful people."
+        },
+        "answer": "C",
+        "answer_text": "The speaker first met the high school student on the plane."
+      },
+      {
+        "id": 9,
+        "type": "sequence_mcq",
+        "question": "What happened after the speaker met the student on the plane?",
+        "options": {
+          "A": "She asked him what leads to success.",
+          "B": "He immediately interviewed TED speakers.",
+          "C": "She gave a TED talk.",
+          "D": "He gave her a job."
+        },
+        "answer": "A",
+        "answer_text": "The student wanted to make something of her life and asked what leads to success."
+      },
+      {
+        "id": 10,
+        "type": "sequence_mcq",
+        "question": "What did the speaker do after arriving at TED?",
+        "options": {
+          "A": "He went home immediately.",
+          "B": "He decided to ask successful people what helped them succeed.",
+          "C": "He asked the student another question.",
+          "D": "He started a new school."
+        },
+        "answer": "B",
+        "answer_text": "After arriving at TED, he decided to ask successful people what helped them succeed and pass that information on to kids."
+      },
+      {
+        "id": 11,
+        "type": "sequence_mcq",
+        "question": "Which sequence correctly describes the main events?",
+        "options": {
+          "A": "TED → student → plane → success question → interviews",
+          "B": "Plane → student → success question → TED → ask successful people",
+          "C": "Student → TED → success question → plane → interviews",
+          "D": "Success question → plane → TED → student → interviews"
+        },
+        "answer": "B",
+        "answer_text": "The speaker was on a plane, met the student, heard her question about success, went to TED, and decided to ask successful people what helped them succeed.",
+        "difficulty": "medium"
+      }
+    ]
+  },
+  "scoring": {
+    "mcq": {
+      "points_per_correct_answer": 1
+    },
+    "descriptive": {
+      "method": "cosine_similarity",
+      "description": "Create embeddings for the learner's answer and the reference answer, then calculate cosine similarity.",
+      "suggested_interpretation": {
+        "0.80-1.00": "Excellent understanding",
+        "0.65-0.79": "Good understanding",
+        "0.50-0.64": "Partially correct",
+        "0.00-0.49": "Needs improvement"
+      },
+      "note": "Cosine similarity should be treated as an aid rather than the only measure of correctness."
+    },
+    "sequence_test": {
+      "points_per_correct_answer": 1
+    }
+  }
+}
