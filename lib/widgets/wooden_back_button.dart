@@ -27,7 +27,6 @@ class _WoodenBackButtonState extends State<WoodenBackButton> {
         widget.onTap();
       },
       onTapCancel: () => setState(() => _isPressed = false),
-      onTap: () => widget.onTap(),
       child: AnimatedScale(
         scale: _isPressed ? 0.88 : 1.0,
         duration: const Duration(milliseconds: 100),

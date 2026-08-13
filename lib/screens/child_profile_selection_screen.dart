@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+
+import '../qa_pipeline/database/child_repository.dart';
 import '../screens/onboarding_screen.dart';
 import 'game_map_1913_screen.dart';
 
@@ -88,7 +90,16 @@ class _ChildProfileSelectionScreenState extends State<ChildProfileSelectionScree
     super.dispose();
   }
 
-  void _startAdventure() {
+  Future<void> _startAdventure() async {
+    final name = _profiles[_selectedChildIndex]['name'] as String;
+    // Keep the analytics/parent dashboard profile in sync with the profile
+    // selected in the main experience.
+    final existingProfile = await ChildRepository.getChildByName(name);
+    if (existingProfile == null) {
+      await ChildRepository.createChild(name: name);
+    }
+
+    if (!mounted) return;
     if (widget.onStartAdventure != null) {
       widget.onStartAdventure!();
       return;

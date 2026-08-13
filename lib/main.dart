@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:media_kit/media_kit.dart';
 import 'screens/onboarding_screen.dart';
 import 'services/app_asset_preloader.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
   runApp(const NimoApp());
 }
 

@@ -172,7 +172,13 @@ function closePopup() {
 function enterLocation() {
     if (currentSelectedCity) {
         if (currentSelectedCity.id === 'calcutta') {
-            window.location.href = 'calcutta.html';
+            if (window.chrome && window.chrome.webview) {
+                window.chrome.webview.postMessage('open_calcutta');
+            } else if (window.parent !== window) {
+                window.parent.postMessage('open_calcutta', '*');
+            } else {
+                window.location.href = 'calcutta.html';
+            }
         } else {
             alert(`Entering ${currentSelectedCity.name}...\nLoading historical scenario...`);
         }

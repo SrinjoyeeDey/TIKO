@@ -1,0 +1,44 @@
+{
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 4.8,
+      "text": "This is really a two-hour presentation I give to high school students, cut down to three minutes."
+    },
+    {
+      "start": 4.8,
+      "end": 9.0,
+      "text": "And it all started one day on a plane, on my way to TED, seven years ago."
+    },
+    {
+      "start": 9.0,
+      "end": 14.2,
+      "text": "And in the seat next to me was a high school student, a teenager, and she came from a really poor family."
+    },
+    {
+      "start": 14.2,
+      "end": 18.5,
+      "text": "And she wanted to make something of her life, and she asked me a simple little question."
+    },
+    {
+      "start": 18.5,
+      "end": 23.0,
+      "text": "She said, \"What leads to success?\" And I felt really badly, because I couldn't give her a good answer."
+    },
+    {
+      "start": 23.0,
+      "end": 25.5,
+      "text": "So I get off the plane, and I come to TED."
+    },
+    {
+      "start": 25.5,
+      "end": 28.0,
+      "text": "And I think, jeez, I'm in the middle of a room of successful people!"
+    },
+    {
+      "start": 28.0,
+      "end": 30.5,
+      "text": "So why don't I ask them what helped them succeed, and pass it on to kids?"
+    }
+  ]
+}
