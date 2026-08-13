@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CALCUTTA — 1913 Historical Archive</title>
+    <!-- Vintage serif fonts matching the 1913 world map -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="calcutta.css">
+</head>
+<body class="calcutta-archive-body">
+
+    <!-- Decorative Vintage Border matching map -->
+    <div class="vintage-border"></div>
+
+    <!-- Back To Map Button -->
+    <a href="index.html" class="back-map-btn" aria-label="Return to 1913 World Map">
+        <span class="back-arrow">&larr;</span> BACK TO MAP
+    </a>
+
+    <!-- Page Header -->
+    <header class="archive-header">
+        <h1 class="archive-title">CALCUTTA</h1>
+        <h2 class="archive-subtitle">THE CITY OF CALCUTTA</h2>
+        
+        <!-- Vintage Ornamental Divider -->
+        <div class="vintage-divider">
+            <span class="divider-line"></span>
+            <span class="divider-ornament">&#10087;</span>
+            <span class="divider-line"></span>
+        </div>
+
+        <p class="archive-tagline">Explore the changing face of Calcutta through time.</p>
+    </header>
+
+    <!-- Main Historical Archive Content -->
+    <main class="archive-container">
+        <!-- Card 1: Calcutta 1916 -->
+        <article class="archive-card" id="card-1916" data-period="1916" tabindex="0" role="button" aria-label="Explore Calcutta 1916 photo archive">
+            <div class="photo-frame">
+                <div class="frame-corner corner-tl"></div>
+                <div class="frame-corner corner-tr"></div>
+                <div class="frame-corner corner-bl"></div>
+                <div class="frame-corner corner-br"></div>
+                <div class="photo-wrapper">
+                    <img src="assets/calcutta-1916.jpg" alt="Vintage photograph of Calcutta in 1916" class="archive-photo">
+                </div>
+            </div>
+            <div class="card-details">
+                <h3 class="card-year">1916</h3>
+                <h4 class="card-location">CALCUTTA</h4>
+                <button class="explore-btn" type="button" aria-label="Explore 1916 Calcutta photo">EXPLORE</button>
+            </div>
+        </article>
+
+        <!-- Card 2: Calcutta 1921–1941 -->
+        <article class="archive-card" id="card-1921-1941" data-period="1921-1941" tabindex="0" role="button" aria-label="Explore Calcutta 1921–1941 photo archive">
+            <div class="photo-frame">
+                <div class="frame-corner corner-tl"></div>
+                <div class="frame-corner corner-tr"></div>
+                <div class="frame-corner corner-bl"></div>
+                <div class="frame-corner corner-br"></div>
+                <div class="photo-wrapper">
+                    <img src="assets/calcutta-1921-1941.jpg" alt="Vintage photograph of Calcutta during 1921–1941" class="archive-photo">
+                </div>
+            </div>
+            <div class="card-details">
+                <h3 class="card-year">1921&ndash;1941</h3>
+                <h4 class="card-location">CALCUTTA</h4>
+                <button class="explore-btn" type="button" aria-label="Explore 1921-1941 Calcutta photo">EXPLORE</button>
+            </div>
+        </article>
+    </main>
+
+    <!-- Archival Photo Lightbox Modal -->
+    <div id="photo-lightbox" class="lightbox-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="lightbox-year">
+        <div class="lightbox-modal">
+            <button id="lightbox-close" class="lightbox-close-btn" aria-label="Close photo view">&times;</button>
+            
+            <div class="lightbox-frame">
+                <img id="lightbox-img" src="" alt="Enlarged historical photograph of Calcutta" class="lightbox-photo">
+            </div>
+
+            <div class="lightbox-info">
+                <h3 id="lightbox-year" class="lightbox-year-title">1916</h3>
+                <h4 id="lightbox-location" class="lightbox-location-title">CALCUTTA</h4>
+                <p id="lightbox-desc" class="lightbox-description">Historical archival view from the heritage collection.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="calcutta.js"></script>
+</body>
+</html>

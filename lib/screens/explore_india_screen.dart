@@ -7,6 +7,7 @@ import '../widgets/wooden_back_button.dart';
 import 'story_map_screen.dart';
 import 'onboarding_screen.dart';
 import 'state_story_collection_screen.dart';
+import 'horizontal_ground_map_screen.dart';
 import '../journey/widgets/proceed_button.dart';
 import '../services/app_asset_preloader.dart';
 
@@ -310,6 +311,24 @@ class _ExploreIndiaScreenState extends State<ExploreIndiaScreen>
               ],
             ),
           ),
+          _PressableIconButton(
+            onTap: () {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      HorizontalGroundMapScreen(initialStateId: _selectedStateId),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+                      FadeTransition(opacity: animation, child: child),
+                  transitionDuration: const Duration(milliseconds: 500),
+                ),
+              );
+            },
+            icon: Icons.view_in_ar_rounded,
+            active: true,
+            size: 36,
+            iconSize: 18,
+          ),
+          const SizedBox(width: 6),
           _PressableIconButton(
             onTap: () {
               if (_selectedStateId != null) {

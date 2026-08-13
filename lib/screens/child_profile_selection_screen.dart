@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../screens/onboarding_screen.dart';
-import 'explore_india_screen.dart';
+import 'game_map_1913_screen.dart';
 
 /// Japanese-Inspired Child Profile Selection Screen ("Who are you?")
 /// Features:
@@ -97,7 +97,7 @@ class _ChildProfileSelectionScreenState extends State<ChildProfileSelectionScree
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            const ExploreIndiaScreen(),
+            const GameMap1913Screen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },

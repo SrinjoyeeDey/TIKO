@@ -4,6 +4,7 @@ import 'wooden_plank_button.dart';
 import 'rope_painter.dart';
 import '../screens/character_profile_screen.dart';
 import '../screens/leaderboard_screen.dart';
+import '../screens/pure_ground_map_screen.dart';
 
 class AnimatedRopeMenu extends StatefulWidget {
   final VoidCallback? onMenuItemSelected;
@@ -24,7 +25,7 @@ class _AnimatedRopeMenuState extends State<AnimatedRopeMenu>
 
   final List<String> _menuItems = [
     'PROFILE',
-    'HOME',
+    '3D GROUND MAP',
     'LEADERBOARD',
     'MORE GAME',
     'OPTIONS',
@@ -182,6 +183,18 @@ class _AnimatedRopeMenuState extends State<AnimatedRopeMenu>
                                       PageRouteBuilder(
                                         pageBuilder: (context, animation, secondaryAnimation) =>
                                             const CharacterProfileScreen(),
+                                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                          return FadeTransition(opacity: animation, child: child);
+                                        },
+                                        transitionDuration: const Duration(milliseconds: 350),
+                                      ),
+                                    );
+                                  } else if (itemText == '3D GROUND MAP') {
+                                    _toggleMenu();
+                                    Navigator.of(context).push(
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation, secondaryAnimation) =>
+                                            const PureGroundMapScreen(),
                                         transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                           return FadeTransition(opacity: animation, child: child);
                                         },

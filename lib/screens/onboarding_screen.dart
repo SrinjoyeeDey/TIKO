@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'auth_mode_selection_screen.dart';
-import 'explore_india_screen.dart';
+import 'pure_ground_map_screen.dart';
+import 'game_map_1913_screen.dart';
 import '../widgets/animated_rope_menu.dart';
 import '../widgets/wooden_next_button.dart';
 import '../widgets/wooden_back_button.dart';
+import '../widgets/wooden_plank_button.dart';
 import '../widgets/japanese_kungfu_background.dart';
 import '../widgets/animated_interactive_swing.dart';
 
@@ -42,7 +44,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            const ExploreIndiaScreen(),
+            const GameMap1913Screen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(
             opacity: animation,
@@ -142,6 +144,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Positioned.fill(
             child: AnimatedRopeMenu(
               onMenuItemSelected: _nextPage,
+            ),
+          ),
+
+          // 4. Top-Left 3D Ground Map Wooden Shortcut Button on Landing Page
+          Positioned(
+            top: 16,
+            left: 16,
+            child: SafeArea(
+              child: WoodenPlankButton(
+                text: '3D MAP',
+                width: 110,
+                height: 44,
+                variant: WoodenPlankVariant.standard,
+                onTap: () {
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          const PureGroundMapScreen(),
+                      transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+                          FadeTransition(opacity: animation, child: child),
+                      transitionDuration: const Duration(milliseconds: 400),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
 

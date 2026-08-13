@@ -33,6 +33,26 @@ class IndiaStatePath {
 }
 
 class IndiaMapData {
+  /// Bounding rectangle of all state paths in normalized 0..1 coordinates
+  static final Rect bounds = () {
+    double minX = double.infinity, minY = double.infinity;
+    double maxX = double.negativeInfinity, maxY = double.negativeInfinity;
+    for (final state in states) {
+      for (final poly in state.subPolygons) {
+        for (final pt in poly) {
+          if (pt.dx < minX) minX = pt.dx;
+          if (pt.dx > maxX) maxX = pt.dx;
+          if (pt.dy < minY) minY = pt.dy;
+          if (pt.dy > maxY) maxY = pt.dy;
+        }
+      }
+    }
+    return Rect.fromLTRB(minX, minY, maxX, maxY);
+  }();
+
+  /// Normalized geometric center offset of the entire India landmass
+  static Offset get center => bounds.center;
+
   static const List<IndiaStatePath> states = [
     IndiaStatePath(
       id: 'arunachal_pradesh',
