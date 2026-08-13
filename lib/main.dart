@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/onboarding_screen.dart';
+import 'screens/sego_concept_screen.dart';
 import 'services/app_asset_preloader.dart';
 
 void main() {
@@ -59,6 +59,6 @@ class _BootStrapWrapperState extends State<BootStrapWrapper> {
         color: const Color(0xFFC5AE79), // Lightweight branded sepia canvas
       );
     }
-    return const OnboardingScreen();
+    return const SegoConceptScreen();
   }
 }

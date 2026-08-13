@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SEGO - Merch Design Concept</title>
+  <meta name="description" content="SEGO Merch Design Concept Showcase page with vibrant zesty green color palette and custom typography.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Animated Hand-Drawn Topographical Wave Background & Buttery Texture -->
+  <div class="wave-bg">
+    <div class="buttery-texture"></div>
+
+    <svg viewBox="0 0 1440 700" preserveAspectRatio="none">
+      <path d="M80 0 C40 100 120 180 70 280 S30 460 110 700" />
+      <path d="M210 0 C150 120 250 180 190 320 S150 520 240 700" />
+      <path d="M390 0 C340 100 430 190 370 300 S330 500 420 700" />
+      <path d="M620 0 C550 140 680 190 590 340 S560 550 650 700" />
+      <path d="M850 0 C790 120 900 200 820 330 S780 520 870 700" />
+      <path d="M1080 0 C1010 130 1130 200 1050 350 S1020 540 1110 700" />
+      <path d="M1290 0 C1230 120 1340 190 1270 320 S1230 520 1320 700" />
+    </svg>
+  </div>
+
+  <!-- SEGO CONCEPT PAGE -->
+  <section id="sego-screen" class="page-screen active">
+    <!-- Header Bar -->
+    <header class="sego-header">
+      <!-- Back Navigation Button (Top Left) -->
+      <a href="index.html" class="back-btn" title="Back to Home" aria-label="Go back">
+        <svg viewBox="0 0 24 24">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </a>
+
+      <!-- Center Text: Merch Design Concept -->
+      <div></div>
+      <div></div>
+    </header>
+
+    <!-- Main Visual Content -->
+    <main class="sego-main-content">
+      
+      <!-- Right Side: 你好8月 Heading -->
+      <div class="sego-right-content">
+        <!-- Main Headline: 你好8月 with Sun Rays & Wave Motifs -->
+        <div class="hello-august-title-wrapper">
+          <!-- Sun Rays Motif above '好' -->
+          <div class="sun-rays-motif">
+            <svg viewBox="0 0 80 40">
+              <path d="M20,35 C20,18 60,18 60,35" stroke="#FFFFFF" stroke-width="5" fill="none" stroke-linecap="round"/>
+              <line x1="40" y1="10" x2="40" y2="2" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round"/>
+              <line x1="24" y1="16" x2="16" y2="9" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+              <line x1="56" y1="16" x2="64" y2="9" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+              <line x1="12" y1="28" x2="4" y2="25" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+              <line x1="68" y1="28" x2="76" y2="25" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <h1 class="sego-title-large">你好8月</h1>
+
+          <!-- Water Wave Squiggles & Bubble Dots Underneath -->
+          <div class="title-wave-squiggles">
+            <svg viewBox="0 0 360 30">
+              <path d="M10,12 C25,22 40,2 55,12 C70,22 85,2 100,12" stroke="#FFFFFF" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+              <path d="M230,12 C245,22 260,2 275,12 C290,22 305,2 320,12" stroke="#FFFFFF" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+              <circle cx="112" cy="14" r="3.5" fill="#FFFFFF"/>
+              <circle cx="124" cy="18" r="2.5" fill="#FFFFFF"/>
+              <circle cx="212" cy="12" r="3" fill="#FFFFFF"/>
+              <circle cx="335" cy="14" r="3.5" fill="#FFFFFF"/>
+            </svg>
+          </div>
+        <!-- Interactive Monster Teeth Age Selector Card -->
+        <div class="monster-age-card">
+          <!-- Organic White Accent Spot Markings (matching user reference image) -->
+          <div class="monster-spot-white monster-spot-white-1"></div>
+          <div class="monster-spot-white monster-spot-white-2"></div>
+          <div class="monster-spot-white monster-spot-white-3"></div>
+
+          <!-- Question Heading -->
+          <h2 class="monster-question">Select Your Age</h2>
+
+          <!-- Big Expressive Monster Cartoon Eyes & Eyebrows — Happy Look -->
+          <div class="monster-face-features">
+            <!-- Eyebrows Row (curved arches) -->
+            <div class="monster-brows-row">
+              <div class="monster-eyebrow"></div>
+              <div class="monster-eyebrow"></div>
+            </div>
+            <!-- Eyes + Nostril Row -->
+            <div class="monster-eyes-row">
+              <!-- Left Eye -->
+              <div class="monster-eye-wrapper">
+                <div class="monster-eye">
+                  <div class="eye-pupil left-pupil">
+                    <div class="pupil-gloss"></div>
+                  </div>
+                </div>
+              </div>
+              <!-- Two Nostril Holes -->
+              <div class="monster-nostrils">
+                <div class="nostril-hole"></div>
+                <div class="nostril-hole"></div>
+              </div>
+              <!-- Right Eye -->
+              <div class="monster-eye-wrapper">
+                <div class="monster-eye">
+                  <div class="eye-pupil right-pupil">
+                    <div class="pupil-gloss"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Monster Mouth & Teeth Carousel -->
+          <div class="monster-mouth">
+            <div class="monster-teeth-container" id="monster-teeth-container">
+              <div class="teeth-track" id="teeth-track">
+                <!-- Teeth generated by script.js (ages 3 to 15) -->
+              </div>
+            </div>
+            <div class="selected-age-unit" id="selected-age-unit">Years Old</div>
+          </div>
+
+          <!-- Bottom Action Buttons -->
+          <div class="monster-card-footer">
+            <button class="card-nav-btn prev-btn" id="age-prev-btn" aria-label="Previous Age">
+              <svg viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            </button>
+            <div class="selected-age-display" id="selected-age-display">7 Years</div>
+            <button class="card-nav-btn next-btn" id="age-next-btn" aria-label="Next Age">
+              <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>

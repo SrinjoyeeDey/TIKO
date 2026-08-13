@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'auth_mode_selection_screen.dart';
 import 'pure_ground_map_screen.dart';
 import 'game_map_1913_screen.dart';
+import 'sego_concept_screen.dart';
 import '../widgets/animated_rope_menu.dart';
 import '../widgets/wooden_next_button.dart';
 import '../widgets/wooden_back_button.dart';
@@ -162,6 +163,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) =>
                           const PureGroundMapScreen(),
+                      transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+                          FadeTransition(opacity: animation, child: child),
+                      transitionDuration: const Duration(milliseconds: 400),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+
+          // 5. Top-Right SEGO Concept Navigation Button on Landing Page
+          Positioned(
+            top: 16,
+            right: 16,
+            child: SafeArea(
+              child: WoodenPlankButton(
+                text: 'SEGO PAGE',
+                width: 125,
+                height: 44,
+                variant: WoodenPlankVariant.golden,
+                onTap: () {
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          const SegoConceptScreen(),
                       transitionsBuilder: (context, animation, secondaryAnimation, child) =>
                           FadeTransition(opacity: animation, child: child),
                       transitionDuration: const Duration(milliseconds: 400),

@@ -4,6 +4,7 @@ enum WoodenPlankVariant {
   standard,
   menuHeader,
   exit,
+  golden,
   arrowLeft,
   arrowRight,
 }
@@ -37,6 +38,8 @@ class _WoodenPlankButtonState extends State<WoodenPlankButton> {
 
   Color _getGradientStart() {
     switch (widget.variant) {
+      case WoodenPlankVariant.golden:
+        return const Color(0xFFFFE082); // Vibrant Golden Warm Amber
       case WoodenPlankVariant.exit:
         return const Color(0xFFD4E157); // Yellowish green tint for EXIT
       case WoodenPlankVariant.menuHeader:
@@ -48,6 +51,8 @@ class _WoodenPlankButtonState extends State<WoodenPlankButton> {
 
   Color _getGradientEnd() {
     switch (widget.variant) {
+      case WoodenPlankVariant.golden:
+        return const Color(0xFFFF8F00); // Deep Amber Gold
       case WoodenPlankVariant.exit:
         return const Color(0xFF9E9D24);
       case WoodenPlankVariant.menuHeader:
@@ -60,6 +65,9 @@ class _WoodenPlankButtonState extends State<WoodenPlankButton> {
   Color _getTextColor() {
     if (widget.variant == WoodenPlankVariant.menuHeader) {
       return const Color(0xFFFFD54F); // Golden yellow for main MENU header
+    }
+    if (widget.variant == WoodenPlankVariant.golden) {
+      return const Color(0xFF3E1F07); // Dark rich brown text for Golden variant
     }
     return Colors.white;
   }

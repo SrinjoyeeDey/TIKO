@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SEGO — Select Your Age</title>
+  <meta name="description" content="SEGO interactive age selector with dynamic color theming and animated monster face.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Animated Hand-Drawn Topographical Wave Background & Buttery Texture -->
+  <div class="wave-bg">
+    <div class="buttery-texture"></div>
+    <svg viewBox="0 0 1440 700" preserveAspectRatio="none">
+      <path d="M80 0 C40 100 120 180 70 280 S30 460 110 700" />
+      <path d="M210 0 C150 120 250 180 190 320 S150 520 240 700" />
+      <path d="M390 0 C340 100 430 190 370 300 S330 500 420 700" />
+      <path d="M620 0 C550 140 680 190 590 340 S560 550 650 700" />
+      <path d="M850 0 C790 120 900 200 820 330 S780 520 870 700" />
+      <path d="M1080 0 C1010 130 1130 200 1050 350 S1020 540 1110 700" />
+      <path d="M1290 0 C1230 120 1340 190 1270 320 S1230 520 1320 700" />
+    </svg>
+  </div>
+
+  <!-- SEGO CONCEPT PAGE — Direct First Page -->
+  <section id="sego-screen" class="page-screen active">
+
+    <!-- Main Visual Content -->
+    <main class="sego-main-content">
+
+      <!-- 你好8月 Heading with Sun Rays & Wave Motifs -->
+      <div class="sego-right-content">
+        <div class="hello-august-title-wrapper">
+          <!-- Sun Rays Motif above '好' -->
+          <div class="sun-rays-motif">
+            <svg viewBox="0 0 80 40">
+              <path d="M20,35 C20,18 60,18 60,35" stroke="#FFFFFF" stroke-width="5" fill="none" stroke-linecap="round"/>
+              <line x1="40" y1="10" x2="40" y2="2" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round"/>
+              <line x1="24" y1="16" x2="16" y2="9" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+              <line x1="56" y1="16" x2="64" y2="9" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+              <line x1="12" y1="28" x2="4" y2="25" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+              <line x1="68" y1="28" x2="76" y2="25" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <h1 class="sego-title-large">你好8月</h1>
+
+          <!-- Water Wave Squiggles & Bubble Dots Underneath -->
+          <div class="title-wave-squiggles">
+            <svg viewBox="0 0 360 30">
+              <path d="M10,12 C25,22 40,2 55,12 C70,22 85,2 100,12" stroke="#FFFFFF" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+              <path d="M230,12 C245,22 260,2 275,12 C290,22 305,2 320,12" stroke="#FFFFFF" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+              <circle cx="112" cy="14" r="3.5" fill="#FFFFFF"/>
+              <circle cx="124" cy="18" r="2.5" fill="#FFFFFF"/>
+              <circle cx="212" cy="12" r="3" fill="#FFFFFF"/>
+              <circle cx="335" cy="14" r="3.5" fill="#FFFFFF"/>
+            </svg>
+          </div>
+
+          <!-- Interactive Monster Teeth Age Selector Card -->
+          <div class="monster-age-card">
+            <!-- Organic White Accent Spot Markings -->
+            <div class="monster-spot-white monster-spot-white-1"></div>
+            <div class="monster-spot-white monster-spot-white-2"></div>
+            <div class="monster-spot-white monster-spot-white-3"></div>
+
+            <!-- Question Heading -->
+            <h2 class="monster-question">Select Your Age</h2>
+
+            <!-- Big Expressive Monster Cartoon Eyes & Eyebrows — Happy Look -->
+            <div class="monster-face-features">
+              <!-- Eyebrows Row (curved arches) -->
+              <div class="monster-brows-row">
+                <div class="monster-eyebrow"></div>
+                <div class="monster-eyebrow"></div>
+              </div>
+              <!-- Eyes + Nostril Row -->
+              <div class="monster-eyes-row">
+                <!-- Left Eye -->
+                <div class="monster-eye-wrapper">
+                  <div class="monster-eye">
+                    <div class="eye-pupil left-pupil">
+                      <div class="pupil-gloss"></div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Two Nostril Holes -->
+                <div class="monster-nostrils">
+                  <div class="nostril-hole"></div>
+                  <div class="nostril-hole"></div>
+                </div>
+                <!-- Right Eye -->
+                <div class="monster-eye-wrapper">
+                  <div class="monster-eye">
+                    <div class="eye-pupil right-pupil">
+                      <div class="pupil-gloss"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Monster Mouth & Teeth Carousel -->
+            <div class="monster-mouth">
+              <div class="monster-teeth-container" id="monster-teeth-container">
+                <div class="teeth-track" id="teeth-track">
+                  <!-- Teeth generated by script.js (ages 3 to 15) -->
+                </div>
+              </div>
+              <div class="selected-age-unit" id="selected-age-unit">Years Old</div>
+            </div>
+
+            <!-- Bottom Action Buttons -->
+            <div class="monster-card-footer">
+              <button class="card-nav-btn prev-btn" id="age-prev-btn" aria-label="Previous Age">
+                <svg viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+              </button>
+              <div class="selected-age-display" id="selected-age-display">7 Years</div>
+              <button class="card-nav-btn next-btn" id="age-next-btn" aria-label="Next Age">
+                <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+              </button>
+            </div>
+
+            <!-- Scroll / Next Button with Up Arrow -->
+            <button class="scroll-up-btn" id="scroll-up-btn" aria-label="Go to next screen">
+              <div class="scroll-up-arrow">
+                <svg viewBox="0 0 24 24" width="22" height="22">
+                  <path d="M18 15l-6-6-6 6" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                </svg>
+              </div>
+              <span>Swipe / Scroll Up to Continue</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </section>
+
+  <!-- SCREEN 1.5: MONSTER TAKEOVER & SPECIAL JOURNEY ANIMATION -->
+  <section id="takeover-screen" class="page-screen">
+    <div class="takeover-container" id="takeover-container">
+      
+      <!-- Radial spotlight gradient background -->
+      <div class="takeover-spotlight"></div>
+
+      <!-- Green Monster Background Face Features -->
+      <div class="takeover-monster-face">
+        <!-- Floating Bubble Spots (like reference image 1) -->
+        <div class="takeover-spots">
+          <div class="t-spot t-spot-1"></div>
+          <div class="t-spot t-spot-2"></div>
+          <div class="t-spot t-spot-3"></div>
+          <div class="t-spot t-spot-4"></div>
+          <div class="t-spot t-spot-5"></div>
+          <div class="t-spot t-spot-6"></div>
+          <div class="t-spot t-spot-7"></div>
+          <div class="t-spot t-spot-8"></div>
+        </div>
+
+        <!-- Big Expressive Cartoon Eyes & Eyebrows -->
+        <div class="takeover-eyes-group">
+          <div class="takeover-brows-row">
+            <div class="monster-eyebrow"></div>
+            <div class="monster-eyebrow"></div>
+          </div>
+          <div class="takeover-eyes-row">
+            <div class="monster-eye">
+              <div class="eye-pupil left-pupil">
+                <div class="pupil-gloss"></div>
+              </div>
+            </div>
+            <div class="monster-nostrils">
+              <div class="nostril-hole"></div>
+              <div class="nostril-hole"></div>
+            </div>
+            <div class="monster-eye">
+              <div class="eye-pupil right-pupil">
+                <div class="pupil-gloss"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cute Smile Arc with Teeth (matching reference image 1 smile) -->
+        <div class="takeover-smile-wrapper">
+          <svg class="takeover-smile-svg" viewBox="0 0 240 70">
+            <!-- Smile Curve -->
+            <path d="M 20 20 Q 120 75 220 20" stroke="#1C4108" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <!-- Teeth / Fangs sticking up from smile -->
+            <polygon points="75,46 84,33 93,48" fill="#FFFFFF" stroke="#1C4108" stroke-width="2"/>
+            <polygon points="147,48 156,33 165,46" fill="#FFFFFF" stroke="#1C4108" stroke-width="2"/>
+            <!-- Lower lip shadow -->
+            <path d="M 80 56 Q 120 72 160 56" stroke="rgba(28,65,8,0.35)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Hopping / Writing Ball -->
+      <div class="hopping-ball" id="hopping-ball"></div>
+
+      <!-- Cinematic Message Container (TAIKO / ONE SMALL STEP Style Font) -->
+      <div class="takeover-message-box">
+        <div class="takeover-subtitle-tag">T A I K O</div>
+        <h1 class="takeover-text-line" id="takeover-line-1">EVERYONE'S JOURNEY IS DIFFERENT</h1>
+        <h2 class="takeover-text-line highlight" id="takeover-line-2">BUT YOURS IS SPECIAL</h2>
+      </div>
+
+      <div class="takeover-tap-prompt" id="takeover-tap-prompt">Tap anywhere to continue →</div>
+    </div>
+  </section>
+
+  <!-- SCREEN 2: ROLE SELECTION (Child or Parent?) -->
+  <section id="role-screen" class="page-screen">
+
+    <main class="role-main-content">
+
+      <!-- Age badge at top -->
+      <div class="role-age-badge" id="role-age-badge">Age: 7</div>
+
+      <!-- Heading -->
+      <div class="role-heading-wrapper">
+        <h1 class="role-title">Who are<br>you? 👀</h1>
+        <p class="role-subtitle">Tell us a little about yourself</p>
+      </div>
+
+      <!-- Two Role Cards -->
+      <div class="role-cards-row">
+
+        <!-- Child Card -->
+        <button class="role-card role-card-child" id="role-child-btn" aria-label="I am a child">
+          <div class="role-card-inner">
+            <div class="role-card-emoji">🧒</div>
+            <div class="role-card-label">I'm a Child</div>
+            <div class="role-card-sublabel">Learning & growing</div>
+          </div>
+          <div class="role-card-glow"></div>
+        </button>
+
+        <!-- Parent Card -->
+        <button class="role-card role-card-parent" id="role-parent-btn" aria-label="I am a parent">
+          <div class="role-card-inner">
+            <div class="role-card-emoji">🧑‍🍼</div>
+            <div class="role-card-label">I'm a Parent</div>
+            <div class="role-card-sublabel">Guiding & nurturing</div>
+          </div>
+          <div class="role-card-glow"></div>
+        </button>
+
+      </div>
+
+      <!-- Back button -->
+      <button class="role-back-btn" id="role-back-btn" aria-label="Go back to age selection">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        Change Age
+      </button>
+
+    </main>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
