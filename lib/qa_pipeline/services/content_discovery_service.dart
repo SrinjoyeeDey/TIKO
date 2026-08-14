@@ -210,7 +210,7 @@ class ContentDiscoveryService {
       }
 
       // Global fallback: if not found in the chapter's folder, search everywhere for the base path
-      final lowerBasePath = basePath.toLowerCase() + '.';
+      final lowerBasePath = '${basePath.toLowerCase()}.';
       for (final path in assetPaths) {
         if (path.toLowerCase().contains(lowerBasePath)) {
           return path;

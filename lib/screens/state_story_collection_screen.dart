@@ -5,9 +5,11 @@ import '../data/west_bengal_stories_database.dart';
 import '../models/interactive_story_models.dart';
 import 'interactive_story_screen.dart';
 import '../qa_pipeline/screens/intro_screen.dart';
-import '../qa_pipeline/models/learning_content.dart';
 import '../qa_pipeline/services/content_discovery_service.dart';
 import '../qa_pipeline/screens/level_selection_screen.dart';
+import '../qa_pipeline/screens/video_player_screen.dart';
+import '../qa_pipeline/screens/level_clear_screen.dart';
+import '../qa_pipeline/models/learning_content.dart';
 
 /// 80s Showa Retro Worn Explorer Postcard Carousel Screen
 /// Features:
@@ -164,10 +166,16 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
 
     Widget nextScreen;
     if (selectedStory.stateId == 'west_bengal_dynamic') {
-      // Dynamic QA Chapter selected
+      // Dynamic QA Chapter selected - skip sub-level map and launch video directly
       final allChapters = await ContentDiscoveryService.discoverContent();
+      if (!mounted) return;
       final chapter = allChapters.firstWhere((c) => c.id == selectedStory.id);
-      nextScreen = LevelSelectionScreen(childId: 'child_1', chapter: chapter);
+      final level = chapter.levels.isNotEmpty ? chapter.levels.first : null;
+      if (level != null) {
+        nextScreen = VideoPlayerScreen(childId: 'child_1', level: level);
+      } else {
+        nextScreen = LevelSelectionScreen(childId: 'child_1', chapter: chapter);
+      }
     } else if (selectedStory.id == 'british_power') {
       nextScreen = const IntroScreen(childId: 'child_1');
     } else {
@@ -286,6 +294,63 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
             ),
           ),
 
+          // Top-Right Dev Rewards Button
+          Positioned(
+            top: 14,
+            right: 16,
+            child: InkWell(
+              onTap: () async {
+                final navigator = Navigator.of(context);
+                final chapters = await ContentDiscoveryService.discoverContent();
+                final chapter = chapters.firstOrNull;
+                final level = chapter?.levels.firstOrNull ?? LearningLevel(
+                  id: 'Netaji_0',
+                  chapterId: 'netaji_subhas_chandra_bose',
+                  chapterName: 'Netaji Subhas Chandra Bose',
+                  levelName: 'Level 1',
+                  videoPath: 'assets/Netaji/Netaji_0/video.mp4',
+                  isPlayable: true,
+                );
+                if (!mounted) return;
+                navigator.push(
+                  MaterialPageRoute(
+                    builder: (_) => LevelClearScreen(
+                      childId: 'default_child',
+                      level: level,
+                      totalCorrect: 3,
+                      totalQuestions: 3,
+                    ),
+                  ),
+                );
+              },
+              borderRadius: BorderRadius.circular(16),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFD4AF37),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: const Color(0xFFFFF8E1), width: 1.2),
+                  boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 4, offset: Offset(0, 2))],
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.emoji_events_rounded, size: 14, color: Color(0xFF2E1C12)),
+                    SizedBox(width: 6),
+                    Text(
+                      'DEV: REWARDS',
+                      style: TextStyle(
+                        fontFamily: 'Outfit',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xFF2E1C12),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
           // Main Layout Content
           SafeArea(
             child: Column(
@@ -341,20 +406,24 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
                                     angle: rotation,
                                     child: InkWell(
                                       onTap: () async {
+                                        final navigator = Navigator.of(context);
+                                        final messenger = ScaffoldMessenger.of(context);
                                         final chapters = await ContentDiscoveryService.discoverContent();
+                                        if (!mounted) return;
                                         final chapter = chapters.where((c) => c.id == story.id).firstOrNull;
                                         
-                                        if (chapter != null && mounted) {
-                                          Navigator.of(context).push(
+                                        if (chapter != null && chapter.levels.isNotEmpty) {
+                                          final level = chapter.levels.first;
+                                          navigator.push(
                                             MaterialPageRoute(
-                                              builder: (_) => LevelSelectionScreen(
+                                              builder: (_) => VideoPlayerScreen(
                                                 childId: 'default_child',
-                                                chapter: chapter,
+                                                level: level,
                                               ),
                                             ),
                                           );
-                                        } else if (mounted) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                        } else {
+                                          messenger.showSnackBar(
                                             SnackBar(
                                               content: Text('Starting ${story.title}...'),
                                               backgroundColor: const Color(0xFF8B4513),

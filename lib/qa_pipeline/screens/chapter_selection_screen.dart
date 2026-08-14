@@ -1,11 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../widgets/wooden_back_button.dart';
 import '../../widgets/game_textured_text.dart';
 import '../models/learning_content.dart';
 import '../services/content_discovery_service.dart';
-import 'level_selection_screen.dart';
+import 'video_player_screen.dart';
 
 class ChapterSelectionScreen extends StatefulWidget {
   final String childId;
@@ -137,14 +136,16 @@ class _ChapterSelectionScreenState extends State<ChapterSelectionScreen> {
         child: InkWell(
           borderRadius: BorderRadius.circular(14),
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => LevelSelectionScreen(
-                  childId: widget.childId,
-                  chapter: chapter,
+            if (chapter.levels.isNotEmpty) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => VideoPlayerScreen(
+                    childId: widget.childId,
+                    level: chapter.levels.first,
+                  ),
                 ),
-              ),
-            );
+              );
+            }
           },
           child: Padding(
             padding: const EdgeInsets.all(16),

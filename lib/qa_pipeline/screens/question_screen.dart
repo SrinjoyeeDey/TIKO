@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:uuid/uuid.dart';
@@ -198,46 +199,139 @@ class _QuestionScreenState extends State<QuestionScreen> {
     );
   }
 
+  void _onBackPressed() {
+    if (_currentIndex > 0) {
+      setState(() {
+        _currentIndex--;
+        _questionStartedAt = DateTime.now();
+      });
+    } else {
+      Navigator.of(context).pop();
+    }
+  }
+
   // ─── Build ────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A), // Dark Steampunk Blue
+      backgroundColor: const Color(0xFFC5AE79), // Vintage Paper Canvas
       body: Stack(
         children: [
-          // Background Texture
+          // 1. GENERATED WEST BENGAL HISTORY MAP BACKGROUND
           Positioned.fill(
-            child: Opacity(
-              opacity: 0.15,
-              child: Image.asset(
-                'assets/images/story_selection_bg.png',
+            child: Image.asset(
+              'assets/images/story_selection_wb_bg.png',
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+              errorBuilder: (ctx, err, stack) => Image.asset(
+                'assets/images/nimo_japanese_bg_clean.png',
                 fit: BoxFit.cover,
-                errorBuilder: (ctx, err, stack) => const SizedBox(),
               ),
             ),
           ),
+
+          // 2. Vintage Sepia Dark Vignette Overlay
+          Positioned.fill(
+            child: IgnorePointer(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    center: Alignment.center,
+                    radius: 0.95,
+                    colors: [
+                      Colors.transparent,
+                      const Color(0xFF2E1C12).withValues(alpha: 0.35),
+                      const Color(0xFF1E100A).withValues(alpha: 0.65),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
           SafeArea(
             child: Column(
               children: [
-                // Custom Top Bar
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  child: Row(
-                    children: [
-                      WoodenBackButton(
-                        onTap: () => Navigator.of(context).pop(),
+                // Elevated Blurred Glassmorphic Top Bar
+                Container(
+                  margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0x882E1C12), // Vintage Sepia Glass
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: const Color(0xAA8B6914), width: 1.8),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black54,
+                        blurRadius: 14,
+                        offset: Offset(0, 6),
                       ),
-                      Expanded(
-                        child: Center(
-                          child: GameTexturedText(
-                            text: 'EXAM RECORD',
-                            fontSize: 24,
-                          ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(18),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        child: Row(
+                          children: [
+                            WoodenBackButton(
+                              onTap: _onBackPressed,
+                            ),
+                            Expanded(
+                              child: Center(
+                                child: GameTexturedText(
+                                  text: 'NETAJI QUIZ',
+                                  fontSize: 24,
+                                ),
+                              ),
+                            ),
+                             InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => LevelClearScreen(
+                                      childId: widget.childId,
+                                      level: widget.level,
+                                      totalCorrect: 3,
+                                      totalQuestions: 3,
+                                    ),
+                                  ),
+                                );
+                              },
+                              borderRadius: BorderRadius.circular(12),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFD4AF37),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(color: const Color(0xFFFFF8E1), width: 1.2),
+                                  boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 4)],
+                                ),
+                                child: const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.emoji_events_rounded, color: Color(0xFF2E1C12), size: 15),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      'REWARDS',
+                                      style: TextStyle(
+                                        fontFamily: 'Outfit',
+                                        color: Color(0xFF2E1C12),
+                                        fontSize: 11.5,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(width: 52), // Balance for back button
-                    ],
+                    ),
                   ),
                 ),
                 Expanded(child: _buildBody()),
@@ -310,43 +404,72 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
     return Column(
       children: [
-        // Progress bar
+        // Vintage Brass Compass & Progress Header
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    phaseInfo.phaseLabel,
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.5),
-                      fontSize: 12,
-                    ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              color: const Color(0x992E1C12),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: const Color(0xFFD4AF37), width: 1.5),
+              boxShadow: const [
+                BoxShadow(color: Colors.black38, blurRadius: 6, offset: Offset(0, 3)),
+              ],
+            ),
+            child: Row(
+              children: [
+                // Phase Badge
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD4AF37),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  Text(
-                    '${_currentIndex + 1} / ${_allQuestions.length}',
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.5),
-                      fontSize: 12,
+                  child: Text(
+                    phaseInfo.phaseLabel.toUpperCase(),
+                    style: const TextStyle(
+                      fontFamily: 'Outfit',
+                      fontSize: 11,
+                      fontWeight: FontWeight.w900,
+                      color: Color(0xFF2E1C12),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 6),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: (_currentIndex + 1) / _allQuestions.length,
-                  minHeight: 4,
-                  backgroundColor: Colors.white12,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    Color(0xFFD4AF37),
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(width: 12),
+
+                // Animated Progress Bar
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: LinearProgressIndicator(
+                      value: (_currentIndex + 1) / _allQuestions.length,
+                      minHeight: 8,
+                      backgroundColor: Colors.white24,
+                      valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFFFD700)),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+
+                // Counter Badge with Star Icon
+                Row(
+                  children: [
+                    const Icon(Icons.stars_rounded, color: Color(0xFFFFD700), size: 18),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${_currentIndex + 1} / ${_allQuestions.length}',
+                      style: const TextStyle(
+                        fontFamily: 'Outfit',
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
 

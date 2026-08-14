@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
-
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart' as ffi;
-import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
+
+import 'database_factory_stub.dart'
+    if (dart.library.html) 'database_factory_web.dart';
 
 /// Singleton database manager for the application's SQLite database.
 class DatabaseHelper {
@@ -15,31 +15,46 @@ class DatabaseHelper {
 
   Database? _database;
 
+  static void initDatabaseFactory() {
+    initPlatformDatabaseFactory();
+  }
+
   Future<Database> get database async {
     _database ??= await _initDatabase();
     return _database!;
   }
 
   Future<Database> _initDatabase() async {
-    // Use FFI for Windows/Linux/macOS desktop support.
-    if (kIsWeb) {
-      databaseFactory = databaseFactoryFfiWeb;
-    } else if (defaultTargetPlatform == TargetPlatform.windows || 
-         defaultTargetPlatform == TargetPlatform.linux || 
-         defaultTargetPlatform == TargetPlatform.macOS) {
-      ffi.sqfliteFfiInit();
-      databaseFactory = ffi.databaseFactoryFfi;
+    initDatabaseFactory();
+
+    try {
+      if (kIsWeb) {
+        return await openDatabase(
+          inMemoryDatabasePath,
+          version: _dbVersion,
+          onCreate: _onCreate,
+          onUpgrade: _onUpgrade,
+        );
+      }
+
+      final dbPath = await getDatabasesPath();
+      final path = join(dbPath, _dbName);
+
+      return await openDatabase(
+        path,
+        version: _dbVersion,
+        onCreate: _onCreate,
+        onUpgrade: _onUpgrade,
+      );
+    } catch (e) {
+      debugPrint('DatabaseHelper: Primary database initialization failed ($e). Falling back to in-memory database.');
+      return await openDatabase(
+        inMemoryDatabasePath,
+        version: _dbVersion,
+        onCreate: _onCreate,
+        onUpgrade: _onUpgrade,
+      );
     }
-
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, _dbName);
-
-    return openDatabase(
-      path,
-      version: _dbVersion,
-      onCreate: _onCreate,
-      onUpgrade: _onUpgrade,
-    );
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {

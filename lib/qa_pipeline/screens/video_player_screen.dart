@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:media_kit/media_kit.dart';
@@ -73,24 +74,16 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         }
       });
 
-<<<<<<< HEAD
-      // Open the video directly from assets.
-      final uri = kIsWeb ? 'asset://${widget.level.videoPath}' : 'asset:///${widget.level.videoPath}';
-      await _player.open(Media(uri));
-
-      _segments = await transcriptFuture;
-
-=======
       // Mount the Video widget immediately so the player starts buffering & rendering without UI delay.
->>>>>>> bc83aa0b81ce3bb57c7fc1da1ef8490bd65923f7
       if (mounted) {
         setState(() {
           _isInitialized = true;
         });
       }
 
-      // Open the video directly from assets.
-      await _player.open(Media('asset:///${widget.level.videoPath}'), play: true);
+      // Open the video directly from assets (supporting both Web and native target paths).
+      final uri = kIsWeb ? 'asset://${widget.level.videoPath}' : 'asset:///${widget.level.videoPath}';
+      await _player.open(Media(uri), play: true);
 
       _segments = await transcriptFuture;
     } catch (e) {
@@ -127,33 +120,91 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A), // Dark Steampunk Blue
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Custom Top Bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              child: Row(
-                children: [
-                  WoodenBackButton(
-                    onTap: () => Navigator.of(context).pop(),
+      backgroundColor: const Color(0xFFC5AE79), // Vintage Paper Canvas
+      body: Stack(
+        children: [
+          // 1. GENERATED WEST BENGAL HISTORY MAP BACKGROUND (Replaces black bars!)
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/story_selection_wb_bg.png',
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+              errorBuilder: (ctx, err, stack) => Image.asset(
+                'assets/images/nimo_japanese_bg_clean.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+
+          // 2. Vintage Sepia Dark Vignette Overlay
+          Positioned.fill(
+            child: IgnorePointer(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    center: Alignment.center,
+                    radius: 0.95,
+                    colors: [
+                      Colors.transparent,
+                      const Color(0xFF2E1C12).withValues(alpha: 0.35),
+                      const Color(0xFF1E100A).withValues(alpha: 0.65),
+                    ],
                   ),
-                  Expanded(
-                    child: Center(
-                      child: GameTexturedText(
-                        text: widget.level.levelName.toUpperCase(),
-                        fontSize: 24,
+                ),
+              ),
+            ),
+          ),
+
+          SafeArea(
+            child: Column(
+              children: [
+                // Elevated Blurred Glassmorphic Top Bar
+                Container(
+                  margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0x882E1C12), // Vintage Sepia Glass
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: const Color(0xAA8B6914), width: 1.8),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black54,
+                        blurRadius: 14,
+                        offset: Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(18),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        child: Row(
+                          children: [
+                            WoodenBackButton(
+                              onTap: () => Navigator.of(context).pop(),
+                            ),
+                            Expanded(
+                              child: Center(
+                                child: GameTexturedText(
+                                  text: widget.level.levelName.toUpperCase(),
+                                  fontSize: 24,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 52), // Balance for back button
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 52), // Balance for back button
-                ],
-              ),
+                ),
+                Expanded(child: _buildBody()),
+              ],
             ),
-            Expanded(child: _buildBody()),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -210,6 +261,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                   onTap: _togglePlayPause,
                   child: Video(
                     controller: _videoController,
+                    fit: BoxFit.cover,
                     controls: NoVideoControls,
                   ),
                 ),

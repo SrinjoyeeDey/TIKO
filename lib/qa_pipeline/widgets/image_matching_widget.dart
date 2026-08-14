@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:confetti/confetti.dart';
 import '../models/image_matching_question.dart';
 import '../services/content_discovery_service.dart';
 
+/// High-contrast 3D Vintage Image Matching Widget with Perfectly Aligned Side-by-Side Rows
 class ImageMatchingWidget extends StatefulWidget {
   final ImageMatchingQuestion question;
   final String chapterId;
@@ -74,244 +74,148 @@ class _ImageMatchingWidgetState extends State<ImageMatchingWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final int rowCount = widget.question.images.length;
+
     return Stack(
       children: [
         Column(
           children: [
+            // Title Header
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: Text(
-                '🧩 Match the Pictures!',
-                style: GoogleFonts.outfit(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                '🧩 MATCH THE PICTURES!',
+                style: const TextStyle(
+                  fontFamily: 'Outfit',
+                  fontSize: 26,
+                  fontWeight: FontWeight.w900,
+                  color: Color(0xFFFFD700), // Bright Vintage Gold
+                  letterSpacing: 1.5,
+                  shadows: [
+                    Shadow(color: Colors.black, blurRadius: 8, offset: Offset(2, 3)),
+                  ],
                 ),
               ),
             ),
+
+            // Perfectly Aligned Side-by-Side Matching Rows
             Expanded(
-              child: Row(
-                children: [
-                  // Images Column
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: widget.question.images.length,
-                      itemBuilder: (context, index) {
-                        final img = widget.question.images[index];
-                        final matchedDescId = _currentMatches[img.id];
-                        final matchedDesc = matchedDescId != null 
-                            ? widget.question.descriptions.firstWhere((d) => d.id == matchedDescId)
-                            : null;
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                itemCount: rowCount,
+                itemBuilder: (context, index) {
+                  final img = widget.question.images[index];
+                  final desc = index < _shuffledDescriptions.length ? _shuffledDescriptions[index] : null;
 
-                        return DragTarget<String>(
-                          onAcceptWithDetails: (details) {
-                            if (_isSubmitted) return;
-                            setState(() {
-                              _currentMatches[img.id] = details.data;
-                            });
-                          },
-                          builder: (context, candidateData, rejectedData) {
-                            return Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: candidateData.isNotEmpty
-                                    ? Colors.white.withValues(alpha: 0.2)
-                                    : Colors.white.withValues(alpha: 0.05),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: candidateData.isNotEmpty 
-                                      ? const Color(0xFF6C63FF) 
-                                      : Colors.white24,
-                                  width: 2,
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: FutureBuilder<String?>(
-                                      future: ContentDiscoveryService.findImageAsset(widget.chapterId, widget.levelId, img.file),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState == ConnectionState.waiting) {
-                                          return const SizedBox(
-                                            width: 100,
-                                            height: 100,
-                                            child: Center(child: CircularProgressIndicator()),
-                                          );
-                                        }
-                                        final actualPath = snapshot.data;
-                                        if (actualPath == null) {
-                                          return Container(
-                                            width: 100,
-                                            height: 100,
-                                            color: Colors.white12,
-                                            child: const Icon(Icons.broken_image, color: Colors.white54),
-                                          );
-                                        }
-                                        return Image.asset(
-                                          actualPath,
-                                          width: 100,
-                                          height: 100,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) {
-                                            return Container(
-                                              width: 100,
-                                              height: 100,
-                                              color: Colors.white12,
-                                              child: const Icon(Icons.broken_image, color: Colors.white54),
-                                            );
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: matchedDesc != null
-                                        ? InkWell(
-                                            onTap: _isSubmitted ? null : () {
-                                              // Allow unmatching by tapping
-                                              setState(() {
-                                                _currentMatches.remove(img.id);
-                                              });
-                                            },
-                                            child: Container(
-                                              padding: const EdgeInsets.all(12),
-                                              decoration: BoxDecoration(
-                                                color: const Color(0xFF6C63FF).withValues(alpha: 0.2),
-                                                borderRadius: BorderRadius.circular(12),
-                                                border: Border.all(color: const Color(0xFF6C63FF).withValues(alpha: 0.5)),
-                                              ),
-                                              child: Text(
-                                                matchedDesc.text,
-                                                style: GoogleFonts.outfit(color: Colors.white, fontSize: 14),
-                                              ),
-                                            ),
-                                          )
-                                        : Text(
-                                            'Drag a description here',
-                                            style: GoogleFonts.outfit(
-                                              color: Colors.white54,
-                                              fontStyle: FontStyle.italic,
-                                            ),
-                                          ),
-                                  ),
-                                  if (_isSubmitted && matchedDesc != null)
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0),
-                                      child: Icon(
-                                        matchedDescId == widget.question.correctMatches[img.id]
-                                            ? Icons.check_circle
-                                            : Icons.cancel,
-                                        color: matchedDescId == widget.question.correctMatches[img.id]
-                                            ? Colors.greenAccent
-                                            : Colors.redAccent,
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  
-                  const VerticalDivider(color: Colors.white24, thickness: 1),
-
-                  // Descriptions Column
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: _shuffledDescriptions.length,
-                      itemBuilder: (context, index) {
-                        final desc = _shuffledDescriptions[index];
-                        final isMatched = _currentMatches.containsValue(desc.id);
-
-                        if (isMatched) {
-                          return const SizedBox.shrink(); // Hide if already matched
-                        }
-
-                        return Draggable<String>(
-                          data: desc.id,
-                          feedback: Material(
-                            color: Colors.transparent,
-                            child: Container(
-                              width: 300,
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF6C63FF),
-                                borderRadius: BorderRadius.circular(16),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.3),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 5),
-                                  )
-                                ],
-                              ),
-                              child: Text(
-                                desc.text,
-                                style: GoogleFonts.outfit(color: Colors.white, fontSize: 14),
-                              ),
-                            ),
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12.0),
+                    child: IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          // Left Column: Image Target Card (Row index)
+                          Expanded(
+                            flex: 5,
+                            child: _buildImageTargetCard(img),
                           ),
-                          childWhenDragging: Opacity(
-                            opacity: 0.3,
-                            child: _buildDescriptionCard(desc),
+
+                          const SizedBox(width: 14),
+
+                          // Right Column: Description Card (Row index - Side by Side Alignment!)
+                          Expanded(
+                            flex: 5,
+                            child: desc != null
+                                ? _buildDescriptionDraggableCard(desc)
+                                : const SizedBox(),
                           ),
-                          child: _buildDescriptionCard(desc),
-                        );
-                      },
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  );
+                },
               ),
             ),
             
-            // Check / Continue Button
+            // Check / Continue Button with High-Contrast Feedback Banner
             Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
               child: _isSubmitted
                   ? Column(
                       children: [
-                        Text(
-                          _currentMatches.length == widget.question.images.length &&
-                                  _currentMatches.entries.every((e) => e.value == widget.question.correctMatches[e.key])
-                              ? '🎉 Amazing! You matched them all!'
-                              : '✨ Nice try! Let\'s keep learning!',
-                          style: GoogleFonts.outfit(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: _continue,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF4CAF50),
-                            padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                        // High-Contrast Feedback Card
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: _currentMatches.length == widget.question.images.length &&
+                                    _currentMatches.entries.every((e) => e.value == widget.question.correctMatches[e.key])
+                                ? const Color(0xDD1B5E20)
+                                : const Color(0xDDE65100),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: const Color(0xFFFFF8E1),
+                              width: 1.8,
+                            ),
+                            boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 8, offset: Offset(0, 4))],
                           ),
                           child: Text(
-                            'Continue',
-                            style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                            _currentMatches.length == widget.question.images.length &&
+                                    _currentMatches.entries.every((e) => e.value == widget.question.correctMatches[e.key])
+                                ? 'AMAZING! You matched them all correctly!'
+                                : 'NICE TRY! Let\'s keep learning together.',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontFamily: 'Outfit',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 52,
+                          child: ElevatedButton(
+                            onPressed: _continue,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFD4AF37),
+                              foregroundColor: const Color(0xFF2E1C12),
+                              elevation: 6,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                              textStyle: const TextStyle(
+                                fontFamily: 'Outfit',
+                                fontSize: 18,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 1.2,
+                              ),
+                            ),
+                            child: const Text('CONTINUE →'),
                           ),
                         ),
                       ],
                     )
-                  : ElevatedButton(
-                      onPressed: _currentMatches.length == widget.question.images.length ? _checkAnswers : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF6C63FF),
-                        padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                        disabledBackgroundColor: Colors.white12,
-                      ),
-                      child: Text(
-                        'CHECK',
-                        style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                  : SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: ElevatedButton(
+                        onPressed: _currentMatches.length == widget.question.images.length ? _checkAnswers : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFD4AF37),
+                          foregroundColor: const Color(0xFF2E1C12),
+                          disabledBackgroundColor: Colors.white12,
+                          disabledForegroundColor: Colors.white30,
+                          elevation: 6,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          textStyle: const TextStyle(
+                            fontFamily: 'Outfit',
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.2,
+                          ),
+                        ),
+                        child: const Text('CHECK ANSWERS'),
                       ),
                     ),
             ),
@@ -323,25 +227,223 @@ class _ImageMatchingWidgetState extends State<ImageMatchingWidget> {
             confettiController: _confettiController,
             blastDirectionality: BlastDirectionality.explosive,
             shouldLoop: false,
-            colors: const [Colors.green, Colors.blue, Colors.pink, Colors.orange, Colors.purple],
+            colors: const [Color(0xFFFFD700), Color(0xFFFFB300), Color(0xFF4CAF50), Color(0xFF2196F3)],
           ),
         ),
       ],
     );
   }
 
+  Widget _buildImageTargetCard(MatchingImage img) {
+    final matchedDescId = _currentMatches[img.id];
+    final matchedDesc = matchedDescId != null 
+        ? widget.question.descriptions.firstWhere((d) => d.id == matchedDescId)
+        : null;
+
+    return DragTarget<String>(
+      onAcceptWithDetails: (details) {
+        if (_isSubmitted) return;
+        setState(() {
+          _currentMatches[img.id] = details.data;
+        });
+      },
+      builder: (context, candidateData, rejectedData) {
+        final isHovering = candidateData.isNotEmpty;
+        return Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: isHovering ? const Color(0xEEFFB300) : const Color(0xEE2E1C12),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: isHovering ? Colors.white : const Color(0xFFD4AF37),
+              width: 2.2,
+            ),
+            boxShadow: const [
+              BoxShadow(color: Colors.black45, blurRadius: 8, offset: Offset(0, 4)),
+            ],
+          ),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: FutureBuilder<String?>(
+                  future: ContentDiscoveryService.findImageAsset(widget.chapterId, widget.levelId, img.file),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const SizedBox(
+                        width: 78,
+                        height: 78,
+                        child: Center(child: CircularProgressIndicator(color: Color(0xFFD4AF37))),
+                      );
+                    }
+                    final actualPath = snapshot.data;
+                    if (actualPath == null) {
+                      return Container(
+                        width: 78,
+                        height: 78,
+                        color: Colors.black38,
+                        child: const Icon(Icons.broken_image, color: Colors.white54),
+                      );
+                    }
+                    return Image.asset(
+                      actualPath,
+                      width: 78,
+                      height: 78,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          width: 78,
+                          height: 78,
+                          color: Colors.black38,
+                          child: const Icon(Icons.broken_image, color: Colors.white54),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: matchedDesc != null
+                    ? InkWell(
+                        onTap: _isSubmitted ? null : () {
+                          setState(() {
+                            _currentMatches.remove(img.id);
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF3B70A6),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: const Color(0xFFFFF8E1), width: 1.5),
+                          ),
+                          child: Text(
+                            matchedDesc.text,
+                            style: const TextStyle(
+                              fontFamily: 'Outfit',
+                              color: Colors.white,
+                              fontSize: 13.5,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      )
+                    : const Text(
+                        'Drag description here',
+                        style: TextStyle(
+                          fontFamily: 'Outfit',
+                          color: Color(0xFFF5EAD4),
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.w600,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+              ),
+              if (_isSubmitted && matchedDesc != null)
+                Padding(
+                  padding: const EdgeInsets.only(left: 6.0),
+                  child: Icon(
+                    matchedDescId == widget.question.correctMatches[img.id]
+                        ? Icons.check_circle
+                        : Icons.cancel,
+                    color: matchedDescId == widget.question.correctMatches[img.id]
+                        ? const Color(0xFFA5D6A7)
+                        : const Color(0xFFEF9A9A),
+                    size: 26,
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildDescriptionDraggableCard(MatchingDescription desc) {
+    final isMatched = _currentMatches.containsValue(desc.id);
+
+    if (isMatched) {
+      return Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: const Color(0x332E1C12),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0x55D4AF37), width: 1.5),
+        ),
+        child: const Center(
+          child: Text(
+            '✓ MATCHED',
+            style: TextStyle(
+              fontFamily: 'Outfit',
+              color: Color(0xFFD4AF37),
+              fontSize: 13,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Draggable<String>(
+      data: desc.id,
+      feedback: Material(
+        color: Colors.transparent,
+        child: Container(
+          width: 260,
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: const Color(0xFFD4AF37),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black54,
+                blurRadius: 10,
+                offset: Offset(0, 5),
+              )
+            ],
+          ),
+          child: Text(
+            desc.text,
+            style: const TextStyle(
+              fontFamily: 'Outfit',
+              color: Color(0xFF2E1C12),
+              fontSize: 14,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ),
+      ),
+      childWhenDragging: Opacity(
+        opacity: 0.3,
+        child: _buildDescriptionCard(desc),
+      ),
+      child: _buildDescriptionCard(desc),
+    );
+  }
+
   Widget _buildDescriptionCard(MatchingDescription desc) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.1),
+        color: const Color(0xEE2E1C12),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white24),
+        border: Border.all(color: const Color(0xFFD4AF37), width: 1.8),
+        boxShadow: const [
+          BoxShadow(color: Colors.black38, blurRadius: 6, offset: Offset(0, 3)),
+        ],
       ),
-      child: Text(
-        desc.text,
-        style: GoogleFonts.outfit(color: Colors.white, fontSize: 14),
+      child: Center(
+        child: Text(
+          desc.text,
+          style: const TextStyle(
+            fontFamily: 'Outfit',
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.w800,
+            height: 1.3,
+          ),
+        ),
       ),
     );
   }

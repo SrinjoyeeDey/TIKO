@@ -428,7 +428,6 @@ class _MapPathPainter extends CustomPainter {
 
       // Control points for a cubic bezier (smooth curves)
       // Since it's vertical, we pull the control points horizontally and vertically
-      final dx = (p2.dx - p1.dx).abs();
       final dy = (p1.dy - p2.dy).abs();
       
       final cp1 = Offset(p1.dx, p1.dy - (dy * 0.4));
