@@ -49,71 +49,23 @@ function initMap() {
         });
     svg.call(zoom);
 
+    // Draw cities and route immediately so interactive nodes never depend on remote GeoJSON fetch
+    drawCitiesAndRoute(g, path, projection);
+
     // Fetch the 1914 historical world map GeoJSON (closest accurate representation to 1913)
     d3.json("https://raw.githubusercontent.com/aourednik/historical-basemaps/master/geojson/world_1914.geojson")
         .then(data => {
-            // 1. Draw the landmasses
+            // Draw the landmasses behind cities
             g.selectAll("path.country")
                 .data(data.features)
                 .enter()
-                .append("path")
+                .insert("path", ":first-child")
                 .attr("class", "country")
                 .attr("d", path);
-
-            // 2. Draw the connecting travel route
-            g.append("path")
-                .datum(route)
-                .attr("class", "route-line")
-                .attr("id", "travel-route")
-                .attr("d", path);
-
-            // 3. Draw the interactive cities
-            const cityNodes = g.selectAll(".city-node")
-                .data(cities)
-                .enter()
-                .append("g")
-                .attr("class", "city-node")
-                .attr("id", d => `node-${d.id}`)
-                .attr("transform", d => {
-                    const [x, y] = projection(d.coords);
-                    return `translate(${x},${y})`;
-                })
-                .on("click", (event, d) => handleCityClick(event, d));
-
-            // Pulsing aura
-            cityNodes.append("circle")
-                .attr("class", "city-pulse")
-                .attr("r", 6);
-
-            // Vintage Marker background
-            cityNodes.append("circle")
-                .attr("class", "city-marker-bg")
-                .attr("r", 8);
-
-            // Marker inner dot
-            cityNodes.append("circle")
-                .attr("class", "city-marker-dot")
-                .attr("r", 3);
-
-            // 4. Hover Labels
-            const labelGroup = cityNodes.append("g")
-                .attr("transform", d => `translate(${d.labelOffset[0]}, ${d.labelOffset[1]})`);
-            
-            // Label background
-            labelGroup.append("rect")
-                .attr("class", "city-label-bg")
-                .attr("x", -5)
-                .attr("y", -14)
-                .attr("width", 90)
-                .attr("height", 20);
-                
-            // Label text
-            labelGroup.append("text")
-                .attr("class", "city-label-text")
-                .text(d => d.name);
-
         })
-        .catch(err => console.error("Error loading historical map data:", err));
+        .catch(err => {
+            console.warn("Could not load remote historical GeoJSON, using default map canvas background:", err);
+        });
 
     // Handle Window Resizing to keep map responsive
     window.addEventListener('resize', () => {
@@ -136,6 +88,60 @@ function initMap() {
             closePopup();
         }
     });
+}
+
+function drawCitiesAndRoute(g, path, projection) {
+    // 1. Draw the connecting travel route
+    g.append("path")
+        .datum(route)
+        .attr("class", "route-line")
+        .attr("id", "travel-route")
+        .attr("d", path);
+
+    // 2. Draw the interactive cities
+    const cityNodes = g.selectAll(".city-node")
+        .data(cities)
+        .enter()
+        .append("g")
+        .attr("class", "city-node")
+        .attr("id", d => `node-${d.id}`)
+        .attr("transform", d => {
+            const [x, y] = projection(d.coords);
+            return `translate(${x},${y})`;
+        })
+        .on("click", (event, d) => handleCityClick(event, d));
+
+    // Pulsing aura
+    cityNodes.append("circle")
+        .attr("class", "city-pulse")
+        .attr("r", 6);
+
+    // Vintage Marker background
+    cityNodes.append("circle")
+        .attr("class", "city-marker-bg")
+        .attr("r", 8);
+
+    // Marker inner dot
+    cityNodes.append("circle")
+        .attr("class", "city-marker-dot")
+        .attr("r", 3);
+
+    // 3. Hover Labels
+    const labelGroup = cityNodes.append("g")
+        .attr("transform", d => `translate(${d.labelOffset[0]}, ${d.labelOffset[1]})`);
+    
+    // Label background
+    labelGroup.append("rect")
+        .attr("class", "city-label-bg")
+        .attr("x", -5)
+        .attr("y", -14)
+        .attr("width", 90)
+        .attr("height", 20);
+        
+    // Label text
+    labelGroup.append("text")
+        .attr("class", "city-label-text")
+        .text(d => d.name);
 }
 
 // INTERACTION LOGIC
@@ -172,11 +178,16 @@ function closePopup() {
 function enterLocation() {
     if (currentSelectedCity) {
         if (currentSelectedCity.id === 'calcutta') {
+            let messageSent = false;
             if (window.chrome && window.chrome.webview) {
                 window.chrome.webview.postMessage('open_calcutta');
-            } else if (window.parent !== window) {
+                messageSent = true;
+            }
+            if (window.parent !== window) {
                 window.parent.postMessage('open_calcutta', '*');
-            } else {
+                messageSent = true;
+            }
+            if (!messageSent) {
                 window.location.href = 'calcutta.html';
             }
         } else {

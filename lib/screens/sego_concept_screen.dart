@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'auth_mode_selection_screen.dart';
+import 'game_map_1913_screen.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // AGE THEME DATA CLASS
@@ -363,13 +364,6 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
 
               // Bouncing Ball Transition Overlay (3 Floor Bounces then Single-Layer Circular Iris Reveal of Page 2)
               if (_isBouncingBallActive) _buildBouncingBallOverlay(size, theme),
-
-              // 🫧 DYNAMIC LIQUID FLUID 3D GLASS BUBBLE CURSOR (Physics Deformation)
-              if (_isCursorInside)
-                GlassBubbleCursorWidget(
-                  theme: theme,
-                  targetPos: _cursorPos,
-                ),
             ],
           ),
         ),
@@ -454,7 +448,8 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
             top: currentY - 45.0,
             width: 90.0,
             height: 90.0,
-            child: Transform.scale(
+            child: IgnorePointer(
+              child: Transform.scale(
               scaleX: squashX,
               scaleY: squashY,
               alignment: Alignment.bottomCenter,
@@ -552,7 +547,8 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                 ),
               ),
             ),
-          );
+          ),
+        );
         } else {
           // PHASE 2: THE BALL EXPANDS AS A GROWING CIRCLE FROM THE BALL'S CENTER
           final te = ((t - phase1End) / (1.0 - phase1End)).clamp(0.0, 1.0);
@@ -562,12 +558,14 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
           final currentRadius = 45.0 + (maxRadius - 45.0) * expandCurve;
 
           return Positioned.fill(
-            child: ClipPath(
-              clipper: _CircleClipper(
-                center: Offset(size.width / 2, targetCenterY),
-                radius: currentRadius,
+            child: IgnorePointer(
+              child: ClipPath(
+                clipper: _CircleClipper(
+                  center: Offset(size.width / 2, targetCenterY),
+                  radius: currentRadius,
+                ),
+                child: _buildTakeoverScreen(context, theme),
               ),
-              child: _buildTakeoverScreen(context, theme),
             ),
           );
         }
@@ -997,7 +995,19 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                         PageRouteBuilder(
                           pageBuilder:
                               (context, animation, secondaryAnimation) =>
-                                  const AuthModeSelectionScreen(),
+                                  AuthModeSelectionScreen(
+                                    onBeginJourney: () {
+                                      Navigator.of(context).pushReplacement(
+                                        PageRouteBuilder(
+                                          pageBuilder: (context, animation, secondaryAnimation) =>
+                                              const GameMap1913Screen(),
+                                          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+                                              FadeTransition(opacity: animation, child: child),
+                                          transitionDuration: const Duration(milliseconds: 600),
+                                        ),
+                                      );
+                                    },
+                                  ),
                           transitionsBuilder: (
                             context,
                             animation,
@@ -1238,25 +1248,20 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
   }
 
   void _completeLevelAndUnlockNext(int levelIndex) {
-    if (levelIndex != _unlockedLevelIndex || unlockAnimController.isAnimating) {
-      return;
-    }
-
+    debugPrint("_completeLevelAndUnlockNext called for levelIndex=$levelIndex");
     SystemSound.play(SystemSoundType.click);
 
-    setState(() {
-      _animatingUnlockingIndex = levelIndex + 1;
-    });
-
-    unlockAnimController.forward(from: 0.0).then((_) {
-      if (mounted) {
-        setState(() {
-          _unlockedLevelIndex = levelIndex + 1;
-          _animatingUnlockingIndex = null;
-        });
-        unlockAnimController.reset();
-      }
-    });
+    // Clicking the first level (level 0) or any level opens the 1913 World Map
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const GameMap1913Screen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+        transitionDuration: const Duration(milliseconds: 600),
+      ),
+    );
   }
 
   Widget _buildEmergingLevelStone({
@@ -1609,7 +1614,8 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
       onEnter: (_) => setState(() => _hoveredLevelIndex = levelIndex),
       onExit: (_) => setState(() => _hoveredLevelIndex = null),
       child: GestureDetector(
-        onTap: isActive ? () => _completeLevelAndUnlockNext(levelIndex) : null,
+        behavior: HitTestBehavior.opaque,
+        onTap: () => _completeLevelAndUnlockNext(levelIndex),
         child: AnimatedScale(
           scale: isHovered ? (isBossNode ? 1.28 : 1.16) : 1.0,
           duration: const Duration(milliseconds: 250),

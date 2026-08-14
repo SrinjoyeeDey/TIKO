@@ -43,11 +43,22 @@ class _WindowsGameMapViewState extends State<WindowsGameMapView> {
       String executableDir = p.dirname(executablePath);
       String assetPath = p.join(executableDir, 'data', 'flutter_assets', 'assets', '1913-game-map', 'index.html');
       
-      await _controller.loadUrl('file:///$assetPath');
+      if (!File(assetPath).existsSync()) {
+        final currentDir = Directory.current.path;
+        final altPath = p.join(currentDir, 'assets', '1913-game-map', 'index.html');
+        if (File(altPath).existsSync()) {
+          assetPath = altPath;
+        }
+      }
+      
+      final fileUri = Uri.file(p.canonicalize(assetPath)).toString();
+      debugPrint("WEBVIEW LOADING URL: $fileUri");
+      await _controller.loadUrl(fileUri);
       
       _controller.webMessage.listen((message) {
         debugPrint("WEBVIEW MESSAGE RECEIVED: $message");
-        if (message == 'open_calcutta') {
+        final msgStr = message.toString();
+        if (msgStr == 'open_calcutta' || msgStr == '"open_calcutta"' || msgStr.contains('open_calcutta')) {
           if (!mounted) return;
           debugPrint("Navigating to West Bengal story collection...");
           

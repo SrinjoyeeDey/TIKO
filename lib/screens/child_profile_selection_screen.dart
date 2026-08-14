@@ -367,7 +367,7 @@ class _ChildProfileSelectionScreenState extends State<ChildProfileSelectionScree
                                     FittedBox(
                                       fit: BoxFit.scaleDown,
                                       child: Text(
-                                        'はじめる  Start Journey',
+                                        'はじめる  Enter Your Journey',
                                         style: TextStyle(
                                           fontFamily: 'Outfit',
                                           fontSize: 14,
