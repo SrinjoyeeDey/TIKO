@@ -73,17 +73,26 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         }
       });
 
+<<<<<<< HEAD
       // Open the video directly from assets.
       final uri = kIsWeb ? 'asset://${widget.level.videoPath}' : 'asset:///${widget.level.videoPath}';
       await _player.open(Media(uri));
 
       _segments = await transcriptFuture;
 
+=======
+      // Mount the Video widget immediately so the player starts buffering & rendering without UI delay.
+>>>>>>> bc83aa0b81ce3bb57c7fc1da1ef8490bd65923f7
       if (mounted) {
         setState(() {
           _isInitialized = true;
         });
       }
+
+      // Open the video directly from assets.
+      await _player.open(Media('asset:///${widget.level.videoPath}'), play: true);
+
+      _segments = await transcriptFuture;
     } catch (e) {
       if (mounted) {
         setState(() {

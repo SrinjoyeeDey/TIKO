@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'auth_mode_selection_screen.dart';
 import 'game_map_1913_screen.dart';
+import '../widgets/smoke_bomb_transition.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // AGE THEME DATA CLASS
@@ -153,6 +154,7 @@ class SegoConceptScreen extends StatefulWidget {
 class _SegoConceptScreenState extends State<SegoConceptScreen>
     with TickerProviderStateMixin {
   double _currentAge = 7.0;
+  double _emotionValue = 0.5; // 0.0: Not good (Sky Blue), 0.5: Great (Lavender), 1.0: Awesome (Yellow)
   int _screenIndex =
       0; // 0: Age Selection, 1: Monster Takeover, 2: Role Selection
   String? _selectedRole;
@@ -871,319 +873,289 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     );
   }
 
-  // SCREEN 1: FULLSCREEN MONSTER TAKEOVER SCREEN (Green Theme)
+  Color _lerp4Colors(Color c1, Color c2, Color c3, Color c4, double t) {
+    if (t <= 0.33) {
+      return Color.lerp(c1, c2, t / 0.33)!;
+    } else if (t <= 0.66) {
+      return Color.lerp(c2, c3, (t - 0.33) / 0.33)!;
+    } else {
+      return Color.lerp(c3, c4, (t - 0.66) / 0.34)!;
+    }
+  }
+
+  // SCREEN 1: FULLSCREEN MONSTER TAKEOVER SCREEN (4 Emotion States + Typewriter Reveal)
   Widget _buildTakeoverScreen(BuildContext context, _AgeTheme theme) {
     final size = MediaQuery.of(context).size;
-    const cardTopGreen = Color(0xFF94D561);
-    const cardBottomGreen = Color(0xFF6AAE38);
-    final midShimmerGreen = Color.lerp(cardTopGreen, Colors.white, 0.14)!;
 
-    return GestureDetector(
-      onTap: _goToRoleSelection,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [cardTopGreen, midShimmerGreen, cardBottomGreen],
-            stops: const [0.0, 0.45, 1.0],
-          ),
+    // 4 Dynamic Emotion Background Colors: sad (Red), grumpy (Orange), silly (Green), happy (Gold)
+    // Synchronized 100% with inner card theme colors!
+    final bgTop = _lerp4Colors(
+      const Color(0xFFFF6B55), // sad (Red)
+      const Color(0xFFFF6D00), // grumpy (Orange)
+      const Color(0xFF94D561), // silly (Apple Lime Green from Age Selection!)
+      const Color(0xFFFFE082), // happy (Gold)
+      _emotionValue,
+    );
+
+    final bgBottom = _lerp4Colors(
+      const Color(0xFFE53935), // sad
+      const Color(0xFFE65100), // grumpy
+      const Color(0xFF3F771A), // silly (Deep Forest Green from Age Selection!)
+      const Color(0xFFFFB300), // happy
+      _emotionValue,
+    );
+
+    final pimpleColor = _lerp4Colors(
+      const Color(0xFFFF8A65),
+      const Color(0xFFFFAB91),
+      const Color(0xFFB5F280), // Glowing lime accent
+      const Color(0xFFFFE082),
+      _emotionValue,
+    );
+
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [bgTop, bgBottom],
         ),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // Soft Organic Corner Accent Circles (Matching the card in screenshot)
-            Positioned(
-              top: -30,
-              right: -30,
-              child: Container(
-                width: 140,
-                height: 140,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.22),
-                  shape: BoxShape.circle,
-                ),
+      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Background Sparkles/Bubble Dots Accent
+          Positioned.fill(
+            child: CustomPaint(
+              painter: BiboPimplesPainter(
+                pimpleColor: pimpleColor.withValues(alpha: 0.35),
               ),
             ),
-            Positioned(
-              top: 50,
-              right: 60,
-              child: Container(
-                width: 42,
-                height: 42,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.18),
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-            Positioned(
-              top: -35,
-              left: 30,
-              child: Container(
-                width: 110,
-                height: 110,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.18),
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
+          ),
 
-            // 1. Pimples / Sparkles / Bubble Dots Background (Light mint green)
-            Positioned.fill(
-              child: CustomPaint(
-                painter: const BiboPimplesPainter(
-                  pimpleColor: Color(0xFFD3F1BA),
+          // 1. Header Title & Typewriter Text Reveal (100% Visible!)
+          Positioned(
+            top: 75,
+            left: 20,
+            right: 20,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'How was your day?',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.fredoka(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                    letterSpacing: 0.8,
+                    shadows: const [
+                      Shadow(
+                        color: Color(0x40000000),
+                        blurRadius: 8,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ),
-
-            // 2. Exact Monster Face with Smooth Blinking Eyes (Smile, Shiny Fangs, Chin Accent)
-            Positioned.fill(
-              child: BiboMonsterFaceWidget(chinColor: const Color(0xFF1C4108)),
-            ),
-
-            // 3. Typed Sentence Reveal (Rendered smoothly above eyes)
-            if (_typedText.isNotEmpty)
-              Positioned(
-                top: 100,
-                left: 20,
-                right: 20,
-                child: Center(
-                  child: Text(
+                if (_typedText.isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  Text(
                     _typedText,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.fredoka(
-                      fontSize: 23,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                      letterSpacing: 0.6,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white.withValues(alpha: 0.95),
+                      letterSpacing: 0.5,
                       shadows: const [
                         Shadow(
-                          color: Color(0x601C4108),
-                          blurRadius: 14,
-                          offset: Offset(0, 3),
-                        ),
-                        Shadow(
-                          color: Color(0x30000000),
+                          color: Color(0x50000000),
                           blurRadius: 6,
                           offset: Offset(0, 2),
                         ),
                       ],
                     ),
                   ),
-                ),
+                ],
+              ],
+            ),
+          ),
+
+          // Compact Floating 3D Emotion Card
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 60),
+              child: _CompactEmotionCard(
+                emotionValue: _emotionValue,
+                onChanged: (val) {
+                  setState(() => _emotionValue = val);
+                },
               ),
+            ),
+          ),
 
-            // 4. White Bouncing Ball Typewriter Overlay
-            if (_isTypewriterActive) _buildTypewriterBallOverlay(size),
+          // White Bouncing Ball Typewriter Overlay (if active)
+          if (_isTypewriterActive) _buildTypewriterBallOverlay(size),
 
-            // 5. Top-Right 3D Organic Signup Pill Button
-            Positioned(
-              top: 24,
-              right: 20,
-              child: SafeArea(
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        PageRouteBuilder(
-                          pageBuilder:
-                              (context, animation, secondaryAnimation) =>
-                                  AuthModeSelectionScreen(
-                                    onBeginJourney: () {
-                                      Navigator.of(context).pushReplacement(
-                                        PageRouteBuilder(
-                                          pageBuilder: (context, animation, secondaryAnimation) =>
-                                              const GameMap1913Screen(),
-                                          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-                                              FadeTransition(opacity: animation, child: child),
-                                          transitionDuration: const Duration(milliseconds: 600),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                          transitionsBuilder: (
-                            context,
-                            animation,
-                            secondaryAnimation,
-                            child,
-                          ) {
-                            return FadeTransition(
-                              opacity: animation,
-                              child: ScaleTransition(
-                                scale:
-                                    Tween<double>(
-                                      begin: 0.95,
-                                      end: 1.0,
-                                    ).animate(
-                                      CurvedAnimation(
-                                        parent: animation,
-                                        curve: Curves.easeOutCubic,
+          // Top-Right Sign Up Button
+          Positioned(
+            top: 24,
+            right: 20,
+            child: SafeArea(
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      PageRouteBuilder(
+                        pageBuilder:
+                            (context, animation, secondaryAnimation) =>
+                                AuthModeSelectionScreen(
+                                  onBeginJourney: () {
+                                    Navigator.of(context).pushReplacement(
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation, secondaryAnimation) =>
+                                            const GameMap1913Screen(),
+                                        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+                                            FadeTransition(opacity: animation, child: child),
+                                        transitionDuration: const Duration(milliseconds: 600),
                                       ),
+                                    );
+                                  },
+                                ),
+                        transitionsBuilder: (
+                          context,
+                          animation,
+                          secondaryAnimation,
+                          child,
+                        ) {
+                          return FadeTransition(
+                            opacity: animation,
+                            child: ScaleTransition(
+                              scale:
+                                  Tween<double>(
+                                    begin: 0.95,
+                                    end: 1.0,
+                                  ).animate(
+                                    CurvedAnimation(
+                                      parent: animation,
+                                      curve: Curves.easeOutCubic,
                                     ),
-                                child: child,
-                              ),
-                            );
-                          },
-                          transitionDuration: const Duration(
-                            milliseconds: 400,
+                                  ),
+                              child: child,
+                            ),
+                          );
+                        },
+                        transitionDuration: const Duration(
+                          milliseconds: 400,
+                        ),
+                      ),
+                    );
+                  },
+                  borderRadius: BorderRadius.circular(30),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.25),
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.75),
+                        width: 1.6,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 26,
+                          height: 26,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.person_add_alt_1_rounded,
+                            size: 15,
+                            color: Color(0xFF333333),
                           ),
                         ),
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(30),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Color(0xFF1C4108), // Dark Forest Green
-                            Color(0xFF2D5E12),
-                          ],
+                        const SizedBox(width: 8),
+                        const Text(
+                          'SIGN UP',
+                          style: TextStyle(
+                            fontFamily: 'Outfit',
+                            fontSize: 13,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                            letterSpacing: 1.0,
+                          ),
                         ),
-                        borderRadius: BorderRadius.circular(30),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.65),
-                          width: 1.6,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(
-                              0xFF1C4108,
-                            ).withValues(alpha: 0.40),
-                            blurRadius: 14,
-                            offset: const Offset(0, 5),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // Cute Avatar Badge Icon
-                          Container(
-                            width: 26,
-                            height: 26,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFFFFDE8),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.person_add_alt_1_rounded,
-                              size: 15,
-                              color: Color(0xFF1C4108),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          const Text(
-                            'SIGN UP',
-                            style: TextStyle(
-                              fontFamily: 'Outfit',
-                              fontSize: 13,
-                              fontWeight: FontWeight.w900,
-                              color: Colors.white,
-                              letterSpacing: 1.0,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          const Icon(
-                            Icons.chevron_right_rounded,
-                            size: 18,
-                            color: Color(0xFFFFEEA0),
-                          ),
-                        ],
-                      ),
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
+          ),
 
-            // 6. Top Swipe Down Indicator Prompt (Go to Age Selection)
-            Positioned(
-              top: 28,
+          // Top Back Navigation Button
+          Positioned(
+            top: 24,
+            left: 20,
+            child: SafeArea(
               child: GestureDetector(
                 onTap: _goToAgeSelection,
                 behavior: HitTestBehavior.opaque,
-                child: Opacity(
-                  opacity: 0.9,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Text(
-                        'Swipe Down for Age Selection',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                          letterSpacing: 0.5,
-                          shadows: [
-                            Shadow(
-                              color: Color(0x60000000),
-                              blurRadius: 8,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 2),
-                      Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: Colors.white,
-                        size: 26,
-                      ),
-                    ],
+                child: Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.25),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: const Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    color: Colors.white,
+                    size: 20,
                   ),
                 ),
               ),
             ),
+          ),
 
-            // 6. Bottom Swipe Up Indicator Prompt (Go to Level Map)
-            Positioned(
-              bottom: 28,
-              child: Opacity(
-                opacity: 0.9,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(
-                      Icons.keyboard_arrow_up_rounded,
+          // Bottom Swipe Up Prompt
+          Positioned(
+            bottom: 22,
+            child: Opacity(
+              opacity: 0.9,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Icon(
+                    Icons.keyboard_arrow_up_rounded,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                  Text(
+                    'Swipe Up for Level Map',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
                       color: Colors.white,
-                      size: 26,
+                      letterSpacing: 0.5,
                     ),
-                    SizedBox(height: 2),
-                    Text(
-                      'Swipe Up for Level Map',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
-                        letterSpacing: 0.6,
-                        shadows: [
-                          Shadow(
-                            color: Color(0x60000000),
-                            blurRadius: 8,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -1247,19 +1219,24 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     );
   }
 
-  void _completeLevelAndUnlockNext(int levelIndex) {
+  void _completeLevelAndUnlockNext(int levelIndex, [Offset? tapOffset, Color? buttonColor]) {
     debugPrint("_completeLevelAndUnlockNext called for levelIndex=$levelIndex");
     SystemSound.play(SystemSoundType.click);
 
-    // Clicking the first level (level 0) or any level opens the 1913 World Map
+    final origin = tapOffset ??
+        Offset(
+          MediaQuery.of(context).size.width / 2,
+          MediaQuery.of(context).size.height / 2,
+        );
+    final initialColor = buttonColor ?? const Color(0xFF94D561);
+
+    // Clicking the first level (level 0) or any level triggers the Smoke Bomb Time-Travel Transition to 1913 World Map
     Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            const GameMap1913Screen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(opacity: animation, child: child);
-        },
-        transitionDuration: const Duration(milliseconds: 600),
+      SmokeBombPageRoute(
+        page: const GameMap1913Screen(),
+        originOffset: origin,
+        buttonColor: initialColor,
+        vintageMapColor: const Color(0xFFF4E8C1),
       ),
     );
   }
@@ -1615,7 +1592,11 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
       onExit: (_) => setState(() => _hoveredLevelIndex = null),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () => _completeLevelAndUnlockNext(levelIndex),
+        onTapUp: (details) => _completeLevelAndUnlockNext(
+          levelIndex,
+          details.globalPosition,
+          topColor,
+        ),
         child: AnimatedScale(
           scale: isHovered ? (isBossNode ? 1.28 : 1.16) : 1.0,
           duration: const Duration(milliseconds: 250),
@@ -2032,173 +2013,6 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
           Icon(icon, color: Colors.white, size: 32),
         ],
       ),
-    );
-  }
-
-  Widget _buildDuolingoChestNode() {
-    return Container(
-      width: 58,
-      height: 52,
-      decoration: BoxDecoration(
-        color: const Color(0xFFF3C79A),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE4A265), width: 3),
-        boxShadow: const [
-          BoxShadow(color: Color(0xFFC48145), offset: Offset(0, 5)),
-        ],
-      ),
-      child: Center(
-        child: Container(
-          width: 14,
-          height: 14,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDuoOwlMascot() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        // Blue Crystal Gem 💎
-        const Text('💎', style: TextStyle(fontSize: 22)),
-        const SizedBox(width: 4),
-
-        // Cute Green Mascot Body (Duo Owl)
-        Container(
-          width: 56,
-          height: 64,
-          decoration: BoxDecoration(
-            color: const Color(0xFF78C800),
-            borderRadius: BorderRadius.circular(28),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x35000000),
-                blurRadius: 8,
-                offset: Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              // Large White Eye Patches
-              Positioned(
-                top: 14,
-                child: Row(
-                  children: [
-                    Container(
-                      width: 18,
-                      height: 22,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Container(
-                          width: 8,
-                          height: 8,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF111111),
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 2),
-                    Container(
-                      width: 18,
-                      height: 22,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Container(
-                          width: 8,
-                          height: 8,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF111111),
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Orange Beak
-              Positioned(
-                top: 32,
-                child: Container(
-                  width: 10,
-                  height: 8,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFFF9600),
-                    borderRadius: BorderRadius.vertical(
-                      bottom: Radius.circular(5),
-                    ),
-                  ),
-                ),
-              ),
-
-              // Orange Feet
-              Positioned(
-                bottom: 2,
-                child: Row(
-                  children: [
-                    Container(
-                      width: 10,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFF9600),
-                        borderRadius: BorderRadius.circular(3),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      width: 10,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFF9600),
-                        borderRadius: BorderRadius.circular(3),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDuolingoWorkoutNode() {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        // Progress Ring Arc
-        const SizedBox(
-          width: 78,
-          height: 78,
-          child: CircularProgressIndicator(
-            value: 0.72,
-            strokeWidth: 5,
-            color: Color(0xFF58CC02),
-            backgroundColor: Color(0xFFE5E5E5),
-          ),
-        ),
-
-        // Node Button
-        _buildDuolingoNode(icon: Icons.fitness_center_rounded),
-      ],
     );
   }
 
@@ -3009,6 +2823,29 @@ class _BlinkingEyesWidgetState extends State<BlinkingEyesWidget>
   late AnimationController _blinkController;
   late Animation<double> _blinkAnimation;
   Timer? _blinkTimer;
+  Offset _eyeOffset = Offset.zero;
+
+  void _onMouseMove(PointerHoverEvent event) {
+    try {
+      final RenderBox? box = context.findRenderObject() as RenderBox?;
+      if (box == null || !box.hasSize) return;
+      final local = box.globalToLocal(event.position);
+      final cx = box.size.width / 2;
+      final cy = box.size.height / 2;
+      final dx = local.dx - cx;
+      final dy = local.dy - cy;
+      final dist = (dx * dx + dy * dy);
+      if (dist < 0.01) return;
+      final len = math.sqrt(dist);
+      final mag = len < 7.0 ? len : 7.0;
+      final nx = dx / len * mag;
+      final ny = dy / len * mag;
+      final clamped = Offset(nx, ny);
+      if ((clamped - _eyeOffset).distance > 0.3) {
+        setState(() => _eyeOffset = clamped);
+      }
+    } catch (_) {}
+  }
 
   @override
   void initState() {
@@ -3041,131 +2878,182 @@ class _BlinkingEyesWidgetState extends State<BlinkingEyesWidget>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _blinkAnimation,
-      builder: (context, child) {
-        final double scaleY = _blinkAnimation.value;
+    return MouseRegion(
+      onHover: _onMouseMove,
+      child: AnimatedBuilder(
+        animation: _blinkAnimation,
+        builder: (context, child) {
+          final double scaleY = _blinkAnimation.value;
+          const specFrameColor = Color(0xFF2C1B54); // Deep Navy Purple Spectacle Frame
 
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Eyebrows Row — curved arches
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomPaint(
-                  size: const Size(42, 14),
-                  painter: _EyebrowPainter(color: widget.accentDark),
-                ),
-                const SizedBox(width: 44),
-                CustomPaint(
-                  size: const Size(42, 14),
-                  painter: _EyebrowPainter(color: widget.accentDark),
-                ),
-              ],
-            ),
-            const SizedBox(height: 5),
-
-            // Eyes + Nostrils Row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Left Eye
-                Transform.scale(
-                  scaleY: scaleY,
-                  alignment: Alignment.center,
-                  child: _buildEye(isLeft: true),
-                ),
-
-                // Two nostril holes in center
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 10),
-                      Container(
-                        width: 9,
-                        height: 7,
-                        decoration: BoxDecoration(
-                          color: widget.accentDark.withValues(alpha: 0.65),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Container(
-                        width: 9,
-                        height: 7,
-                        decoration: BoxDecoration(
-                          color: widget.accentDark.withValues(alpha: 0.65),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                    ],
-                  ),
-                ),
-
-                // Right Eye
-                Transform.scale(
-                  scaleY: scaleY,
-                  alignment: Alignment.center,
-                  child: _buildEye(isLeft: false),
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildEye({required bool isLeft}) {
-    return Container(
-      width: 58,
-      height: 50,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(26),
-        border: Border.all(color: widget.accentDark, width: 3.0),
-        boxShadow: const [
-          BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 3)),
-        ],
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            left: isLeft ? 12 : 8,
-            top: 4,
-            child: Container(
-              width: 32,
-              height: 32,
-              decoration: const BoxDecoration(
-                color: Color(0xFF111111),
-                shape: BoxShape.circle,
-              ),
-              child: Stack(
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Curved Eyebrows Row above Spectacles
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Positioned(
-                    top: 5,
-                    left: 6,
-                    child: Container(
-                      width: 10,
-                      height: 10,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
+                  CustomPaint(
+                    size: const Size(44, 14),
+                    painter: _EyebrowPainter(color: widget.accentDark),
+                  ),
+                  const SizedBox(width: 42),
+                  CustomPaint(
+                    size: const Size(44, 14),
+                    painter: _EyebrowPainter(color: widget.accentDark),
                   ),
                 ],
               ),
-            ),
-          ),
-        ],
+              const SizedBox(height: 6),
+
+              // Spectacle Lenses + Connected Bridge Row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Left Spectacle Eye
+                  Transform.scale(
+                    scaleY: scaleY,
+                    alignment: Alignment.center,
+                    child: _buildSpectacleEye(isLeft: true, eyeOffset: _eyeOffset, frameColor: specFrameColor),
+                  ),
+
+                  // Spectacle Bridge Bar + Nostril Holes
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Spectacle Bridge connecting the two round frames
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: CustomPaint(
+                          size: const Size(26, 12),
+                          painter: _SpectacleBridgePainter(color: specFrameColor),
+                        ),
+                      ),
+                      // Nostrils below bridge
+                      Padding(
+                        padding: const EdgeInsets.only(top: 14),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 8,
+                              height: 6,
+                              decoration: BoxDecoration(
+                                color: widget.accentDark.withValues(alpha: 0.65),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Container(
+                              width: 8,
+                              height: 6,
+                              decoration: BoxDecoration(
+                                color: widget.accentDark.withValues(alpha: 0.65),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // Right Spectacle Eye
+                  Transform.scale(
+                    scaleY: scaleY,
+                    alignment: Alignment.center,
+                    child: _buildSpectacleEye(isLeft: false, eyeOffset: _eyeOffset, frameColor: specFrameColor),
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }
+
+  Widget _buildSpectacleEye({
+    required bool isLeft,
+    required Offset eyeOffset,
+    required Color frameColor,
+  }) {
+    return Container(
+      width: 66,
+      height: 66,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+        border: Border.all(color: frameColor, width: 5.5),
+        boxShadow: const [
+          BoxShadow(color: Colors.black26, blurRadius: 8, offset: Offset(0, 4)),
+        ],
+      ),
+      child: Center(
+        child: Transform.translate(
+          offset: eyeOffset,
+          child: Container(
+            width: 38,
+            height: 38,
+            decoration: const BoxDecoration(
+              color: Color(0xFF1565C0), // Rich Royal Blue Iris (matching reference spec image!)
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Container(
+                width: 22,
+                height: 22,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF0D0D0D), // Deep Black Pupil
+                  shape: BoxShape.circle,
+                ),
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 3,
+                      left: 3,
+                      child: Container(
+                        width: 7,
+                        height: 7,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Draws the arched bridge linking the left and right spectacle frames
+class _SpectacleBridgePainter extends CustomPainter {
+  final Color color;
+  const _SpectacleBridgePainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 5.0
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    final path = Path();
+    path.moveTo(0, size.height * 0.7);
+    path.quadraticBezierTo(size.width / 2, -2, size.width, size.height * 0.7);
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(_SpectacleBridgePainter oldDelegate) => oldDelegate.color != color;
 }
 
 // Draws a smooth upward-arched eyebrow with a theme-aware color
@@ -3387,72 +3275,87 @@ class BiboMonsterFacePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final cx = size.width / 2;
     final cy = size.height * 0.45;
+    final eyeCenterY = cy - 35.0;
 
-    final blackBorderPaint = Paint()
-      ..color = const Color(0xFF111111)
+    const specFrameColor = Color(0xFF2C1B54); // Deep Navy Purple Spectacle Frame
+    final specFramePaint = Paint()
+      ..color = specFrameColor
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 5.0
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
+      ..strokeWidth = 6.0
+      ..strokeCap = StrokeCap.round;
 
     final whiteFillPaint = Paint()
       ..color = const Color(0xFFFAFAFA)
       ..style = PaintingStyle.fill;
 
-    // 1. EYES & PUPILS (Smoothly Blinking, Two distinct tilted ovals touching at inner border)
-    const eyeW = 84.0;
-    const eyeH = 102.0;
-    final pupilPaint = Paint()..color = const Color(0xFF111111);
+    final irisPaint = Paint()..color = const Color(0xFF1565C0); // Royal Blue Iris
+    final pupilPaint = Paint()..color = const Color(0xFF0D0D0D); // Black Pupil
     final shinePaint = Paint()..color = Colors.white;
 
-    final eyeCenterY = cy - 35.0;
+    final eyebrowPaint = Paint()
+      ..color = chinColor.withValues(alpha: 0.95)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 5.5
+      ..strokeCap = StrokeCap.round;
 
+    // ─── 0. CURVED EYEBROWS ABOVE SPECTACLES ───
+    final eyebrowLeftPath = Path()
+      ..moveTo(cx - 74.0, eyeCenterY - 48.0)
+      ..quadraticBezierTo(cx - 46.0, eyeCenterY - 64.0, cx - 18.0, eyeCenterY - 48.0);
+
+    final eyebrowRightPath = Path()
+      ..moveTo(cx + 18.0, eyeCenterY - 48.0)
+      ..quadraticBezierTo(cx + 46.0, eyeCenterY - 64.0, cx + 74.0, eyeCenterY - 48.0);
+
+    canvas.drawPath(eyebrowLeftPath, eyebrowPaint);
+    canvas.drawPath(eyebrowRightPath, eyebrowPaint);
+
+    // ─── 1. SPECTACLE BRIDGE ───
+    final bridgePath = Path()
+      ..moveTo(cx - 16.0, eyeCenterY - 4.0)
+      ..quadraticBezierTo(cx, eyeCenterY - 18.0, cx + 16.0, eyeCenterY - 4.0);
+    canvas.drawPath(bridgePath, specFramePaint);
+
+    // ─── 2. EYES & PUPILS (Blinking Spectacle Lenses) ───
     canvas.save();
-    // Apply vertical blink scaling transformation around eyeCenterY
     canvas.translate(cx, eyeCenterY);
     canvas.scale(1.0, eyeScaleY);
     canvas.translate(-cx, -eyeCenterY);
 
-    // Left Eye (Tilted slightly right towards center)
-    canvas.save();
-    canvas.translate(cx - 41.0, eyeCenterY);
-    canvas.rotate(0.18);
-    final leftEyeLocalRect = Rect.fromCenter(
-      center: Offset.zero,
-      width: eyeW,
-      height: eyeH,
-    );
-    canvas.drawOval(leftEyeLocalRect, whiteFillPaint);
-    canvas.drawOval(leftEyeLocalRect, blackBorderPaint);
+    const specRadius = 42.0;
 
-    // Left Pupil & Glossy Shine — moves with mouse
-    final leftPupilLocal = Offset(3.5 + eyeOffset.dx, 4.0 + eyeOffset.dy);
-    canvas.drawCircle(leftPupilLocal, 18.5, pupilPaint);
+    // Left Spectacle Eye
+    canvas.save();
+    canvas.translate(cx - 44.0, eyeCenterY);
+    final leftEyeRect = Rect.fromCircle(center: Offset.zero, radius: specRadius);
+    canvas.drawOval(leftEyeRect, whiteFillPaint);
+    canvas.drawOval(leftEyeRect, specFramePaint);
+
+    // Left Royal Blue Iris & Black Pupil — moves with mouse
+    final leftIrisCenter = Offset(eyeOffset.dx * 1.5, eyeOffset.dy * 1.5);
+    canvas.drawCircle(leftIrisCenter, 24.0, irisPaint);
+    canvas.drawCircle(leftIrisCenter, 14.0, pupilPaint);
     canvas.drawCircle(
-      Offset(leftPupilLocal.dx - 5.0, leftPupilLocal.dy - 5.0),
-      4.8,
+      Offset(leftIrisCenter.dx - 4.5, leftIrisCenter.dy - 4.5),
+      4.5,
       shinePaint,
     );
     canvas.restore();
 
-    // Right Eye (Tilted slightly left towards center)
+    // Right Spectacle Eye
     canvas.save();
-    canvas.translate(cx + 41.0, eyeCenterY);
-    canvas.rotate(-0.18);
-    final rightEyeLocalRect = Rect.fromCenter(
-      center: Offset.zero,
-      width: eyeW,
-      height: eyeH,
-    );
-    canvas.drawOval(rightEyeLocalRect, whiteFillPaint);
-    canvas.drawOval(rightEyeLocalRect, blackBorderPaint);
+    canvas.translate(cx + 44.0, eyeCenterY);
+    final rightEyeRect = Rect.fromCircle(center: Offset.zero, radius: specRadius);
+    canvas.drawOval(rightEyeRect, whiteFillPaint);
+    canvas.drawOval(rightEyeRect, specFramePaint);
 
-    // Right Pupil & Glossy Shine — moves with mouse
-    final rightPupilLocal = Offset(-3.5 + eyeOffset.dx, 4.0 + eyeOffset.dy);
-    canvas.drawCircle(rightPupilLocal, 18.5, pupilPaint);
+    // Right Royal Blue Iris & Black Pupil — moves with mouse
+    final rightIrisCenter = Offset(eyeOffset.dx * 1.5, eyeOffset.dy * 1.5);
+    canvas.drawCircle(rightIrisCenter, 24.0, irisPaint);
+    canvas.drawCircle(rightIrisCenter, 14.0, pupilPaint);
     canvas.drawCircle(
-      Offset(rightPupilLocal.dx - 5.0, rightPupilLocal.dy - 5.0),
-      4.8,
+      Offset(rightIrisCenter.dx - 4.5, rightIrisCenter.dy - 4.5),
+      4.5,
       shinePaint,
     );
     canvas.restore();
@@ -4672,4 +4575,944 @@ class OrganicBlobBubblePainter extends CustomPainter {
   bool shouldRepaint(covariant OrganicBlobBubblePainter oldDelegate) =>
       oldDelegate.phase != phase || oldDelegate.velocity != velocity;
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// COMPACT 3D FLOATING EMOTION CARD INTERFACE
+// ─────────────────────────────────────────────────────────────────────────────
+class _CompactEmotionCard extends StatelessWidget {
+  final double emotionValue;
+  final ValueChanged<double> onChanged;
+
+  const _CompactEmotionCard({
+    required this.emotionValue,
+    required this.onChanged,
+  });
+
+  Color _lerp4Colors(Color c1, Color c2, Color c3, Color c4, double t) {
+    if (t <= 0.33) {
+      return Color.lerp(c1, c2, t / 0.33)!;
+    } else if (t <= 0.66) {
+      return Color.lerp(c2, c3, (t - 0.33) / 0.33)!;
+    } else {
+      return Color.lerp(c3, c4, (t - 0.66) / 0.34)!;
+    }
+  }
+
+  Color _getThemeTopColor(double t) {
+    return _lerp4Colors(
+      const Color(0xFFFF6B55), // sad (Red)
+      const Color(0xFFFF6D00), // grumpy (Burnt Orange)
+      const Color(0xFF94D561), // silly (Apple Lime Green from Age Selection!)
+      const Color(0xFFFFE082), // awesome (Gold)
+      t,
+    );
+  }
+
+  Color _getThemeBottomColor(double t) {
+    return _lerp4Colors(
+      const Color(0xFFE53935), // sad
+      const Color(0xFFE65100), // grumpy
+      const Color(0xFF3F771A), // silly (Deep Forest Green from Age Selection!)
+      const Color(0xFFFFB300), // awesome
+      t,
+    );
+  }
+
+  String _getEmotionTitle(double t) {
+    if (t < 0.25) {
+      return 'sad';
+    } else if (t < 0.50) {
+      return 'grumpy';
+    } else if (t < 0.75) {
+      return 'silly';
+    } else {
+      return 'happy';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final cardW = math.min(size.width * 0.88, 340.0);
+    final cardH = math.min(size.height * 0.70, 500.0);
+
+    final topColor = _getThemeTopColor(emotionValue);
+    final bottomColor = _getThemeBottomColor(emotionValue);
+    final title = _getEmotionTitle(emotionValue);
+
+    return Container(
+      width: cardW,
+      height: cardH,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [topColor, bottomColor],
+        ),
+        borderRadius: BorderRadius.circular(34),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.38),
+            blurRadius: 32,
+            offset: const Offset(0, 16),
+          ),
+          BoxShadow(
+            color: topColor.withValues(alpha: 0.40),
+            blurRadius: 44,
+            offset: const Offset(0, 20),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(32),
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            // Top Emotion Title Text ("sad", "great", "awesome")
+            Positioned(
+              top: 24,
+              child: Text(
+                title,
+                style: GoogleFonts.fredoka(
+                  fontSize: 34,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white.withValues(alpha: 0.95),
+                  letterSpacing: 1.0,
+                  shadows: const [
+                    Shadow(
+                      color: Color(0x30000000),
+                      blurRadius: 6,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Monster Face (Centered in top portion of card)
+            Positioned.fill(
+              top: 48,
+              bottom: 110,
+              child: InteractiveEmotionMonsterFaceWidget(
+                emotionValue: emotionValue,
+                chinColor: bottomColor,
+              ),
+            ),
+
+            // White 3D Dock Container at Bottom
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: 120,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(32),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 10,
+                      offset: const Offset(0, -4),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
+                  child: Center(
+                    child: _CompactEmotionSlider(
+                      value: emotionValue,
+                      onChanged: onChanged,
+                      themeColor: topColor,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// COMPACT 3D SLIDER WITH TICK MARKERS (| . | . |) & FLOATING 3D SPHERE
+// ─────────────────────────────────────────────────────────────────────────────
+class _CompactEmotionSlider extends StatefulWidget {
+  final double value;
+  final ValueChanged<double> onChanged;
+  final Color themeColor;
+
+  const _CompactEmotionSlider({
+    required this.value,
+    required this.onChanged,
+    required this.themeColor,
+  });
+
+  @override
+  State<_CompactEmotionSlider> createState() => _CompactEmotionSliderState();
+}
+
+class _CompactEmotionSliderState extends State<_CompactEmotionSlider> {
+  void _updateValueFromOffset(Offset localPos, double trackWidth) {
+    final double clampedX = localPos.dx.clamp(0.0, trackWidth);
+    final double newValue = (clampedX / trackWidth).clamp(0.0, 1.0);
+    widget.onChanged(newValue);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final trackWidth = constraints.maxWidth;
+        const thumbRadius = 18.0;
+        final thumbX = (widget.value * trackWidth).clamp(0.0, trackWidth);
+
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onPanStart: (details) =>
+              _updateValueFromOffset(details.localPosition, trackWidth),
+          onPanUpdate: (details) =>
+              _updateValueFromOffset(details.localPosition, trackWidth),
+          onTapDown: (details) =>
+              _updateValueFromOffset(details.localPosition, trackWidth),
+          child: SizedBox(
+            height: 60,
+            width: trackWidth,
+            child: Stack(
+              alignment: Alignment.centerLeft,
+              children: [
+                // Track Container with 4 Notch Markers (| . | . | . |)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 4,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF222222),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    Container(
+                      width: 4,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFB0B0B0),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    Container(
+                      width: 4,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFB0B0B0),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    Container(
+                      width: 4,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFB0B0B0),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ],
+                ),
+
+                // Floating 3D Red/Theme Sphere Knob Handle
+                Positioned(
+                  left: (thumbX - thumbRadius).clamp(
+                    0.0,
+                    trackWidth - thumbRadius * 2,
+                  ),
+                  top: 12,
+                  child: Container(
+                    width: thumbRadius * 2,
+                    height: thumbRadius * 2,
+                    decoration: BoxDecoration(
+                      color: widget.themeColor,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: widget.themeColor.withValues(alpha: 0.50),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5),
+                        ),
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.20),
+                          blurRadius: 6,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// INTERACTIVE EMOTION MONSTER FACE WIDGET & PAINTER
+// ─────────────────────────────────────────────────────────────────────────────
+class InteractiveEmotionMonsterFaceWidget extends StatefulWidget {
+  final double emotionValue; // 0.0 to 1.0
+  final Color chinColor;
+
+  const InteractiveEmotionMonsterFaceWidget({
+    super.key,
+    required this.emotionValue,
+    required this.chinColor,
+  });
+
+  @override
+  State<InteractiveEmotionMonsterFaceWidget> createState() =>
+      _InteractiveEmotionMonsterFaceWidgetState();
+}
+
+class _InteractiveEmotionMonsterFaceWidgetState
+    extends State<InteractiveEmotionMonsterFaceWidget>
+    with TickerProviderStateMixin {
+  late AnimationController _blinkController;
+  late AnimationController _tearController;
+  Offset _pointerOffset = Offset.zero;
+
+  @override
+  void initState() {
+    super.initState();
+    _blinkController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+    );
+    _tearController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1400),
+    )..repeat();
+
+    _scheduleNextBlink();
+  }
+
+  void _scheduleNextBlink() {
+    Future.delayed(
+      Duration(milliseconds: 2500 + math.Random().nextInt(3000)),
+      () {
+        if (mounted) {
+          _blinkController.forward().then((_) {
+            if (mounted) {
+              _blinkController.reverse().then((_) {
+                if (mounted) _scheduleNextBlink();
+              });
+            }
+          });
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _blinkController.dispose();
+    _tearController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onHover: (event) {
+        final RenderBox? box = context.findRenderObject() as RenderBox?;
+        if (box != null) {
+          final localPos = box.globalToLocal(event.position);
+          final size = box.size;
+          if (size.width > 0 && size.height > 0) {
+            setState(() {
+              _pointerOffset = Offset(
+                ((localPos.dx / size.width) - 0.5) * 2.0,
+                ((localPos.dy / size.height) - 0.5) * 2.0,
+              );
+            });
+          }
+        }
+      },
+      onExit: (_) {
+        setState(() {
+          _pointerOffset = Offset.zero;
+        });
+      },
+      child: AnimatedBuilder(
+        animation: Listenable.merge([_blinkController, _tearController]),
+        builder: (context, child) {
+          final blinkVal = _blinkController.value;
+          final eyeScaleY = 1.0 - (blinkVal * 0.92);
+
+          return CustomPaint(
+            size: Size.infinite,
+            painter: _InteractiveEmotionMonsterFacePainter(
+              emotionValue: widget.emotionValue,
+              chinColor: widget.chinColor,
+              eyeScaleY: eyeScaleY,
+              tearProgress: _tearController.value,
+              pointerOffset: _pointerOffset,
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _InteractiveEmotionMonsterFacePainter extends CustomPainter {
+  final double emotionValue; // 0.0 to 1.0
+  final Color chinColor;
+  final double eyeScaleY;
+  final double tearProgress;
+  final Offset pointerOffset;
+
+  _InteractiveEmotionMonsterFacePainter({
+    required this.emotionValue,
+    required this.chinColor,
+    required this.eyeScaleY,
+    required this.tearProgress,
+    required this.pointerOffset,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final cx = size.width / 2;
+    final cy = size.height / 2 - 10.0;
+
+    // 1. EYEBROWS MORPHING (Distinct Expressive Curved Eyebrow Arches)
+    final browPaint = Paint()
+      ..color = const Color(0xFF111111)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 9.0
+      ..strokeCap = StrokeCap.round;
+
+    final browShadowPaint = Paint()
+      ..color = const Color(0x30000000)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 10.0
+      ..strokeCap = StrokeCap.round
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
+
+    final leftBrowPath = Path();
+    final rightBrowPath = Path();
+
+    if (emotionValue < 0.25) {
+      // 0.0 ("sad"): Worried high-arched sad eyebrows (🥺)
+      final t = (emotionValue / 0.25).clamp(0.0, 1.0);
+      final outerY = cy - 64.0 - 4.0 * t;
+      final innerY = cy - 88.0 + 4.0 * t;
+      final archY = cy - 106.0 + 4.0 * t;
+
+      leftBrowPath.moveTo(cx - 72, outerY);
+      leftBrowPath.quadraticBezierTo(cx - 44, archY, cx - 18, innerY);
+
+      rightBrowPath.moveTo(cx + 18, innerY);
+      rightBrowPath.quadraticBezierTo(cx + 44, archY, cx + 72, outerY);
+    } else if (emotionValue < 0.50) {
+      // 0.33 ("grumpy"): Fierce angry curved V-eyebrows (😠)
+      leftBrowPath.moveTo(cx - 72, cy - 102.0);
+      leftBrowPath.quadraticBezierTo(cx - 44, cy - 72.0, cx - 18, cy - 62.0);
+
+      rightBrowPath.moveTo(cx + 18, cy - 62.0);
+      rightBrowPath.quadraticBezierTo(cx + 44, cy - 72.0, cx + 72, cy - 102.0);
+    } else if (emotionValue < 0.75) {
+      // 0.66 ("silly"): Playful bouncy curved raised eyebrows (😜)
+      leftBrowPath.moveTo(cx - 70, cy - 82.0);
+      leftBrowPath.quadraticBezierTo(cx - 44, cy - 108.0, cx - 18, cy - 90.0);
+
+      rightBrowPath.moveTo(cx + 18, cy - 90.0);
+      rightBrowPath.quadraticBezierTo(cx + 44, cy - 108.0, cx + 70, cy - 82.0);
+    } else {
+      // 1.0 ("awesome"): Joyful high curved happy eyebrows (😊)
+      leftBrowPath.moveTo(cx - 70, cy - 84.0);
+      leftBrowPath.quadraticBezierTo(cx - 44, cy - 114.0, cx - 18, cy - 88.0);
+
+      rightBrowPath.moveTo(cx + 18, cy - 88.0);
+      rightBrowPath.quadraticBezierTo(cx + 44, cy - 114.0, cx + 70, cy - 84.0);
+    }
+
+    canvas.drawPath(leftBrowPath.shift(const Offset(0, 3)), browShadowPaint);
+    canvas.drawPath(rightBrowPath.shift(const Offset(0, 3)), browShadowPaint);
+    canvas.drawPath(leftBrowPath, browPaint);
+    canvas.drawPath(rightBrowPath, browPaint);
+
+    // 2. EYES & EYELIDS MORPHING (Interactive Mouse-Following Pupils)
+    final eyeCenterY = cy - 30.0;
+    const eyeW = 52.0;
+    const eyeH = 58.0;
+
+    final whiteFillPaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill;
+
+    final blackBorderPaint = Paint()
+      ..color = const Color(0xFF111111)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4.5;
+
+    final pupilPaint = Paint()
+      ..color = const Color(0xFF111111)
+      ..style = PaintingStyle.fill;
+
+    final shinePaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill;
+
+    // Pupil shift based on interactive mouse pointer direction
+    final pupilFollowX = (pointerOffset.dx * 13.0).clamp(-14.0, 14.0);
+    final pupilFollowY = (pointerOffset.dy * 13.0).clamp(-14.0, 14.0);
+    final basePupilY = emotionValue < 0.25 ? 2.0 : 0.0;
+
+    canvas.save();
+    canvas.translate(cx, eyeCenterY);
+    canvas.scale(1.0, eyeScaleY);
+    canvas.translate(-cx, -eyeCenterY);
+
+    final isSilly = emotionValue >= 0.50 && emotionValue < 0.75;
+    final isGrumpy = emotionValue >= 0.25 && emotionValue < 0.50;
+
+    // Left Eye
+    canvas.save();
+    canvas.translate(cx - 38.0, eyeCenterY);
+    final leftEyeRect = Rect.fromCenter(
+      center: Offset.zero,
+      width: eyeW,
+      height: eyeH,
+    );
+
+    if (isSilly) {
+      // Winking Eye
+      canvas.drawOval(leftEyeRect, Paint()..color = chinColor..style = PaintingStyle.fill);
+      canvas.drawOval(leftEyeRect, blackBorderPaint);
+
+      final winkArcPath = Path()
+        ..moveTo(-eyeW / 2 + 4, 0)
+        ..quadraticBezierTo(0, 14, eyeW / 2 - 4, 0);
+      canvas.drawPath(winkArcPath, blackBorderPaint);
+    } else {
+      canvas.drawOval(leftEyeRect, whiteFillPaint);
+      canvas.drawOval(leftEyeRect, blackBorderPaint);
+
+      final pupilOffsetLeft = Offset(
+        pupilFollowX,
+        basePupilY + pupilFollowY,
+      );
+      canvas.drawCircle(pupilOffsetLeft, 12.0, pupilPaint);
+      canvas.drawCircle(
+        Offset(pupilOffsetLeft.dx - 3.5, pupilOffsetLeft.dy - 3.5),
+        3.8,
+        shinePaint,
+      );
+    }
+    canvas.restore();
+
+    // Right Eye
+    canvas.save();
+    canvas.translate(cx + 38.0, eyeCenterY);
+    final rightEyeRect = Rect.fromCenter(
+      center: Offset.zero,
+      width: eyeW,
+      height: eyeH,
+    );
+
+    canvas.drawOval(rightEyeRect, whiteFillPaint);
+    canvas.drawOval(rightEyeRect, blackBorderPaint);
+
+    if (isSilly) {
+      // Big Anime Open Eye with Green Iris
+      final greenIrisPaint = Paint()
+        ..color = const Color(0xFF78C800)
+        ..style = PaintingStyle.fill;
+      final greenIrisCenter = Offset(
+        -4.0 + pupilFollowX * 0.8,
+        2.0 + pupilFollowY * 0.8,
+      );
+      canvas.drawCircle(greenIrisCenter, 16.0, greenIrisPaint);
+      canvas.drawCircle(greenIrisCenter, 10.0, pupilPaint);
+      canvas.drawCircle(
+        Offset(greenIrisCenter.dx - 5.0, greenIrisCenter.dy - 5.0),
+        5.0,
+        shinePaint,
+      );
+    } else {
+      final pupilOffsetRight = Offset(
+        pupilFollowX,
+        basePupilY + pupilFollowY,
+      );
+      canvas.drawCircle(pupilOffsetRight, 12.0, pupilPaint);
+      canvas.drawCircle(
+        Offset(pupilOffsetRight.dx - 3.5, pupilOffsetRight.dy - 3.5),
+        3.8,
+        shinePaint,
+      );
+    }
+    canvas.restore();
+
+    // Glaring Slanted Top Eyelids for Grumpy
+    if (isGrumpy) {
+      final lidFillPaint = Paint()
+        ..color = chinColor
+        ..style = PaintingStyle.fill;
+      final lidLinePaint = Paint()
+        ..color = const Color(0xFF111111)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 5.0
+        ..strokeCap = StrokeCap.round;
+
+      final leftLidPath = Path()
+        ..moveTo(cx - 38.0 - eyeW / 2 - 4, eyeCenterY - eyeH / 2 - 4)
+        ..lineTo(cx - 38.0 + eyeW / 2 + 4, eyeCenterY - 4)
+        ..lineTo(cx - 38.0 + eyeW / 2 + 4, eyeCenterY - eyeH / 2 - 4)
+        ..close();
+      canvas.drawPath(leftLidPath, lidFillPaint);
+      canvas.drawLine(
+        Offset(cx - 38.0 - eyeW / 2 - 4, eyeCenterY - eyeH / 2 - 4),
+        Offset(cx - 38.0 + eyeW / 2 + 4, eyeCenterY - 4),
+        lidLinePaint,
+      );
+
+      final rightLidPath = Path()
+        ..moveTo(cx + 38.0 + eyeW / 2 + 4, eyeCenterY - eyeH / 2 - 4)
+        ..lineTo(cx + 38.0 - eyeW / 2 - 4, eyeCenterY - 4)
+        ..lineTo(cx + 38.0 - eyeW / 2 - 4, eyeCenterY - eyeH / 2 - 4)
+        ..close();
+      canvas.drawPath(rightLidPath, lidFillPaint);
+      canvas.drawLine(
+        Offset(cx + 38.0 + eyeW / 2 + 4, eyeCenterY - eyeH / 2 - 4),
+        Offset(cx + 38.0 - eyeW / 2 - 4, eyeCenterY - 4),
+        lidLinePaint,
+      );
+    }
+
+    canvas.restore(); // Restore blink scale transform
+
+    // 2.5 ANIMATED FALLING TEARDROPS FOR SAD EMOTION (Continuous Dripping Tears)
+    if (emotionValue < 0.25) {
+      void drawTearDrop(Offset topPoint, double dropProgress) {
+        final opacity = (1.0 - dropProgress).clamp(0.0, 1.0);
+        if (opacity <= 0.05) return;
+
+        final dropY = topPoint.dy + dropProgress * 70.0;
+        final dropX = topPoint.dx;
+        final dropSize = 6.5 + dropProgress * 3.0;
+
+        final tearPath = Path()
+          ..moveTo(dropX, dropY - dropSize * 1.4)
+          ..cubicTo(
+            dropX + dropSize,
+            dropY - dropSize * 0.2,
+            dropX + dropSize,
+            dropY + dropSize,
+            dropX,
+            dropY + dropSize,
+          )
+          ..cubicTo(
+            dropX - dropSize,
+            dropY + dropSize,
+            dropX - dropSize,
+            dropY - dropSize * 0.2,
+            dropX,
+            dropY - dropSize * 1.4,
+          );
+
+        final tearFillPaint = Paint()
+          ..color = const Color(0xFF4FC3F7).withValues(alpha: opacity)
+          ..style = PaintingStyle.fill;
+
+        final tearBorderPaint = Paint()
+          ..color = const Color(0xFF0288D1).withValues(alpha: opacity)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.0;
+
+        final tearShinePaint = Paint()
+          ..color = Colors.white.withValues(alpha: opacity * 0.9)
+          ..style = PaintingStyle.fill;
+
+        canvas.drawPath(tearPath, tearFillPaint);
+        canvas.drawPath(tearPath, tearBorderPaint);
+        canvas.drawCircle(
+          Offset(dropX - dropSize * 0.3, dropY - dropSize * 0.2),
+          dropSize * 0.3,
+          tearShinePaint,
+        );
+      }
+
+      // Left Eye Teardrops (Staggered continuous flow)
+      final leftEyeOrigin = Offset(cx - 38.0 - 10.0, eyeCenterY + eyeH / 2 - 4.0);
+      drawTearDrop(leftEyeOrigin, tearProgress);
+      drawTearDrop(leftEyeOrigin, (tearProgress + 0.5) % 1.0);
+
+      // Right Eye Teardrops (Staggered continuous flow)
+      final rightEyeOrigin = Offset(cx + 38.0 + 10.0, eyeCenterY + eyeH / 2 - 4.0);
+      drawTearDrop(rightEyeOrigin, (tearProgress + 0.25) % 1.0);
+      drawTearDrop(rightEyeOrigin, (tearProgress + 0.75) % 1.0);
+    }
+
+    // 3. UNIFIED PLUSH 3D CLAY CURVED SMILE MOUTH (Expressive curved smile shape)
+    final mouthCy = cy + 40.0;
+    final mouthPath = Path();
+    double mouthW, mouthH;
+    bool showTeeth, showTongue;
+
+    if (emotionValue >= 0.75) {
+      // 1.0 ("happy" / "awesome"): Joyful open curved smile (U-crescent smile curve!)
+      final t = ((emotionValue - 0.75) / 0.25).clamp(0.0, 1.0);
+      mouthW = 128.0 + 14.0 * t;
+      mouthH = 48.0 + 16.0 * t;
+
+      final leftCorner = Offset(cx - mouthW / 2, mouthCy - 12.0);
+      final rightCorner = Offset(cx + mouthW / 2, mouthCy - 12.0);
+      final topControl = Offset(cx, mouthCy - 4.0);
+      final bottomCenterY = mouthCy + mouthH * 0.75;
+
+      mouthPath.moveTo(leftCorner.dx, leftCorner.dy);
+      // Top lip: gentle curve connecting corners
+      mouthPath.quadraticBezierTo(
+        topControl.dx,
+        topControl.dy,
+        rightCorner.dx,
+        rightCorner.dy,
+      );
+      // Right corner rounded arc into bottom smile curve
+      mouthPath.cubicTo(
+        rightCorner.dx + 4.0, rightCorner.dy + mouthH * 0.35,
+        cx + mouthW * 0.32, bottomCenterY,
+        cx, bottomCenterY,
+      );
+      // Bottom smile curve sweeping back up to left corner
+      mouthPath.cubicTo(
+        cx - mouthW * 0.32, bottomCenterY,
+        leftCorner.dx - 4.0, leftCorner.dy + mouthH * 0.35,
+        leftCorner.dx, leftCorner.dy,
+      );
+      mouthPath.close();
+
+      showTeeth = true;
+      showTongue = false;
+    } else if (emotionValue >= 0.50) {
+      // 0.66 ("silly"): Cheerful grinning curved smile with tongue
+      final t = ((emotionValue - 0.50) / 0.25).clamp(0.0, 1.0);
+      mouthW = 118.0 + 8.0 * t;
+      mouthH = 40.0 + 8.0 * t;
+
+      final leftCorner = Offset(cx - mouthW / 2, mouthCy - 10.0);
+      final rightCorner = Offset(cx + mouthW / 2, mouthCy - 10.0);
+      final topControl = Offset(cx, mouthCy - 3.0);
+      final bottomCenterY = mouthCy + mouthH * 0.70;
+
+      mouthPath.moveTo(leftCorner.dx, leftCorner.dy);
+      mouthPath.quadraticBezierTo(
+        topControl.dx,
+        topControl.dy,
+        rightCorner.dx,
+        rightCorner.dy,
+      );
+      mouthPath.cubicTo(
+        rightCorner.dx + 4.0, rightCorner.dy + mouthH * 0.35,
+        cx + mouthW * 0.32, bottomCenterY,
+        cx, bottomCenterY,
+      );
+      mouthPath.cubicTo(
+        cx - mouthW * 0.32, bottomCenterY,
+        leftCorner.dx - 4.0, leftCorner.dy + mouthH * 0.35,
+        leftCorner.dx, leftCorner.dy,
+      );
+      mouthPath.close();
+
+      showTeeth = true;
+      showTongue = true;
+    } else if (emotionValue >= 0.25) {
+      // 0.33 ("grumpy"): Tight annoyed downturned curved mouth
+      final t = ((emotionValue - 0.25) / 0.25).clamp(0.0, 1.0);
+      mouthW = 114.0 - 4.0 * t;
+      mouthH = 26.0 + 4.0 * t;
+
+      final cornerY = mouthCy + 14.0;
+      final topArchY = mouthCy - 6.0;
+      final bottomArchY = mouthCy + 8.0;
+
+      final leftCorner = Offset(cx - mouthW / 2, cornerY);
+      final rightCorner = Offset(cx + mouthW / 2, cornerY);
+
+      mouthPath.moveTo(leftCorner.dx, leftCorner.dy);
+      mouthPath.quadraticBezierTo(
+        cx,
+        topArchY,
+        rightCorner.dx,
+        rightCorner.dy,
+      );
+      mouthPath.quadraticBezierTo(
+        cx,
+        bottomArchY,
+        leftCorner.dx,
+        leftCorner.dy,
+      );
+      mouthPath.close();
+
+      showTeeth = true;
+      showTongue = false;
+    } else {
+      // 0.0 ("sad"): Deep downturned sad frown curve (drooping corners ☹️)
+      final t = (emotionValue / 0.25).clamp(0.0, 1.0);
+      mouthW = 118.0 - 8.0 * t;
+      mouthH = 34.0;
+
+      final cornerY = mouthCy + 24.0 - 4.0 * t;
+      final topArchY = mouthCy - 14.0 + 4.0 * t;
+      final bottomArchY = mouthCy + 4.0 + 2.0 * t;
+
+      final leftCorner = Offset(cx - mouthW / 2, cornerY);
+      final rightCorner = Offset(cx + mouthW / 2, cornerY);
+
+      mouthPath.moveTo(leftCorner.dx, leftCorner.dy);
+      // Top lip: Arches UPWARDS high in the middle into a sad frown arc
+      mouthPath.quadraticBezierTo(
+        cx,
+        topArchY,
+        rightCorner.dx,
+        rightCorner.dy,
+      );
+      // Bottom lip: Follows frown curve, arching UP in the middle
+      mouthPath.quadraticBezierTo(
+        cx,
+        bottomArchY,
+        leftCorner.dx,
+        leftCorner.dy,
+      );
+      mouthPath.close();
+
+      showTeeth = true;
+      showTongue = false;
+    }
+
+    // 0. Soft 3D Drop Shadow Under Plush Lip Rim & Mouth Cavity
+    final mouthShadowStrokePaint = Paint()
+      ..color = Colors.black.withValues(alpha: 0.35)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 18.0
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6.0);
+
+    final mouthShadowFillPaint = Paint()
+      ..color = Colors.black.withValues(alpha: 0.24)
+      ..style = PaintingStyle.fill
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8.0);
+
+    // Draw drop shadow behind mouth
+    canvas.drawPath(mouthPath.shift(const Offset(0, 5.0)), mouthShadowFillPaint);
+    canvas.drawPath(mouthPath.shift(const Offset(0, 5.0)), mouthShadowStrokePaint);
+
+    // 1. Thick Plush 3D Clay Outer Lip Bevel Rim (16px)
+    final plushLipRimPaint = Paint()
+      ..color = const Color(0xFFFFB74D) // Signature warm plush 3D lip bevel highlight
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 16.0
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    // 2. Inner Dark Mouth Cavity Fill
+    final mouthCavityPaint = Paint()
+      ..color = const Color(0xFF1A1A1A)
+      ..style = PaintingStyle.fill;
+
+    // 3. Inner Black Contour Border (4px)
+    final mouthOutlinePaint = Paint()
+      ..color = const Color(0xFF111111)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4.0
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    // Draw outer plush lip rim
+    canvas.drawPath(mouthPath, plushLipRimPaint);
+
+    // Draw inner dark cavity
+    canvas.drawPath(mouthPath, mouthCavityPaint);
+
+    // Clip & Draw Teeth / Tongue inside Cavity
+    canvas.save();
+    canvas.clipPath(mouthPath);
+
+    if (emotionValue >= 0.75) {
+      // Smooth Solid White Top Tooth Band following the top smile curve
+      final toothBarPath = Path()
+        ..moveTo(cx - mouthW / 2 - 10, mouthCy - 30.0)
+        ..lineTo(cx + mouthW / 2 + 10, mouthCy - 30.0)
+        ..lineTo(cx + mouthW / 2 + 10, mouthCy + 4.0)
+        ..quadraticBezierTo(cx, mouthCy + 14.0, cx - mouthW / 2 - 10, mouthCy + 4.0)
+        ..close();
+
+      final toothBarPaint = Paint()..color = Colors.white..style = PaintingStyle.fill;
+      final toothBarBorderPaint = Paint()
+        ..color = const Color(0xFF111111)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 3.0;
+
+      canvas.drawPath(toothBarPath, toothBarPaint);
+      canvas.drawPath(toothBarPath, toothBarBorderPaint);
+    } else {
+      if (showTeeth) {
+        final toothPaint = Paint()
+          ..color = Colors.white
+          ..style = PaintingStyle.fill;
+        final toothBorderPaint = Paint()
+          ..color = const Color(0xFF222222)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.6;
+
+        const numTeeth = 6;
+        final toothW = (mouthW - 16) / numTeeth;
+        final toothTop = mouthCy - 10.0;
+
+        for (int i = 0; i < numTeeth; i++) {
+          final tLeft = cx - (mouthW - 16) / 2 + i * toothW;
+          final tRect = Rect.fromLTWH(tLeft, toothTop, toothW - 1, 12);
+          canvas.drawRect(tRect, toothPaint);
+          canvas.drawRect(tRect, toothBorderPaint);
+        }
+      }
+
+      if (showTongue && emotionValue >= 0.50) {
+        // "silly": Cheeky side tongue for winking face
+        final tonguePaint = Paint()
+          ..color = const Color(0xFFFF5252)
+          ..style = PaintingStyle.fill;
+        final tongueCenter = Offset(cx + 14.0, mouthCy + mouthH * 0.40);
+        canvas.drawCircle(tongueCenter, mouthW * 0.32, tonguePaint);
+      }
+    }
+    canvas.restore();
+
+    // Draw inner black contour border on top
+    canvas.drawPath(mouthPath, mouthOutlinePaint);
+  }
+
+  @override
+  bool shouldRepaint(
+    covariant _InteractiveEmotionMonsterFacePainter oldDelegate,
+  ) {
+    return oldDelegate.emotionValue != emotionValue ||
+        oldDelegate.chinColor != chinColor ||
+        oldDelegate.eyeScaleY != eyeScaleY ||
+        oldDelegate.tearProgress != tearProgress ||
+        oldDelegate.pointerOffset != pointerOffset;
+  }
+}
+
 

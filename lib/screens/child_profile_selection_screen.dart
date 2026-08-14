@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../qa_pipeline/database/child_repository.dart';
 import '../screens/onboarding_screen.dart';
 import 'game_map_1913_screen.dart';
+import '../widgets/smoke_bomb_transition.dart';
 
 /// Japanese-Inspired Child Profile Selection Screen ("Who are you?")
 /// Features:
@@ -106,13 +107,14 @@ class _ChildProfileSelectionScreenState extends State<ChildProfileSelectionScree
     }
 
     Navigator.of(context).pushReplacement(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            const GameMap1913Screen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(opacity: animation, child: child);
-        },
-        transitionDuration: const Duration(milliseconds: 600),
+      SmokeBombPageRoute(
+        page: const GameMap1913Screen(),
+        originOffset: Offset(
+          MediaQuery.of(context).size.width / 2,
+          MediaQuery.of(context).size.height * 0.75,
+        ),
+        buttonColor: const Color(0xFFEF6C6C),
+        vintageMapColor: const Color(0xFFF4E8C1),
       ),
     );
   }

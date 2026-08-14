@@ -3,6 +3,7 @@ import 'auth_mode_selection_screen.dart';
 import 'pure_ground_map_screen.dart';
 import 'game_map_1913_screen.dart';
 import 'sego_concept_screen.dart';
+import '../widgets/smoke_bomb_transition.dart';
 import '../widgets/animated_rope_menu.dart';
 import '../widgets/wooden_next_button.dart';
 import '../widgets/wooden_back_button.dart';
@@ -43,16 +44,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void _openMainMenu() {
     Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            const GameMap1913Screen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(
-            opacity: animation,
-            child: child,
-          );
-        },
-        transitionDuration: const Duration(milliseconds: 600),
+      SmokeBombPageRoute(
+        page: const GameMap1913Screen(),
+        originOffset: Offset(
+          MediaQuery.of(context).size.width / 2,
+          MediaQuery.of(context).size.height * 0.8,
+        ),
+        buttonColor: const Color(0xFF94D561),
+        vintageMapColor: const Color(0xFFF4E8C1),
       ),
     );
   }
