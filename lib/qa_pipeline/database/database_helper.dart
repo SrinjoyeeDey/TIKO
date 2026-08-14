@@ -4,6 +4,9 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart' as ffi;
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
+import 'database_factory_stub.dart'
+    if (dart.library.html) 'database_factory_web.dart';
+
 /// Singleton database manager for the application's SQLite database.
 class DatabaseHelper {
   DatabaseHelper._();
@@ -24,15 +27,16 @@ class DatabaseHelper {
   }
 
   Future<Database> _initDatabase() async {
-    // Use FFI for Windows/Linux/macOS desktop support.
-    if (kIsWeb) {
-      databaseFactory = databaseFactoryFfiWeb;
-    } else if (defaultTargetPlatform == TargetPlatform.windows || 
-         defaultTargetPlatform == TargetPlatform.linux || 
-         defaultTargetPlatform == TargetPlatform.macOS) {
-      ffi.sqfliteFfiInit();
-      databaseFactory = ffi.databaseFactoryFfi;
-    }
+    try {
+      // Use FFI for Windows/Linux/macOS desktop support.
+      if (kIsWeb) {
+        databaseFactory = databaseFactoryFfiWeb;
+      } else if (defaultTargetPlatform == TargetPlatform.windows || 
+           defaultTargetPlatform == TargetPlatform.linux || 
+           defaultTargetPlatform == TargetPlatform.macOS) {
+        ffi.sqfliteFfiInit();
+        databaseFactory = ffi.databaseFactoryFfi;
+      }
 
       final dbPath = await getDatabasesPath();
       final path = join(dbPath, _dbName);
