@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import '../models/learning_content.dart';
@@ -73,7 +74,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       });
 
       // Open the video directly from assets.
-      await _player.open(Media('asset:///${widget.level.videoPath}'));
+      final uri = kIsWeb ? 'asset://${widget.level.videoPath}' : 'asset:///${widget.level.videoPath}';
+      await _player.open(Media(uri));
 
       _segments = await transcriptFuture;
 

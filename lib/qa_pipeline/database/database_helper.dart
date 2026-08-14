@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart' as ffi;
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
 /// Singleton database manager for the application's SQLite database.
 class DatabaseHelper {
@@ -21,10 +22,11 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     // Use FFI for Windows/Linux/macOS desktop support.
-    if (!kIsWeb && 
-        (defaultTargetPlatform == TargetPlatform.windows || 
+    if (kIsWeb) {
+      databaseFactory = databaseFactoryFfiWeb;
+    } else if (defaultTargetPlatform == TargetPlatform.windows || 
          defaultTargetPlatform == TargetPlatform.linux || 
-         defaultTargetPlatform == TargetPlatform.macOS)) {
+         defaultTargetPlatform == TargetPlatform.macOS) {
       ffi.sqfliteFfiInit();
       databaseFactory = ffi.databaseFactoryFfi;
     }
