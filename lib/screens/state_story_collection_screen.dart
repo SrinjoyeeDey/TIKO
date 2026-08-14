@@ -42,6 +42,14 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
   double _tiltX = 0.0;
   double _tiltY = 0.0;
 
+  // Grayscale Color Matrix for Dull Black & White Side Cards
+  static const List<double> _grayscaleMatrix = [
+    0.2126, 0.7152, 0.0722, 0, 0,
+    0.2126, 0.7152, 0.0722, 0, 0,
+    0.2126, 0.7152, 0.0722, 0, 0,
+    0,      0,      0,      1, 0,
+  ];
+
   bool _isLoadingDynamic = false;
 
   @override
@@ -231,11 +239,9 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
                 fit: BoxFit.cover,
                 width: double.infinity,
                 height: double.infinity,
-                cacheWidth: 1280,
                 errorBuilder: (ctx, err, stack) => Image.asset(
                   'assets/images/nimo_japanese_bg_clean.png',
                   fit: BoxFit.cover,
-                  cacheWidth: 1280,
                 ),
               ),
             ),
@@ -699,7 +705,7 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
     // Apply Dull Black & White Desaturation Filter to Side Cards
     if (!isSelected) {
       cardContent = ColorFiltered(
-        colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.saturation),
+        colorFilter: const ColorFilter.matrix(_grayscaleMatrix),
         child: Opacity(
           opacity: 0.75, // Dull & desaturated side cards
           child: cardContent,

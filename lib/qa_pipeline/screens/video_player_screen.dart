@@ -18,7 +18,11 @@ class VideoPlayerScreen extends StatefulWidget {
   final LearningLevel level;
   final String childId;
 
-  const VideoPlayerScreen({super.key, required this.level, required this.childId});
+  const VideoPlayerScreen({
+    super.key,
+    required this.level,
+    required this.childId,
+  });
 
   @override
   State<VideoPlayerScreen> createState() => _VideoPlayerScreenState();
@@ -47,8 +51,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   Future<void> _initializePlayer() async {
     try {
       // Load transcript in parallel.
-      final transcriptFuture =
-          TranscriptService.loadTranscript(widget.level.transcriptPath);
+      final transcriptFuture = TranscriptService.loadTranscript(
+        widget.level.transcriptPath,
+      );
 
       // Listen to position changes for caption sync.
       _player.stream.position.listen((position) {
@@ -81,9 +86,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         });
       }
 
-      // Open the video directly from assets (supporting both Web and native target paths).
-      final uri = kIsWeb ? 'asset://${widget.level.videoPath}' : 'asset:///${widget.level.videoPath}';
-      await _player.open(Media(uri), play: true);
+      // Open the video directly from assets.
+      await _player.open(
+        Media('asset:///${widget.level.videoPath}'),
+        play: true,
+      );
 
       _segments = await transcriptFuture;
     } catch (e) {
@@ -96,12 +103,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     }
   }
 
-
-
   void _updateCaption(Duration position) {
     final positionSeconds = position.inMilliseconds / 1000.0;
-    final active =
-        TranscriptService.getActiveSegment(_segments, positionSeconds);
+    final active = TranscriptService.getActiveSegment(
+      _segments,
+      positionSeconds,
+    );
     final newCaption = active?.text;
 
     if (newCaption != _activeCaption) {
@@ -165,7 +172,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                   decoration: BoxDecoration(
                     color: const Color(0x882E1C12), // Vintage Sepia Glass
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: const Color(0xAA8B6914), width: 1.8),
+                    border: Border.all(
+                      color: const Color(0xAA8B6914),
+                      width: 1.8,
+                    ),
                     boxShadow: const [
                       BoxShadow(
                         color: Colors.black54,
@@ -179,7 +189,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         child: Row(
                           children: [
                             WoodenBackButton(
@@ -193,7 +206,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 52), // Balance for back button
+                            const SizedBox(
+                              width: 52,
+                            ), // Balance for back button
                           ],
                         ),
                       ),
@@ -218,7 +233,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.error_outline, color: Colors.redAccent, size: 56),
+              const Icon(
+                Icons.error_outline,
+                color: Colors.redAccent,
+                size: 56,
+              ),
               const SizedBox(height: 16),
               Text(
                 _errorMessage!,
@@ -304,9 +323,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
             ),
             child: Slider(
               value: _duration.inMilliseconds > 0
-                  ? _position.inMilliseconds
-                      .toDouble()
-                      .clamp(0, _duration.inMilliseconds.toDouble())
+                  ? _position.inMilliseconds.toDouble().clamp(
+                      0,
+                      _duration.inMilliseconds.toDouble(),
+                    )
                   : 0,
               max: _duration.inMilliseconds > 0
                   ? _duration.inMilliseconds.toDouble()
@@ -329,10 +349,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                 icon: const Icon(Icons.replay_10, color: Colors.white70),
                 iconSize: 32,
                 onPressed: () {
-                  final newPos =
-                      _position - const Duration(seconds: 10);
-                  _player.seek(
-                      newPos < Duration.zero ? Duration.zero : newPos);
+                  final newPos = _position - const Duration(seconds: 10);
+                  _player.seek(newPos < Duration.zero ? Duration.zero : newPos);
                 },
               ),
               const SizedBox(width: 24),
@@ -355,10 +373,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                 icon: const Icon(Icons.forward_10, color: Colors.white70),
                 iconSize: 32,
                 onPressed: () {
-                  final newPos =
-                      _position + const Duration(seconds: 10);
-                  _player.seek(
-                      newPos > _duration ? _duration : newPos);
+                  final newPos = _position + const Duration(seconds: 10);
+                  _player.seek(newPos > _duration ? _duration : newPos);
                 },
               ),
             ],
@@ -378,13 +394,18 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                   if (widget.level.questionsPath != null) {
                     Navigator.of(context).push(
                       PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) => QuestionScreen(
-                          childId: widget.childId,
-                          level: widget.level,
-                        ),
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          return FadeTransition(opacity: animation, child: child);
-                        },
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            QuestionScreen(
+                              childId: widget.childId,
+                              level: widget.level,
+                            ),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
+                              return FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              );
+                            },
                       ),
                     );
                   } else {
