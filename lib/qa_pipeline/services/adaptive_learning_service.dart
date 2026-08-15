@@ -60,7 +60,7 @@ enum AdaptiveStatus {
 /// - Never permanently removes a learning area.
 class AdaptiveLearningService {
   /// The question section types to analyze.
-  static const List<String> _sectionTypes = ['mcq', 'descriptive', 'sequence', 'imageMatching'];
+  static const List<String> _sectionTypes = ['mcq', 'descriptive', 'speech', 'sequence', 'imageMatching'];
 
   /// Analyzes all sections and returns insights for each.
   static Future<List<AdaptiveInsight>> analyzeAll(String childId) async {
@@ -160,6 +160,8 @@ class AdaptiveLearningService {
         return 'Multiple Choice';
       case 'descriptive':
         return 'Descriptive';
+      case 'speech':
+        return 'Speech Recognition';
       case 'sequence':
         return 'Sequence';
       case 'imageMatching':

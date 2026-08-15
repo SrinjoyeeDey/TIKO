@@ -4,6 +4,7 @@ enum QuestionType {
   descriptive,
   sequenceMcq,
   imageMatching,
+  speech,
 }
 
 /// Base class for all question types.

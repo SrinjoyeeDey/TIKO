@@ -7,12 +7,14 @@ import '../models/image_matching_question.dart';
 import '../models/mcq_question.dart';
 import '../models/question.dart';
 import '../models/sequence_question.dart';
+import '../models/speech_question.dart';
 
 /// Result of loading questions — questions grouped by phase.
 class QuestionSet {
   final List<McqQuestion> mcqQuestions;
   final List<DescriptiveQuestion> descriptiveQuestions;
   final List<McqQuestion> sequenceQuestions;
+  final List<SpeechQuestion> speechQuestions;
 
   /// Drag-and-drop sequence questions derived from the sequence_test data.
   final List<SequenceQuestion> sequenceDragQuestions;
@@ -22,6 +24,7 @@ class QuestionSet {
     required this.mcqQuestions,
     required this.descriptiveQuestions,
     required this.sequenceQuestions,
+    this.speechQuestions = const [],
     this.sequenceDragQuestions = const [],
     this.imageMatchingQuestions = const [],
   });
@@ -31,6 +34,7 @@ class QuestionSet {
       mcqQuestions.length +
       descriptiveQuestions.length +
       sequenceQuestions.length +
+      speechQuestions.length +
       imageMatchingQuestions.length;
 
   /// Whether there are no questions at all.
@@ -41,7 +45,7 @@ class QuestionSet {
 class QuestionService {
   /// Loads questions from the asset at [assetPath].
   ///
-  /// Parses both the `questions` array (MCQ + descriptive) and the
+  /// Parses both the `questions` array (MCQ + descriptive + speech) and the
   /// `sequence_test.questions` array (sequence MCQs).
   ///
   /// Returns an empty [QuestionSet] if [assetPath] is null, the file is
@@ -52,6 +56,7 @@ class QuestionService {
         mcqQuestions: [],
         descriptiveQuestions: [],
         sequenceQuestions: [],
+        speechQuestions: [],
         sequenceDragQuestions: [],
         imageMatchingQuestions: [],
       );
@@ -69,6 +74,7 @@ class QuestionService {
         mcqQuestions: [],
         descriptiveQuestions: [],
         sequenceQuestions: [],
+        speechQuestions: [],
         sequenceDragQuestions: [],
         imageMatchingQuestions: [],
       );
@@ -79,6 +85,7 @@ class QuestionService {
   static QuestionSet _parseQuestionSet(Map<String, dynamic> json) {
     final List<McqQuestion> mcqQuestions = [];
     final List<DescriptiveQuestion> descriptiveQuestions = [];
+    final List<SpeechQuestion> speechQuestions = [];
     final List<McqQuestion> sequenceQuestions = [];
     final List<SequenceQuestion> sequenceDragQuestions = [];
     final List<ImageMatchingQuestion> imageMatchingQuestions = [];
@@ -94,6 +101,8 @@ class QuestionService {
           mcqQuestions.add(McqQuestion.fromJson(map, QuestionType.mcq));
         } else if (type == 'descriptive') {
           descriptiveQuestions.add(DescriptiveQuestion.fromJson(map));
+        } else if (type == 'speech') {
+          speechQuestions.add(SpeechQuestion.fromJson(map));
         }
       } catch (e) {
         // Skip malformed individual questions rather than failing everything.
@@ -136,6 +145,7 @@ class QuestionService {
       mcqQuestions: mcqQuestions,
       descriptiveQuestions: descriptiveQuestions,
       sequenceQuestions: sequenceQuestions,
+      speechQuestions: speechQuestions,
       sequenceDragQuestions: sequenceDragQuestions,
       imageMatchingQuestions: imageMatchingQuestions,
     );

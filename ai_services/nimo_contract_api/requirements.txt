@@ -1,0 +1,8 @@
+# NIMO Contract API — Dependencies
+fastapi
+uvicorn[standard]
+python-multipart
+pydantic
+SpeechRecognition
+opencv-python-headless
+numpy

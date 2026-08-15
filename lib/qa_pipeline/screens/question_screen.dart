@@ -14,12 +14,15 @@ import '../models/mcq_question.dart';
 import '../models/question.dart';
 import '../models/question_attempt.dart';
 import '../models/sequence_question.dart';
+import '../models/speech_question.dart';
 import '../services/adaptive_learning_service.dart';
 import '../services/question_service.dart';
+import '../widgets/camera_engagement_overlay.dart';
 import '../widgets/descriptive_question_widget.dart';
 import '../widgets/image_matching_widget.dart';
 import '../widgets/mcq_question_widget.dart';
 import '../widgets/sequence_question_widget.dart';
+import '../widgets/speech_question_widget.dart';
 import 'level_clear_screen.dart';
 import '../../core/api/activity_api.dart';
 import '../../core/models/activity_model.dart';
@@ -89,6 +92,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
         if (activeSections.contains('mcq')) _allQuestions.addAll(qs.mcqQuestions);
         if (activeSections.contains('descriptive')) _allQuestions.addAll(qs.descriptiveQuestions);
+        if (activeSections.contains('speech')) _allQuestions.addAll(qs.speechQuestions);
         if (activeSections.contains('sequence')) _allQuestions.addAll(qs.sequenceDragQuestions);
         if (activeSections.contains('imageMatching')) _allQuestions.addAll(qs.imageMatchingQuestions);
 
@@ -96,6 +100,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
           _allQuestions
             ..addAll(qs.mcqQuestions)
             ..addAll(qs.descriptiveQuestions)
+            ..addAll(qs.speechQuestions)
             ..addAll(qs.sequenceDragQuestions)
             ..addAll(qs.imageMatchingQuestions);
         }
@@ -140,6 +145,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
       questionId = question.id;
     } else if (question is DescriptiveQuestion) {
       questionType = 'descriptive';
+      questionId = question.id;
+    } else if (question is SpeechQuestion) {
+      questionType = 'speech';
       questionId = question.id;
     } else if (question is SequenceQuestion) {
       questionType = 'sequence';
@@ -213,7 +221,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFC5AE79), // Vintage Paper Canvas
-      body: Stack(
+      body: CameraEngagementOverlay(
+        activityId: 'netaji_${widget.level.id}',
+        child: Stack(
         children: [
           // 1. GENERATED WEST BENGAL HISTORY MAP BACKGROUND
           Positioned.fill(
@@ -336,6 +346,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
             ),
           ),
         ],
+      ),
       ),
     );
   }
@@ -519,6 +530,15 @@ class _QuestionScreenState extends State<QuestionScreen> {
       );
     }
 
+    if (question is SpeechQuestion) {
+      return SpeechQuestionWidget(
+        key: widgetKey,
+        question: question,
+        questionNumber: phaseInfo.numberInPhase,
+        onAnswered: (isCorrect) => _onQuestionAnswered(isCorrect),
+      );
+    }
+
     if (question is SequenceQuestion) {
       return SequenceQuestionWidget(
         key: widgetKey,
@@ -573,6 +593,11 @@ class _QuestionScreenState extends State<QuestionScreen> {
       final idx =
           _allQuestions.whereType<DescriptiveQuestion>().toList().indexOf(question);
       return _PhaseInfo('Descriptive', idx + 1);
+    }
+    if (question is SpeechQuestion) {
+      final idx =
+          _allQuestions.whereType<SpeechQuestion>().toList().indexOf(question);
+      return _PhaseInfo('Speech', idx + 1);
     }
     if (question is SequenceQuestion) {
       final idx =
