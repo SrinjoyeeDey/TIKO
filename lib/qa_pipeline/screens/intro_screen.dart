@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../widgets/wooden_back_button.dart';
 import '../../widgets/game_textured_text.dart';
+import '../widgets/panda_animation_widget.dart';
 import 'chapter_selection_screen.dart';
 import 'parent_pin_screen.dart';
 import 'parent_dashboard.dart';
@@ -55,38 +56,15 @@ class IntroScreen extends StatelessWidget {
                 
                 const Spacer(flex: 2),
 
-                // Icon / Centerpiece
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xFFD4AF37), Color(0xFF8B6914)], // Gold
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFD4AF37).withValues(alpha: 0.3),
-                        blurRadius: 40,
-                        spreadRadius: 5,
-                      ),
-                    ],
-                    border: Border.all(
-                      color: const Color(0xFFFFD700).withValues(alpha: 0.5),
-                      width: 2,
-                    ),
-                  ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.menu_book_rounded,
-                      size: 60,
-                      color: Color(0xFF2E1C12),
-                    ),
+                // Panda Companion Welcoming Centerpiece
+                const Center(
+                  child: PandaAnimationWidget(
+                    initialState: PandaState.appear,
+                    size: 160,
+                    showShadow: true,
                   ),
                 ),
-                const SizedBox(height: 48),
+                const SizedBox(height: 24),
 
                 // Title
                 const GameTexturedText(

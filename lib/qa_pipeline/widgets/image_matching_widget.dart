@@ -10,12 +10,16 @@ class ImageMatchingWidget extends StatefulWidget {
   final String levelId;
   final Function(int correctMatches, int totalMatches) onCompleted;
 
+  /// Called synchronously the exact instant the match result is checked.
+  final ValueChanged<bool>? onAnswerEvaluated;
+
   const ImageMatchingWidget({
     super.key,
     required this.question,
     required this.chapterId,
     required this.levelId,
     required this.onCompleted,
+    this.onAnswerEvaluated,
   });
 
   @override
@@ -44,10 +48,6 @@ class _ImageMatchingWidgetState extends State<ImageMatchingWidget> {
   void _checkAnswers() {
     if (_isSubmitted) return;
     
-    setState(() {
-      _isSubmitted = true;
-    });
-
     int correct = 0;
     for (final img in widget.question.images) {
       final selectedDescId = _currentMatches[img.id];
@@ -57,7 +57,15 @@ class _ImageMatchingWidgetState extends State<ImageMatchingWidget> {
       }
     }
 
-    if (correct == widget.question.images.length) {
+    final isAllCorrect = correct == widget.question.images.length;
+    // Synchronous immediate event trigger for Panda companion
+    widget.onAnswerEvaluated?.call(isAllCorrect);
+
+    setState(() {
+      _isSubmitted = true;
+    });
+
+    if (isAllCorrect) {
       _confettiController.play();
     }
   }

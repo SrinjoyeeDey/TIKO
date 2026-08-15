@@ -6,6 +6,7 @@ import '../database/progress_repository.dart';
 import '../models/learning_content.dart';
 import '../services/content_discovery_service.dart';
 import '../services/star_calculator.dart';
+import '../widgets/panda_animation_widget.dart';
 import 'video_player_screen.dart';
 
 /// Full-screen Celebration screen showing crystal prism lesson badge with specular light glare,
@@ -159,7 +160,16 @@ class _LevelClearScreenState extends State<LevelClearScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 10),
+
+                      // Celebrating Panda Companion
+                      const PandaAnimationWidget(
+                        initialState: PandaState.celebrate,
+                        size: 140,
+                        showShadow: true,
+                      ),
+
+                      const SizedBox(height: 10),
 
                       // CRYSTAL PRISM DIAMOND LESSON BADGE WITH SPECULAR GLARE & LIGHT FLARES
                       _buildCrystalDiamondBadge(),

@@ -20,6 +20,7 @@ import '../widgets/descriptive_question_widget.dart';
 import '../widgets/image_matching_widget.dart';
 import '../widgets/mcq_question_widget.dart';
 import '../widgets/sequence_question_widget.dart';
+import '../widgets/panda_animation_widget.dart';
 import 'level_clear_screen.dart';
 
 /// Manages the full question flow for a level:
@@ -42,6 +43,9 @@ class QuestionScreen extends StatefulWidget {
 
 class _QuestionScreenState extends State<QuestionScreen> {
   static const _uuid = Uuid();
+
+  /// GlobalKey for controlling the panda companion animation.
+  final _pandaKey = GlobalKey<PandaAnimationWidgetState>();
 
   QuestionSet? _questionSet;
   String? _errorMessage;
@@ -116,10 +120,46 @@ class _QuestionScreenState extends State<QuestionScreen> {
         _questionSet = qs;
         _questionStartedAt = DateTime.now();
       });
+
+      // Play the appear animation once after the first build completes.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _pandaKey.currentState?.playAppear();
+        }
+      });
     } catch (e) {
       setState(() {
         _errorMessage = 'Failed to load questions.\n\n$e';
       });
+    }
+  }
+
+  /// Calls a panda animation method as soon as the widget is ready.
+  /// If the GlobalKey isn't resolved yet (can happen on the very first answer
+  /// before the initial postFrameCallback fires), retries on the next frame.
+  void _callPanda(void Function(PandaAnimationWidgetState s) fn) {
+    final state = _pandaKey.currentState;
+    if (state != null) {
+      fn(state);
+    } else {
+      // Widget not yet mounted — retry on the very next frame.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          final retryState = _pandaKey.currentState;
+          if (retryState != null) fn(retryState);
+        }
+      });
+    }
+  }
+
+  /// Synchronously reacts the exact instant the player submits and the answer is evaluated.
+  /// Triggers immediate correct -> celebrate or wrong_sad reactions without waiting for
+  /// async operations, network, database, or next question transitions!
+  void _handleImmediateAnswerEvaluation(bool isCorrect) {
+    if (isCorrect) {
+      _callPanda((s) => s.playCorrect());
+    } else {
+      _callPanda((s) => s.playWrongSad());
     }
   }
 
@@ -155,7 +195,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
       questionId = _currentIndex;
     }
 
-    // Save the attempt to the database.
+    // Save the attempt to the database asynchronously.
     final attempt = QuestionAttempt(
       id: _uuid.v4(),
       childId: widget.childId,
@@ -181,6 +221,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
         _currentIndex++;
         _questionStartedAt = DateTime.now();
       });
+      // Return to idle for the new question — force:false so any active
+      // wrongSad/correct/celebrate reaction is allowed to finish naturally.
+      _callPanda((s) => s.playIdle(force: false));
     } else {
       _navigateToLevelClear();
     }
@@ -473,6 +516,27 @@ class _QuestionScreenState extends State<QuestionScreen> {
           ),
         ),
 
+        // ── Panda Companion ─────────────────────────────────────────────────
+        // Sits above the question content as a persistent character companion.
+        // Size is responsive: 18% of screen height in portrait (130–200 px).
+        Builder(
+          builder: (context) {
+            final screenH = MediaQuery.sizeOf(context).height;
+            final isLandscape = MediaQuery.orientationOf(context) == Orientation.landscape;
+            final pandaSize = isLandscape
+                ? (screenH * 0.22).clamp(100.0, 140.0)
+                : (screenH * 0.18).clamp(130.0, 200.0);
+            return Center(
+              child: PandaAnimationWidget(
+                key: _pandaKey,
+                size: pandaSize,
+                showShadow: true,
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: 4),
+
         // Question content
         Expanded(
           child: _buildQuestionWidget(question, phaseInfo, widgetKey),
@@ -494,6 +558,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
         phaseLabel: phaseInfo.phaseLabel,
         onAnswered: (isCorrect) =>
             _onQuestionAnswered(isCorrect),
+        onAnswerEvaluated: _handleImmediateAnswerEvaluation,
       );
     }
 
@@ -510,6 +575,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
           similarityScore: score,
           userAnswer: answer,
         ),
+        onAnswerEvaluated: _handleImmediateAnswerEvaluation,
       );
     }
 
@@ -520,6 +586,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
         questionNumber: phaseInfo.numberInPhase,
         onAnswered: (isCorrect) =>
             _onQuestionAnswered(isCorrect),
+        onAnswerEvaluated: _handleImmediateAnswerEvaluation,
       );
     }
 
@@ -536,6 +603,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
             totalMatches: totalMatches,
           );
         },
+        onAnswerEvaluated: _handleImmediateAnswerEvaluation,
       );
     }
 

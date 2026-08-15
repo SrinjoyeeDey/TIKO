@@ -13,11 +13,15 @@ class SequenceQuestionWidget extends StatefulWidget {
   /// [isCorrect] indicates whether the order was right.
   final ValueChanged<bool> onAnswered;
 
+  /// Called synchronously the exact instant the sequence is evaluated upon submit.
+  final ValueChanged<bool>? onAnswerEvaluated;
+
   const SequenceQuestionWidget({
     super.key,
     required this.question,
     required this.questionNumber,
     required this.onAnswered,
+    this.onAnswerEvaluated,
   });
 
   @override
@@ -272,6 +276,8 @@ class _SequenceQuestionWidgetState extends State<SequenceQuestionWidget> {
 
   void _onSubmit() {
     final correct = widget.question.isCorrect(_currentOrder);
+    // Synchronous immediate event trigger for Panda companion
+    widget.onAnswerEvaluated?.call(correct);
     setState(() {
       _submitted = true;
       _isCorrect = correct;

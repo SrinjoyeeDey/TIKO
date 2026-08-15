@@ -19,12 +19,16 @@ class DescriptiveQuestionWidget extends StatefulWidget {
   final void Function(bool isCorrect, double score, String userAnswer)?
       onAnsweredDetailed;
 
+  /// Called synchronously the exact instant the answer is evaluated upon submit.
+  final ValueChanged<bool>? onAnswerEvaluated;
+
   const DescriptiveQuestionWidget({
     super.key,
     required this.question,
     required this.questionNumber,
     required this.onAnswered,
     this.onAnsweredDetailed,
+    this.onAnswerEvaluated,
   });
 
   @override
@@ -192,6 +196,9 @@ class _DescriptiveQuestionWidgetState extends State<DescriptiveQuestionWidget> {
         score,
         widget.question.similarityThreshold,
       );
+
+      // Synchronous immediate event trigger for Panda companion
+      widget.onAnswerEvaluated?.call(passed);
 
       setState(() {
         _score = score;

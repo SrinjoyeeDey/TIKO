@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import '../data/west_bengal_stories_database.dart';
+import '../qa_pipeline/widgets/panda_animation_widget.dart';
 
 /// Staged Asset Preloader Service
 /// Ensures instant UI rendering without blocking startup or consuming excessive RAM.
 class AppAssetPreloader {
   static final Set<String> _precachedAssets = {};
 
-  /// Stage 1: Preload critical first-screen background assets before main UI launch
+  /// Stage 1: Preload critical first-screen background assets and Panda companion frames before main UI launch
   static Future<void> precacheBootAssets(BuildContext context) async {
     const bootImages = [
       'assets/images/story_selection_wb_bg.png',
@@ -24,6 +25,11 @@ class AppAssetPreloader {
           // Ignore missing optional assets gracefully
         }
       }
+    }
+
+    // Preload all 48 Panda animation PNG frames for zero-jank immediate playback
+    if (context.mounted) {
+      PandaAnimationWidget.precacheAllFrames(context);
     }
   }
 

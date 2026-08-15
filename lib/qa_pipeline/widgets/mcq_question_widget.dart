@@ -15,12 +15,16 @@ class McqQuestionWidget extends StatefulWidget {
   /// [isCorrect] indicates whether the selected answer was right.
   final ValueChanged<bool> onAnswered;
 
+  /// Called synchronously the exact instant the answer is evaluated upon submit.
+  final ValueChanged<bool>? onAnswerEvaluated;
+
   const McqQuestionWidget({
     super.key,
     required this.question,
     required this.questionNumber,
     required this.phaseLabel,
     required this.onAnswered,
+    this.onAnswerEvaluated,
   });
 
   @override
@@ -348,6 +352,8 @@ class _McqQuestionWidgetState extends State<McqQuestionWidget>
   void _onButtonPressed() {
     if (!_submitted) {
       final isCorrect = widget.question.isCorrect(_selectedKey!);
+      // Synchronous immediate event trigger for Panda companion
+      widget.onAnswerEvaluated?.call(isCorrect);
       setState(() => _submitted = true);
 
       if (isCorrect) {

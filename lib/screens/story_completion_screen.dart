@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/interactive_story_models.dart';
 import '../data/west_bengal_stories_database.dart';
+import '../qa_pipeline/widgets/panda_animation_widget.dart';
 import 'state_story_collection_screen.dart';
 
 /// Quiet & Accomplished Story Completion Screen (Step 10 & 11)
@@ -114,6 +115,15 @@ class _StoryCompletionScreenState extends State<StoryCompletionScreen>
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        // Celebrating Panda Companion
+                        const PandaAnimationWidget(
+                          initialState: PandaState.celebrate,
+                          size: 130,
+                          showShadow: true,
+                        ),
+
+                        const SizedBox(height: 12),
+
                         // Subtle Check Circle
                         Container(
                           width: 56,
