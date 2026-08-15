@@ -146,6 +146,22 @@ class _ActivityRendererState extends State<ActivityRenderer> {
     }
   }
 
+  Widget _buildSpeechWidget() {
+    final sq = SpeechQuestion(
+      id: widget.questionNumber,
+      questionText: widget.activity.question,
+      targetPhrase: widget.activity.targetPhrase ?? widget.activity.question,
+      referenceAnswer: widget.activity.question,
+      keyConcepts: widget.activity.title.split(' '),
+    );
+
+    return SpeechQuestionWidget(
+      question: sq,
+      questionNumber: widget.questionNumber,
+      onAnswered: _handleAnswerSubmitted,
+    );
+  }
+
   Widget _buildMcqWidget() {
     final Map<String, String> optionsMap = {};
     final keys = ['A', 'B', 'C', 'D', 'E', 'F'];

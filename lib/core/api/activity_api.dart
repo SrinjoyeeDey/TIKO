@@ -41,7 +41,19 @@ class ActivityApi {
         order: 1,
       ),
       const ActivityModel(
-        activityId: 'netaji_q02',
+        activityId: 'netaji_q02_speech',
+        storyId: 'netaji',
+        title: 'Netaji Speech Recognition',
+        type: 'speech',
+        skill: 'speech',
+        difficulty: 1,
+        question: 'Speak Netaji Subhas Chandra Bose\'s full name clearly into your microphone:',
+        targetPhrase: 'Subhas Chandra Bose',
+        reward: 30,
+        order: 2,
+      ),
+      const ActivityModel(
+        activityId: 'netaji_q03',
         storyId: 'netaji',
         title: 'Netaji\'s Escape Sequence',
         type: 'sequencing',
@@ -56,7 +68,7 @@ class ActivityApi {
         ],
         correctAnswer: [0, 1, 2, 3],
         reward: 30,
-        order: 2,
+        order: 3,
       ),
     ];
   }

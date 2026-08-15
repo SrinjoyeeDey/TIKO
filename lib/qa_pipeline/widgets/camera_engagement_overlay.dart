@@ -16,11 +16,13 @@ import '../../core/state/child_state.dart';
 class CameraEngagementOverlay extends StatefulWidget {
   final Widget child;
   final String activityId;
+  final bool isActive;
 
   const CameraEngagementOverlay({
     super.key,
     required this.child,
     this.activityId = 'netaji_qa_session',
+    this.isActive = true,
   });
 
   @override
@@ -62,24 +64,17 @@ class _CameraEngagementOverlayState extends State<CameraEngagementOverlay> {
   }
 
   void _startPeriodicFrameAnalysis() {
-    _analysisTimer?.cancel();
-    // Run camera frame analysis every 1500ms for stable non-blocking performance
-    _analysisTimer = Timer.periodic(const Duration(milliseconds: 1500), (_) {
-      if (mounted) {
-        _captureAndAnalyzeFrame();
-      }
+    // Run camera frame analysis every 3 seconds
+    _analysisTimer = Timer.periodic(const Duration(seconds: 3), (_) {
+      _captureAndAnalyzeFrame();
     });
-    // Run first frame capture after 1 second
-    Future.delayed(const Duration(milliseconds: 1000), () {
-      if (mounted) {
-        _captureAndAnalyzeFrame();
-      }
-    });
+    // Run initial frame capture after 1 second
+    Future.delayed(const Duration(seconds: 1), _captureAndAnalyzeFrame);
   }
 
   Future<void> _captureAndAnalyzeFrame() async {
     if (_isAnalyzing) return;
-    if (mounted) setState(() => _isAnalyzing = true);
+    setState(() => _isAnalyzing = true);
 
     final childId = ChildState.instance.currentProfile.id;
     final sessionId = ChildState.instance.currentSessionId ?? 'SES_NETAJI_001';
@@ -126,6 +121,10 @@ class _CameraEngagementOverlayState extends State<CameraEngagementOverlay> {
 
   @override
   Widget build(BuildContext context) {
+    if (!widget.isActive) {
+      return widget.child;
+    }
+
     return Stack(
       children: [
         // Main Screen Content

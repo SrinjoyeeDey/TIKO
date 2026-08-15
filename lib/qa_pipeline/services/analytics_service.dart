@@ -15,6 +15,10 @@ class AnalyticsService {
           title: 'Descriptive & Keyword',
           sectionKey: 'descriptive',
           sectionType: 'descriptive'),
+      'speech': SectionStatistics(
+          title: 'Speech Recognition',
+          sectionKey: 'speech',
+          sectionType: 'speech'),
       'sequence': SectionStatistics(
           title: 'Sequencing', sectionKey: 'sequence', sectionType: 'sequence'),
       'imageMatching': SectionStatistics(
