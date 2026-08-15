@@ -206,27 +206,13 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-    return CameraEngagementOverlay(
-      activityId: 'netaji_${widget.level.id}',
-      child: Scaffold(
-        backgroundColor: const Color(0xFFC5AE79), // Vintage Paper Canvas
-        body: Stack(
-          children: [
-=======
     return Scaffold(
       backgroundColor: const Color(0xFFC5AE79), // Vintage Paper Canvas
       body: CameraEngagementOverlay(
         activityId: 'netaji_${widget.level.id}',
-        isActive: _allQuestions.isNotEmpty &&
-            _currentIndex < _allQuestions.length &&
-            (_allQuestions[_currentIndex] is SpeechQuestion ||
-                (_allQuestions[_currentIndex] is ActivityModel &&
-                    ((_allQuestions[_currentIndex] as ActivityModel).type == 'speech' ||
-                        (_allQuestions[_currentIndex] as ActivityModel).type == 'voice'))),
         child: Stack(
         children: [
->>>>>>> 3ed1f09e68861014137874920196c9a01496d771
+
           // 1. GENERATED WEST BENGAL HISTORY MAP BACKGROUND
           Positioned.fill(
             child: Image.asset(

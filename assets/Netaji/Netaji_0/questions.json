@@ -111,33 +111,6 @@
       ],
       "cosine_similarity_threshold": 0.7,
       "difficulty": "medium"
-    },
-    {
-      "id": 13,
-      "type": "speech",
-      "question": "Speak Netaji Subhas Chandra Bose's full name clearly into your microphone:",
-      "target_phrase": "Subhas Chandra Bose",
-      "reference_answer": "Subhas Chandra Bose",
-      "key_concepts": [
-        "Subhas",
-        "Chandra",
-        "Bose"
-      ],
-      "min_score_threshold": 80,
-      "difficulty": "easy"
-    },
-    {
-      "id": 14,
-      "type": "speech",
-      "question": "Pronounce the name of Netaji's mother out loud:",
-      "target_phrase": "Prabhavati Devi",
-      "reference_answer": "Prabhavati Devi",
-      "key_concepts": [
-        "Prabhavati",
-        "Devi"
-      ],
-      "min_score_threshold": 80,
-      "difficulty": "medium"
     }
   ],
   "sequence_test": {
