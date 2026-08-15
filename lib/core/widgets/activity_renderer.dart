@@ -9,9 +9,11 @@ import '../../qa_pipeline/models/question.dart';
 import '../../qa_pipeline/models/mcq_question.dart';
 import '../../qa_pipeline/models/sequence_question.dart';
 import '../../qa_pipeline/models/image_matching_question.dart';
+import '../../qa_pipeline/models/speech_question.dart';
 import '../../qa_pipeline/widgets/mcq_question_widget.dart';
 import '../../qa_pipeline/widgets/sequence_question_widget.dart';
 import '../../qa_pipeline/widgets/image_matching_widget.dart';
+import '../../qa_pipeline/widgets/speech_question_widget.dart';
 
 /// Centralized Activity Renderer that dynamically renders the appropriate UI widget
 /// based on `activity.type` (`mcq`, `sequencing`, `matching`, `voice`, `memory`, `drag_drop`)
@@ -135,11 +137,29 @@ class _ActivityRendererState extends State<ActivityRenderer> {
       case 'matching':
         return _buildMatchingWidget();
       case 'voice':
+      case 'speech':
+        return _buildSpeechWidget();
       case 'memory':
       case 'drag_drop':
       default:
         return _buildFallbackWidget();
     }
+  }
+
+  Widget _buildSpeechWidget() {
+    final sq = SpeechQuestion(
+      id: widget.questionNumber,
+      questionText: widget.activity.question,
+      targetPhrase: widget.activity.targetPhrase ?? widget.activity.question,
+      referenceAnswer: widget.activity.question,
+      keyConcepts: widget.activity.title.split(' '),
+    );
+
+    return SpeechQuestionWidget(
+      question: sq,
+      questionNumber: widget.questionNumber,
+      onAnswered: _handleAnswerSubmitted,
+    );
   }
 
   Widget _buildMcqWidget() {

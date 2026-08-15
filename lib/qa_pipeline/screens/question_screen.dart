@@ -15,7 +15,6 @@ import '../models/question.dart';
 import '../models/question_attempt.dart';
 import '../models/sequence_question.dart';
 import '../models/speech_question.dart';
-import '../services/adaptive_learning_service.dart';
 import '../services/question_service.dart';
 import '../widgets/camera_engagement_overlay.dart';
 import '../widgets/descriptive_question_widget.dart';
@@ -79,31 +78,19 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   Future<void> _loadQuestions() async {
     try {
-      // 1. Fetch Backend-Driven Activities (Phase 3 Activity Engine)
+      // 1. Load local level JSON questions (MCQ, Descriptive, Speech, Sequence, Matching)
+      final qs = await QuestionService.loadQuestions(widget.level.questionsPath);
+      _allQuestions
+        ..addAll(qs.mcqQuestions)
+        ..addAll(qs.descriptiveQuestions)
+        ..addAll(qs.speechQuestions)
+        ..addAll(qs.sequenceDragQuestions)
+        ..addAll(qs.imageMatchingQuestions);
+
+      // 2. Also append backend activities if available
       final backendActivities = await ActivityApi.getActivitiesForStory(widget.level.chapterId);
       if (backendActivities.isNotEmpty) {
         _allQuestions.addAll(backendActivities);
-      }
-
-      // 2. Fallback to local questions if backend offline
-      if (_allQuestions.isEmpty) {
-        final qs = await QuestionService.loadQuestions(widget.level.questionsPath);
-        final activeSections = await AdaptiveLearningService.getActiveSections(widget.childId);
-
-        if (activeSections.contains('mcq')) _allQuestions.addAll(qs.mcqQuestions);
-        if (activeSections.contains('descriptive')) _allQuestions.addAll(qs.descriptiveQuestions);
-        if (activeSections.contains('speech')) _allQuestions.addAll(qs.speechQuestions);
-        if (activeSections.contains('sequence')) _allQuestions.addAll(qs.sequenceDragQuestions);
-        if (activeSections.contains('imageMatching')) _allQuestions.addAll(qs.imageMatchingQuestions);
-
-        if (_allQuestions.isEmpty) {
-          _allQuestions
-            ..addAll(qs.mcqQuestions)
-            ..addAll(qs.descriptiveQuestions)
-            ..addAll(qs.speechQuestions)
-            ..addAll(qs.sequenceDragQuestions)
-            ..addAll(qs.imageMatchingQuestions);
-        }
       }
 
       _totalQuestions = _allQuestions.length;
@@ -223,6 +210,12 @@ class _QuestionScreenState extends State<QuestionScreen> {
       backgroundColor: const Color(0xFFC5AE79), // Vintage Paper Canvas
       body: CameraEngagementOverlay(
         activityId: 'netaji_${widget.level.id}',
+        isActive: _allQuestions.isNotEmpty &&
+            _currentIndex < _allQuestions.length &&
+            (_allQuestions[_currentIndex] is SpeechQuestion ||
+                (_allQuestions[_currentIndex] is ActivityModel &&
+                    ((_allQuestions[_currentIndex] as ActivityModel).type == 'speech' ||
+                        (_allQuestions[_currentIndex] as ActivityModel).type == 'voice'))),
         child: Stack(
         children: [
           // 1. GENERATED WEST BENGAL HISTORY MAP BACKGROUND

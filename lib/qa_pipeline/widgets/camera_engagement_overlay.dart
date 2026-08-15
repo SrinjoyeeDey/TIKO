@@ -14,11 +14,13 @@ import '../../core/state/child_state.dart';
 class CameraEngagementOverlay extends StatefulWidget {
   final Widget child;
   final String activityId;
+  final bool isActive;
 
   const CameraEngagementOverlay({
     super.key,
     required this.child,
     this.activityId = 'netaji_qa_session',
+    this.isActive = true,
   });
 
   @override
@@ -52,14 +54,17 @@ class _CameraEngagementOverlayState extends State<CameraEngagementOverlay> {
   void _startPeriodicFrameAnalysis() {
     // Run camera frame analysis every 3 seconds
     _analysisTimer = Timer.periodic(const Duration(seconds: 3), (_) {
-      _captureAndAnalyzeFrame();
+      if (widget.isActive) {
+        _captureAndAnalyzeFrame();
+      }
     });
-    // Run initial frame capture after 1 second
-    Future.delayed(const Duration(seconds: 1), _captureAndAnalyzeFrame);
+    if (widget.isActive) {
+      Future.delayed(const Duration(seconds: 1), _captureAndAnalyzeFrame);
+    }
   }
 
   Future<void> _captureAndAnalyzeFrame() async {
-    if (_isAnalyzing) return;
+    if (!widget.isActive || _isAnalyzing) return;
     setState(() => _isAnalyzing = true);
 
     final childId = ChildState.instance.currentProfile.id;
@@ -121,6 +126,10 @@ class _CameraEngagementOverlayState extends State<CameraEngagementOverlay> {
 
   @override
   Widget build(BuildContext context) {
+    if (!widget.isActive) {
+      return widget.child;
+    }
+
     return Stack(
       children: [
         // Main Screen Content

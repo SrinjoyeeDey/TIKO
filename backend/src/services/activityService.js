@@ -24,6 +24,19 @@ const seedActivities = [
     order: 1
   }),
   new Activity({
+    activityId: 'netaji_q02_speech',
+    storyId: 'netaji',
+    title: 'Netaji Speech Recognition',
+    type: 'speech',
+    skill: 'speech',
+    difficulty: 1,
+    question: 'Speak Netaji Subhas Chandra Bose\'s full name clearly into your microphone:',
+    targetPhrase: 'Subhas Chandra Bose',
+    maxAttempts: 3,
+    reward: 30,
+    order: 2
+  }),
+  new Activity({
     activityId: 'netaji_q02',
     storyId: 'netaji',
     title: 'Netaji\'s Escape Sequence',
@@ -40,7 +53,7 @@ const seedActivities = [
     correctAnswer: [0, 1, 2, 3],
     maxAttempts: 3,
     reward: 30,
-    order: 2
+    order: 3
   }),
   new Activity({
     activityId: 'netaji_q03',
@@ -58,7 +71,7 @@ const seedActivities = [
     correctAnswer: 0,
     maxAttempts: 3,
     reward: 40,
-    order: 3
+    order: 4
   })
 ];
 
