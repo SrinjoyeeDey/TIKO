@@ -219,12 +219,12 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFC5AE79), // Vintage Paper Canvas
-      body: CameraEngagementOverlay(
-        activityId: 'netaji_${widget.level.id}',
-        child: Stack(
-        children: [
+    return CameraEngagementOverlay(
+      activityId: 'netaji_${widget.level.id}',
+      child: Scaffold(
+        backgroundColor: const Color(0xFFC5AE79), // Vintage Paper Canvas
+        body: Stack(
+          children: [
           // 1. GENERATED WEST BENGAL HISTORY MAP BACKGROUND
           Positioned.fill(
             child: Image.asset(
@@ -397,18 +397,6 @@ class _QuestionScreenState extends State<QuestionScreen> {
     final question = _allQuestions[_currentIndex];
     final phaseInfo = _getPhaseInfo(question);
     final widgetKey = ValueKey('q_${_currentIndex}_${question.hashCode}');
-
-    if (question is ImageMatchingQuestion) {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.landscapeRight,
-        DeviceOrientation.landscapeLeft,
-      ]);
-    } else {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-      ]);
-    }
 
     return Column(
       children: [

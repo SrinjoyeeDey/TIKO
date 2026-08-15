@@ -12,31 +12,10 @@ Endpoints:
 All outputs strictly follow the NIMO Integration Contract format.
 """
 
-import sys
-from pathlib import Path
-
-# Add project root and ai_services directory to sys.path
-root_dir = Path(__file__).resolve().parent.parent.parent
-ai_dir = Path(__file__).resolve().parent.parent
-pkg_dir = Path(__file__).resolve().parent
-
-for p in [str(root_dir), str(ai_dir), str(pkg_dir)]:
-    if p not in sys.path:
-        sys.path.insert(0, p)
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-try:
-    from .routes import speech, engagement  # type: ignore
-except (ImportError, ValueError):
-    try:
-        from ai_services.nimo_contract_api.routes import speech, engagement  # type: ignore
-    except ImportError:
-        try:
-            from nimo_contract_api.routes import speech, engagement  # type: ignore
-        except ImportError:
-            from routes import speech, engagement  # type: ignore
+from .routes import engagement, speech
 
 app = FastAPI(
     title="NIMO Python Model API",

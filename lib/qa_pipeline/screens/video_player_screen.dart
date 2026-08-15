@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
@@ -10,6 +11,7 @@ import '../../widgets/game_textured_text.dart';
 import '../screens/question_screen.dart';
 import '../services/transcript_service.dart';
 import '../widgets/caption_overlay.dart';
+import '../widgets/camera_engagement_overlay.dart';
 
 /// Plays the video for a given [LearningLevel] and overlays synchronized captions
 /// when a transcript is available.
@@ -39,12 +41,23 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   Duration _position = Duration.zero;
   Duration _duration = Duration.zero;
 
+  bool _isDraggingSlider = false;
+  double? _dragValue;
+
+  final List<dynamic> _subscriptions = [];
+
   @override
   void initState() {
     super.initState();
     _player = Player();
     _videoController = VideoController(_player);
     _initializePlayer();
+  }
+
+  String _formatDuration(Duration d) {
+    final minutes = d.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final seconds = d.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
   }
 
   Future<void> _initializePlayer() async {
@@ -55,28 +68,30 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       );
 
       // Listen to position changes for caption sync.
-      _player.stream.position.listen((position) {
-        _position = position;
-        _updateCaption(position);
-        if (mounted) setState(() {});
-      });
+      _subscriptions.add(_player.stream.position.listen((position) {
+        if (!_isDraggingSlider) {
+          _position = position;
+          _updateCaption(position);
+          if (mounted) setState(() {});
+        }
+      }));
 
-      _player.stream.duration.listen((duration) {
+      _subscriptions.add(_player.stream.duration.listen((duration) {
         _duration = duration;
         if (mounted) setState(() {});
-      });
+      }));
 
-      _player.stream.playing.listen((playing) {
+      _subscriptions.add(_player.stream.playing.listen((playing) {
         _isPlaying = playing;
         if (mounted) setState(() {});
-      });
+      }));
 
-      _player.stream.completed.listen((completed) {
+      _subscriptions.add(_player.stream.completed.listen((completed) {
         if (completed && !_isVideoCompleted) {
           _isVideoCompleted = true;
           if (mounted) setState(() {});
         }
-      });
+      }));
 
       // Mount the Video widget immediately so the player starts buffering & rendering without UI delay.
       if (mounted) {
@@ -117,6 +132,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   @override
   void dispose() {
+    for (var sub in _subscriptions) {
+      if (sub is StreamSubscription) {
+        sub.cancel();
+      }
+    }
     _player.dispose();
     super.dispose();
   }
@@ -125,8 +145,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFC5AE79), // Vintage Paper Canvas
+    return CameraEngagementOverlay(
+      activityId: 'video_${widget.level.id}',
+      child: Scaffold(
+        backgroundColor: const Color(0xFFC5AE79), // Vintage Paper Canvas
       body: Stack(
         children: [
           // 1. GENERATED WEST BENGAL HISTORY MAP BACKGROUND (Replaces black bars!)
@@ -220,7 +242,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           ),
         ],
       ),
-    );
+    ));
   }
 
   Widget _buildBody() {
@@ -309,31 +331,80 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           ),
         ),
 
-        // Progress bar
+        // Progress bar with timestamps
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: SliderTheme(
-            data: SliderTheme.of(context).copyWith(
-              activeTrackColor: const Color(0xFFD4AF37),
-              inactiveTrackColor: Colors.white24,
-              thumbColor: const Color(0xFFD4AF37),
-              trackHeight: 3,
-              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
-            ),
-            child: Slider(
-              value: _duration.inMilliseconds > 0
-                  ? _position.inMilliseconds.toDouble().clamp(
-                      0,
-                      _duration.inMilliseconds.toDouble(),
-                    )
-                  : 0,
-              max: _duration.inMilliseconds > 0
-                  ? _duration.inMilliseconds.toDouble()
-                  : 1,
-              onChanged: (value) {
-                _player.seek(Duration(milliseconds: value.toInt()));
-              },
-            ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+          child: Column(
+            children: [
+              SliderTheme(
+                data: SliderTheme.of(context).copyWith(
+                  activeTrackColor: const Color(0xFFD4AF37),
+                  inactiveTrackColor: Colors.white24,
+                  thumbColor: const Color(0xFFFFF8E1),
+                  overlayColor: const Color(0x33D4AF37),
+                  trackHeight: 4,
+                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
+                ),
+                child: Slider(
+                  value: (_dragValue ?? (_duration.inMilliseconds > 0
+                      ? _position.inMilliseconds.toDouble().clamp(0.0, _duration.inMilliseconds.toDouble())
+                      : 0.0)).clamp(0.0, _duration.inMilliseconds > 0 ? _duration.inMilliseconds.toDouble() : 1.0),
+                  max: _duration.inMilliseconds > 0
+                      ? _duration.inMilliseconds.toDouble()
+                      : 1.0,
+                  onChangeStart: (val) {
+                    setState(() {
+                      _isDraggingSlider = true;
+                      _dragValue = val;
+                    });
+                  },
+                  onChanged: (val) {
+                    setState(() {
+                      _dragValue = val;
+                    });
+                  },
+                  onChangeEnd: (val) async {
+                    final target = Duration(milliseconds: val.toInt());
+                    await _player.seek(target);
+                    if (mounted) {
+                      setState(() {
+                        _position = target;
+                        _isDraggingSlider = false;
+                        _dragValue = null;
+                      });
+                    }
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      _formatDuration(_dragValue != null
+                          ? Duration(milliseconds: _dragValue!.toInt())
+                          : _position),
+                      style: const TextStyle(
+                        fontFamily: 'Outfit',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFFD4AF37),
+                      ),
+                    ),
+                    Text(
+                      _formatDuration(_duration),
+                      style: const TextStyle(
+                        fontFamily: 'Outfit',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
 
@@ -343,16 +414,17 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Replay button
+              // Replay -10s button
               IconButton(
                 icon: const Icon(Icons.replay_10, color: Colors.white70),
                 iconSize: 32,
+                tooltip: 'Rewind 10s',
                 onPressed: () {
                   final newPos = _position - const Duration(seconds: 10);
                   _player.seek(newPos < Duration.zero ? Duration.zero : newPos);
                 },
               ),
-              const SizedBox(width: 24),
+              const SizedBox(width: 16),
 
               // Play / Pause
               IconButton(
@@ -365,16 +437,52 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                 iconSize: 56,
                 onPressed: _togglePlayPause,
               ),
-              const SizedBox(width: 24),
+              const SizedBox(width: 16),
 
-              // Forward button
+              // Forward +10s button
               IconButton(
                 icon: const Icon(Icons.forward_10, color: Colors.white70),
                 iconSize: 32,
+                tooltip: 'Skip 10s',
                 onPressed: () {
                   final newPos = _position + const Duration(seconds: 10);
                   _player.seek(newPos > _duration ? _duration : newPos);
                 },
+              ),
+              const SizedBox(width: 16),
+
+              // Quick Skip to Questions
+              InkWell(
+                onTap: () {
+                  _player.pause();
+                  _navigateToQuestionsOrComplete();
+                },
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0x662E1C12),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFFD4AF37), width: 1.2),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'SKIP',
+                        style: TextStyle(
+                          fontFamily: 'Outfit',
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xFFD4AF37),
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                      SizedBox(width: 4),
+                      Icon(Icons.skip_next_rounded, color: Color(0xFFD4AF37), size: 18),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
@@ -390,35 +498,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
               child: ElevatedButton.icon(
                 onPressed: () {
                   _player.pause();
-                  if (widget.level.questionsPath != null) {
-                    Navigator.of(context).push(
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            QuestionScreen(
-                              childId: widget.childId,
-                              level: widget.level,
-                            ),
-                        transitionsBuilder:
-                            (context, animation, secondaryAnimation, child) {
-                              return FadeTransition(
-                                opacity: animation,
-                                child: child,
-                              );
-                            },
-                      ),
-                    );
-                  } else {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => LevelClearScreen(
-                          childId: widget.childId,
-                          level: widget.level,
-                          totalCorrect: 0,
-                          totalQuestions: 0,
-                        ),
-                      ),
-                    );
-                  }
+                  _navigateToQuestionsOrComplete();
                 },
                 icon: Icon(
                   widget.level.questionsPath != null
@@ -447,6 +527,38 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           ),
       ],
     );
+  }
+
+  void _navigateToQuestionsOrComplete() {
+    if (widget.level.questionsPath != null) {
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              QuestionScreen(
+                childId: widget.childId,
+                level: widget.level,
+              ),
+          transitionsBuilder:
+              (context, animation, secondaryAnimation, child) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
+        ),
+      );
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => LevelClearScreen(
+            childId: widget.childId,
+            level: widget.level,
+            totalCorrect: 0,
+            totalQuestions: 0,
+          ),
+        ),
+      );
+    }
   }
 
   void _togglePlayPause() {

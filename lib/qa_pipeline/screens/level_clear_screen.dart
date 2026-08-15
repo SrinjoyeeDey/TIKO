@@ -7,7 +7,12 @@ import '../models/learning_content.dart';
 import '../services/content_discovery_service.dart';
 import '../services/star_calculator.dart';
 import 'video_player_screen.dart';
+import 'parent_dashboard.dart';
 import '../../core/state/child_state.dart';
+import '../../core/services/media_capture_service.dart';
+import '../../core/services/event_service.dart';
+import '../../core/models/event_model.dart';
+import '../services/clinical_report_service.dart';
 
 /// Full-screen Celebration screen showing crystal prism lesson badge with specular light glare,
 /// lesson progress (e.g. Lesson 1 of 5), remaining count, and reward stats.
@@ -95,6 +100,10 @@ class _LevelClearScreenState extends State<LevelClearScreen>
   }
 
   Future<void> _saveCompletion() async {
+    // 1. Immediately stop and release the camera hardware
+    await MediaCaptureService.instance.disposeCamera();
+
+    // 2. Persist level progress to SQLite database
     await ProgressRepository.saveLevelCompletion(
       childId: widget.childId,
       chapterId: widget.level.chapterId,
@@ -102,7 +111,7 @@ class _LevelClearScreenState extends State<LevelClearScreen>
       stars: _stars,
     );
 
-    // Log real interaction and complete session with calculated real duration
+    // 3. Log real interaction and complete session
     ChildState.instance.incrementActivitiesCompleted();
     await ChildState.instance.logInteraction(
       type: 'level_complete',
@@ -114,7 +123,28 @@ class _LevelClearScreenState extends State<LevelClearScreen>
         'stars': _stars,
       },
     );
+
+    // 4. Record ACTIVITY_COMPLETED telemetry event
+    await EventService.logEvent(
+      eventType: EventType.activityCompleted,
+      activityId: widget.level.id,
+      data: {
+        'chapterId': widget.level.chapterId,
+        'levelId': widget.level.id,
+        'stars': _stars,
+        'totalCorrect': widget.totalCorrect,
+        'totalQuestions': widget.totalQuestions,
+      },
+    );
+
     await ChildState.instance.endCurrentSession();
+
+    // 5. Trigger generation of Post-Play Clinical & Parental Report
+    try {
+      await ClinicalReportService.generateReport(widget.childId);
+    } catch (e) {
+      debugPrint('LevelClearScreen: Error generating clinical report: $e');
+    }
   }
 
   @override
@@ -254,6 +284,39 @@ class _LevelClearScreenState extends State<LevelClearScreen>
                               fontWeight: FontWeight.w900,
                               letterSpacing: 1.5,
                             ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      // View Parent Dashboard Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: OutlinedButton.icon(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => ParentDashboard(childId: widget.childId),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.analytics_outlined, color: Color(0xFFD4AF37), size: 20),
+                          label: const Text(
+                            'VIEW PARENT DASHBOARD',
+                            style: TextStyle(
+                              fontFamily: 'Outfit',
+                              fontSize: 15,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 1.0,
+                              color: Color(0xFFFFF8E1),
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Color(0x88D4AF37), width: 1.5),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            backgroundColor: const Color(0x552E1C12),
                           ),
                         ),
                       ),

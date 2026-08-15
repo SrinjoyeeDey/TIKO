@@ -1,15 +1,14 @@
 import 'dart:async';
-import 'dart:math' as math;
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/services/ai_integration_service.dart';
+import '../../core/services/media_capture_service.dart';
 import '../../core/state/child_state.dart';
 import '../models/speech_question.dart';
 
 /// Renders a Speech Recognition question with 3D Vintage Speech Bubble styling,
 /// active microphone recording button, real-time voice pulse animation,
-/// and AI Speech Analysis feedback from Python FastAPI (/analyze/speech).
+/// real-time Google Speech Recognition & pronunciation scoring from Python FastAPI (/analyze/speech).
 class SpeechQuestionWidget extends StatefulWidget {
   final SpeechQuestion question;
   final int questionNumber;
@@ -36,7 +35,7 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
   String _recognizedTranscript = '';
   bool _speechDetected = false;
   bool _passed = false;
-  String _statusText = 'Tap mic button & speak clearly out loud';
+  String _statusText = 'Tap the microphone button & read the sentence out loud!';
 
   late AnimationController _pulseController;
   Timer? _recordingTimer;
@@ -47,7 +46,7 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
     super.initState();
     _pulseController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 900),
     );
   }
 
@@ -58,142 +57,200 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
     super.dispose();
   }
 
-  void _toggleRecording() {
-    if (_evaluated || _isAnalyzing) return;
+  Future<void> _toggleRecording() async {
+    if (_isAnalyzing) return;
 
-    if (!_isRecording) {
-      // Start Recording
-      setState(() {
-        _isRecording = true;
-        _secondsRecorded = 0;
-        _statusText = 'Listening... Speak now!';
-      });
-      _pulseController.repeat(reverse: true);
-
-      _recordingTimer = Timer.periodic(const Duration(seconds: 1), (t) {
-        setState(() {
-          _secondsRecorded++;
-        });
-        if (_secondsRecorded >= 4) {
-          _stopAndAnalyze();
-        }
-      });
-    } else {
-      _stopAndAnalyze();
+    if (_isRecording) {
+      await _stopAndAnalyze();
+      return;
     }
+
+    setState(() {
+      _statusText = '🎙️ Accessing microphone...';
+    });
+
+    final started = await MediaCaptureService.instance.startAudioRecording();
+    if (!mounted) return;
+
+    if (!started) {
+      setState(() {
+        _isRecording = false;
+        _isAnalyzing = false;
+        _statusText = 'Microphone access denied or unavailable.';
+      });
+      return;
+    }
+
+    setState(() {
+      _isRecording = true;
+      _evaluated = false;
+      _secondsRecorded = 0;
+      _statusText = '🎙️ Listening... Speak the highlighted phrase!';
+    });
+    _pulseController.repeat(reverse: true);
+
+    _recordingTimer?.cancel();
+    _recordingTimer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (!mounted) {
+        t.cancel();
+        return;
+      }
+      setState(() {
+        _secondsRecorded++;
+      });
+      // Auto-stop after 8 seconds
+      if (_secondsRecorded >= 8) {
+        _stopAndAnalyze();
+      }
+    });
   }
 
   Future<void> _stopAndAnalyze() async {
     _recordingTimer?.cancel();
     _pulseController.stop();
 
-    setState(() {
-      _isRecording = false;
-      _isAnalyzing = true;
-      _statusText = 'Analyzing speech with Python AI Engine...';
-    });
+    if (mounted) {
+      setState(() {
+        _isRecording = false;
+        _isAnalyzing = true;
+        _statusText = 'Recognizing speech with Google AI Engine...';
+      });
+    }
 
     final childId = ChildState.instance.currentProfile.id;
     final sessionId = ChildState.instance.currentSessionId ?? 'SES_NETAJI_001';
 
-    // Build sample WAV audio bytes payload (44-byte PCM WAV header + audio payload)
-    final wavBytes = _generatePcmWavBytes(targetPhrase: widget.question.targetPhrase);
+    // Stop recording and retrieve audio bytes and browser transcript
+    final audioRes = await MediaCaptureService.instance.stopAudioRecordingAndGetResult();
+    final wavBytes = audioRes != null && audioRes['bytes'] != null ? (audioRes['bytes'] as List<int>) : <int>[];
+    final clientTranscript = audioRes != null ? (audioRes['transcript'] as String? ?? '').trim() : '';
 
-    try {
-      final res = await AiIntegrationService.instance.analyzeSpeech(
-        audioBytes: wavBytes,
-        childId: childId,
-        sessionId: sessionId,
-        activityId: 'netaji_speech_${widget.question.id}',
-        targetPhrase: widget.question.targetPhrase,
-      );
-
-      if (res['success'] == true && res['aiEvent'] != null) {
-        final data = res['aiEvent']['data'] as Map<String, dynamic>;
-        final score = (data['pronunciationScore'] as num?)?.toInt() ?? 88;
-        final transcript = (data['transcript'] as String?).orIfEmpty(widget.question.targetPhrase);
-        final detected = data['speechDetected'] == true || true;
-
+    if (wavBytes.isEmpty && clientTranscript.isEmpty) {
+      if (mounted) {
         setState(() {
           _isAnalyzing = false;
           _evaluated = true;
-          _pronunciationScore = score > 0 ? score : 90;
-          _recognizedTranscript = transcript;
-          _speechDetected = detected;
-          _passed = _pronunciationScore >= widget.question.minScoreThreshold;
-          _statusText = _passed
-              ? 'Speech Recognized! Excellent Pronunciation!'
-              : 'Good attempt! Try speaking with clear pronunciation.';
+          _pronunciationScore = 0;
+          _recognizedTranscript = '(No audio captured)';
+          _speechDetected = false;
+          _passed = false;
+          _statusText = 'No audio captured. Tap mic to try again.';
         });
-      } else {
-        // Fallback robust offline speech evaluation
-        _applyFallbackEvaluation();
+      }
+      return;
+    }
+
+    try {
+      Map<String, dynamic> res = {};
+      if (wavBytes.isNotEmpty) {
+        res = await AiIntegrationService.instance.analyzeSpeech(
+          audioBytes: wavBytes,
+          childId: childId,
+          sessionId: sessionId,
+          activityId: 'netaji_speech_${widget.question.id}',
+          targetPhrase: widget.question.targetPhrase,
+        );
+      }
+
+      int score = 0;
+      String transcript = '';
+      bool detected = false;
+
+      if (res['success'] == true && res['aiEvent'] != null) {
+        final data = res['aiEvent']['data'] as Map<String, dynamic>;
+        score = (data['pronunciationScore'] as num?)?.toInt() ?? 0;
+        final rawTranscript = data['transcript'] as String?;
+        transcript = (rawTranscript != null && rawTranscript.trim().isNotEmpty)
+            ? rawTranscript.trim()
+            : '';
+        detected = data['speechDetected'] == true;
+      }
+
+      // If backend returned 0/empty but browser Web Speech API heard speech, use client transcript
+      if (transcript.isEmpty && clientTranscript.isNotEmpty) {
+        transcript = clientTranscript;
+        detected = true;
+        score = _calculateLocalScore(clientTranscript, widget.question.targetPhrase);
+      } else if (score == 0 && clientTranscript.isNotEmpty) {
+        final localScore = _calculateLocalScore(clientTranscript, widget.question.targetPhrase);
+        if (localScore > score) {
+          score = localScore;
+          if (transcript.isEmpty) transcript = clientTranscript;
+        }
+      }
+
+      if (mounted) {
+        setState(() {
+          _isAnalyzing = false;
+          _evaluated = true;
+          _pronunciationScore = score;
+          _recognizedTranscript = transcript.isNotEmpty ? transcript : '(No words recognized)';
+          _speechDetected = detected;
+          _passed = score >= widget.question.minScoreThreshold;
+
+          if (score >= 80) {
+            _statusText = '🎉 Outstanding! Clear and accurate pronunciation!';
+          } else if (score >= 50) {
+            _statusText = '👍 Good effort! Spoke most words correctly.';
+          } else if (detected) {
+            _statusText = '👂 Speech heard, but words differed. Try speaking clearly.';
+          } else {
+            _statusText = '🔇 No clear speech heard. Speak a little louder and closer to mic.';
+          }
+        });
       }
     } catch (e) {
-      _applyFallbackEvaluation();
+      if (clientTranscript.isNotEmpty && mounted) {
+        final score = _calculateLocalScore(clientTranscript, widget.question.targetPhrase);
+        setState(() {
+          _isAnalyzing = false;
+          _evaluated = true;
+          _pronunciationScore = score;
+          _recognizedTranscript = clientTranscript;
+          _speechDetected = true;
+          _passed = score >= widget.question.minScoreThreshold;
+          _statusText = score >= 60 ? '🎉 Clear pronunciation recognized!' : '👍 Good effort!';
+        });
+        return;
+      }
+
+      if (mounted) {
+        setState(() {
+          _isAnalyzing = false;
+          _evaluated = true;
+          _pronunciationScore = 0;
+          _recognizedTranscript = '(Connection error)';
+          _speechDetected = false;
+          _passed = false;
+          _statusText = 'Could not reach AI recognition service. Tap to retry.';
+        });
+      }
     }
   }
 
-  void _applyFallbackEvaluation() {
+  int _calculateLocalScore(String heard, String target) {
+    if (heard.trim().isEmpty || target.trim().isEmpty) return 0;
+    final hWords = heard.toLowerCase().replaceAll(RegExp(r'[^\w\s]'), '').split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toList();
+    final tWords = target.toLowerCase().replaceAll(RegExp(r'[^\w\s]'), '').split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toList();
+    if (tWords.isEmpty) return 0;
+    int matched = 0;
+    for (final tw in tWords) {
+      if (hWords.any((hw) => hw == tw || hw.contains(tw) || tw.contains(hw))) {
+        matched++;
+      }
+    }
+    return ((matched / tWords.length) * 100).clamp(0, 100).toInt();
+  }
+
+  void _resetForRetry() {
     setState(() {
-      _isAnalyzing = false;
-      _evaluated = true;
-      _pronunciationScore = 92;
-      _recognizedTranscript = widget.question.targetPhrase;
-      _speechDetected = true;
-      _passed = true;
-      _statusText = 'Speech Recognized! Excellent Pronunciation!';
+      _evaluated = false;
+      _pronunciationScore = 0;
+      _recognizedTranscript = '';
+      _speechDetected = false;
+      _passed = false;
+      _statusText = 'Tap the microphone button & read the sentence out loud!';
     });
-  }
-
-  /// Generates a valid 44-byte WAV header + dummy audio waveform for Web/Desktop HTTP transmission
-  List<int> _generatePcmWavBytes({required String targetPhrase}) {
-    final sampleRate = 16000;
-    final numSamples = sampleRate * 2; // 2 seconds
-    final dataSize = numSamples * 2;
-    final fileSize = 36 + dataSize;
-
-    final bytes = Uint8List(44 + dataSize);
-    final bd = ByteData.sublistView(bytes);
-
-    // RIFF header
-    bd.setUint8(0, 0x52); // 'R'
-    bd.setUint8(1, 0x49); // 'I'
-    bd.setUint8(2, 0x46); // 'F'
-    bd.setUint8(3, 0x46); // 'F'
-    bd.setUint32(4, fileSize, Endian.little);
-    bd.setUint8(8, 0x57);  // 'W'
-    bd.setUint8(9, 0x41);  // 'A'
-    bd.setUint8(10, 0x56); // 'V'
-    bd.setUint8(11, 0x45); // 'E'
-
-    // fmt chunk
-    bd.setUint8(12, 0x66); // 'f'
-    bd.setUint8(13, 0x6D); // 'm'
-    bd.setUint8(14, 0x74); // 't'
-    bd.setUint8(15, 0x20); // ' '
-    bd.setUint32(16, 16, Endian.little); // Chunk size 16
-    bd.setUint16(20, 1, Endian.little);  // PCM format
-    bd.setUint16(22, 1, Endian.little);  // Mono
-    bd.setUint32(24, sampleRate, Endian.little);
-    bd.setUint32(28, sampleRate * 2, Endian.little); // Byte rate
-    bd.setUint16(32, 2, Endian.little);  // Block align
-    bd.setUint16(34, 16, Endian.little); // Bits per sample
-
-    // data chunk
-    bd.setUint8(36, 0x64); // 'd'
-    bd.setUint8(37, 0x61); // 'a'
-    bd.setUint8(38, 0x74); // 't'
-    bd.setUint8(39, 0x61); // 'a'
-    bd.setUint32(40, dataSize, Endian.little);
-
-    // Fill sine wave audio signal
-    for (int i = 0; i < numSamples; i++) {
-      final sample = (math.sin(2 * math.pi * 440 * i / sampleRate) * 16000).toInt();
-      bd.setInt16(44 + i * 2, sample, Endian.little);
-    }
-
-    return bytes;
   }
 
   @override
@@ -206,11 +263,11 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: const Color(0xB51E100A), // Vintage Sepia Glass
+              color: const Color(0xCC1E100A), // Vintage Sepia Glass
               borderRadius: BorderRadius.circular(32),
               border: Border.all(color: const Color(0xFFD4AF37), width: 2.5),
               boxShadow: const [
-                BoxShadow(color: Colors.black54, blurRadius: 12, offset: Offset(0, 6)),
+                BoxShadow(color: Colors.black54, blurRadius: 14, offset: Offset(0, 6)),
               ],
             ),
             child: Column(
@@ -228,7 +285,7 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
                       Icon(Icons.record_voice_over, size: 18, color: Color(0xFF2E1C12)),
                       SizedBox(width: 6),
                       Text(
-                        'SPEECH RECOGNITION TEST',
+                        'VOICE PRONUNCIATION TEST',
                         style: TextStyle(
                           fontFamily: 'Outfit',
                           fontSize: 12,
@@ -248,8 +305,8 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontFamily: 'Outfit',
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
                 ),
@@ -258,16 +315,19 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
                 // Target Phrase Highlight Box
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                   decoration: BoxDecoration(
                     color: const Color(0xEE2E1C12),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0xFFFFF8E1), width: 1.5),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: const Color(0xFFD4AF37), width: 1.8),
+                    boxShadow: const [
+                      BoxShadow(color: Colors.black45, blurRadius: 8, offset: Offset(0, 4)),
+                    ],
                   ),
                   child: Column(
                     children: [
                       const Text(
-                        'TARGET PHRASE:',
+                        'READ & SPEAK OUT LOUD:',
                         style: TextStyle(
                           fontFamily: 'Outfit',
                           color: Color(0xFFD4AF37),
@@ -276,16 +336,17 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
                           letterSpacing: 1.2,
                         ),
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 8),
                       Text(
                         '"${widget.question.targetPhrase}"',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontFamily: 'Outfit',
-                          color: Colors.white,
+                          color: Color(0xFFFFF8E1),
                           fontSize: 22,
                           fontWeight: FontWeight.w900,
-                          letterSpacing: 0.8,
+                          letterSpacing: 0.5,
+                          height: 1.3,
                         ),
                       ),
                     ],
@@ -318,31 +379,65 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
                   const SizedBox(height: 20),
                 ],
 
-                // Action Continue Button
+                // Action Buttons
                 if (_evaluated)
-                  SizedBox(
-                    width: double.infinity,
-                    height: 52,
-                    child: ElevatedButton(
-                      onPressed: () => widget.onAnswered(_passed),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFD4AF37),
-                        foregroundColor: const Color(0xFF2E1C12),
-                        elevation: 6,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          side: const BorderSide(color: Color(0xFFFFF8E1), width: 1.5),
+                  Row(
+                    children: [
+                      // Practice / Try Again Button
+                      Expanded(
+                        child: SizedBox(
+                          height: 50,
+                          child: OutlinedButton.icon(
+                            onPressed: _resetForRetry,
+                            icon: const Icon(Icons.refresh_rounded, size: 20),
+                            label: const Text(
+                              'PRACTICE AGAIN',
+                              style: TextStyle(
+                                fontFamily: 'Outfit',
+                                fontSize: 13,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: const Color(0xFFD4AF37),
+                              side: const BorderSide(color: Color(0xFFD4AF37), width: 1.8),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                      child: const Text(
-                        'CONTINUE →',
-                        style: TextStyle(
-                          fontFamily: 'Outfit',
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
+                      const SizedBox(width: 12),
+
+                      // Continue / Submit Button
+                      Expanded(
+                        child: SizedBox(
+                          height: 50,
+                          child: ElevatedButton.icon(
+                            onPressed: () => widget.onAnswered(_passed),
+                            icon: const Icon(Icons.arrow_forward_rounded, size: 20),
+                            label: const Text(
+                              'SUBMIT',
+                              style: TextStyle(
+                                fontFamily: 'Outfit',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFD4AF37),
+                              foregroundColor: const Color(0xFF2E1C12),
+                              elevation: 6,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                side: const BorderSide(color: Color(0xFFFFF8E1), width: 1.5),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
               ],
             ),
@@ -354,7 +449,28 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
 
   Widget _buildMicButton() {
     if (_isAnalyzing) {
-      return const CircularProgressIndicator(color: Color(0xFFD4AF37));
+      return Column(
+        children: [
+          const SizedBox(
+            width: 70,
+            height: 70,
+            child: CircularProgressIndicator(
+              color: Color(0xFFD4AF37),
+              strokeWidth: 4,
+            ),
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            'Analyzing Audio...',
+            style: TextStyle(
+              fontFamily: 'Outfit',
+              color: Color(0xFFD4AF37),
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      );
     }
 
     return AnimatedBuilder(
@@ -371,15 +487,19 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: _isRecording
-                    ? const Color(0xFFFF4D4D)
-                    : (_evaluated ? const Color(0xFF2E7D32) : const Color(0xFFD4AF37)),
+                    ? const Color(0xFFFF3333)
+                    : (_evaluated
+                        ? (_passed ? const Color(0xFF2E7D32) : const Color(0xFFE65100))
+                        : const Color(0xFFD4AF37)),
                 border: Border.all(
                   color: Colors.white,
                   width: 3.5,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: _isRecording ? Colors.redAccent.withValues(alpha: 0.6) : Colors.black45,
+                    color: _isRecording
+                        ? Colors.redAccent.withValues(alpha: 0.6)
+                        : Colors.black45,
                     blurRadius: _isRecording ? 20 : 10,
                     spreadRadius: _isRecording ? 4 : 1,
                   ),
@@ -391,9 +511,9 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
                   Icon(
                     _isRecording
                         ? Icons.mic
-                        : (_evaluated ? Icons.check_circle_outline : Icons.mic_none_rounded),
-                    color: _isRecording ? Colors.white : const Color(0xFF2E1C12),
-                    size: 40,
+                        : (_evaluated ? Icons.mic_none_rounded : Icons.mic),
+                    color: _isRecording || _evaluated ? Colors.white : const Color(0xFF2E1C12),
+                    size: 38,
                   ),
                   if (_isRecording)
                     Text(
@@ -402,7 +522,18 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
                         fontFamily: 'Outfit',
                         color: Colors.white,
                         fontSize: 11,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    )
+                  else
+                    Text(
+                      _evaluated ? 'TAP MIC' : 'SPEAK',
+                      style: TextStyle(
+                        fontFamily: 'Outfit',
+                        color: _evaluated ? Colors.white : const Color(0xFF2E1C12),
+                        fontSize: 10,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 0.8,
                       ),
                     ),
                 ],
@@ -415,18 +546,22 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
   }
 
   Widget _buildResultsCard() {
+    final isGoodScore = _pronunciationScore >= widget.question.minScoreThreshold;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: _passed ? const Color(0xDD1B5E20) : const Color(0xDDE65100),
-        borderRadius: BorderRadius.circular(16),
+        color: isGoodScore ? const Color(0xDD1B5E20) : const Color(0xDD4A2810),
+        borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: _passed ? const Color(0xFFA5D6A7) : const Color(0xFFFFCC80),
+          color: isGoodScore ? const Color(0xFFA5D6A7) : const Color(0xFFD4AF37),
           width: 1.8,
         ),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Score row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -436,77 +571,157 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
                   fontFamily: 'Outfit',
                   color: Colors.white70,
                   fontSize: 14,
-                ),
-              ),
-              Text(
-                '$_pronunciationScore%',
-                style: const TextStyle(
-                  fontFamily: 'Outfit',
-                  color: Color(0xFFFFD700),
-                  fontSize: 22,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Recognized Text:',
-                style: TextStyle(
-                  fontFamily: 'Outfit',
-                  color: Colors.white70,
-                  fontSize: 14,
-                ),
-              ),
-              Flexible(
-                child: Text(
-                  '"$_recognizedTranscript"',
-                  style: const TextStyle(
-                    fontFamily: 'Outfit',
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Phonetic Alignment:',
-                style: TextStyle(
-                  fontFamily: 'Outfit',
-                  color: Colors.white70,
-                  fontSize: 14,
-                ),
-              ),
-              Text(
-                _speechDetected ? 'Verified (Totla Normalized)' : 'Low Signal',
-                style: const TextStyle(
-                  fontFamily: 'Outfit',
-                  color: Colors.white,
-                  fontSize: 13,
                   fontWeight: FontWeight.w600,
                 ),
               ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: isGoodScore ? const Color(0xFF2E7D32) : const Color(0xFFB71C1C),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  '$_pronunciationScore%',
+                  style: const TextStyle(
+                    fontFamily: 'Outfit',
+                    color: Color(0xFFFFD700),
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
             ],
           ),
+          const SizedBox(height: 12),
+
+          // Recognized Text
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Google AI Heard:',
+                style: TextStyle(
+                  fontFamily: 'Outfit',
+                  color: Colors.white70,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: _speechDetected ? const Color(0x334CAF50) : const Color(0x33FF5722),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      _speechDetected ? Icons.mic : Icons.mic_off,
+                      size: 12,
+                      color: _speechDetected ? const Color(0xFF81C784) : const Color(0xFFFF8A65),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      _speechDetected ? 'Voice Detected' : 'Low/No Signal',
+                      style: TextStyle(
+                        fontFamily: 'Outfit',
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: _speechDetected ? const Color(0xFF81C784) : const Color(0xFFFF8A65),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color(0x66000000),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              '"$_recognizedTranscript"',
+              style: const TextStyle(
+                fontFamily: 'Outfit',
+                color: Color(0xFFFFF8E1),
+                fontSize: 14,
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Word Breakdown Badges
+          const Text(
+            'Spoken Word Alignment:',
+            style: TextStyle(
+              fontFamily: 'Outfit',
+              color: Colors.white70,
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 8),
+          _buildWordBreakdown(),
         ],
       ),
     );
   }
-}
 
-extension _StringExt on String? {
-  String orIfEmpty(String fallback) {
-    if (this == null || this!.trim().isEmpty) return fallback;
-    return this!;
+  Widget _buildWordBreakdown() {
+    final targetWords = widget.question.targetPhrase.split(RegExp(r'\s+'));
+    final spokenWords = _recognizedTranscript.toLowerCase().split(RegExp(r'\s+'));
+
+    return Wrap(
+      spacing: 6,
+      runSpacing: 6,
+      children: targetWords.map((word) {
+        final cleanTarget = word.toLowerCase().replaceAll(RegExp(r'[^\w]'), '');
+        final isMatched = spokenWords.any((sw) {
+          final cleanSw = sw.replaceAll(RegExp(r'[^\w]'), '');
+          return cleanSw == cleanTarget ||
+              (cleanTarget.length > 3 && cleanSw.contains(cleanTarget)) ||
+              (cleanSw.length > 3 && cleanTarget.contains(cleanSw));
+        });
+
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: isMatched ? const Color(0x334CAF50) : const Color(0x33FF9800),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: isMatched ? const Color(0xFF81C784) : const Color(0xFFFFB74D),
+              width: 1.2,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                isMatched ? Icons.check_circle : Icons.radio_button_unchecked,
+                size: 13,
+                color: isMatched ? const Color(0xFF81C784) : const Color(0xFFFFB74D),
+              ),
+              const SizedBox(width: 4),
+              Text(
+                word,
+                style: TextStyle(
+                  fontFamily: 'Outfit',
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: isMatched ? const Color(0xFFE8F5E9) : const Color(0xFFFFF3E0),
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
   }
 }

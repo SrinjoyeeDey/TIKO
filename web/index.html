@@ -41,6 +41,143 @@
     For more details:
     * https://docs.flutter.dev/platform-integration/web/initialization
   -->
+  <script>
+    window.nimoAudioRecorder = {
+      mediaRecorder: null,
+      audioChunks: [],
+      stream: null,
+      speechRecognition: null,
+      liveTranscript: '',
+      
+      start: async function() {
+        try {
+          this.audioChunks = [];
+          this.liveTranscript = '';
+          
+          let stream;
+          try {
+            stream = await navigator.mediaDevices.getUserMedia({ 
+              audio: {
+                echoCancellation: true,
+                noiseSuppression: true,
+                autoGainControl: true
+              } 
+            });
+          } catch(e) {
+            console.warn('Strict mic constraints failed, falling back to audio:true', e);
+            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          }
+          this.stream = stream;
+          
+          let mimeType = '';
+          if (typeof MediaRecorder !== 'undefined') {
+            if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+              mimeType = 'audio/webm;codecs=opus';
+            } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+              mimeType = 'audio/webm';
+            } else if (MediaRecorder.isTypeSupported('audio/ogg')) {
+              mimeType = 'audio/ogg';
+            }
+          }
+          
+          this.mediaRecorder = mimeType ? new MediaRecorder(this.stream, { mimeType }) : new MediaRecorder(this.stream);
+          this.mediaRecorder.ondataavailable = (e) => {
+            if (e.data && e.data.size > 0) {
+              this.audioChunks.push(e.data);
+            }
+          };
+          this.mediaRecorder.start(100);
+
+          // Web Speech API for real-time transcription backup
+          try {
+            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (SpeechRec) {
+              this.speechRecognition = new SpeechRec();
+              this.speechRecognition.continuous = true;
+              this.speechRecognition.interimResults = true;
+              this.speechRecognition.lang = 'en-IN';
+              this.speechRecognition.onresult = (event) => {
+                let text = '';
+                for (let i = 0; i < event.results.length; i++) {
+                  text += event.results[i][0].transcript + ' ';
+                }
+                window.nimoAudioRecorder.liveTranscript = text.trim();
+              };
+              this.speechRecognition.start();
+            }
+          } catch (e) {
+            console.warn('SpeechRecognition init:', e);
+          }
+
+          return true;
+        } catch (err) {
+          console.error('Audio recorder start error:', err);
+          return false;
+        }
+      },
+
+      stop: function() {
+        return new Promise((resolve) => {
+          try {
+            if (this.speechRecognition) {
+              try { this.speechRecognition.stop(); } catch(_) {}
+            }
+            if (!this.mediaRecorder || this.mediaRecorder.state === 'inactive') {
+              resolve(JSON.stringify({ base64Audio: '', transcript: this.liveTranscript || '' }));
+              return;
+            }
+            this.mediaRecorder.onstop = () => {
+              const blob = new Blob(this.audioChunks, { type: this.mediaRecorder.mimeType || 'audio/webm' });
+              if (this.stream) {
+                this.stream.getTracks().forEach(track => track.stop());
+              }
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                const res = reader.result || '';
+                const base64Audio = res.includes(',') ? res.split(',')[1] : '';
+                resolve(JSON.stringify({ 
+                  base64Audio: base64Audio, 
+                  transcript: window.nimoAudioRecorder.liveTranscript || '',
+                  mimeType: blob.type
+                }));
+              };
+              reader.readAsDataURL(blob);
+            };
+            this.mediaRecorder.stop();
+          } catch (err) {
+            console.error('Audio recorder stop error:', err);
+            resolve(JSON.stringify({ base64Audio: '', transcript: this.liveTranscript || '' }));
+          }
+        });
+      }
+    };
+
+    window.nimoAudioRecorderStart = function() {
+      return window.nimoAudioRecorder.start();
+    };
+
+    window.nimoAudioRecorderStop = function() {
+      return window.nimoAudioRecorder.stop();
+    };
+
+    window.nimoCaptureVideoFrame = function() {
+      try {
+        const video = document.querySelector('video');
+        if (!video || video.readyState < 2 || video.videoWidth === 0) return '';
+        const canvas = document.createElement('canvas');
+        const scale = Math.min(1.0, 480 / video.videoWidth);
+        canvas.width = Math.round(video.videoWidth * scale);
+        canvas.height = Math.round(video.videoHeight * scale);
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.65);
+        return dataUrl.includes(',') ? dataUrl.split(',')[1] : '';
+      } catch(e) {
+        console.warn('Video frame capture error:', e);
+        return '';
+      }
+    };
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

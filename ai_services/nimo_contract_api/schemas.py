@@ -4,9 +4,6 @@ defined by the backend team.
 """
 from pydantic import BaseModel
 from typing import Optional
-from datetime import datetime
-
-
 # ─── Shared Event Wrapper ────────────────────────────────────────────────────
 
 class NIMOEvent(BaseModel):
