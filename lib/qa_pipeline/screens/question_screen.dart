@@ -21,6 +21,9 @@ import '../widgets/image_matching_widget.dart';
 import '../widgets/mcq_question_widget.dart';
 import '../widgets/sequence_question_widget.dart';
 import 'level_clear_screen.dart';
+import '../../core/api/activity_api.dart';
+import '../../core/models/activity_model.dart';
+import '../../core/widgets/activity_renderer.dart';
 
 /// Manages the full question flow for a level:
 ///   MCQ → Descriptive → Sequence (drag-and-drop) → Level Clear.
@@ -73,47 +76,41 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   Future<void> _loadQuestions() async {
     try {
-      final qs =
-          await QuestionService.loadQuestions(widget.level.questionsPath);
-
-      if (qs.isEmpty) {
-        if (mounted) {
-          _navigateToLevelClear();
-        }
-        return;
+      // 1. Fetch Backend-Driven Activities (Phase 3 Activity Engine)
+      final backendActivities = await ActivityApi.getActivitiesForStory(widget.level.chapterId);
+      if (backendActivities.isNotEmpty) {
+        _allQuestions.addAll(backendActivities);
       }
 
-      // Check adaptive learning to see if any sections should be skipped.
-      final activeSections =
-          await AdaptiveLearningService.getActiveSections(widget.childId);
-
-      // Build the flat ordered list: MCQ → Descriptive → Sequence drag-and-drop.
-      if (activeSections.contains('mcq')) {
-        _allQuestions.addAll(qs.mcqQuestions);
-      }
-      if (activeSections.contains('descriptive')) {
-        _allQuestions.addAll(qs.descriptiveQuestions);
-      }
-      if (activeSections.contains('sequence')) {
-        _allQuestions.addAll(qs.sequenceDragQuestions);
-      }
-      if (activeSections.contains('imageMatching')) {
-        _allQuestions.addAll(qs.imageMatchingQuestions);
-      }
-
-      // If adaptive filtering removed everything, fall back to all questions.
+      // 2. Fallback to local questions if backend offline
       if (_allQuestions.isEmpty) {
-        _allQuestions
-          ..addAll(qs.mcqQuestions)
-          ..addAll(qs.descriptiveQuestions)
-          ..addAll(qs.sequenceDragQuestions)
-          ..addAll(qs.imageMatchingQuestions);
+        final qs = await QuestionService.loadQuestions(widget.level.questionsPath);
+        final activeSections = await AdaptiveLearningService.getActiveSections(widget.childId);
+
+        if (activeSections.contains('mcq')) _allQuestions.addAll(qs.mcqQuestions);
+        if (activeSections.contains('descriptive')) _allQuestions.addAll(qs.descriptiveQuestions);
+        if (activeSections.contains('sequence')) _allQuestions.addAll(qs.sequenceDragQuestions);
+        if (activeSections.contains('imageMatching')) _allQuestions.addAll(qs.imageMatchingQuestions);
+
+        if (_allQuestions.isEmpty) {
+          _allQuestions
+            ..addAll(qs.mcqQuestions)
+            ..addAll(qs.descriptiveQuestions)
+            ..addAll(qs.sequenceDragQuestions)
+            ..addAll(qs.imageMatchingQuestions);
+        }
       }
 
       _totalQuestions = _allQuestions.length;
 
       setState(() {
-        _questionSet = qs;
+        _questionSet = const QuestionSet(
+          mcqQuestions: [],
+          descriptiveQuestions: [],
+          sequenceQuestions: [],
+          sequenceDragQuestions: [],
+          imageMatchingQuestions: [],
+        );
         _questionStartedAt = DateTime.now();
       });
     } catch (e) {
@@ -486,6 +483,15 @@ class _QuestionScreenState extends State<QuestionScreen> {
     _PhaseInfo phaseInfo,
     Key widgetKey,
   ) {
+    if (question is ActivityModel) {
+      return ActivityRenderer(
+        key: widgetKey,
+        activity: question,
+        questionNumber: phaseInfo.numberInPhase,
+        onAnswered: (isCorrect) => _onQuestionAnswered(isCorrect),
+      );
+    }
+
     if (question is McqQuestion) {
       return McqQuestionWidget(
         key: widgetKey,
@@ -551,6 +557,10 @@ class _QuestionScreenState extends State<QuestionScreen> {
   // ─── Helpers ──────────────────────────────────────────────────────
 
   _PhaseInfo _getPhaseInfo(dynamic question) {
+    if (question is ActivityModel) {
+      final idx = _allQuestions.indexOf(question);
+      return _PhaseInfo(question.type.toUpperCase(), idx != -1 ? idx + 1 : 1);
+    }
     if (question is McqQuestion && question.type == QuestionType.mcq) {
       final idx = _allQuestions
           .whereType<McqQuestion>()

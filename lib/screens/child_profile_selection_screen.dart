@@ -5,6 +5,8 @@ import '../qa_pipeline/database/child_repository.dart';
 import '../screens/onboarding_screen.dart';
 import 'game_map_1913_screen.dart';
 import '../widgets/smoke_bomb_transition.dart';
+import '../core/api/child_api.dart';
+import '../core/state/child_state.dart';
 
 /// Japanese-Inspired Child Profile Selection Screen ("Who are you?")
 /// Features:
@@ -63,6 +65,24 @@ class _ChildProfileSelectionScreenState extends State<ChildProfileSelectionScree
     )..repeat();
 
     _generatePetals();
+    _loadBackendProfile();
+  }
+
+  Future<void> _loadBackendProfile() async {
+    try {
+      final profile = await ChildApi.getChildProfile('A001');
+      ChildState.instance.setProfile(profile);
+      if (mounted) {
+        setState(() {
+          _profiles[0]['name'] = profile.name;
+          _profiles[0]['level'] = profile.level;
+          _profiles[0]['streak'] = profile.streak;
+          _profiles[0]['xp'] = profile.xp;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading backend profile: $e');
+    }
   }
 
   void _generatePetals() {
@@ -92,9 +112,22 @@ class _ChildProfileSelectionScreenState extends State<ChildProfileSelectionScree
   }
 
   Future<void> _startAdventure() async {
-    final name = _profiles[_selectedChildIndex]['name'] as String;
-    // Keep the analytics/parent dashboard profile in sync with the profile
-    // selected in the main experience.
+    final selectedMap = _profiles[_selectedChildIndex];
+    final name = selectedMap['name'] as String;
+
+    // Load or create child profile & store in ChildState
+    final profile = await ChildApi.getChildProfile('A001');
+    ChildState.instance.setProfile(profile.copyWith(
+      name: name,
+      level: selectedMap['level'] as int? ?? profile.level,
+      streak: selectedMap['streak'] as int? ?? profile.streak,
+    ));
+
+    // Start Session on Backend -> Session ID generated
+    final session = await ChildState.instance.startNewSession(storyId: 'netaji');
+    debugPrint('🚀 Session Started! Session ID: ${session?.sessionId}, Story: ${session?.storyId}');
+
+    // Keep analytics / parent database in sync
     final existingProfile = await ChildRepository.getChildByName(name);
     if (existingProfile == null) {
       await ChildRepository.createChild(name: name);

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'auth_mode_selection_screen.dart';
 import 'game_map_1913_screen.dart';
+import 'leaderboard_screen.dart';
 import '../widgets/smoke_bomb_transition.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -2023,7 +2024,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     final navItems = [
       {'icon': Icons.home_rounded, 'color': const Color(0xFF78C850), 'label': 'Home'},
       {'icon': Icons.shield_rounded, 'color': const Color(0xFFF4C95D), 'label': 'Quests'},
-      {'icon': Icons.park_rounded, 'color': const Color(0xFF1F3B16), 'label': 'Practice'},
+      {'icon': Icons.leaderboard_rounded, 'color': const Color(0xFFF08A5D), 'label': 'Leaderboard'},
       {'icon': Icons.favorite_rounded, 'color': const Color(0xFFFF4B4B), 'label': 'Hearts'},
       {'icon': Icons.videocam_rounded, 'color': const Color(0xFF78C850), 'label': 'Call'},
       {'icon': Icons.more_horiz_rounded, 'color': const Color(0xFF1F3B16), 'label': 'More'},
@@ -2062,6 +2063,14 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
             child: GestureDetector(
               onTap: () {
                 HapticFeedback.selectionClick();
+                if (index == 2) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const LeaderboardScreen(),
+                    ),
+                  );
+                  return;
+                }
                 setState(() => _activeNavIndex = index);
               },
               behavior: HitTestBehavior.opaque,

@@ -10,6 +10,7 @@ import '../qa_pipeline/screens/level_selection_screen.dart';
 import '../qa_pipeline/screens/video_player_screen.dart';
 import '../qa_pipeline/screens/level_clear_screen.dart';
 import '../qa_pipeline/models/learning_content.dart';
+import '../core/state/child_state.dart';
 
 /// 80s Showa Retro Worn Explorer Postcard Carousel Screen
 /// Features:
@@ -171,6 +172,10 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
     if (!mounted) return;
 
     final selectedStory = _collection.stories[index];
+
+    // Trigger Session Engine -> POST /api/sessions
+    await ChildState.instance.startNewSession(storyId: selectedStory.id);
+    if (!mounted) return;
 
     Widget nextScreen;
     if (selectedStory.stateId == 'west_bengal_dynamic') {

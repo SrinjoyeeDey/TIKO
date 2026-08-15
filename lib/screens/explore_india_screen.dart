@@ -10,6 +10,8 @@ import 'state_story_collection_screen.dart';
 import 'horizontal_ground_map_screen.dart';
 import '../journey/widgets/proceed_button.dart';
 import '../services/app_asset_preloader.dart';
+import '../core/state/child_state.dart';
+import '../core/models/child_profile.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // EXPLORE INDIA SCREEN (Red Pin & Ultra-Smooth Leisurely Animations)
@@ -327,6 +329,31 @@ class _ExploreIndiaScreenState extends State<ExploreIndiaScreen>
             active: true,
             size: 36,
             iconSize: 18,
+          ),
+          const SizedBox(width: 6),
+          // Live Child Profile HUD pill
+          ValueListenableBuilder<ChildProfile?>(
+            valueListenable: ChildState.instance.activeProfileNotifier,
+            builder: (context, profile, _) {
+              final lvl = profile?.level ?? 1;
+              final streak = profile?.streak ?? 1;
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF2C1C0F),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: const Color(0xFFFFD54F), width: 1),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('⭐ Lvl $lvl', style: const TextStyle(fontSize: 10, color: Color(0xFFFFF176), fontWeight: FontWeight.bold)),
+                    const SizedBox(width: 6),
+                    Text('🔥 ${streak}d', style: const TextStyle(fontSize: 10, color: Color(0xFFFF8A65), fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              );
+            },
           ),
           const SizedBox(width: 6),
           _PressableIconButton(

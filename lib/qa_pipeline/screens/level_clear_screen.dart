@@ -7,6 +7,7 @@ import '../models/learning_content.dart';
 import '../services/content_discovery_service.dart';
 import '../services/star_calculator.dart';
 import 'video_player_screen.dart';
+import '../../core/state/child_state.dart';
 
 /// Full-screen Celebration screen showing crystal prism lesson badge with specular light glare,
 /// lesson progress (e.g. Lesson 1 of 5), remaining count, and reward stats.
@@ -100,6 +101,20 @@ class _LevelClearScreenState extends State<LevelClearScreen>
       levelId: widget.level.id,
       stars: _stars,
     );
+
+    // Log real interaction and complete session with calculated real duration
+    ChildState.instance.incrementActivitiesCompleted();
+    await ChildState.instance.logInteraction(
+      type: 'level_complete',
+      questionId: widget.level.id,
+      isCorrect: widget.totalCorrect == widget.totalQuestions,
+      details: {
+        'totalCorrect': widget.totalCorrect,
+        'totalQuestions': widget.totalQuestions,
+        'stars': _stars,
+      },
+    );
+    await ChildState.instance.endCurrentSession();
   }
 
   @override
