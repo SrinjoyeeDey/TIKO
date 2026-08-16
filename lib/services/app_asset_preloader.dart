@@ -25,6 +25,21 @@ class AppAssetPreloader {
         }
       }
     }
+
+    // Precache all 48 Panda animation PNG frames for instantaneous Frame-1 reaction
+    for (final anim in ['idle', 'thinking', 'correct', 'celebrate', 'wrong_sad', 'appear']) {
+      for (int i = 1; i <= 8; i++) {
+        if (!context.mounted) return;
+        final numStr = i.toString().padLeft(2, '0');
+        final pandaPath = 'assets/animations/panda/$anim/frame_$numStr.png';
+        if (!_precachedAssets.contains(pandaPath)) {
+          try {
+            await precacheImage(AssetImage(pandaPath), context);
+            _precachedAssets.add(pandaPath);
+          } catch (_) {}
+        }
+      }
+    }
   }
 
   /// Stage 2: Intelligently precache state story thumbnails when state is tapped

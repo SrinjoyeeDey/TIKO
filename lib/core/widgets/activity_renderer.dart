@@ -22,12 +22,14 @@ class ActivityRenderer extends StatefulWidget {
   final ActivityModel activity;
   final int questionNumber;
   final ValueChanged<bool> onAnswered;
+  final ValueChanged<bool>? onPandaReaction;
 
   const ActivityRenderer({
     super.key,
     required this.activity,
     this.questionNumber = 1,
     required this.onAnswered,
+    this.onPandaReaction,
   });
 
   @override
@@ -124,6 +126,7 @@ class _ActivityRendererState extends State<ActivityRenderer> {
       });
     }
 
+    widget.onPandaReaction?.call(isCorrect);
     widget.onAnswered(isCorrect);
   }
 
@@ -177,6 +180,7 @@ class _ActivityRendererState extends State<ActivityRenderer> {
       questionNumber: widget.questionNumber,
       phaseLabel: widget.activity.title,
       onAnswered: _handleAnswerSubmitted,
+      onPandaReaction: widget.onPandaReaction,
     );
   }
 
@@ -194,6 +198,7 @@ class _ActivityRendererState extends State<ActivityRenderer> {
       question: seq,
       questionNumber: widget.questionNumber,
       onAnswered: _handleAnswerSubmitted,
+      onPandaReaction: widget.onPandaReaction,
     );
   }
 
@@ -242,6 +247,7 @@ class _ActivityRendererState extends State<ActivityRenderer> {
       onCompleted: (correctMatchesCount, totalMatchesCount) {
         _handleAnswerSubmitted(correctMatchesCount == totalMatchesCount);
       },
+      onPandaReaction: widget.onPandaReaction,
     );
   }
 
@@ -267,6 +273,7 @@ class _ActivityRendererState extends State<ActivityRenderer> {
       question: speechQ,
       questionNumber: widget.questionNumber,
       onAnswered: _handleAnswerSubmitted,
+      onPandaReaction: widget.onPandaReaction,
     );
   }
 

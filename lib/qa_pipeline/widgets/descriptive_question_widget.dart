@@ -19,12 +19,16 @@ class DescriptiveQuestionWidget extends StatefulWidget {
   final void Function(bool isCorrect, double score, String userAnswer)?
       onAnsweredDetailed;
 
+  /// Called immediately on submission to trigger character animations.
+  final ValueChanged<bool>? onPandaReaction;
+
   const DescriptiveQuestionWidget({
     super.key,
     required this.question,
     required this.questionNumber,
     required this.onAnswered,
     this.onAnsweredDetailed,
+    this.onPandaReaction,
   });
 
   @override
@@ -198,6 +202,8 @@ class _DescriptiveQuestionWidgetState extends State<DescriptiveQuestionWidget> {
         _passed = passed;
         _submitted = true;
       });
+
+      widget.onPandaReaction?.call(passed);
     } else {
       if (widget.onAnsweredDetailed != null) {
         widget.onAnsweredDetailed!(

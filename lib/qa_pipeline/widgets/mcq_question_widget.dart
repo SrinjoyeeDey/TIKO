@@ -15,12 +15,16 @@ class McqQuestionWidget extends StatefulWidget {
   /// [isCorrect] indicates whether the selected answer was right.
   final ValueChanged<bool> onAnswered;
 
+  /// Called immediately on submission to trigger character animations without waiting for next question.
+  final ValueChanged<bool>? onPandaReaction;
+
   const McqQuestionWidget({
     super.key,
     required this.question,
     required this.questionNumber,
     required this.phaseLabel,
     required this.onAnswered,
+    this.onPandaReaction,
   });
 
   @override
@@ -349,6 +353,8 @@ class _McqQuestionWidgetState extends State<McqQuestionWidget>
     if (!_submitted) {
       final isCorrect = widget.question.isCorrect(_selectedKey!);
       setState(() => _submitted = true);
+
+      widget.onPandaReaction?.call(isCorrect);
 
       if (isCorrect) {
         confettiController.play();

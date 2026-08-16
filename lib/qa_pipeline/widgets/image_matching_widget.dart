@@ -9,6 +9,7 @@ class ImageMatchingWidget extends StatefulWidget {
   final String chapterId;
   final String levelId;
   final Function(int correctMatches, int totalMatches) onCompleted;
+  final ValueChanged<bool>? onPandaReaction;
 
   const ImageMatchingWidget({
     super.key,
@@ -16,6 +17,7 @@ class ImageMatchingWidget extends StatefulWidget {
     required this.chapterId,
     required this.levelId,
     required this.onCompleted,
+    this.onPandaReaction,
   });
 
   @override
@@ -59,6 +61,9 @@ class _ImageMatchingWidgetState extends State<ImageMatchingWidget> {
 
     if (correct == widget.question.images.length) {
       _confettiController.play();
+      widget.onPandaReaction?.call(true);
+    } else {
+      widget.onPandaReaction?.call(false);
     }
   }
 
