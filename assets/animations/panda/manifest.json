@@ -1,0 +1,120 @@
+{
+  "character": "panda",
+  "source": "C:\\Users\\bbisw\\Downloads\\panda_all_other_conditions_40_frames",
+  "animations": {
+    "idle": {
+      "frames": [
+        "idle/frame_01.png",
+        "idle/frame_02.png",
+        "idle/frame_03.png",
+        "idle/frame_04.png",
+        "idle/frame_05.png",
+        "idle/frame_06.png",
+        "idle/frame_07.png",
+        "idle/frame_08.png"
+      ],
+      "count": 8,
+      "canvas": [
+        87,
+        95
+      ],
+      "fps": "6-8",
+      "status": "validated RGBA source frames"
+    },
+    "thinking": {
+      "frames": [
+        "thinking/frame_01.png",
+        "thinking/frame_02.png",
+        "thinking/frame_03.png",
+        "thinking/frame_04.png",
+        "thinking/frame_05.png",
+        "thinking/frame_06.png",
+        "thinking/frame_07.png",
+        "thinking/frame_08.png"
+      ],
+      "count": 8,
+      "canvas": [
+        127,
+        143
+      ],
+      "fps": "8-10",
+      "status": "validated RGBA source frames"
+    },
+    "correct": {
+      "frames": [
+        "correct/frame_01.png",
+        "correct/frame_02.png",
+        "correct/frame_03.png",
+        "correct/frame_04.png",
+        "correct/frame_05.png",
+        "correct/frame_06.png",
+        "correct/frame_07.png",
+        "correct/frame_08.png"
+      ],
+      "count": 8,
+      "canvas": [
+        154,
+        134
+      ],
+      "fps": "10-12",
+      "status": "validated RGBA source frames"
+    },
+    "celebrate": {
+      "frames": [
+        "celebrate/frame_01.png",
+        "celebrate/frame_02.png",
+        "celebrate/frame_03.png",
+        "celebrate/frame_04.png",
+        "celebrate/frame_05.png",
+        "celebrate/frame_06.png",
+        "celebrate/frame_07.png",
+        "celebrate/frame_08.png"
+      ],
+      "count": 8,
+      "canvas": [
+        145,
+        153
+      ],
+      "fps": "10-12",
+      "status": "validated RGBA source frames"
+    },
+    "wrong_sad": {
+      "frames": [
+        "wrong_sad/frame_01.png",
+        "wrong_sad/frame_02.png",
+        "wrong_sad/frame_03.png",
+        "wrong_sad/frame_04.png",
+        "wrong_sad/frame_05.png",
+        "wrong_sad/frame_06.png",
+        "wrong_sad/frame_07.png",
+        "wrong_sad/frame_08.png"
+      ],
+      "count": 8,
+      "canvas": [
+        135,
+        133
+      ],
+      "fps": "8-10",
+      "status": "validated RGBA source frames"
+    },
+    "appear": {
+      "frames": [
+        "appear/frame_01.png",
+        "appear/frame_02.png",
+        "appear/frame_03.png",
+        "appear/frame_04.png",
+        "appear/frame_05.png",
+        "appear/frame_06.png",
+        "appear/frame_07.png",
+        "appear/frame_08.png"
+      ],
+      "count": 8,
+      "canvas": [
+        165,
+        128
+      ],
+      "fps": "10-12",
+      "status": "validated RGBA source frames"
+    }
+  }
+}
