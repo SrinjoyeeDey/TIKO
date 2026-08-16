@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../widgets/wooden_back_button.dart';
 import '../../widgets/game_textured_text.dart';
+import '../../core/widgets/panda_character.dart';
 import 'chapter_selection_screen.dart';
 import 'parent_pin_screen.dart';
 import 'parent_dashboard.dart';
 
 /// The landing screen with app title, description, and a Start button.
 ///
-/// Now styled to match the base app's Steampunk/Parchment vintage theme.
+/// Now styled to match the base app's Steampunk/Parchment vintage theme with Panda Companion.
 class IntroScreen extends StatelessWidget {
   final String childId;
 
@@ -55,38 +56,14 @@ class IntroScreen extends StatelessWidget {
                 
                 const Spacer(flex: 2),
 
-                // Icon / Centerpiece
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xFFD4AF37), Color(0xFF8B6914)], // Gold
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFD4AF37).withValues(alpha: 0.3),
-                        blurRadius: 40,
-                        spreadRadius: 5,
-                      ),
-                    ],
-                    border: Border.all(
-                      color: const Color(0xFFFFD700).withValues(alpha: 0.5),
-                      width: 2,
-                    ),
-                  ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.menu_book_rounded,
-                      size: 60,
-                      color: Color(0xFF2E1C12),
-                    ),
-                  ),
+                // Panda Companion Hero
+                const PandaCharacterWidget(
+                  initialAnimation: PandaAnimation.idle,
+                  size: 130,
+                  showSpeechBubble: true,
+                  speechText: 'Welcome! Ready for adventure? 🐼',
                 ),
-                const SizedBox(height: 48),
+                const SizedBox(height: 36),
 
                 // Title
                 const GameTexturedText(

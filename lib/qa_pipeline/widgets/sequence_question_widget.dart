@@ -9,15 +9,17 @@ class SequenceQuestionWidget extends StatefulWidget {
   final SequenceQuestion question;
   final int questionNumber;
 
-  /// Called after the user submits and views feedback.
-  /// [isCorrect] indicates whether the order was right.
   final ValueChanged<bool> onAnswered;
+
+  /// Called immediately on submission to trigger character animations.
+  final ValueChanged<bool>? onPandaReaction;
 
   const SequenceQuestionWidget({
     super.key,
     required this.question,
     required this.questionNumber,
     required this.onAnswered,
+    this.onPandaReaction,
   });
 
   @override
@@ -276,6 +278,7 @@ class _SequenceQuestionWidgetState extends State<SequenceQuestionWidget> {
       _submitted = true;
       _isCorrect = correct;
     });
+    widget.onPandaReaction?.call(correct);
   }
 
   void _onContinue() {

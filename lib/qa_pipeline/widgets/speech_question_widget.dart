@@ -21,7 +21,10 @@ class SpeechQuestionWidget extends StatefulWidget {
     required this.questionNumber,
     required this.onAnswered,
     this.onAnsweredDetailed,
+    this.onPandaReaction,
   });
+
+  final ValueChanged<bool>? onPandaReaction;
 
   @override
   State<SpeechQuestionWidget> createState() => _SpeechQuestionWidgetState();
@@ -188,7 +191,8 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
           _pronunciationScore = score;
           _recognizedTranscript = transcript.isNotEmpty ? transcript : '(No words recognized)';
           _speechDetected = detected;
-          _passed = score >= widget.question.minScoreThreshold;
+          final passed = score >= widget.question.minScoreThreshold;
+          _passed = passed;
 
           if (score >= 80) {
             _statusText = '🎉 Outstanding! Clear and accurate pronunciation!';
@@ -199,6 +203,8 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
           } else {
             _statusText = '🔇 No clear speech heard. Speak a little louder and closer to mic.';
           }
+
+          widget.onPandaReaction?.call(passed);
         });
       }
     } catch (e) {

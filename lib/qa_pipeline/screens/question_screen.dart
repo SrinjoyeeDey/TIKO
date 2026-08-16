@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,6 +27,7 @@ import 'level_clear_screen.dart';
 import '../../core/api/activity_api.dart';
 import '../../core/models/activity_model.dart';
 import '../../core/widgets/activity_renderer.dart';
+import '../../core/widgets/panda_character.dart';
 import '../../core/services/event_service.dart';
 
 /// Manages the full question flow for a level:
@@ -49,6 +51,8 @@ class QuestionScreen extends StatefulWidget {
 class _QuestionScreenState extends State<QuestionScreen> {
   static const _uuid = Uuid();
 
+  late final PandaController _pandaController;
+
   QuestionSet? _questionSet;
   String? _errorMessage;
 
@@ -65,16 +69,26 @@ class _QuestionScreenState extends State<QuestionScreen> {
   @override
   void initState() {
     super.initState();
+    _pandaController = PandaController(initialAnimation: PandaAnimation.appear);
     _loadQuestions();
   }
 
   @override
   void dispose() {
+    _pandaController.dispose();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
     super.dispose();
+  }
+
+  void _handlePandaReaction(bool isCorrect) {
+    if (isCorrect) {
+      _pandaController.playCorrect(speech: 'Great job! ⭐');
+    } else {
+      _pandaController.playWrongSad(speech: 'Oops! Try again! 🤗');
+    }
   }
 
   Future<void> _loadQuestions() async {
@@ -346,6 +360,29 @@ class _QuestionScreenState extends State<QuestionScreen> {
               ],
             ),
           ),
+
+          // 4. LARGE RESPONSIVE PANDA CHARACTER COMPANION IN BOTTOM-RIGHT
+          Builder(
+            builder: (context) {
+              final media = MediaQuery.of(context);
+              final isLandscape = media.size.width > media.size.height;
+              final double pandaSize = (isLandscape
+                  ? math.min(media.size.width * 0.22, media.size.height * 0.36)
+                  : media.size.width * 0.30).clamp(135.0, 240.0);
+
+              return Positioned(
+                right: 16,
+                bottom: 16,
+                child: SafeArea(
+                  child: PandaCharacterWidget(
+                    controller: _pandaController,
+                    size: pandaSize,
+                    showSpeechBubble: true,
+                  ),
+                ),
+              );
+            },
+          ),
         ],
       ),
       ),
@@ -489,6 +526,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
         activity: question,
         questionNumber: phaseInfo.numberInPhase,
         onAnswered: (isCorrect) => _onQuestionAnswered(isCorrect),
+        onPandaReaction: _handlePandaReaction,
       );
     }
 
@@ -500,6 +538,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
         phaseLabel: phaseInfo.phaseLabel,
         onAnswered: (isCorrect) =>
             _onQuestionAnswered(isCorrect),
+        onPandaReaction: _handlePandaReaction,
       );
     }
 
@@ -516,6 +555,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
           similarityScore: score,
           userAnswer: answer,
         ),
+        onPandaReaction: _handlePandaReaction,
       );
     }
 
@@ -530,6 +570,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
           similarityScore: score.toDouble(),
           userAnswer: transcript,
         ),
+        onPandaReaction: _handlePandaReaction,
       );
     }
 
@@ -540,6 +581,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
         questionNumber: phaseInfo.numberInPhase,
         onAnswered: (isCorrect) =>
             _onQuestionAnswered(isCorrect),
+        onPandaReaction: _handlePandaReaction,
       );
     }
 
@@ -556,6 +598,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
             totalMatches: totalMatches,
           );
         },
+        onPandaReaction: _handlePandaReaction,
       );
     }
 

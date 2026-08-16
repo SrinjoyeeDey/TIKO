@@ -108,7 +108,13 @@ flutter:
     - assets/Success/success_5/
     - assets/Success/success_6/
     - assets/Success/success_7/
-    
+    - assets/animations/panda/
+    - assets/animations/panda/appear/
+    - assets/animations/panda/celebrate/
+    - assets/animations/panda/correct/
+    - assets/animations/panda/idle/
+    - assets/animations/panda/thinking/
+    - assets/animations/panda/wrong_sad/
 
 
 

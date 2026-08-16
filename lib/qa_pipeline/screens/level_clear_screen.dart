@@ -12,6 +12,7 @@ import '../../core/state/child_state.dart';
 import '../../core/services/media_capture_service.dart';
 import '../../core/services/event_service.dart';
 import '../../core/models/event_model.dart';
+import '../../core/widgets/panda_character.dart';
 import '../services/clinical_report_service.dart';
 
 /// Full-screen Celebration screen showing crystal prism lesson badge with specular light glare,
@@ -205,6 +206,15 @@ class _LevelClearScreenState extends State<LevelClearScreen>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const SizedBox(height: 16),
+
+                      // CELEBRATING PANDA COMPANION
+                      const PandaCharacterWidget(
+                        initialAnimation: PandaAnimation.celebrate,
+                        size: 110,
+                        showSpeechBubble: true,
+                        speechText: 'You did it! Amazing! 🌟',
+                      ),
+                      const SizedBox(height: 12),
 
                       // CRYSTAL PRISM DIAMOND LESSON BADGE WITH SPECULAR GLARE & LIGHT FLARES
                       _buildCrystalDiamondBadge(),
