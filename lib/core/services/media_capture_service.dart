@@ -42,6 +42,14 @@ class MediaCaptureService {
 
   /// Ensure camera is ready and properly attached for the current screen
   Future<bool> ensureCameraReady({bool forceReinit = false}) async {
+    if (kIsWeb) {
+      try {
+        await WebAudioHelper.ensureWebCameraReady();
+      } catch (e) {
+        debugPrint('MediaCaptureService: WebAudioHelper ensureWebCameraReady note: $e');
+      }
+    }
+
     if (!forceReinit && _cameraController != null) {
       try {
         if (_cameraController!.value.isInitialized) {
@@ -69,6 +77,10 @@ class MediaCaptureService {
   /// Initialize front camera safely across Web and Native
   Future<bool> initCamera() async {
     try {
+      if (kIsWeb) {
+        await WebAudioHelper.ensureWebCameraReady();
+      }
+
       final hasPermissions = await requestPermissions();
       if (!hasPermissions && !kIsWeb) {
         debugPrint('MediaCaptureService: Camera permissions denied');
@@ -78,6 +90,11 @@ class MediaCaptureService {
       final cameras = await availableCameras();
       if (cameras.isEmpty) {
         debugPrint('MediaCaptureService: No available cameras found on system');
+        // On web, direct getUserMedia in WebAudioHelper may still work even if camera_web fails to enumerate
+        if (kIsWeb) {
+          _isCameraInitialized = true;
+          return true;
+        }
         return false;
       }
 
@@ -108,6 +125,10 @@ class MediaCaptureService {
       return true;
     } catch (e) {
       debugPrint('MediaCaptureService: Failed to init camera: $e');
+      if (kIsWeb) {
+        _isCameraInitialized = true;
+        return true;
+      }
       _isCameraInitialized = false;
       return false;
     }
@@ -122,8 +143,12 @@ class MediaCaptureService {
 
     try {
       if (kIsWeb) {
-        // Fast offscreen canvas snapshot from HTML5 video element without freezing the camera stream
-        final base64Frame = WebAudioHelper.captureWebFrame();
+        // Fast offscreen canvas snapshot from live HTML5 webcam stream without freezing video
+        var base64Frame = WebAudioHelper.captureWebFrame();
+        if (base64Frame == null || base64Frame.isEmpty) {
+          await WebAudioHelper.ensureWebCameraReady();
+          base64Frame = WebAudioHelper.captureWebFrame();
+        }
         if (base64Frame != null && base64Frame.isNotEmpty) {
           return base64.decode(base64Frame);
         }

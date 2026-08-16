@@ -296,13 +296,15 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                // Video
+                // Video (Full Screen Viewport, Aspect Ratio Preserved)
                 GestureDetector(
                   onTap: _togglePlayPause,
-                  child: Video(
-                    controller: _videoController,
-                    fit: BoxFit.cover,
-                    controls: NoVideoControls,
+                  child: Center(
+                    child: Video(
+                      controller: _videoController,
+                      fit: BoxFit.contain,
+                      controls: NoVideoControls,
+                    ),
                   ),
                 ),
 

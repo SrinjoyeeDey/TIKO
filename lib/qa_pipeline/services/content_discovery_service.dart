@@ -103,7 +103,15 @@ class ContentDiscoveryService {
           final levelId = levelEntry.key;
           final files = levelEntry.value;
 
-          final videoFileName = files.where((f) => f.endsWith('.mp4') || f.endsWith('.mkv') || f.endsWith('.avi')).firstOrNull;
+          // Prioritize level video files located directly in the level folder (e.g. video.mp4, clip_001.mp4),
+          // ignoring videos inside subfolders like images/video1.mp4.
+          final directVideos = files
+              .where((f) => !f.contains('/') && (f.endsWith('.mp4') || f.endsWith('.mkv') || f.endsWith('.avi')))
+              .toList();
+
+          final videoFileName = (directVideos.contains('video.mp4') ? 'video.mp4' : directVideos.firstOrNull)
+              ?? files.where((f) => f.endsWith('.mp4') || f.endsWith('.mkv') || f.endsWith('.avi')).firstOrNull;
+
           final hasVideo = videoFileName != null;
           final hasTranscript = files.contains('transcript.json');
           final hasQuestions = files.contains('questions.json');

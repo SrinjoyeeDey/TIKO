@@ -5,4 +5,5 @@ abstract class WebAudioHelper {
   static Future<bool> startWebRecording() => startWebRecordingImpl();
   static Future<Map<String, dynamic>?> stopWebRecording() => stopWebRecordingImpl();
   static String? captureWebFrame() => captureWebFrameImpl();
+  static Future<bool> ensureWebCameraReady() => ensureWebCameraReadyImpl();
 }

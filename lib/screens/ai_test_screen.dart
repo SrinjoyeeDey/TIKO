@@ -122,6 +122,9 @@ class _AiTestScreenState extends State<AiTestScreen> {
     final childId = ChildState.instance.currentProfile.id;
     final sessionId = ChildState.instance.currentSessionId ?? 'SES_001';
 
+    // Ensure camera hardware / web stream is ready
+    await MediaCaptureService.instance.ensureCameraReady();
+
     // Capture real JPEG frame payload from camera
     final jpegBytes = await MediaCaptureService.instance.captureFrameBytes();
     if (jpegBytes == null || jpegBytes.isEmpty) {

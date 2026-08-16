@@ -39,8 +39,11 @@ def _load_cascade(filename: str) -> Any | None:
     cascade_path = Path(cv2.data.haarcascades) / filename
     if not cascade_path.exists():
         return None
-    classifier = cv2.CascadeClassifier(str(cascade_path))
-    return None if classifier.empty() else classifier
+    try:
+        classifier = cv2.CascadeClassifier(str(cascade_path))
+        return None if classifier.empty() else classifier
+    except Exception:
+        return None
 
 
 FACE_CASCADE_ALT2 = _load_cascade(_CASCADE_ALT2)
@@ -51,9 +54,69 @@ EYE_CASCADE_TREE = _load_cascade(_CASCADE_EYE_TREE)
 EYE_CASCADE = _load_cascade(_CASCADE_EYE) or EYE_CASCADE_TREE
 SMILE_CASCADE = _load_cascade(_CASCADE_SMILE)
 
+
+def _ensure_cascades() -> None:
+    global FACE_CASCADE_ALT2, FACE_CASCADE_ALT, FACE_CASCADE_DEFAULT, PROFILE_CASCADE, EYE_CASCADE, SMILE_CASCADE
+    if FACE_CASCADE_DEFAULT is None or FACE_CASCADE_ALT2 is None:
+        FACE_CASCADE_ALT2 = _load_cascade(_CASCADE_ALT2)
+        FACE_CASCADE_ALT = _load_cascade(_CASCADE_ALT)
+        FACE_CASCADE_DEFAULT = _load_cascade(_CASCADE_DEFAULT)
+        PROFILE_CASCADE = _load_cascade(_CASCADE_PROFILE)
+        eye_tree = _load_cascade(_CASCADE_EYE_TREE)
+        EYE_CASCADE = _load_cascade(_CASCADE_EYE) or eye_tree
+        SMILE_CASCADE = _load_cascade(_CASCADE_SMILE)
+
+
 # Running state buffers per session
 _SESSION_SMOOTHED_SCORES: Dict[str, float] = {}
 _SESSION_PREV_MOUTH_ROIS: Dict[str, np.ndarray] = {}
+
+
+def _detect_faces_on_gray(gray_img: np.ndarray) -> Tuple[Any, bool]:
+    """Helper to detect faces with multi-tier cascades."""
+    _ensure_cascades()
+    faces: Any = ()
+    is_profile = False
+
+    # 1. Alt2 (Most accurate frontal)
+    if FACE_CASCADE_ALT2 is not None:
+        faces = FACE_CASCADE_ALT2.detectMultiScale(
+            gray_img,
+            scaleFactor=1.06,
+            minNeighbors=3,
+            minSize=(24, 24),
+        )
+
+    # 2. Alt (Ensemble fallback)
+    if len(faces) == 0 and FACE_CASCADE_ALT is not None:
+        faces = FACE_CASCADE_ALT.detectMultiScale(
+            gray_img,
+            scaleFactor=1.06,
+            minNeighbors=3,
+            minSize=(24, 24),
+        )
+
+    # 3. Default (Broad coverage)
+    if len(faces) == 0 and FACE_CASCADE_DEFAULT is not None:
+        faces = FACE_CASCADE_DEFAULT.detectMultiScale(
+            gray_img,
+            scaleFactor=1.08,
+            minNeighbors=2,
+            minSize=(20, 20),
+        )
+
+    # 4. Profile (Looking sideways/tilted)
+    if len(faces) == 0 and PROFILE_CASCADE is not None:
+        faces = PROFILE_CASCADE.detectMultiScale(
+            gray_img,
+            scaleFactor=1.08,
+            minNeighbors=2,
+            minSize=(20, 20),
+        )
+        if len(faces) > 0:
+            is_profile = True
+
+    return faces, is_profile
 
 
 def _analyze_frame(frame_bytes: bytes, session_id: str = "default") -> dict:
@@ -101,43 +164,14 @@ def _analyze_frame(frame_bytes: bytes, session_id: str = "default") -> dict:
     clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
     gray_eq = clahe.apply(gray)
 
-    # 1. Multi-tier Cascade Face Detection: Alt2 -> Alt -> Default -> Profile
+    # 1. Multi-tier Cascade Face Detection across lighting representations
     faces: Any = ()
     is_profile = False
 
-    if FACE_CASCADE_ALT2 is not None:
-        faces = FACE_CASCADE_ALT2.detectMultiScale(
-            gray_eq,
-            scaleFactor=1.08,
-            minNeighbors=4,
-            minSize=(30, 30),
-        )
-
-    if len(faces) == 0 and FACE_CASCADE_ALT is not None:
-        faces = FACE_CASCADE_ALT.detectMultiScale(
-            gray_eq,
-            scaleFactor=1.08,
-            minNeighbors=4,
-            minSize=(30, 30),
-        )
-
-    if len(faces) == 0 and FACE_CASCADE_DEFAULT is not None:
-        faces = FACE_CASCADE_DEFAULT.detectMultiScale(
-            gray_eq,
-            scaleFactor=1.10,
-            minNeighbors=3,
-            minSize=(30, 30),
-        )
-
-    if len(faces) == 0 and PROFILE_CASCADE is not None:
-        faces = PROFILE_CASCADE.detectMultiScale(
-            gray_eq,
-            scaleFactor=1.10,
-            minNeighbors=3,
-            minSize=(30, 30),
-        )
+    for test_img in (gray_eq, gray, cv2.equalizeHist(gray)):
+        faces, is_profile = _detect_faces_on_gray(test_img)
         if len(faces) > 0:
-            is_profile = True
+            break
 
     face_detected = len(faces) > 0
     looking_at_screen = False
@@ -166,9 +200,9 @@ def _analyze_frame(frame_bytes: bytes, session_id: str = "default") -> dict:
             if upper_face.size > 0:
                 eyes = eye_cascade_to_use.detectMultiScale(
                     upper_face,
-                    scaleFactor=1.10,
+                    scaleFactor=1.08,
                     minNeighbors=2,
-                    minSize=(12, 12),
+                    minSize=(10, 10),
                 )
                 num_eyes = len(eyes)
                 if num_eyes >= 2:
@@ -182,13 +216,13 @@ def _analyze_frame(frame_bytes: bytes, session_id: str = "default") -> dict:
             eye_factor = 0.40
 
         # Looking at screen condition: Centered frontal face within main 75% field of view
-        looking_at_screen = bool(center_proximity > 0.25 and not is_profile)
+        looking_at_screen = bool(center_proximity > 0.20 and not is_profile)
 
-        # Adaptive Lip / Mouth Movement Detection
-        mouth_y1 = y + int(fh * 0.62)
+        # Adaptive Lip / Mouth Movement & Expression Detection
+        mouth_y1 = y + int(fh * 0.60)
         mouth_y2 = min(sw_h, y + int(fh * 0.98))
-        mouth_x1 = max(0, x + int(fw * 0.20))
-        mouth_x2 = min(sw_w, x + int(fw * 0.80))
+        mouth_x1 = max(0, x + int(fw * 0.18))
+        mouth_x2 = min(sw_w, x + int(fw * 0.82))
 
         mouth_motion_score = 0.0
         if mouth_y2 > mouth_y1 and mouth_x2 > mouth_x1:
@@ -198,16 +232,29 @@ def _analyze_frame(frame_bytes: bytes, session_id: str = "default") -> dict:
             prev_mouth = _SESSION_PREV_MOUTH_ROIS.get(session_id)
             _SESSION_PREV_MOUTH_ROIS[session_id] = mouth_normalized
 
+            # 1. Temporal motion diff between consecutive video frames
+            motion_energy = 0.0
             if prev_mouth is not None and prev_mouth.shape == mouth_normalized.shape:
                 diff = cv2.absdiff(mouth_normalized, prev_mouth)
                 motion_energy = float(np.mean(diff))
-                
-                # Check for subtle speaking motion or smile
-                mouth_movement = motion_energy > 2.2
-                mouth_motion_score = min(1.0, motion_energy / 8.0)
-            else:
-                mouth_movement = False
-                mouth_motion_score = 0.0
+
+            # 2. Smile / Expression detection
+            smile_detected = False
+            if SMILE_CASCADE is not None:
+                smiles = SMILE_CASCADE.detectMultiScale(
+                    mouth_raw,
+                    scaleFactor=1.12,
+                    minNeighbors=6,
+                    minSize=(12, 12),
+                )
+                smile_detected = len(smiles) > 0
+
+            # 3. Dynamic lip gradient / open-mouth variance (Laplacian texture variance)
+            laplacian_var = float(cv2.Laplacian(mouth_normalized, cv2.CV_64F).var())
+            is_articulating = laplacian_var > 55.0 or smile_detected
+
+            mouth_movement = motion_energy > 1.8 or is_articulating
+            mouth_motion_score = min(1.0, max(motion_energy / 5.0, 0.75 if is_articulating else 0.0))
         else:
             mouth_movement = False
             mouth_motion_score = 0.0
@@ -238,7 +285,7 @@ def _analyze_frame(frame_bytes: bytes, session_id: str = "default") -> dict:
     # Exponential Moving Average for smooth non-jittery score updates
     prev_score = _SESSION_SMOOTHED_SCORES.get(session_id, raw_engagement_score)
     if face_detected:
-        smoothed = (prev_score * 0.35) + (raw_engagement_score * 0.65)
+        smoothed = (prev_score * 0.30) + (raw_engagement_score * 0.70)
     else:
         smoothed = max(0.0, prev_score * 0.4)
 
