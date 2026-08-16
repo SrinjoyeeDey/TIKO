@@ -7,6 +7,11 @@ import '../database/progress_repository.dart';
 import '../models/learning_content.dart';
 import '../models/level_progress.dart';
 import 'video_player_screen.dart';
+import '../../features/activities/catch_nimo/screens/catch_nimo_screen.dart';
+import '../../features/activities/remember_nimo/screens/remember_nimo_screen.dart';
+import '../../features/activities/echo_nimo/screens/echo_nimo_screen.dart';
+import '../../features/activities/find_nimo/screens/find_nimo_screen.dart';
+import '../../features/activities/category_sort/screens/category_sort_screen.dart';
 
 class LevelSelectionScreen extends StatefulWidget {
   final String childId;
@@ -89,10 +94,84 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
       curve: Curves.easeOutCubic,
     );
   }
-  
   void _onLevelTap(LearningLevel level, int index, bool isLocked) {
+    if (index == 1) {
+      // Level 2 -> Catch NIMO Activity
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => const CatchNimoScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+        ),
+      ).then((_) {
+        _loadProgress();
+      });
+      return;
+    }
+
+    if (index == 2) {
+      // Level 3 -> Remember NIMO Activity
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => const RememberNimoScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+        ),
+      ).then((_) {
+        _loadProgress();
+      });
+      return;
+    }
+
+    if (index == 3) {
+      // Level 4 -> Echo NIMO Activity
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => const EchoNimoScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+        ),
+      ).then((_) {
+        _loadProgress();
+      });
+      return;
+    }
+
+    if (index == 4) {
+      // Level 5 -> Find NIMO Activity
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => const FindNimoScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+        ),
+      ).then((_) {
+        _loadProgress();
+      });
+      return;
+    }
+
+    if (index == 5) {
+      // Level 6 -> Category Sort Activity
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => const CategorySortScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+        ),
+      ).then((_) {
+        _loadProgress();
+      });
+      return;
+    }
+
     if (isLocked) return;
-    
+
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => VideoPlayerScreen(

@@ -110,6 +110,12 @@ class ChildState {
     loadProgress(profile.id);
   }
 
+  /// Add XP to active child profile
+  void addXp(int amount) {
+    final cur = currentProfile;
+    setProfile(cur.copyWith(xp: cur.xp + amount));
+  }
+
   /// Start a new learning session for current child profile with storyId
   Future<SessionModel?> startNewSession({String storyId = 'netaji'}) async {
     final profile = currentProfile;

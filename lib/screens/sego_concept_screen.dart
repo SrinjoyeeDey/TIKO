@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' as ui;
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +7,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'auth_mode_selection_screen.dart';
 import 'game_map_1913_screen.dart';
 import 'leaderboard_screen.dart';
+import '../features/activities/catch_nimo/screens/catch_nimo_screen.dart';
+import '../features/activities/remember_nimo/screens/remember_nimo_screen.dart';
+import '../features/activities/echo_nimo/screens/echo_nimo_screen.dart';
+import '../features/activities/find_nimo/screens/find_nimo_screen.dart';
+import '../features/activities/category_sort/screens/category_sort_screen.dart';
+import '../features/activities/turn_nimo/screens/turn_nimo_screen.dart';
+import 'package:media_kit/media_kit.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 import '../widgets/smoke_bomb_transition.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -155,7 +164,8 @@ class SegoConceptScreen extends StatefulWidget {
 class _SegoConceptScreenState extends State<SegoConceptScreen>
     with TickerProviderStateMixin {
   double _currentAge = 7.0;
-  double _emotionValue = 0.5; // 0.0: Not good (Sky Blue), 0.5: Great (Lavender), 1.0: Awesome (Yellow)
+  double _emotionValue =
+      0.5; // 0.0: Not good (Sky Blue), 0.5: Great (Lavender), 1.0: Awesome (Yellow)
   int _screenIndex =
       0; // 0: Age Selection, 1: Monster Takeover, 2: Role Selection
   String? _selectedRole;
@@ -184,15 +194,28 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
   late final ScrollController _mapScrollController;
   late final AnimationController _waterWaveController;
 
-  int _unlockedLevelIndex = 0; // Level 0 (Stone 1 at top) starts UNLOCKED!
+  late final Player _bgVideoPlayer;
+  late final VideoController _bgVideoController;
+  bool _isBgVideoInitialized = false;
+  Duration _bgVideoDuration = Duration.zero;
+  bool _isLoopingTransitioning = false;
+
+  int _unlockedLevelIndex =
+      2; // Node 2 ("Your Vehicle") is the active yellow play button matching reference image!
   int? _animatingUnlockingIndex;
   int? _hoveredLevelIndex;
   int _activeNavIndex = 4; // Video Call tab default selected
   Offset _cursorPos = const Offset(-200, -200);
   bool _isCursorInside = false;
+  String _selectedOnboardingRole = 'child';
+  String? _hoveredOnboardingRole;
+  bool _roleCardLocked = false;
+  bool _showParentPin = false;
+  String _parentPinInput = '';
 
   @override
   void dispose() {
+    _bgVideoPlayer.dispose();
     _waterWaveController.dispose();
     _mapScrollController.dispose();
     _ballController.dispose();
@@ -205,6 +228,9 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
   @override
   void initState() {
     super.initState();
+    _bgVideoPlayer = Player();
+    _bgVideoController = VideoController(_bgVideoPlayer);
+    _initBgVideoPlayer();
     _mapScrollController = ScrollController();
     _waterWaveController = AnimationController(
       vsync: this,
@@ -223,6 +249,57 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
       vsync: this,
       duration: const Duration(milliseconds: 950),
     );
+  }
+
+  Future<void> _initBgVideoPlayer() async {
+    try {
+      await _bgVideoPlayer.setVolume(0.0); // Mute ambient background video
+
+      _bgVideoPlayer.stream.duration.listen((duration) {
+        _bgVideoDuration = duration;
+      });
+
+      // Ultra-smooth pre-emptive loop transition rewind before EOF freeze!
+      _bgVideoPlayer.stream.position.listen((position) {
+        if (_bgVideoDuration > Duration.zero &&
+            position >= _bgVideoDuration - const Duration(milliseconds: 300) &&
+            !_isLoopingTransitioning) {
+          _isLoopingTransitioning = true;
+          _bgVideoPlayer.seek(Duration.zero);
+          Future.delayed(const Duration(milliseconds: 500), () {
+            _isLoopingTransitioning = false;
+          });
+        }
+      });
+
+      final playlist = Playlist([
+        Media('asset:///assets/Netaji/COVER_IMG/video2.mp4'),
+        Media('asset:///assets/images/video2.mp4'),
+      ]);
+
+      // Auto-restart listener guarantees video2 loops infinitely without ever stopping!
+      _bgVideoPlayer.stream.completed.listen((completed) async {
+        if (completed) {
+          try {
+            await _bgVideoPlayer.seek(Duration.zero);
+            await _bgVideoPlayer.play();
+          } catch (_) {
+            await _bgVideoPlayer.open(playlist, play: true);
+          }
+        }
+      });
+
+      await _bgVideoPlayer.open(playlist, play: true);
+      await _bgVideoPlayer.setPlaylistMode(PlaylistMode.loop);
+
+      if (mounted) {
+        setState(() {
+          _isBgVideoInitialized = true;
+        });
+      }
+    } catch (e) {
+      debugPrint("Background video playlist init error: $e");
+    }
   }
 
   void _onAgeChanged(double age) {
@@ -263,7 +340,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     });
   }
 
-  void _goToAgeSelection() {
+  void _goToOnboardingSplash() {
     if (_takeoverPageController.hasClients) {
       _takeoverPageController.animateToPage(
         0,
@@ -273,7 +350,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     }
   }
 
-  void _goToTakeoverScreen() {
+  void _goToAgeSelection() {
     if (_takeoverPageController.hasClients) {
       _takeoverPageController.animateToPage(
         1,
@@ -283,10 +360,20 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     }
   }
 
-  void _goToRoleSelection() {
+  void _goToTakeoverScreen() {
     if (_takeoverPageController.hasClients) {
       _takeoverPageController.animateToPage(
         2,
+        duration: const Duration(milliseconds: 700),
+        curve: Curves.easeOutQuart,
+      );
+    }
+  }
+
+  void _goToRoleSelection() {
+    if (_takeoverPageController.hasClients) {
+      _takeoverPageController.animateToPage(
+        3,
         duration: const Duration(milliseconds: 700),
         curve: Curves.easeOutQuart,
       );
@@ -353,13 +440,16 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                   scrollDirection: Axis.vertical,
                   physics: const BouncingScrollPhysics(),
                   children: [
-                    // Page 0: Age Selection Screen
+                    // Page 0: Onboarding Splash Screen (before age selection)
+                    _buildOnboardingSplashScreen(context),
+
+                    // Page 1: Age Selection Screen
                     _buildAgeScreen(context, theme),
 
-                    // Page 1: Monster Takeover Screen (Monster Face)
+                    // Page 2: Monster Takeover Screen (Monster Face)
                     _buildTakeoverScreen(context, theme),
 
-                    // Page 2: Level Map Screen (Stepping Stones)
+                    // Page 3: Level Map Screen (Stepping Stones)
                     _buildRoleScreen(context, theme),
                   ],
                 ),
@@ -453,105 +543,105 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
             height: 90.0,
             child: IgnorePointer(
               child: Transform.scale(
-              scaleX: squashX,
-              scaleY: squashY,
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: const RadialGradient(
-                    center: Alignment(-0.35, -0.35),
-                    radius: 0.85,
-                    colors: [
-                      Color(0xFFB5F280),
-                      Color(0xFF94D561),
-                      Color(0xFF6AAE38),
-                      Color(0xFF3F771A),
-                    ],
-                    stops: [0.0, 0.35, 0.75, 1.0],
-                  ),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0x551C4108),
-                      blurRadius: 18,
-                      offset: Offset(0, 8),
+                scaleX: squashX,
+                scaleY: squashY,
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: const RadialGradient(
+                      center: Alignment(-0.35, -0.35),
+                      radius: 0.85,
+                      colors: [
+                        Color(0xFFB5F280),
+                        Color(0xFF94D561),
+                        Color(0xFF6AAE38),
+                        Color(0xFF3F771A),
+                      ],
+                      stops: [0.0, 0.35, 0.75, 1.0],
                     ),
-                  ],
-                ),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    // Cute Eyes on Bouncing Ball
-                    Positioned(
-                      top: 22,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 14,
-                            height: 16,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Center(
-                              child: Container(
-                                width: 6,
-                                height: 6,
-                                decoration: const BoxDecoration(
-                                  color: Colors.black,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          Container(
-                            width: 14,
-                            height: 16,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Center(
-                              child: Container(
-                                width: 6,
-                                height: 6,
-                                decoration: const BoxDecoration(
-                                  color: Colors.black,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x551C4108),
+                        blurRadius: 18,
+                        offset: Offset(0, 8),
                       ),
-                    ),
-                    // Cute smile curve on ball
-                    Positioned(
-                      bottom: 22,
-                      child: Container(
-                        width: 22,
-                        height: 10,
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: Color(0xFF111111),
-                              width: 2.5,
+                    ],
+                  ),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Cute Eyes on Bouncing Ball
+                      Positioned(
+                        top: 22,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 14,
+                              height: 16,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Container(
+                                  width: 6,
+                                  height: 6,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.black,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                          borderRadius: BorderRadius.vertical(
-                            bottom: Radius.circular(10),
+                            const SizedBox(width: 6),
+                            Container(
+                              width: 14,
+                              height: 16,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Container(
+                                  width: 6,
+                                  height: 6,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.black,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Cute smile curve on ball
+                      Positioned(
+                        bottom: 22,
+                        child: Container(
+                          width: 22,
+                          height: 10,
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color(0xFF111111),
+                                width: 2.5,
+                              ),
+                            ),
+                            borderRadius: BorderRadius.vertical(
+                              bottom: Radius.circular(10),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
+          );
         } else {
           // PHASE 2: THE BALL EXPANDS AS A GROWING CIRCLE FROM THE BALL'S CENTER
           final te = ((t - phase1End) / (1.0 - phase1End)).clamp(0.0, 1.0);
@@ -801,6 +891,1081 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     );
   }
 
+  // SCREEN -1: ONBOARDING SPLASH SCREEN (Before Age Selection)
+  Widget _buildOnboardingSplashScreen(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return GestureDetector(
+      onVerticalDragEnd: (details) {
+        if (details.primaryVelocity != null && details.primaryVelocity! < -150) {
+          _goToAgeSelection();
+        }
+      },
+      behavior: HitTestBehavior.opaque,
+      child: Stack(
+        children: [
+          // --- Background: Clean White Grid Background matching reference image ---
+          Container(
+            decoration: const BoxDecoration(
+              color: Colors.white, // Pure white background matching reference image!
+            ),
+          ),
+
+          // --- Grid Lines Background Layer (Matching Reference Image!) ---
+          Positioned.fill(
+            child: CustomPaint(
+              painter: GridLinesBackgroundPainter(),
+            ),
+          ),
+
+          // --- Topo Wire Lines Contour Accent Layer (Matching Reference Image!) ---
+          Positioned.fill(
+            child: CustomPaint(
+              painter: TopoLinesPainter(),
+            ),
+          ),
+
+          // --- Top Sun & Wave Line Artwork Accent (Matching Reference Image!) ---
+          Positioned(
+            top: 40,
+            left: 0,
+            right: 0,
+            child: CustomPaint(
+              painter: SunAndWavesPainter(),
+              child: const SizedBox(height: 220),
+            ),
+          ),
+
+          // --- Elevated Yellow Tile with Curved Bulge Slope ---
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: _OnboardingElevatedTile(screenHeight: size.height),
+          ),
+
+          // --- Top content area: Child or Parent Selection Cards ---
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 40),
+
+                  // Header Prompt Text
+                  const Text(
+                    'SELECT YOUR ROLE',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w900,
+                      color: Color(0xFF1A1A2E), // Deep dark ink on white background!
+                      letterSpacing: 3.0,
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // Two Role Cards: Child & Parent (Expanded Wide to Both Corners!)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildOnboardingRoleCard(
+                          roleKey: 'child',
+                          title: 'Child',
+                          subtitle: 'Play & Explore',
+                          iconData: Icons.face_rounded,
+                          isSelected: _selectedOnboardingRole == 'child',
+                          onTap: () {
+                            setState(() {
+                              _selectedOnboardingRole = 'child';
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: _buildOnboardingRoleCard(
+                          roleKey: 'parent',
+                          title: 'Parent',
+                          subtitle: 'Guide & Track',
+                          iconData: Icons.family_restroom_rounded,
+                          isSelected: _selectedOnboardingRole == 'parent',
+                          onTap: () {
+                            setState(() {
+                              _selectedOnboardingRole = 'parent';
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // --- Bottom tile text content ---
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: size.height * 0.09,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 36.0),
+              child: Column(
+                children: [
+                  const Text(
+                    'Begin Your Journey',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w900,
+                      color: Color(0xFF3E1F00),
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Learn. Play. Grow.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF5F3300),
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 28),
+
+                  // Swipe up CTA
+                  GestureDetector(
+                    onTap: _goToAgeSelection,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 44,
+                        vertical: 18,
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color(0xFF3E1F00),
+                            Color(0xFF5F3300),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(50),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x45000000),
+                            blurRadius: 18,
+                            offset: Offset(0, 8),
+                          ),
+                        ],
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "Let's Go",
+                            style: TextStyle(
+                              fontSize: 19,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                              letterSpacing: 0.8,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Icon(Icons.arrow_upward_rounded,
+                              color: Colors.white, size: 22),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          // --- Parent PIN Overlay (appears on top of everything when Enter PIN is tapped) ---
+          if (_showParentPin) _buildParentPinOverlay(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOnboardingRoleCard({
+    required String roleKey,
+    required String title,
+    required String subtitle,
+    required IconData iconData,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    final bool isHovered = _hoveredOnboardingRole == roleKey;
+    final bool isLocked = _roleCardLocked && _selectedOnboardingRole == roleKey;
+    final bool isHighlighted = isHovered || isLocked;
+
+    final themeColor = roleKey == 'child'
+        ? const Color(0xFFFFB300)
+        : const Color(0xFFFF2A6D);
+
+    final Gradient heroGradient = roleKey == 'child'
+        ? const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFFFFD54F), Color(0xFFFFB300), Color(0xFFFF8F00)],
+          )
+        : const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFFFF5252), Color(0xFFFF2A6D), Color(0xFFE91E63)],
+          );
+
+    final String overlayHeadline = roleKey == 'child'
+        ? "Let's Explore! 🚀"
+        : 'Ready to Guide ✨';
+    final String overlaySubtext = roleKey == 'child'
+        ? 'Start your adventure\nthrough NIMO\'s world'
+        : 'Support & track your\nchild\'s journey';
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hoveredOnboardingRole = roleKey),
+      onExit: (_) => setState(() => _hoveredOnboardingRole = null),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            if (_roleCardLocked && _selectedOnboardingRole == roleKey) {
+              _roleCardLocked = false;
+            } else {
+              _selectedOnboardingRole = roleKey;
+              _roleCardLocked = true;
+            }
+          });
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 280),
+          curve: Curves.easeOutCubic,
+          width: double.infinity,
+          height: 220,
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            color: const Color(0x35FFF3C4), // Luminous warm yellow tint!
+            borderRadius: BorderRadius.circular(36),
+            border: Border.all(
+              color: const Color(0x60FFB300),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0x1A000000),
+                blurRadius: isHighlighted ? 24 : 14,
+                offset: Offset(0, isHighlighted ? 10 : 5),
+                spreadRadius: 0,
+              ),
+              if (isHighlighted)
+                BoxShadow(
+                  color: themeColor.withValues(alpha: 0.25),
+                  blurRadius: 18,
+                  offset: const Offset(0, 6),
+                ),
+            ],
+          ),
+          child: Stack(
+            clipBehavior: Clip.antiAlias,
+            children: [
+              // --- Translucent Warm Yellowish Card Background ---
+              Positioned.fill(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0x55FFF8E1),
+                        Color(0x35FFD54F),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // --- Top Hero Color Slice Background Accent ---
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 80,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        themeColor.withValues(alpha: 0.22),
+                        themeColor.withValues(alpha: 0.0),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // --- Floating Translucent Background Accents (Eliminates Empty Look!) ---
+              Positioned(
+                top: 10,
+                right: -10,
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: themeColor.withValues(alpha: 0.12),
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 20,
+                left: -15,
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withValues(alpha: 0.30),
+                  ),
+                ),
+              ),
+
+              // --- Unhovered Content (At bottom of card, covered smoothly by white panel) ---
+              Positioned(
+                bottom: 10,
+                left: 8,
+                right: 8,
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 180),
+                  opacity: isHighlighted ? 0.0 : 1.0,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Title + Green Verified Badge Row
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            title,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w900,
+                              color: Color(0xFF3E1F00),
+                              letterSpacing: 0.4,
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          const Icon(
+                            Icons.verified_rounded,
+                            color: Color(0xFF22C55E),
+                            size: 17,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        roleKey == 'child'
+                            ? 'Games • Quizzes • Creative World'
+                            : 'Progress • Controls • PIN Guard',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 10.5,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF6B4300),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      // 3 Feature Badges Row
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: (roleKey == 'child'
+                                ? ['🎮 Play', '⭐ Learn', '🚀 Explore']
+                                : ['📊 Track', '🛡️ Safety', '🎯 Insights'])
+                            .map((tag) => Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 2.5),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        Colors.white.withValues(alpha: 0.88),
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: themeColor.withValues(alpha: 0.35),
+                                      width: 1.0,
+                                    ),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Color(0x10000000),
+                                        blurRadius: 4,
+                                        offset: Offset(0, 2),
+                                      )
+                                    ],
+                                  ),
+                                  child: Text(
+                                    tag,
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w800,
+                                      color: themeColor,
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                      ),
+                      const SizedBox(height: 6),
+                      // Status / Hover Hint Line
+                      Text(
+                        roleKey == 'child'
+                            ? '✨ Tap / Hover to start adventure'
+                            : '🔒 Secure Parent Portal Entry',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 9,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF8C5800),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // --- WHITE PANEL: Slides UP smoothly from bottom on hover! ---
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(28),
+                    topRight: Radius.circular(28),
+                    bottomLeft: Radius.circular(36),
+                    bottomRight: Radius.circular(36),
+                  ),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 380),
+                    curve: Curves.easeOutCubic,
+                    height: isHighlighted ? 135 : 0,
+                    color: Colors.white,
+                    child: AnimatedOpacity(
+                      duration: const Duration(milliseconds: 240),
+                      opacity: isHighlighted ? 1.0 : 0.0,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            overlayHeadline,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w900,
+                              color: themeColor,
+                              letterSpacing: 0.2,
+                            ),
+                          ),
+                          const SizedBox(height: 3),
+                          Text(
+                            overlaySubtext,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF6B7280),
+                              height: 1.2,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          GestureDetector(
+                            onTap: () {
+                              if (roleKey == 'child') {
+                                _goToAgeSelection();
+                              } else {
+                                setState(() {
+                                  _showParentPin = true;
+                                  _parentPinInput = '';
+                                });
+                              }
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 22, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: themeColor,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: themeColor.withValues(alpha: 0.40),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Text(
+                                roleKey == 'child'
+                                    ? "Let's Go  →"
+                                    : 'Enter PIN  🔐',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.white,
+                                  letterSpacing: 0.4,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              // --- Persistent Avatar Circle (Always at top center) ---
+              Positioned(
+                top: 10,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.easeOutBack,
+                    width: isHighlighted ? 72 : 66,
+                    height: isHighlighted ? 72 : 66,
+                    decoration: BoxDecoration(
+                      gradient: heroGradient,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 3.0,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: themeColor.withValues(
+                              alpha: isHighlighted ? 0.55 : 0.25),
+                          blurRadius: isHighlighted ? 20 : 12,
+                          offset: const Offset(0, 4),
+                          spreadRadius: isHighlighted ? 2 : 0,
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Icon(
+                        iconData,
+                        size: isHighlighted ? 40 : 36,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ====== PARENT PIN OVERLAY ======
+  Widget _buildParentPinOverlay() {
+    return Positioned.fill(
+      child: GestureDetector(
+        onTap: () {}, // block tap-through
+        child: Container(
+          color: const Color(0xEF000000),
+          child: SafeArea(
+            child: Column(
+              children: [
+                // Close button
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16, top: 12),
+                    child: GestureDetector(
+                      onTap: () => setState(() {
+                        _showParentPin = false;
+                        _parentPinInput = '';
+                      }),
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF27272A),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.close, color: Colors.white, size: 20),
+                      ),
+                    ),
+                  ),
+                ),
+
+                const Spacer(),
+
+                // Lock icon
+                Container(
+                  width: 64,
+                  height: 64,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF27272A),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: const Color(0xFFFF2A6D).withValues(alpha: 0.60),
+                      width: 2,
+                    ),
+                  ),
+                  child: const Center(
+                    child: Icon(Icons.lock_rounded, color: Color(0xFFFF2A6D), size: 30),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                const Text(
+                  'Parent PIN',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    letterSpacing: 0.8,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Set a 4-digit PIN to secure\nParent mode',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Color(0xFF9CA3AF),
+                    height: 1.5,
+                  ),
+                ),
+
+                const SizedBox(height: 40),
+
+                // 4 dot PIN indicators
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(4, (i) {
+                    final filled = i < _parentPinInput.length;
+                    return AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeOutBack,
+                      margin: const EdgeInsets.symmetric(horizontal: 14),
+                      width: filled ? 20 : 16,
+                      height: filled ? 20 : 16,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: filled
+                            ? const Color(0xFFFF2A6D)
+                            : Colors.transparent,
+                        border: Border.all(
+                          color: filled
+                              ? const Color(0xFFFF2A6D)
+                              : const Color(0xFF52525B),
+                          width: 2,
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+
+                const SizedBox(height: 48),
+
+                // Numeric Keypad
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 36),
+                  child: Column(
+                    children: [
+                      _buildPinRow(['1', '2', '3']),
+                      const SizedBox(height: 14),
+                      _buildPinRow(['4', '5', '6']),
+                      const SizedBox(height: 14),
+                      _buildPinRow(['7', '8', '9']),
+                      const SizedBox(height: 14),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          const SizedBox(width: 80, height: 80), // placeholder
+                          _buildPinKey('0'),
+                          _buildPinBackspace(),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                const Spacer(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPinRow(List<String> keys) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: keys.map(_buildPinKey).toList(),
+    );
+  }
+
+  Widget _buildPinKey(String digit) {
+    return GestureDetector(
+      onTap: () {
+        if (_parentPinInput.length < 4) {
+          setState(() => _parentPinInput += digit);
+          if (_parentPinInput.length == 4) {
+            Future.delayed(const Duration(milliseconds: 350), () {
+              if (mounted) {
+                setState(() {
+                  _showParentPin = false;
+                  _parentPinInput = '';
+                  _roleCardLocked = false;
+                });
+                _goToAgeSelection();
+              }
+            });
+          }
+        }
+      },
+      child: Container(
+        width: 80,
+        height: 80,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: const Color(0xFF27272A),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x50000000),
+              blurRadius: 8,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            digit,
+            style: const TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPinBackspace() {
+    return GestureDetector(
+      onTap: () {
+        if (_parentPinInput.isNotEmpty) {
+          setState(() => _parentPinInput =
+              _parentPinInput.substring(0, _parentPinInput.length - 1));
+        }
+      },
+      child: const SizedBox(
+        width: 80,
+        height: 80,
+        child: Center(
+          child: Icon(Icons.backspace_outlined, color: Colors.white, size: 26),
+        ),
+      ),
+    );
+  }
+  // ====== END PARENT PIN OVERLAY ======
+
+  Widget _buildPopUpMascot({
+    required String roleKey,
+    required bool isHighlighted,
+  }) {
+    final bodyColor = isHighlighted
+        ? const Color(0xFF1E1B4B)
+        : const Color(0xFF2C2C2C).withValues(alpha: 0.45);
+
+    if (roleKey == 'child') {
+      // --- CHILD CARD MASCOT: Playful Little Alien/Monster with Glowing Antenna & Eyes ---
+      return SizedBox(
+        width: 54,
+        height: 68,
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            // Body dome
+            Container(
+              width: 44,
+              height: 48,
+              decoration: BoxDecoration(
+                color: bodyColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(24),
+                  topRight: Radius.circular(24),
+                ),
+              ),
+            ),
+
+            // Top Center Antenna
+            Positioned(
+              top: 2,
+              child: Column(
+                children: [
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: isHighlighted
+                          ? const Color(0xFFFFD54F)
+                          : Colors.white.withValues(alpha: 0.5),
+                      shape: BoxShape.circle,
+                      boxShadow: isHighlighted
+                          ? [
+                              const BoxShadow(
+                                color: Color(0xFFFFD54F),
+                                blurRadius: 8,
+                                spreadRadius: 1,
+                              )
+                            ]
+                          : [],
+                    ),
+                  ),
+                  Container(
+                    width: 3,
+                    height: 10,
+                    color: bodyColor,
+                  ),
+                ],
+              ),
+            ),
+
+            // Big Glowing Eyes with Pupils
+            Positioned(
+              top: 24,
+              child: Row(
+                children: [
+                  Container(
+                    width: isHighlighted ? 11 : 6,
+                    height: isHighlighted ? 11 : 3,
+                    decoration: BoxDecoration(
+                      color: isHighlighted
+                          ? const Color(0xFFFFEA00)
+                          : Colors.white.withValues(alpha: 0.6),
+                      shape: BoxShape.circle,
+                    ),
+                    child: isHighlighted
+                        ? Center(
+                            child: Container(
+                              width: 4,
+                              height: 4,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFF0F172A),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          )
+                        : null,
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    width: isHighlighted ? 11 : 6,
+                    height: isHighlighted ? 11 : 3,
+                    decoration: BoxDecoration(
+                      color: isHighlighted
+                          ? const Color(0xFFFFEA00)
+                          : Colors.white.withValues(alpha: 0.6),
+                      shape: BoxShape.circle,
+                    ),
+                    child: isHighlighted
+                        ? Center(
+                            child: Container(
+                              width: 4,
+                              height: 4,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFF0F172A),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          )
+                        : null,
+                  ),
+                ],
+              ),
+            ),
+
+            // Cute Pink Cheeks
+            if (isHighlighted)
+              Positioned(
+                top: 34,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 6,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFF80AB),
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                    ),
+                    const SizedBox(width: 22),
+                    Container(
+                      width: 6,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFF80AB),
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      );
+    } else {
+      // --- PARENT CARD MASCOT: Wise Owl with Round Spectacles & Beak ---
+      return SizedBox(
+        width: 56,
+        height: 68,
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            // Owl Body
+            Container(
+              width: 46,
+              height: 48,
+              decoration: BoxDecoration(
+                color: bodyColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(23),
+                  topRight: Radius.circular(23),
+                ),
+              ),
+            ),
+
+            // Pointy Owl Ear Tufts
+            Positioned(
+              top: 6,
+              left: 7,
+              child: Container(
+                width: 10,
+                height: 14,
+                decoration: BoxDecoration(
+                  color: bodyColor,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(8),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 6,
+              right: 7,
+              child: Container(
+                width: 10,
+                height: 14,
+                decoration: BoxDecoration(
+                  color: bodyColor,
+                  borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(8),
+                  ),
+                ),
+              ),
+            ),
+
+            // Spectacles + Eyes
+            Positioned(
+              top: 20,
+              child: Row(
+                children: [
+                  Container(
+                    width: isHighlighted ? 15 : 8,
+                    height: isHighlighted ? 15 : 4,
+                    decoration: BoxDecoration(
+                      color: isHighlighted
+                          ? const Color(0xFFFFF8E7)
+                          : Colors.white.withValues(alpha: 0.5),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: isHighlighted
+                            ? const Color(0xFFFFD54F)
+                            : Colors.transparent,
+                        width: 1.8,
+                      ),
+                    ),
+                    child: isHighlighted
+                        ? Center(
+                            child: Container(
+                              width: 5,
+                              height: 5,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFF0F172A),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          )
+                        : null,
+                  ),
+                  Container(
+                    width: 4,
+                    height: 2,
+                    color: isHighlighted ? const Color(0xFFFFD54F) : Colors.transparent,
+                  ),
+                  Container(
+                    width: isHighlighted ? 15 : 8,
+                    height: isHighlighted ? 15 : 4,
+                    decoration: BoxDecoration(
+                      color: isHighlighted
+                          ? const Color(0xFFFFF8E7)
+                          : Colors.white.withValues(alpha: 0.5),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: isHighlighted
+                            ? const Color(0xFFFFD54F)
+                            : Colors.transparent,
+                        width: 1.8,
+                      ),
+                    ),
+                    child: isHighlighted
+                        ? Center(
+                            child: Container(
+                              width: 5,
+                              height: 5,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFF0F172A),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          )
+                        : null,
+                  ),
+                ],
+              ),
+            ),
+
+            // Golden Beak
+            if (isHighlighted)
+              Positioned(
+                top: 36,
+                child: Container(
+                  width: 6,
+                  height: 6,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFF59E0B),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      );
+    }
+  }
+
   // SCREEN 0: AGE SELECTION SCREEN
   Widget _buildAgeScreen(BuildContext context, _AgeTheme theme) {
     return GestureDetector(
@@ -1012,47 +2177,51 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                   onTap: () {
                     Navigator.of(context).push(
                       PageRouteBuilder(
-                        pageBuilder:
-                            (context, animation, secondaryAnimation) =>
-                                AuthModeSelectionScreen(
-                                  onBeginJourney: () {
-                                    Navigator.of(context).pushReplacement(
-                                      PageRouteBuilder(
-                                        pageBuilder: (context, animation, secondaryAnimation) =>
-                                            const GameMap1913Screen(),
-                                        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-                                            FadeTransition(opacity: animation, child: child),
-                                        transitionDuration: const Duration(milliseconds: 600),
-                                      ),
-                                    );
-                                  },
-                                ),
-                        transitionsBuilder: (
-                          context,
-                          animation,
-                          secondaryAnimation,
-                          child,
-                        ) {
-                          return FadeTransition(
-                            opacity: animation,
-                            child: ScaleTransition(
-                              scale:
-                                  Tween<double>(
-                                    begin: 0.95,
-                                    end: 1.0,
-                                  ).animate(
-                                    CurvedAnimation(
-                                      parent: animation,
-                                      curve: Curves.easeOutCubic,
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            AuthModeSelectionScreen(
+                              onBeginJourney: () {
+                                Navigator.of(context).pushReplacement(
+                                  PageRouteBuilder(
+                                    pageBuilder:
+                                        (
+                                          context,
+                                          animation,
+                                          secondaryAnimation,
+                                        ) => const GameMap1913Screen(),
+                                    transitionsBuilder:
+                                        (
+                                          context,
+                                          animation,
+                                          secondaryAnimation,
+                                          child,
+                                        ) => FadeTransition(
+                                          opacity: animation,
+                                          child: child,
+                                        ),
+                                    transitionDuration: const Duration(
+                                      milliseconds: 600,
                                     ),
                                   ),
-                              child: child,
+                                );
+                              },
                             ),
-                          );
-                        },
-                        transitionDuration: const Duration(
-                          milliseconds: 400,
-                        ),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
+                              return FadeTransition(
+                                opacity: animation,
+                                child: ScaleTransition(
+                                  scale: Tween<double>(begin: 0.95, end: 1.0)
+                                      .animate(
+                                        CurvedAnimation(
+                                          parent: animation,
+                                          curve: Curves.easeOutCubic,
+                                        ),
+                                      ),
+                                  child: child,
+                                ),
+                              );
+                            },
+                        transitionDuration: const Duration(milliseconds: 400),
                       ),
                     );
                   },
@@ -1170,12 +2339,38 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
       builder: (context, child) {
         return Stack(
           children: [
-            // Moving Realistic Water Background (No lines, smooth organic waves & caustics)
+            // 1. Looping Background Video with Light Shade Tint Overlay!
             Positioned.fill(
-              child: CustomPaint(
-                painter: RealisticMovingWaterPainter(
-                  animationValue: _waterWaveController.value,
-                ),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  // Base Mint Landscape Gradient Background
+                  Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: [0.0, 0.45, 1.0],
+                        colors: [
+                          Color(0xFFFFFFFF),
+                          Color(0xFFEFF8F2),
+                          Color(0xFFD6EFE0),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Looping Video Layer
+                  if (_isBgVideoInitialized)
+                    Video(
+                      controller: _bgVideoController,
+                      fit: BoxFit.cover,
+                      controls: NoVideoControls,
+                    ),
+
+                  // Light Shade Tint Overlay (Translucent soft white tint layer)
+                  Container(color: Colors.white.withValues(alpha: 0.82)),
+                ],
               ),
             ),
 
@@ -1220,18 +2415,71 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     );
   }
 
-  void _completeLevelAndUnlockNext(int levelIndex, [Offset? tapOffset, Color? buttonColor]) {
+  void _completeLevelAndUnlockNext(
+    int levelIndex, [
+    Offset? tapOffset,
+    Color? buttonColor,
+  ]) {
     debugPrint("_completeLevelAndUnlockNext called for levelIndex=$levelIndex");
     SystemSound.play(SystemSoundType.click);
 
-    final origin = tapOffset ??
+    final origin =
+        tapOffset ??
         Offset(
           MediaQuery.of(context).size.width / 2,
           MediaQuery.of(context).size.height / 2,
         );
     final initialColor = buttonColor ?? const Color(0xFF94D561);
 
-    // Clicking the first level (level 0) or any level triggers the Smoke Bomb Time-Travel Transition to 1913 World Map
+    // Clicking Level 2 node (levelIndex == 1) redirects to Catch NIMO Activity!
+    if (levelIndex == 1) {
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => const CatchNimoScreen()));
+      return;
+    }
+
+    // Clicking Level 3 node (levelIndex == 2) redirects to Remember NIMO Activity!
+    if (levelIndex == 2) {
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => const RememberNimoScreen()));
+      return;
+    }
+
+    // Clicking Level 4 node (levelIndex == 3) redirects to Echo NIMO Activity!
+    if (levelIndex == 3) {
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => const EchoNimoScreen()));
+      return;
+    }
+
+    // Clicking Level 5 node (levelIndex == 4) redirects to Find NIMO Activity!
+    if (levelIndex == 4) {
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => const FindNimoScreen()));
+      return;
+    }
+
+    // Clicking Level 6 node (levelIndex == 5) redirects to Category Sort Activity!
+    if (levelIndex == 5) {
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => const CategorySortScreen()));
+      return;
+    }
+
+    // Clicking Level 7 node (levelIndex == 6) redirects to Turn NIMO Activity!
+    if (levelIndex == 6) {
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => const TurnNimoScreen()));
+      return;
+    }
+
+    // Clicking the first level (level 0) or any other level triggers the Smoke Bomb Time-Travel Transition to 1913 World Map
     Navigator.of(context).push(
       SmokeBombPageRoute(
         page: const GameMap1913Screen(),
@@ -1241,6 +2489,21 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
       ),
     );
   }
+
+  static const List<String> _levelTitles = [
+    'Netaji Bose',
+    'Gandhiji',
+    'Swami Dayanandji',
+    'Swami Vivekananda',
+    'Bhagat Singh',
+    'Rani Lakshmibai',
+    'Subhashini',
+    'Rabindranath',
+    'Sarojini Naidu',
+    'APJ Abdul Kalam',
+    'Ashoka Great',
+    'Chhatrapati Shivaji',
+  ];
 
   Widget _buildEmergingLevelStone({
     required int levelIndex,
@@ -1263,11 +2526,16 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
           final double stoneScreenY = top - scrollOffset;
           final double distFromBottom = viewportHeight - stoneScreenY;
 
-          // Smooth emergence ratio as stone enters viewport from bottom wave pool
-          final double emergenceRatio = (distFromBottom / 180.0).clamp(0.0, 1.0);
-          final double scale = 0.50 + (0.50 * emergenceRatio);
-          final double translateY = (1.0 - emergenceRatio) * 40.0;
-          final double opacity = (0.20 + (0.80 * emergenceRatio)).clamp(0.0, 1.0);
+          final double emergenceRatio = (distFromBottom / 180.0).clamp(
+            0.0,
+            1.0,
+          );
+          final double scale = 0.60 + (0.40 * emergenceRatio);
+          final double translateY = (1.0 - emergenceRatio) * 30.0;
+          final double opacity = (0.30 + (0.70 * emergenceRatio)).clamp(
+            0.0,
+            1.0,
+          );
 
           return Opacity(
             opacity: opacity,
@@ -1275,7 +2543,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
               offset: Offset(0, translateY),
               child: Transform.scale(
                 scale: scale,
-                child: _build3DSteppingStone(
+                child: _buildBookLevelNode(
                   levelIndex: levelIndex,
                   unlockAnimValue: _animatingUnlockingIndex == levelIndex
                       ? animVal
@@ -1292,6 +2560,45 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
   Widget _buildSteppingStonePath(Size size) {
     final w = size.width;
 
+    // Spacious Serpentine Node Grid (175px vertical step spacing between road tiers!)
+    final List<Offset> nodeOffsets = [
+      Offset(
+        w * 0.28,
+        80,
+      ), // Node 0 (Row 1 Left: Road to Your License - Completed)
+      Offset(w * 0.72, 80), // Node 1 (Row 1 Right: Right of Way I - Completed)
+      Offset(
+        w * 0.50,
+        255,
+      ), // Node 2 (Row 2 Center: Your Vehicle - ACTIVE PLAY BUTTON 🔥)
+      Offset(
+        w * 0.28,
+        430,
+      ), // Node 3 (Row 3 Lower Left: Road Markings I - Locked 🔒)
+      Offset(
+        w * 0.72,
+        430,
+      ), // Node 4 (Row 3 Lower Right: Right of Way II - Locked 🔒)
+      Offset(w * 0.50, 605), // Node 5 (Row 4 Center: Echo NIMO - Locked 🔒)
+      Offset(
+        w * 0.28,
+        780,
+      ), // Node 6 (Row 5 Bottom Left: Find NIMO - Locked 🔒)
+      Offset(
+        w * 0.72,
+        780,
+      ), // Node 7 (Row 5 Bottom Right: Category Sort - Locked 🔒)
+      Offset(w * 0.50, 955), // Node 8 (Row 6 Center: Turn NIMO - Locked 🔒)
+      Offset(
+        w * 0.28,
+        1130,
+      ), // Node 9 (Row 7 Bottom Left: Feel NIMO - Locked 🔒)
+      Offset(
+        w * 0.72,
+        1130,
+      ), // Node 10 (Row 7 Bottom Right: Speak NIMO - Locked 🔒)
+    ];
+
     return AnimatedBuilder(
       animation: unlockAnimController,
       builder: (context, child) {
@@ -1301,205 +2608,176 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
         ).value;
 
         return SizedBox(
-          height: 1100,
+          height: 1300,
           width: w,
           child: Stack(
             children: [
-              // Top Hanging Creamy Drip Banner Accent
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                height: 110,
+              // 1. Environmental Accents (Grass & Environment Painter)
+              Positioned.fill(
                 child: CustomPaint(
-                  painter: CreamyDripsPainter(
-                    creamColor: const Color(0xFFFFF8E7),
-                    isHangingDown: true,
-                  ),
+                  painter: _SubtleEnvironmentMapPainter(points: nodeOffsets),
                 ),
               ),
 
-              // Stone 1 (Level 0 - Top Left Curve: STARTS UNLOCKED AT TOP!)
-              _buildEmergingLevelStone(
-                levelIndex: 0,
-                top: 22,
-                left: w * 0.48 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 2 (Level 1 - Heavy Right Turn)
-              _buildEmergingLevelStone(
-                levelIndex: 1,
-                top: 88,
-                left: w * 0.72 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 3 (Level 2 - Mid Right Curve)
-              _buildEmergingLevelStone(
-                levelIndex: 2,
-                top: 154,
-                left: w * 0.54 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 4 (Level 3 - Swing Back Center)
-              _buildEmergingLevelStone(
-                levelIndex: 3,
-                top: 220,
-                left: w * 0.36 - 36,
-                animVal: animVal,
-              ),
-
-              // BUMP 3 - Buff Altar: 2x XP (Top Region, Coral Orange)
+              // 1A. Red Fort Monument - Centered in Row 1->2 meadow (top ~100-190, center)
+              // Road nodes row 1 ends at top~130, row 2 starts at top~202. Clear meadow: top 155-190.
+              // Images placed at center-left well INSIDE the meadow, far from road edges.
               Positioned(
-                top: 260,
-                right: 35,
-                child: SideRoadBumpWidget(
-                  bumpColor: const Color(0xFFFF8A65),
-                  bumpType: SideRoadBumpType.buffAltar,
-                  label: '2x XP',
-                  sublabel: 'BUFF',
-                  icon: Icons.flash_on_rounded,
-                ),
-              ),
-
-              // Stone 5 (Level 4 - Boss Crown Node 👑)
-              _buildEmergingLevelStone(
-                levelIndex: 4,
-                top: 286,
-                left: w * 0.18 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 6 (Level 5 - Mid Left Curve)
-              _buildEmergingLevelStone(
-                levelIndex: 5,
-                top: 352,
-                left: w * 0.36 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 7 (Level 6 - Mid Right Curve)
-              _buildEmergingLevelStone(
-                levelIndex: 6,
-                top: 418,
-                left: w * 0.54 - 36,
-                animVal: animVal,
-              ),
-
-              // BUMP 2 - Achievement Mound: 7-Day Streak (Mid Region, Fresh Green)
-              Positioned(
-                top: 460,
-                left: 35,
-                child: SideRoadBumpWidget(
-                  bumpColor: const Color(0xFF78C850),
-                  bumpType: SideRoadBumpType.achievement,
-                  label: '7 DAYS',
-                  sublabel: 'STREAK',
-                  icon: Icons.local_fire_department_rounded,
-                ),
-              ),
-
-              // Stone 8 (Level 7 - Heavy Right Turn)
-              _buildEmergingLevelStone(
-                levelIndex: 7,
-                top: 484,
-                left: w * 0.72 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 9 (Level 8 - Mid Right Curve)
-              _buildEmergingLevelStone(
-                levelIndex: 8,
-                top: 550,
-                left: w * 0.54 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 10 (Level 9 - Swing Back Center)
-              _buildEmergingLevelStone(
-                levelIndex: 9,
-                top: 616,
-                left: w * 0.36 - 36,
-                animVal: animVal,
-              ),
-
-              // BUMP 1 - Crystal Relic: XP (Lower Region, Warm Gold)
-              Positioned(
-                top: 660,
-                right: 35,
-                child: SideRoadBumpWidget(
-                  bumpColor: const Color(0xFFF4C95D),
-                  bumpType: SideRoadBumpType.crystalRelic,
-                  label: '1,240 XP',
-                  sublabel: 'TOTAL',
-                  icon: Icons.star_rounded,
-                ),
-              ),
-
-              // Stone 11 (Level 10 - Heavy Left Turn)
-              _buildEmergingLevelStone(
-                levelIndex: 10,
-                top: 682,
-                left: w * 0.18 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 12 (Level 11 - Mid Left Curve)
-              _buildEmergingLevelStone(
-                levelIndex: 11,
-                top: 748,
-                left: w * 0.36 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 13 (Level 12 - Mid Right Curve)
-              _buildEmergingLevelStone(
-                levelIndex: 12,
-                top: 814,
-                left: w * 0.54 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 14 (Level 13 - Bottom Right Curve)
-              _buildEmergingLevelStone(
-                levelIndex: 13,
-                top: 880,
-                left: w * 0.72 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 15 (Level 14 - Winding Loop Level)
-              _buildEmergingLevelStone(
-                levelIndex: 14,
-                top: 946,
-                left: w * 0.54 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 16 (Level 15 - Winding Loop Level)
-              _buildEmergingLevelStone(
-                levelIndex: 15,
-                top: 1012,
-                left: w * 0.36 - 36,
-                animVal: animVal,
-              ),
-
-              // Bottom Creamy Drip Pool (Rendered IN FRONT of lower stones so stones emerge from behind it as you scroll!)
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: 125,
-                child: IgnorePointer(
-                  child: CustomPaint(
-                    painter: CreamyDripsPainter(
-                      creamColor: const Color(0xFFFFF8E7),
-                      isHangingDown: false,
+                top: 270,
+                left: w * 0.16,
+                child: Opacity(
+                  opacity: 0.88,
+                  child: Image.asset(
+                    'assets/images/curve_element_clean.png',
+                    width: 155,
+                    height: 155,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) => Image.asset(
+                      'assets/Netaji/COVER_IMG/curve_element_clean.png',
+                      width: 155,
+                      height: 155,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const SizedBox.shrink(),
                     ),
                   ),
                 ),
+              ),
+
+              // 1B. India Gate & Doves - Centered in Row 4->5 meadow (top ~455-555)
+              // Node 4 at top~460, Node 5 at top~635. Clear meadow center.
+              Positioned(
+                top: 450,
+                left: w * 0.76,
+                child: Opacity(
+                  opacity: 0.86,
+                  child: Image.asset(
+                    'assets/images/tree_replacement_clean.png',
+                    width: 155,
+                    height: 155,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) => Image.asset(
+                      'assets/Netaji/COVER_IMG/tree_replacement_clean.png',
+                      width: 155,
+                      height: 155,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const SizedBox.shrink(),
+                    ),
+                  ),
+                ),
+              ),
+
+              // 1C. Freedom Fighters Silhouette - Centered in Row 7->8 meadow (top ~820-900)
+              // Node 7 at top~810, Node 8 at top~985. Clear meadow center.
+              Positioned(
+                top: 820,
+                left: w * 0.08,
+                child: Opacity(
+                  opacity: 0.86,
+                  child: Image.asset(
+                    'assets/images/curve_element_clean_3.png',
+                    width: 155,
+                    height: 155,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) => Image.asset(
+                      'assets/Netaji/COVER_IMG/curve_element_clean_3.png',
+                      width: 155,
+                      height: 155,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const SizedBox.shrink(),
+                    ),
+                  ),
+                ),
+              ),
+
+              // 2. Prominent Edge U-Turn Serpentine Loop Path matching reference image!
+              Positioned.fill(
+                child: CustomPaint(
+                  painter: WindingRoadPathPainter(
+                    points: nodeOffsets,
+                    unlockedLevelIndex: _unlockedLevelIndex,
+                  ),
+                ),
+              ),
+
+              // Level Nodes (Sized matching reference image)
+              _buildEmergingLevelStone(
+                levelIndex: 0,
+                top: 34,
+                left: w * 0.28 - 43,
+                animVal: animVal,
+              ),
+
+              _buildEmergingLevelStone(
+                levelIndex: 1,
+                top: 34,
+                left: w * 0.72 - 43,
+                animVal: animVal,
+              ),
+
+              _buildEmergingLevelStone(
+                levelIndex: 2,
+                top: 202,
+                left: w * 0.50 - 47,
+                animVal: animVal,
+              ),
+
+              _buildEmergingLevelStone(
+                levelIndex: 3,
+                top: 384,
+                left: w * 0.28 - 40,
+                animVal: animVal,
+              ),
+
+              _buildEmergingLevelStone(
+                levelIndex: 4,
+                top: 384,
+                left: w * 0.72 - 40,
+                animVal: animVal,
+              ),
+
+              _buildEmergingLevelStone(
+                levelIndex: 5,
+                top: 559,
+                left: w * 0.50 - 40,
+                animVal: animVal,
+              ),
+
+              _buildEmergingLevelStone(
+                levelIndex: 6,
+                top: 734,
+                left: w * 0.28 - 40,
+                animVal: animVal,
+              ),
+
+              _buildEmergingLevelStone(
+                levelIndex: 7,
+                top: 734,
+                left: w * 0.72 - 40,
+                animVal: animVal,
+              ),
+
+              _buildEmergingLevelStone(
+                levelIndex: 8,
+                top: 909,
+                left: w * 0.50 - 47,
+                animVal: animVal,
+              ),
+
+              _buildEmergingLevelStone(
+                levelIndex: 9,
+                top: 1084,
+                left: w * 0.28 - 40,
+                animVal: animVal,
+              ),
+
+              _buildEmergingLevelStone(
+                levelIndex: 10,
+                top: 1084,
+                left: w * 0.72 - 40,
+                animVal: animVal,
               ),
             ],
           ),
@@ -1508,84 +2786,60 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     );
   }
 
-  Widget _build3DSteppingStone({
+  Widget _buildBookLevelNode({
     required int levelIndex,
     required double unlockAnimValue,
   }) {
     final bool isCompleted = levelIndex < _unlockedLevelIndex;
     final bool isActive =
         levelIndex == _unlockedLevelIndex && _animatingUnlockingIndex == null;
-    final bool isUnlocking = _animatingUnlockingIndex == levelIndex;
-    final bool isLocked = levelIndex > _unlockedLevelIndex && !isUnlocking;
-    final bool isBossNode = (levelIndex + 1) % 5 == 0;
     final bool isHovered = _hoveredLevelIndex == levelIndex;
 
-    Color topColor;
-    Color bevelColor;
-    Color borderColor;
+    final String title = levelIndex < _levelTitles.length
+        ? _levelTitles[levelIndex].replaceAll('\n', ' ')
+        : 'Level ${levelIndex + 1}';
 
-    if (isBossNode) {
-      if (isHovered || isCompleted || isActive) {
-        topColor = const Color(0xFFFFAB00); // Ultra-Vibrant Electric Amber Gold
-        bevelColor = const Color(0xFFC67100);
-        borderColor = const Color(0xFFFFFFFF);
-      } else if (isUnlocking) {
-        topColor = Color.lerp(
-          const Color(0xFF2C3539),
-          const Color(0xFFFFAB00),
-          unlockAnimValue,
-        )!;
-        bevelColor = Color.lerp(
-          const Color(0xFF1A2124),
-          const Color(0xFFC67100),
-          unlockAnimValue,
-        )!;
-        borderColor = const Color(0xFFFFD54F);
-      } else {
-        topColor = const Color(0xFF2C3539); // Dark Cyber Obsidian
-        bevelColor = const Color(0xFF1A2124);
-        borderColor = const Color(0xFFFFAB00); // Gold Bezel Trim
-      }
-    } else {
-      if (isHovered) {
-        // Smoothly morph to corresponding bump color on hover!
-        if (levelIndex < 5) {
-          topColor = const Color(0xFFFF8A65); // Bump 3 Coral Orange
-          bevelColor = const Color(0xFFD84315);
-        } else if (levelIndex < 10) {
-          topColor = const Color(0xFF78C850); // Bump 2 Fresh Green
-          bevelColor = const Color(0xFF46B300);
-        } else {
-          topColor = const Color(0xFFF4C95D); // Bump 1 Warm Gold
-          bevelColor = const Color(0xFFC79500);
-        }
-        borderColor = Colors.white;
-      } else if (isCompleted || isActive) {
-        topColor = const Color(0xFF58CC02); // Vibrant Neon Emerald
-        bevelColor = const Color(0xFF46B300);
-        borderColor = Colors.white;
-      } else if (isUnlocking) {
-        topColor = Color.lerp(
-          const Color(0xFF2C3539),
-          const Color(0xFF58CC02),
-          unlockAnimValue,
-        )!;
-        bevelColor = Color.lerp(
-          const Color(0xFF1A2124),
-          const Color(0xFF46B300),
-          unlockAnimValue,
-        )!;
-        borderColor = Colors.white;
-      } else {
-        // Locked Cyber-Glass Obsidian Block
-        topColor = const Color(0xFF2C3539);
-        bevelColor = const Color(0xFF1A2124);
-        borderColor = Colors.white.withValues(alpha: 0.60);
-      }
-    }
+    // 3D Closed Hardcover Book Dimensions
+    final double bookWidth = isActive ? 96.0 : (isCompleted ? 88.0 : 82.0);
+    final double bookHeight = isActive ? 116.0 : (isCompleted ? 106.0 : 98.0);
 
-    final double stoneWidth = isBossNode ? 90.0 : 76.0;
-    final double stoneHeight = isBossNode ? 90.0 : 76.0;
+    // Exact Color Schemes matching user's reference:
+    // First Two Books (Level 0 Completed, Level 1 Active): Colorful Parchment
+    // All Other Books (Level 2+): Slate Gray & Locked (Content & Title Hidden)
+    // Rich Vintage Antique Leather & Sepia Parchment Color Palette
+    final Color frontCoverColor = isActive
+        ? const Color(0xFFFFFDF5)
+        : (isCompleted ? const Color(0xFFFDF6E2) : const Color(0xFFF1F5F9));
+
+    final Color frontCoverDarkColor = isActive
+        ? const Color(0xFFF5E6D3)
+        : (isCompleted ? const Color(0xFFEFE3C3) : const Color(0xFFE2E8F0));
+
+    final Color spineColor = isActive
+        ? const Color(0xFF4A2E1B) // Deep Vintage Antique Leather Brown
+        : (isCompleted ? const Color(0xFF3E2723) : const Color(0xFF475569));
+
+    final Color spineStrapColor = isActive
+        ? const Color(0xFFD4AF37) // Aged Gold Foil Embossed Ribs
+        : (isCompleted ? const Color(0xFFC5A059) : const Color(0xFF94A3B8));
+
+    final Color outlineColor = isActive
+        ? const Color(0xFF6D4C41) // Burnished Antique Bronze
+        : (isCompleted ? const Color(0xFF5D4037) : const Color(0xFF334155));
+
+    final Color titleTextColor = isActive
+        ? const Color(0xFF5C3A21) // Deep Vintage Sepia Brown
+        : (isCompleted ? const Color(0xFF4A2E1B) : const Color(0xFF64748B));
+
+    final Color bookmarkColor = isActive
+        ? const Color(0xFF991B1B) // Vintage Crimson Burgundy Red Ribbon
+        : (isCompleted ? const Color(0xFF22C55E) : const Color(0xFF94A3B8));
+
+    final Color borderColor = isHovered
+        ? (isCompleted
+              ? const Color(0xFFD4AF37) // Glowing Gold Accent on Hover!
+              : (isActive ? const Color(0xFFF59E0B) : const Color(0xFF64748B)))
+        : outlineColor;
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -1596,168 +2850,755 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
         onTapUp: (details) => _completeLevelAndUnlockNext(
           levelIndex,
           details.globalPosition,
-          topColor,
+          outlineColor,
         ),
         child: AnimatedScale(
-          scale: isHovered ? (isBossNode ? 1.28 : 1.16) : 1.0,
-          duration: const Duration(milliseconds: 250),
+          scale: isHovered ? 1.08 : 1.0,
+          duration: const Duration(milliseconds: 200),
           curve: Curves.easeOutCubic,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          child: Stack(
+            alignment: Alignment.center,
+            clipBehavior: Clip.none,
             children: [
-              // XP Badge Sitting Above Active / Boss Levels
-              if (isActive || isBossNode || isHovered)
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  margin: const EdgeInsets.only(bottom: 4),
-                  padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 2.5),
-                  decoration: BoxDecoration(
-                    color: isBossNode
-                        ? const Color(0xFFFFAB00)
-                        : isHovered
-                        ? topColor
-                        : const Color(0xFF183018),
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: isBossNode ? const Color(0x60FFAB00) : const Color(0x30000000),
-                        blurRadius: isBossNode ? 10 : 6,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Text(
-                    isBossNode ? '+200 XP' : '+50 XP',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w900,
-                      color: isBossNode ? const Color(0xFF2E1A00) : isHovered ? const Color(0xFF183018) : Colors.white,
-                      letterSpacing: 0.4,
-                    ),
-                  ),
-                ),
-
-              // 3D Stone Block with Smooth Animated Container Color Morphing
+              // 2. Main 3D Closed Storybook Container (Opens into 2-page storybook spread on Hover!)
               AnimatedContainer(
                 duration: const Duration(milliseconds: 250),
-                curve: Curves.easeOutCubic,
-                width: stoneWidth,
-                height: stoneHeight,
-                padding: const EdgeInsets.all(2),
+                curve: Curves.easeOutBack,
+                width: isHovered ? (isActive ? 154.0 : 144.0) : bookWidth,
+                height: bookHeight,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF183018).withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(isBossNode ? 28 : 22),
+                  color: spineColor, // Solid 3D Back Cover & Spine Base
+                  borderRadius: BorderRadius.circular(14),
                   border: Border.all(
                     color: borderColor,
-                    width: isBossNode ? 3.0 : 2.2,
+                    width: isActive ? 3.5 : 3.0,
                   ),
                   boxShadow: [
                     BoxShadow(
                       color: isHovered
-                          ? topColor.withValues(alpha: isBossNode ? 0.75 : 0.55)
-                          : const Color(0xFF102010).withValues(alpha: 0.35),
-                      blurRadius: isHovered ? (isBossNode ? 34 : 24) : 14,
-                      spreadRadius: isHovered && isBossNode ? 6 : 0,
-                      offset: isHovered ? const Offset(0, 10) : const Offset(0, 7),
+                          ? borderColor.withValues(alpha: 0.65)
+                          : const Color(0x35000000),
+                      blurRadius: isHovered ? 16 : 8,
+                      offset: Offset(isActive ? 4 : 3, isActive ? 6 : 4),
                     ),
-                    if (isActive || isHovered || isBossNode)
-                      BoxShadow(
-                        color: topColor.withValues(alpha: isBossNode ? 0.75 : 0.65),
-                        blurRadius: isBossNode ? 24 : 20,
-                        spreadRadius: isBossNode ? 4 : 3,
-                      ),
                   ],
                 ),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 250),
-                      curve: Curves.easeOutCubic,
-                      width: stoneWidth - 4,
-                      height: stoneHeight - 4,
-                      decoration: BoxDecoration(
-                        color: bevelColor,
-                        borderRadius: BorderRadius.circular(isBossNode ? 26 : 20),
-                      ),
-                      child: Stack(
-                        alignment: Alignment.topCenter,
+                child: isHovered
+                    ? Row(
                         children: [
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 250),
-                            curve: Curves.easeOutCubic,
-                            width: stoneWidth - 4,
-                            height: stoneHeight - 14,
-                            decoration: BoxDecoration(
-                              color: topColor,
-                              borderRadius: BorderRadius.circular(isBossNode ? 25 : 19),
-                              border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.45),
-                                width: 1.5,
+                          // A) Opened Left Page (Chapter Info & Read Action)
+                          Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.fromLTRB(4, 4, 1, 10),
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFFFDF5),
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(9),
+                                  bottomLeft: Radius.circular(3),
+                                ),
+                                border: Border.all(
+                                  color: outlineColor.withValues(alpha: 0.30),
+                                  width: 1.0,
+                                ),
                               ),
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Color.lerp(topColor, Colors.white, 0.45)!,
-                                  topColor,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 4,
+                                      vertical: 1.5,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: isCompleted
+                                          ? const Color(0xFFDCFCE7)
+                                          : (isActive
+                                                ? const Color(0xFFFEF3C7)
+                                                : const Color(0xFFE2E8F0)),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Text(
+                                      isCompleted
+                                          ? 'PASSED ✔'
+                                          : (isActive
+                                                ? 'START ▶'
+                                                : 'LOCKED 🔒'),
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.outfit(
+                                        fontSize: 7.5,
+                                        fontWeight: FontWeight.w900,
+                                        color: isCompleted
+                                            ? const Color(0xFF15803D)
+                                            : (isActive
+                                                  ? const Color(0xFFB45309)
+                                                  : const Color(0xFF475569)),
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    (isCompleted || isActive)
+                                        ? title.toUpperCase()
+                                        : '???',
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 7.0,
+                                      fontWeight: FontWeight.w800,
+                                      color: titleTextColor,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                            child: Center(
-                              child: isCompleted
-                                  ? const Icon(
-                                      Icons.check_rounded,
-                                      color: Colors.white,
-                                      size: 36,
+                          ),
+
+                          // Book Spine Crease Line in Middle
+                          Container(
+                            width: 2,
+                            margin: const EdgeInsets.only(bottom: 10),
+                            color: outlineColor.withValues(alpha: 0.40),
+                          ),
+
+                          // B) Opened Right Page (Contains Story Visual e.g. Netaji Subhas Chandra Bose Picture!)
+                          Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.fromLTRB(1, 4, 4, 10),
+                              padding: const EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFFFDF5),
+                                borderRadius: const BorderRadius.only(
+                                  topRight: Radius.circular(9),
+                                  bottomRight: Radius.circular(3),
+                                ),
+                                border: Border.all(
+                                  color: outlineColor.withValues(alpha: 0.30),
+                                  width: 1.0,
+                                ),
+                              ),
+                              child: _buildBookStoryVisual(
+                                levelIndex,
+                                isCompleted,
+                                isActive,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Stack(
+                        children: [
+                          // A) Left 3D Vertical Spine Section with Horizontal Ribbon Straps & Crease Shadow
+                          Positioned(
+                            left: 0,
+                            top: 0,
+                            bottom: 12, // Space for bottom 3D white paper pages
+                            width: 15,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: spineColor,
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(11),
+                                ),
+                                border: Border(
+                                  right: BorderSide(
+                                    color: outlineColor.withValues(alpha: 0.50),
+                                    width: 1.5,
+                                  ),
+                                ),
+                              ),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Container(
+                                    height: 4,
+                                    width: double.infinity,
+                                    color: spineStrapColor,
+                                  ),
+                                  Container(
+                                    height: 4,
+                                    width: double.infinity,
+                                    color: spineStrapColor,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          // B) Front Cover Parchment Card (Fills ENTIRE front cover with Netaji portrait image!)
+                          Positioned(
+                            left: 14,
+                            right: 0,
+                            top: 0,
+                            bottom: 12, // Space for bottom 3D white paper pages
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                topRight: Radius.circular(11),
+                                bottomRight: Radius.circular(3),
+                              ),
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  // 1. Full-cover Netaji / Leader Portrait Image filling the entire book cover with Vintage Sepia Warmth!
+                                  if (levelIndex == 0)
+                                    Stack(
+                                      fit: StackFit.expand,
+                                      children: [
+                                        Image.asset(
+                                          'assets/images/netaji_portrait.png',
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (context, error, stackTrace) => Image.asset(
+                                            'assets/Netaji/COVER_IMG/netaji_portrait.png',
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (
+                                                  context,
+                                                  error,
+                                                  stackTrace,
+                                                ) => Image.asset(
+                                                  'assets/Netaji/COVER_IMG/netaji-bose-portrait-in-his-birthday-celebration-6y6feyj10k9hshwc.jpg',
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder:
+                                                      (
+                                                        context,
+                                                        error,
+                                                        stackTrace,
+                                                      ) => Image.asset(
+                                                        'assets/Netaji/Netaji_0/images/netaji.jpg',
+                                                        fit: BoxFit.cover,
+                                                        errorBuilder:
+                                                            (
+                                                              context,
+                                                              error,
+                                                              stackTrace,
+                                                            ) => Container(
+                                                              color:
+                                                                  const Color(
+                                                                    0xFFFF9933,
+                                                                  ).withValues(
+                                                                    alpha: 0.25,
+                                                                  ),
+                                                            ),
+                                                      ),
+                                                ),
+                                          ),
+                                        ),
+                                        // Soft Vintage Antique Sepia & Leather Vignette Overlay
+                                        Container(
+                                          decoration: const BoxDecoration(
+                                            gradient: LinearGradient(
+                                              begin: Alignment.topCenter,
+                                              end: Alignment.bottomCenter,
+                                              colors: [
+                                                Color(
+                                                  0x18B45309,
+                                                ), // Warm Sepia Gold
+                                                Color(
+                                                  0x354A2E1B,
+                                                ), // Deep Vintage Leather Dark Vignette
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     )
-                                  : isActive
-                                  ? const Icon(
-                                      Icons.videocam_rounded,
-                                      color: Colors.white,
-                                      size: 32,
+                                  else if (levelIndex == 1)
+                                    Stack(
+                                      fit: StackFit.expand,
+                                      children: [
+                                        Image.asset(
+                                          'assets/images/gandhiji_portrait.jpg',
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (
+                                                context,
+                                                error,
+                                                stackTrace,
+                                              ) => Image.asset(
+                                                'assets/Netaji/COVER_IMG/gandhiji_portrait.jpg',
+                                                fit: BoxFit.cover,
+                                                errorBuilder:
+                                                    (
+                                                      context,
+                                                      error,
+                                                      stackTrace,
+                                                    ) => Image.asset(
+                                                      'assets/Netaji/Netaji_0/images/gandhiji_portrait.jpg',
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                              ),
+                                        ),
+                                        // Soft Vintage Antique Sepia & Leather Vignette Overlay
+                                        Container(
+                                          decoration: const BoxDecoration(
+                                            gradient: LinearGradient(
+                                              begin: Alignment.topCenter,
+                                              end: Alignment.bottomCenter,
+                                              colors: [
+                                                Color(0x18B45309),
+                                                Color(0x354A2E1B),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     )
-                                  : isUnlocking
-                                  ? Opacity(
-                                      opacity: unlockAnimValue,
-                                      child: const Icon(
-                                        Icons.videocam_rounded,
-                                        color: Colors.white,
-                                        size: 32,
+                                  else
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                          colors: [
+                                            frontCoverColor,
+                                            frontCoverDarkColor,
+                                          ],
+                                        ),
                                       ),
-                                    )
-                                  : const Icon(
-                                      Icons.lock_outline_rounded,
-                                      color: Colors.white70,
-                                      size: 26,
                                     ),
+
+                                  // 2. Top Title Ribbon Overlaid on Full-Cover Image
+                                  Positioned(
+                                    top: 3,
+                                    left: 3,
+                                    right: 3,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 2,
+                                        horizontal: 3,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.90,
+                                        ),
+                                        borderRadius: BorderRadius.circular(5),
+                                        border: Border.all(
+                                          color: outlineColor.withValues(
+                                            alpha: 0.35,
+                                          ),
+                                          width: 1.0,
+                                        ),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: Color(0x30000000),
+                                            blurRadius: 2,
+                                            offset: Offset(0, 1),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Text(
+                                        (isCompleted || isActive)
+                                            ? title.toUpperCase()
+                                            : '???',
+                                        textAlign: TextAlign.center,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.outfit(
+                                          fontSize: isActive ? 8.5 : 7.5,
+                                          fontWeight: FontWeight.w900,
+                                          color: titleTextColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+
+                                  // 3. Center Icon / Play Button for non-image or active levels
+                                  if (levelIndex > 1)
+                                    Center(
+                                      child: isActive
+                                          ? Container(
+                                              padding: const EdgeInsets.all(7),
+                                              decoration: const BoxDecoration(
+                                                color: Color(0xFFF59E0B),
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: const Icon(
+                                                Icons.play_arrow_rounded,
+                                                color: Colors.white,
+                                                size: 24,
+                                              ),
+                                            )
+                                          : Container(
+                                              padding: const EdgeInsets.all(6),
+                                              decoration: BoxDecoration(
+                                                color: const Color(
+                                                  0xFF94A3B8,
+                                                ).withValues(alpha: 0.35),
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: const Icon(
+                                                Icons.lock_rounded,
+                                                color: Color(0xFF64748B),
+                                                size: 22,
+                                              ),
+                                            ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          // C) Bottom 3D Closed Paper Page Edge Block (White Paper Block matching reference image!)
+                          Positioned(
+                            left: 14,
+                            right: 1,
+                            bottom: 1,
+                            height: 11,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(3),
+                                  bottomRight: Radius.circular(5),
+                                ),
+                                border: Border.all(
+                                  color: outlineColor.withValues(alpha: 0.35),
+                                  width: 1.0,
+                                ),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Color(0x15000000),
+                                    blurRadius: 2,
+                                    offset: Offset(0, 1),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
               ),
 
-              // 3-Star Mastery Ratings Sitting Below Completed Nodes
-              if (isCompleted)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
+              // 3. Right Bookmark Ribbon Clasp matching image reference!
+              Positioned(
+                right: isActive ? -22 : -10,
+                top: bookHeight * 0.38,
+                child: isActive
+                    ? Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 7,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFF6B00),
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x40000000),
+                              blurRadius: 4,
+                              offset: Offset(2, 2),
+                            ),
+                          ],
+                        ),
+                        child: const Text(
+                          'CURRENT',
+                          style: TextStyle(
+                            fontSize: 8,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      )
+                    : Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: bookmarkColor,
+                          borderRadius: const BorderRadius.only(
+                            topRight: Radius.circular(8),
+                            bottomRight: Radius.circular(8),
+                            topLeft: Radius.circular(3),
+                            bottomLeft: Radius.circular(3),
+                          ),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x40000000),
+                              blurRadius: 4,
+                              offset: Offset(2, 2),
+                            ),
+                          ],
+                        ),
+                        child: isCompleted
+                            ? const Icon(
+                                Icons.check_rounded,
+                                color: Colors.white,
+                                size: 14,
+                              )
+                            : const Icon(
+                                Icons.lock_rounded,
+                                color: Colors.white,
+                                size: 12,
+                              ),
+                      ),
+              ),
+
+              // 4. ⭐ Star Badge Attached to Completed / Active Storybooks
+              Positioned(
+                top: -8,
+                left: -6,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 5,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFD166),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.white, width: 1.5),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x35000000),
+                        blurRadius: 4,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: const [
-                      Icon(Icons.star_rounded, color: Color(0xFFFFD166), size: 14),
-                      Icon(Icons.star_rounded, color: Color(0xFFFFD166), size: 14),
-                      Icon(Icons.star_rounded, color: Color(0xFFFFD166), size: 14),
+                      Icon(Icons.star_rounded, color: Colors.white, size: 11),
+                      SizedBox(width: 1),
+                      Text(
+                        '3',
+                        style: TextStyle(
+                          fontSize: 9,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xFF5C3A00),
+                        ),
+                      ),
                     ],
                   ),
                 ),
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildBookStoryVisual(
+    int levelIndex,
+    bool isCompleted,
+    bool isActive,
+  ) {
+    if (levelIndex == 0) {
+      // 🇮🇳 Full-Page Netaji Subhas Chandra Bose Story Visual!
+      return Container(
+        key: const ValueKey('story_visual_netaji'),
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: const Color(0xFFD97706), width: 1.2),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x25000000),
+              blurRadius: 3,
+              offset: Offset(0, 1),
+            ),
+          ],
+        ),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset(
+              'assets/images/netaji_portrait.png',
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Image.asset(
+                'assets/Netaji/COVER_IMG/netaji_portrait.png',
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Image.asset(
+                  'assets/Netaji/COVER_IMG/netaji-bose-portrait-in-his-birthday-celebration-6y6feyj10k9hshwc.jpg',
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Image.asset(
+                    'assets/Netaji/Netaji_0/images/netaji.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+            // Vintage Warm Sepia Overlay
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0x18B45309), // Warm Sepia Gold
+                    Color(0x354A2E1B), // Deep Vintage Leather Dark Vignette
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 2,
+              left: 2,
+              right: 2,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 1.5,
+                  horizontal: 2,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.65),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  'NETAJI BOSE',
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.outfit(
+                    fontSize: 7.5,
+                    fontWeight: FontWeight.w900,
+                    color: const Color(0xFFFFD166),
+                    letterSpacing: 0.3,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (levelIndex == 1) {
+      // 🇮🇳 Full-Page Mahatma Gandhiji Story Visual!
+      return Container(
+        key: const ValueKey('story_visual_gandhiji'),
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: const Color(0xFF16A34A), width: 1.2),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x25000000),
+              blurRadius: 3,
+              offset: Offset(0, 1),
+            ),
+          ],
+        ),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset(
+              'assets/images/gandhiji_portrait.jpg',
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Image.asset(
+                'assets/Netaji/COVER_IMG/gandhiji_portrait.jpg',
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Image.asset(
+                  'assets/Netaji/Netaji_0/images/gandhiji_portrait.jpg',
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 2,
+              left: 2,
+              right: 2,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 1.5,
+                  horizontal: 2,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.65),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  'GANDHIJI',
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.outfit(
+                    fontSize: 7.5,
+                    fontWeight: FontWeight.w900,
+                    color: const Color(0xFF86EFAC),
+                    letterSpacing: 0.3,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (levelIndex == 2) {
+      // 🇮🇳 Swami Dayanandji Story Visual!
+      return Container(
+        key: const ValueKey('story_visual_dayanandji'),
+        padding: const EdgeInsets.all(3),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          gradient: const LinearGradient(
+            colors: [Color(0xFFEFF6FF), Color(0xFFDBEAFE)],
+          ),
+          border: Border.all(color: const Color(0xFF2563EB), width: 1.2),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: const Color(0xFF2563EB).withValues(alpha: 0.20),
+                border: Border.all(color: const Color(0xFF2563EB), width: 1.0),
+              ),
+              child: const Icon(
+                Icons.menu_book_rounded,
+                color: Color(0xFF1D4ED8),
+                size: 20,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              'DAYANANDJI',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.outfit(
+                fontSize: 7.5,
+                fontWeight: FontWeight.w900,
+                color: const Color(0xFF1E40AF),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      // 🔒 Locked Archive Mystery Visual (Cannot unlock until previous ones are completed!)
+      return Container(
+        key: ValueKey('story_visual_locked_$levelIndex'),
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: const Color(0xFFF1F5F9),
+          border: Border.all(color: const Color(0xFF94A3B8), width: 1.0),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.lock_clock_rounded,
+              color: Color(0xFF64748B),
+              size: 18,
+            ),
+            const SizedBox(height: 2),
+            Text(
+              'LOCKED',
+              style: GoogleFonts.outfit(
+                fontSize: 7.5,
+                fontWeight: FontWeight.w900,
+                color: const Color(0xFF475569),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   Widget _buildDuolingoHeaderStats() {
@@ -1770,13 +3611,14 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
         right: 8,
       ),
       decoration: const BoxDecoration(
-        color: Color(0xFFFFF8E7), // Popup #FFF8E7
+        color: Colors
+            .white, // Crisp Pure White Top Header Bar matching reference image!
         border: Border(
-          bottom: BorderSide(color: Color(0xFFD5E2BC), width: 1.5),
+          bottom: BorderSide(color: Color(0xFFE2E8F0), width: 1.0),
         ),
         boxShadow: [
           BoxShadow(
-            color: Color(0x101F3B16),
+            color: Color(0x0E000000),
             blurRadius: 8,
             offset: Offset(0, 3),
           ),
@@ -1903,72 +3745,72 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
         decoration: BoxDecoration(
-          color: const Color(0xFF78C850), // Fresh Primary Leaf Green Outer Block
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: const Color(0xFF5BA33A), width: 2.0),
+          color: const Color(0xFF0B1220), // Deep Midnight Obsidian Navy Card
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: const Color(0xFF1E293B), width: 1.5),
           boxShadow: const [
             BoxShadow(
-              color: Color(0xFF46B300),
-              offset: Offset(0, 5),
+              color: Color(0x35000000),
+              offset: Offset(0, 6),
+              blurRadius: 14,
             ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            // Inner Complementary Deep Forest Green Section #13300C
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-              decoration: BoxDecoration(
-                color: const Color(0xFF13300C), // Deep Forest Green Inner Panel
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.15),
-                  width: 1.0,
-                ),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          'SECTION 1, UNIT 1',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w800,
-                            color: Color(0xFFFFD166), // Warm Yellow Accent
-                            letterSpacing: 0.8,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          'Netaji: Where there is courage, there is a way.',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    'SECTION 1, UNIT 1',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                      color: Color(
+                        0xFF4ADE80,
+                      ), // Bright Mint Green Label Accent matching reference image!
+                      letterSpacing: 0.8,
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  // Guidebook Notebook button in Warm Yellow #FFD166
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFFD166),
-                      borderRadius: BorderRadius.circular(10),
+                  SizedBox(height: 6),
+                  Text(
+                    'Netaji: Where there is courage, there is a way.',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
                     ),
-                    child: const Icon(
-                      Icons.import_contacts_rounded,
-                      color: Color(0xFF13300C),
-                      size: 22,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            // Read Book Button matching reference image
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF070B14),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFF22C55E), width: 2.0),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Icon(
+                    Icons.menu_book_rounded,
+                    color: Color(0xFF4ADE80),
+                    size: 22,
+                  ),
+                  SizedBox(height: 2),
+                  Text(
+                    'Read',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
                     ),
                   ),
                 ],
@@ -1980,54 +3822,41 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     );
   }
 
-  Widget _buildDuolingoNode({required IconData icon, bool isActive = false}) {
-    return Container(
-      width: 66,
-      height: 66,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: const Color(0xFF58CC02),
-        boxShadow: const [
-          BoxShadow(color: Color(0xFF46B300), offset: Offset(0, 7)),
-        ],
-      ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Glossy Top Sheen
-          Positioned(
-            top: 4,
-            left: 10,
-            right: 10,
-            child: Container(
-              height: 16,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.32),
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(30),
-                ),
-              ),
-            ),
-          ),
-
-          // Center Icon
-          Icon(icon, color: Colors.white, size: 32),
-        ],
-      ),
-    );
-  }
-
   Widget _buildDuolingoBottomNavBar() {
     final bottomInset = MediaQuery.of(context).padding.bottom;
     final double safeBottomPadding = math.max(bottomInset, 12.0);
 
     final navItems = [
-      {'icon': Icons.home_rounded, 'color': const Color(0xFF78C850), 'label': 'Home'},
-      {'icon': Icons.shield_rounded, 'color': const Color(0xFFF4C95D), 'label': 'Quests'},
-      {'icon': Icons.leaderboard_rounded, 'color': const Color(0xFFF08A5D), 'label': 'Leaderboard'},
-      {'icon': Icons.favorite_rounded, 'color': const Color(0xFFFF4B4B), 'label': 'Hearts'},
-      {'icon': Icons.videocam_rounded, 'color': const Color(0xFF78C850), 'label': 'Call'},
-      {'icon': Icons.more_horiz_rounded, 'color': const Color(0xFF1F3B16), 'label': 'More'},
+      {
+        'icon': Icons.home_rounded,
+        'color': const Color(0xFF78C850),
+        'label': 'Home',
+      },
+      {
+        'icon': Icons.shield_rounded,
+        'color': const Color(0xFFF4C95D),
+        'label': 'Quests',
+      },
+      {
+        'icon': Icons.leaderboard_rounded,
+        'color': const Color(0xFFF08A5D),
+        'label': 'Leaderboard',
+      },
+      {
+        'icon': Icons.favorite_rounded,
+        'color': const Color(0xFFFF4B4B),
+        'label': 'Hearts',
+      },
+      {
+        'icon': Icons.videocam_rounded,
+        'color': const Color(0xFF78C850),
+        'label': 'Call',
+      },
+      {
+        'icon': Icons.more_horiz_rounded,
+        'color': const Color(0xFF1F3B16),
+        'label': 'More',
+      },
     ];
 
     return Container(
@@ -2101,10 +3930,10 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                       item['icon'] as IconData,
                       color: isSelected
                           ? (index == 2 || index == 5
-                              ? itemColor
-                              : (itemColor == const Color(0xFF78C850)
-                                  ? const Color(0xFF46991D)
-                                  : itemColor))
+                                ? itemColor
+                                : (itemColor == const Color(0xFF78C850)
+                                      ? const Color(0xFF46991D)
+                                      : itemColor))
                           : const Color(0xFF637856),
                       size: isSelected ? 27 : 25,
                     ),
@@ -2118,8 +3947,8 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                           color: index == 2 || index == 5
                               ? itemColor
                               : (itemColor == const Color(0xFF78C850)
-                                  ? const Color(0xFF2C6010)
-                                  : itemColor),
+                                    ? const Color(0xFF2C6010)
+                                    : itemColor),
                           letterSpacing: 0.4,
                         ),
                         child: Text(item['label'] as String),
@@ -2200,36 +4029,62 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
 class TopoLinesPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..strokeWidth = 2.5
+    final w = size.width;
+    final h = size.height;
+
+    final whiteLinePaint = Paint()
+      ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
-      ..color = Colors.white.withValues(alpha: 0.12);
+      ..color = Colors.white.withValues(alpha: 0.28);
 
-    final xRatios = [0.42, 0.52, 0.63, 0.74, 0.85, 0.94];
+    final goldLinePaint = Paint()
+      ..strokeWidth = 1.8
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..color = const Color(0xFFFFD54F).withValues(alpha: 0.22);
 
-    for (var xRatio in xRatios) {
-      final startX = size.width * xRatio;
-      final path = Path();
-      path.moveTo(startX, 0);
-      path.cubicTo(
-        startX - size.width * 0.03,
-        size.height * 0.14,
-        startX + size.width * 0.03,
-        size.height * 0.26,
-        startX - size.width * 0.007,
-        size.height * 0.4,
-      );
-      path.cubicTo(
-        startX - size.width * 0.035,
-        size.height * 0.66,
-        startX + size.width * 0.02,
-        size.height * 0.74,
-        startX + size.width * 0.02,
-        size.height,
-      );
-      canvas.drawPath(path, paint);
-    }
+    // 1. Topo Contour Wire Line 1 (Upper Arc)
+    final path1 = Path()
+      ..moveTo(-w * 0.10, h * 0.08)
+      ..cubicTo(w * 0.35, h * 0.02, w * 0.65, h * 0.18, w * 1.15, h * 0.05);
+    canvas.drawPath(path1, whiteLinePaint);
+
+    // 2. Topo Contour Wire Line 2 (Sweeping Upper Wire Flow)
+    final path2 = Path()
+      ..moveTo(-w * 0.15, h * 0.18)
+      ..cubicTo(w * 0.25, h * 0.06, w * 0.75, h * 0.24, w * 1.12, h * 0.14);
+    canvas.drawPath(path2, goldLinePaint);
+
+    // 3. Topo Contour Wire Line 3 (Mid-Upper Organic Contour)
+    final path3 = Path()
+      ..moveTo(-w * 0.05, h * 0.30)
+      ..cubicTo(w * 0.40, h * 0.14, w * 0.60, h * 0.38, w * 1.10, h * 0.25);
+    canvas.drawPath(path3, whiteLinePaint);
+
+    // 4. Topo Contour Wire Line 4 (Sweeping Across Yellow Tile Boundary)
+    final path4 = Path()
+      ..moveTo(-w * 0.10, h * 0.45)
+      ..cubicTo(w * 0.30, h * 0.32, w * 0.70, h * 0.52, w * 1.15, h * 0.38);
+    canvas.drawPath(path4, whiteLinePaint);
+
+    // 5. Topo Contour Wire Line 5 (Lower Tile Surface Contour)
+    final path5 = Path()
+      ..moveTo(-w * 0.08, h * 0.60)
+      ..cubicTo(w * 0.35, h * 0.46, w * 0.65, h * 0.68, w * 1.12, h * 0.54);
+    canvas.drawPath(path5, goldLinePaint);
+
+    // 6. Topo Contour Wire Line 6 (Bottom Outer Flow Wire)
+    final path6 = Path()
+      ..moveTo(-w * 0.12, h * 0.76)
+      ..cubicTo(w * 0.28, h * 0.62, w * 0.72, h * 0.84, w * 1.10, h * 0.70);
+    canvas.drawPath(path6, whiteLinePaint);
+
+    // 7. Topo Contour Wire Line 7 (Deep Base Wire Flow)
+    final path7 = Path()
+      ..moveTo(-w * 0.05, h * 0.90)
+      ..cubicTo(w * 0.42, h * 0.78, w * 0.68, h * 0.96, w * 1.15, h * 0.84);
+    canvas.drawPath(path7, goldLinePaint);
   }
 
   @override
@@ -2821,7 +4676,12 @@ class _MonsterAgeSelectorWidgetState extends State<MonsterAgeSelectorWidget>
 // ─────────────────────────────────────────────────────────────────────────────
 class BlinkingEyesWidget extends StatefulWidget {
   final Color accentDark;
-  const BlinkingEyesWidget({super.key, required this.accentDark});
+  final double scale;
+  const BlinkingEyesWidget({
+    super.key,
+    required this.accentDark,
+    this.scale = 1.0,
+  });
 
   @override
   State<BlinkingEyesWidget> createState() => _BlinkingEyesWidgetState();
@@ -2893,11 +4753,15 @@ class _BlinkingEyesWidgetState extends State<BlinkingEyesWidget>
         animation: _blinkAnimation,
         builder: (context, child) {
           final double scaleY = _blinkAnimation.value;
-          const specFrameColor = Color(0xFF2C1B54); // Deep Navy Purple Spectacle Frame
+          const specFrameColor = Color(
+            0xFF2C1B54,
+          ); // Deep Navy Purple Spectacle Frame
 
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
+          return Transform.scale(
+            scale: widget.scale,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
               // Curved Eyebrows Row above Spectacles
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -2924,7 +4788,11 @@ class _BlinkingEyesWidgetState extends State<BlinkingEyesWidget>
                   Transform.scale(
                     scaleY: scaleY,
                     alignment: Alignment.center,
-                    child: _buildSpectacleEye(isLeft: true, eyeOffset: _eyeOffset, frameColor: specFrameColor),
+                    child: _buildSpectacleEye(
+                      isLeft: true,
+                      eyeOffset: _eyeOffset,
+                      frameColor: specFrameColor,
+                    ),
                   ),
 
                   // Spectacle Bridge Bar + Nostril Holes
@@ -2936,7 +4804,9 @@ class _BlinkingEyesWidgetState extends State<BlinkingEyesWidget>
                         padding: const EdgeInsets.only(bottom: 12),
                         child: CustomPaint(
                           size: const Size(26, 12),
-                          painter: _SpectacleBridgePainter(color: specFrameColor),
+                          painter: _SpectacleBridgePainter(
+                            color: specFrameColor,
+                          ),
                         ),
                       ),
                       // Nostrils below bridge
@@ -2949,7 +4819,9 @@ class _BlinkingEyesWidgetState extends State<BlinkingEyesWidget>
                               width: 8,
                               height: 6,
                               decoration: BoxDecoration(
-                                color: widget.accentDark.withValues(alpha: 0.65),
+                                color: widget.accentDark.withValues(
+                                  alpha: 0.65,
+                                ),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                             ),
@@ -2958,7 +4830,9 @@ class _BlinkingEyesWidgetState extends State<BlinkingEyesWidget>
                               width: 8,
                               height: 6,
                               decoration: BoxDecoration(
-                                color: widget.accentDark.withValues(alpha: 0.65),
+                                color: widget.accentDark.withValues(
+                                  alpha: 0.65,
+                                ),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                             ),
@@ -2972,12 +4846,17 @@ class _BlinkingEyesWidgetState extends State<BlinkingEyesWidget>
                   Transform.scale(
                     scaleY: scaleY,
                     alignment: Alignment.center,
-                    child: _buildSpectacleEye(isLeft: false, eyeOffset: _eyeOffset, frameColor: specFrameColor),
+                    child: _buildSpectacleEye(
+                      isLeft: false,
+                      eyeOffset: _eyeOffset,
+                      frameColor: specFrameColor,
+                    ),
                   ),
                 ],
               ),
             ],
-          );
+          ), // close Column
+          ); // close Transform.scale
         },
       ),
     );
@@ -3006,7 +4885,9 @@ class _BlinkingEyesWidgetState extends State<BlinkingEyesWidget>
             width: 38,
             height: 38,
             decoration: const BoxDecoration(
-              color: Color(0xFF1565C0), // Rich Royal Blue Iris (matching reference spec image!)
+              color: Color(
+                0xFF1565C0,
+              ), // Rich Royal Blue Iris (matching reference spec image!)
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -3062,7 +4943,8 @@ class _SpectacleBridgePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_SpectacleBridgePainter oldDelegate) => oldDelegate.color != color;
+  bool shouldRepaint(_SpectacleBridgePainter oldDelegate) =>
+      oldDelegate.color != color;
 }
 
 // Draws a smooth upward-arched eyebrow with a theme-aware color
@@ -3286,7 +5168,9 @@ class BiboMonsterFacePainter extends CustomPainter {
     final cy = size.height * 0.45;
     final eyeCenterY = cy - 35.0;
 
-    const specFrameColor = Color(0xFF2C1B54); // Deep Navy Purple Spectacle Frame
+    const specFrameColor = Color(
+      0xFF2C1B54,
+    ); // Deep Navy Purple Spectacle Frame
     final specFramePaint = Paint()
       ..color = specFrameColor
       ..style = PaintingStyle.stroke
@@ -3297,7 +5181,8 @@ class BiboMonsterFacePainter extends CustomPainter {
       ..color = const Color(0xFFFAFAFA)
       ..style = PaintingStyle.fill;
 
-    final irisPaint = Paint()..color = const Color(0xFF1565C0); // Royal Blue Iris
+    final irisPaint = Paint()
+      ..color = const Color(0xFF1565C0); // Royal Blue Iris
     final pupilPaint = Paint()..color = const Color(0xFF0D0D0D); // Black Pupil
     final shinePaint = Paint()..color = Colors.white;
 
@@ -3310,11 +5195,21 @@ class BiboMonsterFacePainter extends CustomPainter {
     // ─── 0. CURVED EYEBROWS ABOVE SPECTACLES ───
     final eyebrowLeftPath = Path()
       ..moveTo(cx - 74.0, eyeCenterY - 48.0)
-      ..quadraticBezierTo(cx - 46.0, eyeCenterY - 64.0, cx - 18.0, eyeCenterY - 48.0);
+      ..quadraticBezierTo(
+        cx - 46.0,
+        eyeCenterY - 64.0,
+        cx - 18.0,
+        eyeCenterY - 48.0,
+      );
 
     final eyebrowRightPath = Path()
       ..moveTo(cx + 18.0, eyeCenterY - 48.0)
-      ..quadraticBezierTo(cx + 46.0, eyeCenterY - 64.0, cx + 74.0, eyeCenterY - 48.0);
+      ..quadraticBezierTo(
+        cx + 46.0,
+        eyeCenterY - 64.0,
+        cx + 74.0,
+        eyeCenterY - 48.0,
+      );
 
     canvas.drawPath(eyebrowLeftPath, eyebrowPaint);
     canvas.drawPath(eyebrowRightPath, eyebrowPaint);
@@ -3336,7 +5231,10 @@ class BiboMonsterFacePainter extends CustomPainter {
     // Left Spectacle Eye
     canvas.save();
     canvas.translate(cx - 44.0, eyeCenterY);
-    final leftEyeRect = Rect.fromCircle(center: Offset.zero, radius: specRadius);
+    final leftEyeRect = Rect.fromCircle(
+      center: Offset.zero,
+      radius: specRadius,
+    );
     canvas.drawOval(leftEyeRect, whiteFillPaint);
     canvas.drawOval(leftEyeRect, specFramePaint);
 
@@ -3354,7 +5252,10 @@ class BiboMonsterFacePainter extends CustomPainter {
     // Right Spectacle Eye
     canvas.save();
     canvas.translate(cx + 44.0, eyeCenterY);
-    final rightEyeRect = Rect.fromCircle(center: Offset.zero, radius: specRadius);
+    final rightEyeRect = Rect.fromCircle(
+      center: Offset.zero,
+      radius: specRadius,
+    );
     canvas.drawOval(rightEyeRect, whiteFillPaint);
     canvas.drawOval(rightEyeRect, specFramePaint);
 
@@ -3736,7 +5637,10 @@ class _SideRoadBumpWidgetState extends State<SideRoadBumpWidget>
                     opacity: _hovered ? 1.0 : 0.0,
                     duration: const Duration(milliseconds: 200),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
                         color: c,
                         borderRadius: BorderRadius.circular(10),
@@ -3766,7 +5670,9 @@ class _SideRoadBumpWidgetState extends State<SideRoadBumpWidget>
                   width: 160,
                   height: 95,
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(90)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(90),
+                    ),
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -3821,7 +5727,9 @@ class _SideRoadBumpWidgetState extends State<SideRoadBumpWidget>
                           width: 140,
                           height: 58,
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: _hovered ? 0.38 : 0.22),
+                            color: Colors.white.withValues(
+                              alpha: _hovered ? 0.38 : 0.22,
+                            ),
                             borderRadius: const BorderRadius.vertical(
                               top: Radius.circular(75),
                             ),
@@ -3830,18 +5738,23 @@ class _SideRoadBumpWidgetState extends State<SideRoadBumpWidget>
                       ),
 
                       // Crystal prism facets (only for crystalRelic type)
-                      if (isCrystal) ...
-                        List.generate(3, (i) => Positioned(
-                          top: 12 + i * 12.0,
-                          child: Container(
-                            width: 80 - i * 16.0,
-                            height: 1.5,
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.30 - i * 0.06),
-                              borderRadius: BorderRadius.circular(2),
+                      if (isCrystal)
+                        ...List.generate(
+                          3,
+                          (i) => Positioned(
+                            top: 12 + i * 12.0,
+                            child: Container(
+                              width: 80 - i * 16.0,
+                              height: 1.5,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(
+                                  alpha: 0.30 - i * 0.06,
+                                ),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
                             ),
                           ),
-                        )),
+                        ),
 
                       // Icon with animated pulse scale
                       Positioned(
@@ -4173,10 +6086,7 @@ class CreamyDripsPainter extends CustomPainter {
     for (int i = 0; i < dropsX.length; i++) {
       final highlightPath = Path();
       highlightPath.addArc(
-        Rect.fromCircle(
-          center: Offset(dropsX[i] - 2, dropsY[i]),
-          radius: 5.5,
-        ),
+        Rect.fromCircle(center: Offset(dropsX[i] - 2, dropsY[i]), radius: 5.5),
         0.8,
         1.8,
       );
@@ -4333,9 +6243,11 @@ class RealisticMovingWaterPainter extends CustomPainter {
 
     for (int i = 0; i <= steps; i++) {
       final x = i * stepWidth;
-      final y = baseY +
+      final y =
+          baseY +
           amplitude * math.sin((x / wavelength) * 2 * math.pi + phase) +
-          (amplitude * 0.35) * math.cos((x / (wavelength * 0.5)) * 2 * math.pi - phase * 0.5);
+          (amplitude * 0.35) *
+              math.cos((x / (wavelength * 0.5)) * 2 * math.pi - phase * 0.5);
       path.lineTo(x, y);
     }
 
@@ -4482,10 +6394,9 @@ class OrganicBlobBubblePainter extends CustomPainter {
       final directionalDistortion = angleDiff * motionFactor * 20.0;
 
       final r = baseRadius + wave1 + wave2 + directionalDistortion;
-      points.add(Offset(
-        center.dx + r * math.cos(a),
-        center.dy + r * math.sin(a),
-      ));
+      points.add(
+        Offset(center.dx + r * math.cos(a), center.dy + r * math.sin(a)),
+      );
     }
 
     // Build smooth closed cubic Bezier path around vertices
@@ -4526,7 +6437,9 @@ class OrganicBlobBubblePainter extends CustomPainter {
           Colors.white.withValues(alpha: 0.25), // Top specular sheen
           theme.toothGlow.withValues(alpha: 0.05), // Subtle iridescent tint
           Colors.transparent, // Completely see-through center body!
-          Colors.cyanAccent.withValues(alpha: 0.06), // Very light glass edge tint
+          Colors.cyanAccent.withValues(
+            alpha: 0.06,
+          ), // Very light glass edge tint
           Colors.white.withValues(alpha: 0.12), // Subtle rim definition
         ],
         stops: const [0.0, 0.20, 0.50, 0.80, 1.0],
@@ -4554,7 +6467,10 @@ class OrganicBlobBubblePainter extends CustomPainter {
 
     // 4. White Glass Specular Highlight Glint (Top-left organic arc)
     final highlightPath = Path();
-    highlightPath.moveTo(center.dx - baseRadius * 0.50, center.dy - baseRadius * 0.45);
+    highlightPath.moveTo(
+      center.dx - baseRadius * 0.50,
+      center.dy - baseRadius * 0.45,
+    );
     highlightPath.quadraticBezierTo(
       center.dx - baseRadius * 0.20,
       center.dy - baseRadius * 0.70,
@@ -4572,7 +6488,10 @@ class OrganicBlobBubblePainter extends CustomPainter {
     canvas.drawPath(highlightPath, highlightPaint);
 
     // 5. Small Secondary Gloss Dot
-    final dotCenter = Offset(center.dx + baseRadius * 0.45, center.dy + baseRadius * 0.45);
+    final dotCenter = Offset(
+      center.dx + baseRadius * 0.45,
+      center.dy + baseRadius * 0.45,
+    );
     canvas.drawCircle(
       dotCenter,
       3.5,
@@ -5106,7 +7025,12 @@ class _InteractiveEmotionMonsterFacePainter extends CustomPainter {
 
     if (isSilly) {
       // Winking Eye
-      canvas.drawOval(leftEyeRect, Paint()..color = chinColor..style = PaintingStyle.fill);
+      canvas.drawOval(
+        leftEyeRect,
+        Paint()
+          ..color = chinColor
+          ..style = PaintingStyle.fill,
+      );
       canvas.drawOval(leftEyeRect, blackBorderPaint);
 
       final winkArcPath = Path()
@@ -5117,10 +7041,7 @@ class _InteractiveEmotionMonsterFacePainter extends CustomPainter {
       canvas.drawOval(leftEyeRect, whiteFillPaint);
       canvas.drawOval(leftEyeRect, blackBorderPaint);
 
-      final pupilOffsetLeft = Offset(
-        pupilFollowX,
-        basePupilY + pupilFollowY,
-      );
+      final pupilOffsetLeft = Offset(pupilFollowX, basePupilY + pupilFollowY);
       canvas.drawCircle(pupilOffsetLeft, 12.0, pupilPaint);
       canvas.drawCircle(
         Offset(pupilOffsetLeft.dx - 3.5, pupilOffsetLeft.dy - 3.5),
@@ -5159,10 +7080,7 @@ class _InteractiveEmotionMonsterFacePainter extends CustomPainter {
         shinePaint,
       );
     } else {
-      final pupilOffsetRight = Offset(
-        pupilFollowX,
-        basePupilY + pupilFollowY,
-      );
+      final pupilOffsetRight = Offset(pupilFollowX, basePupilY + pupilFollowY);
       canvas.drawCircle(pupilOffsetRight, 12.0, pupilPaint);
       canvas.drawCircle(
         Offset(pupilOffsetRight.dx - 3.5, pupilOffsetRight.dy - 3.5),
@@ -5262,12 +7180,18 @@ class _InteractiveEmotionMonsterFacePainter extends CustomPainter {
       }
 
       // Left Eye Teardrops (Staggered continuous flow)
-      final leftEyeOrigin = Offset(cx - 38.0 - 10.0, eyeCenterY + eyeH / 2 - 4.0);
+      final leftEyeOrigin = Offset(
+        cx - 38.0 - 10.0,
+        eyeCenterY + eyeH / 2 - 4.0,
+      );
       drawTearDrop(leftEyeOrigin, tearProgress);
       drawTearDrop(leftEyeOrigin, (tearProgress + 0.5) % 1.0);
 
       // Right Eye Teardrops (Staggered continuous flow)
-      final rightEyeOrigin = Offset(cx + 38.0 + 10.0, eyeCenterY + eyeH / 2 - 4.0);
+      final rightEyeOrigin = Offset(
+        cx + 38.0 + 10.0,
+        eyeCenterY + eyeH / 2 - 4.0,
+      );
       drawTearDrop(rightEyeOrigin, (tearProgress + 0.25) % 1.0);
       drawTearDrop(rightEyeOrigin, (tearProgress + 0.75) % 1.0);
     }
@@ -5299,15 +7223,21 @@ class _InteractiveEmotionMonsterFacePainter extends CustomPainter {
       );
       // Right corner rounded arc into bottom smile curve
       mouthPath.cubicTo(
-        rightCorner.dx + 4.0, rightCorner.dy + mouthH * 0.35,
-        cx + mouthW * 0.32, bottomCenterY,
-        cx, bottomCenterY,
+        rightCorner.dx + 4.0,
+        rightCorner.dy + mouthH * 0.35,
+        cx + mouthW * 0.32,
+        bottomCenterY,
+        cx,
+        bottomCenterY,
       );
       // Bottom smile curve sweeping back up to left corner
       mouthPath.cubicTo(
-        cx - mouthW * 0.32, bottomCenterY,
-        leftCorner.dx - 4.0, leftCorner.dy + mouthH * 0.35,
-        leftCorner.dx, leftCorner.dy,
+        cx - mouthW * 0.32,
+        bottomCenterY,
+        leftCorner.dx - 4.0,
+        leftCorner.dy + mouthH * 0.35,
+        leftCorner.dx,
+        leftCorner.dy,
       );
       mouthPath.close();
 
@@ -5332,14 +7262,20 @@ class _InteractiveEmotionMonsterFacePainter extends CustomPainter {
         rightCorner.dy,
       );
       mouthPath.cubicTo(
-        rightCorner.dx + 4.0, rightCorner.dy + mouthH * 0.35,
-        cx + mouthW * 0.32, bottomCenterY,
-        cx, bottomCenterY,
+        rightCorner.dx + 4.0,
+        rightCorner.dy + mouthH * 0.35,
+        cx + mouthW * 0.32,
+        bottomCenterY,
+        cx,
+        bottomCenterY,
       );
       mouthPath.cubicTo(
-        cx - mouthW * 0.32, bottomCenterY,
-        leftCorner.dx - 4.0, leftCorner.dy + mouthH * 0.35,
-        leftCorner.dx, leftCorner.dy,
+        cx - mouthW * 0.32,
+        bottomCenterY,
+        leftCorner.dx - 4.0,
+        leftCorner.dy + mouthH * 0.35,
+        leftCorner.dx,
+        leftCorner.dy,
       );
       mouthPath.close();
 
@@ -5359,12 +7295,7 @@ class _InteractiveEmotionMonsterFacePainter extends CustomPainter {
       final rightCorner = Offset(cx + mouthW / 2, cornerY);
 
       mouthPath.moveTo(leftCorner.dx, leftCorner.dy);
-      mouthPath.quadraticBezierTo(
-        cx,
-        topArchY,
-        rightCorner.dx,
-        rightCorner.dy,
-      );
+      mouthPath.quadraticBezierTo(cx, topArchY, rightCorner.dx, rightCorner.dy);
       mouthPath.quadraticBezierTo(
         cx,
         bottomArchY,
@@ -5390,12 +7321,7 @@ class _InteractiveEmotionMonsterFacePainter extends CustomPainter {
 
       mouthPath.moveTo(leftCorner.dx, leftCorner.dy);
       // Top lip: Arches UPWARDS high in the middle into a sad frown arc
-      mouthPath.quadraticBezierTo(
-        cx,
-        topArchY,
-        rightCorner.dx,
-        rightCorner.dy,
-      );
+      mouthPath.quadraticBezierTo(cx, topArchY, rightCorner.dx, rightCorner.dy);
       // Bottom lip: Follows frown curve, arching UP in the middle
       mouthPath.quadraticBezierTo(
         cx,
@@ -5424,12 +7350,19 @@ class _InteractiveEmotionMonsterFacePainter extends CustomPainter {
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8.0);
 
     // Draw drop shadow behind mouth
-    canvas.drawPath(mouthPath.shift(const Offset(0, 5.0)), mouthShadowFillPaint);
-    canvas.drawPath(mouthPath.shift(const Offset(0, 5.0)), mouthShadowStrokePaint);
+    canvas.drawPath(
+      mouthPath.shift(const Offset(0, 5.0)),
+      mouthShadowFillPaint,
+    );
+    canvas.drawPath(
+      mouthPath.shift(const Offset(0, 5.0)),
+      mouthShadowStrokePaint,
+    );
 
     // 1. Thick Plush 3D Clay Outer Lip Bevel Rim (16px)
     final plushLipRimPaint = Paint()
-      ..color = const Color(0xFFFFB74D) // Signature warm plush 3D lip bevel highlight
+      ..color =
+          const Color(0xFFFFB74D) // Signature warm plush 3D lip bevel highlight
       ..style = PaintingStyle.stroke
       ..strokeWidth = 16.0
       ..strokeCap = StrokeCap.round
@@ -5464,10 +7397,17 @@ class _InteractiveEmotionMonsterFacePainter extends CustomPainter {
         ..moveTo(cx - mouthW / 2 - 10, mouthCy - 30.0)
         ..lineTo(cx + mouthW / 2 + 10, mouthCy - 30.0)
         ..lineTo(cx + mouthW / 2 + 10, mouthCy + 4.0)
-        ..quadraticBezierTo(cx, mouthCy + 14.0, cx - mouthW / 2 - 10, mouthCy + 4.0)
+        ..quadraticBezierTo(
+          cx,
+          mouthCy + 14.0,
+          cx - mouthW / 2 - 10,
+          mouthCy + 4.0,
+        )
         ..close();
 
-      final toothBarPaint = Paint()..color = Colors.white..style = PaintingStyle.fill;
+      final toothBarPaint = Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.fill;
       final toothBarBorderPaint = Paint()
         ..color = const Color(0xFF111111)
         ..style = PaintingStyle.stroke
@@ -5524,4 +7464,902 @@ class _InteractiveEmotionMonsterFacePainter extends CustomPainter {
   }
 }
 
+/// Custom Painter drawing the exact wide circular C-curve serpentine road ribbon matching reference image.
+class WindingRoadPathPainter extends CustomPainter {
+  final List<Offset> points;
+  final int unlockedLevelIndex;
+
+  WindingRoadPathPainter({required this.points, this.unlockedLevelIndex = 1});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (points.length < 2) return;
+    final w = size.width;
+
+    // Generate individual curve segments between adjacent nodes
+    final List<Path> segmentPaths = [];
+
+    for (int i = 0; i < points.length - 1; i++) {
+      final pA = points[i];
+      final pB = points[i + 1];
+      final segPath = Path();
+      segPath.moveTo(pA.dx, pA.dy);
+
+      if (i % 3 == 0) {
+        // Downward S-Curve
+        segPath.cubicTo(
+          pA.dx + (pB.dx - pA.dx) * 0.5,
+          pA.dy + 45,
+          pA.dx + (pB.dx - pA.dx) * 0.5,
+          pB.dy - 35,
+          pB.dx,
+          pB.dy,
+        );
+      } else if (i % 3 == 1) {
+        // Right U-Turn Loop
+        segPath.cubicTo(
+          w * 0.94,
+          pA.dy + 25,
+          w * 0.94,
+          pB.dy - 25,
+          pB.dx,
+          pB.dy,
+        );
+      } else {
+        // Left U-Turn Loop
+        segPath.cubicTo(
+          w * 0.06,
+          pA.dy + 25,
+          w * 0.06,
+          pB.dy - 25,
+          pB.dx,
+          pB.dy,
+        );
+      }
+      segmentPaths.add(segPath);
+    }
+
+    // End continuation ribbon past last node
+    final lastP = points.last;
+    final endExtensionPath = Path();
+    endExtensionPath.moveTo(lastP.dx, lastP.dy);
+    endExtensionPath.cubicTo(
+      lastP.dx + 40,
+      lastP.dy + 70,
+      w * 0.50,
+      size.height + 40,
+      w * 0.50,
+      size.height + 80,
+    );
+    segmentPaths.add(endExtensionPath);
+
+    // Build completedPath dynamically based on unlockedLevelIndex!
+    final Path completedPath = Path();
+    final Path lockedPath = Path();
+
+    final int completedSegmentCount = math.min(
+      unlockedLevelIndex,
+      segmentPaths.length,
+    );
+
+    for (int i = 0; i < segmentPaths.length; i++) {
+      if (i < completedSegmentCount) {
+        completedPath.addPath(segmentPaths[i], Offset.zero);
+      } else {
+        lockedPath.addPath(segmentPaths[i], Offset.zero);
+      }
+    }
+
+    // 1. Ground Drop Shadow (Soft Ambient Shadow on Grass below the 3D Slab Wall)
+    if (lockedPath.computeMetrics().isNotEmpty) {
+      final shadowPath = lockedPath.shift(const Offset(0, 10.0));
+      final lockedGroundShadowPaint = Paint()
+        ..color = const Color(0x1F0F172A)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 56.0
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8.0);
+
+      canvas.drawPath(shadowPath, lockedGroundShadowPaint);
+
+      // 2. 3D Extruded Side Wall (Solid 3D Thickness Slab shifted down 4.0px)
+      final wallPath = lockedPath.shift(const Offset(0, 4.0));
+      final locked3DWallPaint = Paint()
+        ..color =
+            const Color(0xFFCBD5E1) // Solid Slate 3D Extruded Wall Base
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 48.0
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round;
+
+      final locked3DWallFacePaint = Paint()
+        ..color =
+            const Color(0xFFE2E8F0) // Lighter Slate Extruded Wall Face
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 45.0
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round;
+
+      canvas.drawPath(wallPath, locked3DWallPaint);
+      canvas.drawPath(wallPath, locked3DWallFacePaint);
+
+      // 3. Top Ribbon Surface (Wider Crisp Pure White Main Driving Surface)
+      final lockedMainSurfacePaint = Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 40.0
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round;
+
+      canvas.drawPath(lockedPath, lockedMainSurfacePaint);
+
+      // 4. Draw Precision Curve-Following Center Dashed Lines along lockedPath
+      final dashedCenterPaint = Paint()
+        ..color = const Color(0xFF94A3B8).withValues(alpha: 0.55)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.8
+        ..strokeCap = StrokeCap.round;
+
+      for (final metric in lockedPath.computeMetrics()) {
+        double distance = 10.0;
+        const double dashLength = 12.0;
+        const double dashGap = 12.0;
+        while (distance < metric.length - 10.0) {
+          final Path extract = metric.extractPath(
+            distance,
+            distance + dashLength,
+          );
+          canvas.drawPath(extract, dashedCenterPaint);
+          distance += dashLength + dashGap;
+        }
+      }
+    }
+
+    // 2. Draw Completed Road Segment with Rich Antique Light Vintage Sepia & Gold Palette!
+    if (completedPath.computeMetrics().isNotEmpty) {
+      final p0 = points[0];
+      final targetP = points[math.min(unlockedLevelIndex, points.length - 1)];
+
+      // White outer border stroke
+      final completedWhiteOutlinePaint = Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 42.0
+        ..strokeCap = StrokeCap.round;
+
+      // Darker Vintage Antique Sepia Burnt-Sienna Gradient Track Paint!
+      final completedGradientPaint = Paint()
+        ..shader = LinearGradient(
+          colors: const [
+            Color(0xFF4A2508), // Deep Dark Burnt Sienna
+            Color(0xFF7A4E1A), // Dark Antique Walnut Brown
+            Color(0xFFA8722E), // Rich Warm Amber Brown
+            Color(0xFFC49A45), // Darkened Antique Gold
+          ],
+          stops: const [0.0, 0.35, 0.70, 1.0],
+        ).createShader(Rect.fromPoints(p0, targetP))
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 38.0
+        ..strokeCap = StrokeCap.round;
+
+      canvas.drawPath(completedPath, completedWhiteOutlinePaint);
+      canvas.drawPath(completedPath, completedGradientPaint);
+
+      // Draw Precision Curve-Following White Center Dashes along completedPath
+      final completedDashedCenterPaint = Paint()
+        ..color = Colors.white.withValues(alpha: 0.92)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 3.0
+        ..strokeCap = StrokeCap.round;
+
+      for (final metric in completedPath.computeMetrics()) {
+        double distance = 12.0;
+        const double dashLength = 12.0;
+        const double dashGap = 12.0;
+        while (distance < metric.length - 12.0) {
+          final Path extract = metric.extractPath(
+            distance,
+            distance + dashLength,
+          );
+          canvas.drawPath(extract, completedDashedCenterPaint);
+          distance += dashLength + dashGap;
+        }
+      }
+
+      // Draw Glowing Directional Arrow Sparks (» » ») along completedPath
+      final sparkGlowPaint = Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 3.5
+        ..strokeCap = StrokeCap.round
+        ..maskFilter = const MaskFilter.blur(BlurStyle.solid, 3);
+
+      final sparkCorePaint = Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.2
+        ..strokeCap = StrokeCap.round;
+
+      for (final metric in completedPath.computeMetrics()) {
+        final List<double> sparkFractions = [0.55, 0.65, 0.75];
+        for (final frac in sparkFractions) {
+          final ui.Tangent? tangent = metric.getTangentForOffset(
+            metric.length * frac,
+          );
+          if (tangent != null) {
+            final Offset pos = tangent.position;
+            final double angle = tangent.angle;
+
+            canvas.save();
+            canvas.translate(pos.dx, pos.dy);
+            canvas.rotate(angle);
+
+            final sparkPath = Path()
+              ..moveTo(-5, -6)
+              ..lineTo(2, 0)
+              ..lineTo(-5, 6);
+
+            canvas.drawPath(sparkPath, sparkGlowPaint);
+            canvas.drawPath(sparkPath, sparkCorePaint);
+            canvas.restore();
+          }
+        }
+      }
+
+      // Draw Green Circle Checkmark Badge (✔) at exit of all completed nodes
+      for (int c = 0; c < completedSegmentCount && c < points.length; c++) {
+        final cp = points[c];
+        final checkmarkCenter = Offset(cp.dx + 44, cp.dy);
+        final checkmarkBgPaint = Paint()
+          ..color = const Color(0xFF22C55E)
+          ..style = PaintingStyle.fill;
+        final checkmarkBorderPaint = Paint()
+          ..color = Colors.white
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.0;
+
+        canvas.drawCircle(checkmarkCenter, 13, checkmarkBgPaint);
+        canvas.drawCircle(checkmarkCenter, 13, checkmarkBorderPaint);
+
+        // Draw White Check Icon (✔) inside badge
+        final checkPath = Path()
+          ..moveTo(checkmarkCenter.dx - 4, checkmarkCenter.dy)
+          ..lineTo(checkmarkCenter.dx - 1, checkmarkCenter.dy + 3.5)
+          ..lineTo(checkmarkCenter.dx + 4.5, checkmarkCenter.dy - 3.5);
+
+        final checkIconPaint = Paint()
+          ..color = Colors.white
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.5
+          ..strokeCap = StrokeCap.round
+          ..strokeJoin = StrokeJoin.round;
+
+        canvas.drawPath(checkPath, checkIconPaint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant WindingRoadPathPainter oldDelegate) => true;
+}
+
+/// Custom Painter drawing rolling pastel mint hills, grass tufts, dot matrix grid, concentric target circles, 3D pine trees, and gray boulders matching reference image.
+class _SubtleEnvironmentMapPainter extends CustomPainter {
+  final List<Offset> points;
+
+  _SubtleEnvironmentMapPainter({required this.points});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+
+    // 1. Rolling Hills (Slightly Darker Rich Pasture Mint Background Mounds)
+    final hillPaint1 = Paint()
+      ..color = const Color(0xFFC4E8D1).withValues(alpha: 0.88)
+      ..style = PaintingStyle.fill;
+
+    final hillPaint2 = Paint()
+      ..color = const Color(0xFFB5E2C5).withValues(alpha: 0.92)
+      ..style = PaintingStyle.fill;
+
+    // Left Rolling Hill Mound 1
+    final hillPath1 = Path()
+      ..moveTo(0, h * 0.15)
+      ..cubicTo(w * 0.25, h * 0.12, w * 0.35, h * 0.24, 0, h * 0.32)
+      ..close();
+    canvas.drawPath(hillPath1, hillPaint1);
+
+    // Right Rolling Hill Mound 2
+    final hillPath2 = Path()
+      ..moveTo(w, h * 0.22)
+      ..cubicTo(w * 0.68, h * 0.18, w * 0.60, h * 0.36, w, h * 0.42)
+      ..close();
+    canvas.drawPath(hillPath2, hillPaint2);
+
+    // Lower Left Rolling Hill Mound 3
+    final hillPath3 = Path()
+      ..moveTo(0, h * 0.52)
+      ..cubicTo(w * 0.30, h * 0.48, w * 0.40, h * 0.62, 0, h * 0.70)
+      ..close();
+    canvas.drawPath(hillPath3, hillPaint1);
+
+    // Lower Right Rolling Hill Mound 4
+    final hillPath4 = Path()
+      ..moveTo(w, h * 0.65)
+      ..cubicTo(w * 0.65, h * 0.60, w * 0.58, h * 0.78, w, h * 0.85)
+      ..close();
+    canvas.drawPath(hillPath4, hillPaint2);
+
+    // 2. Concentric Target Rings & 3x3 Dot Grid Matrix (Left Flank Accents matching reference image!)
+    final ringPaint = Paint()
+      ..color = const Color(0xFF86EFAC).withValues(alpha: 0.45)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0;
+
+    final ringFillPaint = Paint()
+      ..color = const Color(0xFF86EFAC).withValues(alpha: 0.35)
+      ..style = PaintingStyle.fill;
+
+    final dotPaint = Paint()
+      ..color = const Color(0xFF86EFAC).withValues(alpha: 0.50)
+      ..style = PaintingStyle.fill;
+
+    // Concentric Circle Ring (Top Left)
+    final ringCenter1 = Offset(w * 0.12, 140);
+    canvas.drawCircle(ringCenter1, 14, ringPaint);
+    canvas.drawCircle(ringCenter1, 4, ringFillPaint);
+
+    // Concentric Circle Ring (Middle Left)
+    final ringCenter2 = Offset(w * 0.09, 530);
+    canvas.drawCircle(ringCenter2, 12, ringPaint);
+    canvas.drawCircle(ringCenter2, 3, ringFillPaint);
+
+    // 3x3 Dot Matrix Grid Clusters
+    final List<Offset> gridCenters = [
+      Offset(w * 0.08, 280),
+      Offset(w * 0.06, 680),
+      Offset(w * 0.88, 320),
+    ];
+
+    for (final gc in gridCenters) {
+      for (int row = 0; row < 3; row++) {
+        for (int col = 0; col < 3; col++) {
+          canvas.drawCircle(
+            Offset(gc.dx + (col * 8), gc.dy + (row * 8)),
+            1.8,
+            dotPaint,
+          );
+        }
+      }
+    }
+
+    // 3. Grass Tufts (3-Blade Green Grass Tufts near road bends matching reference image!)
+    final List<Offset> grassPositions = [
+      Offset(w * 0.44, 310),
+      Offset(w * 0.18, 480),
+      Offset(w * 0.52, 680),
+      Offset(w * 0.82, 850),
+    ];
+
+    final grassPaint = Paint()
+      ..color = const Color(0xFF22C55E).withValues(alpha: 0.70)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0
+      ..strokeCap = StrokeCap.round;
+
+    for (final gpos in grassPositions) {
+      // Center blade
+      canvas.drawLine(gpos, Offset(gpos.dx, gpos.dy - 8), grassPaint);
+      // Left blade
+      canvas.drawLine(gpos, Offset(gpos.dx - 5, gpos.dy - 6), grassPaint);
+      // Right blade
+      canvas.drawLine(gpos, Offset(gpos.dx + 5, gpos.dy - 6), grassPaint);
+    }
+
+    // 4. Gray Boulders / Rocks on hill slopes
+    final rockPaint = Paint()
+      ..color = const Color(0xFF94A3B8)
+      ..style = PaintingStyle.fill;
+    final rockDarkPaint = Paint()
+      ..color = const Color(0xFF64748B)
+      ..style = PaintingStyle.fill;
+    final groundShadowPaint = Paint()
+      ..color = const Color(0x20000000)
+      ..style = PaintingStyle.fill;
+
+    // 4. Gray Boulders / Rocks on hill slopes
+    final List<Offset> rockPositions = [
+      Offset(w * 0.86, 445),
+      Offset(w * 0.12, 885),
+    ];
+
+    for (final rpos in rockPositions) {
+      // Ground shadow
+      canvas.drawOval(
+        Rect.fromCenter(
+          center: Offset(rpos.dx, rpos.dy + 4),
+          width: 14,
+          height: 4,
+        ),
+        groundShadowPaint,
+      );
+      // Rock body
+      canvas.drawCircle(rpos, 6, rockPaint);
+      // Rock shadow face
+      canvas.drawCircle(Offset(rpos.dx + 1.5, rpos.dy + 1.5), 4, rockDarkPaint);
+    }
+
+    // 5. 3D Indian Tricolor Flag Victory Monument (Placed in the Empty Space of the Last Curve at y=1240!)
+    final flagMonumentPos = Offset(w * 0.88, 1240);
+
+    // A) Radiant Golden Sunburst Light Rays behind monument
+    final sunburstRayPaint = Paint()
+      ..color = const Color(0xFFFEF08A).withValues(alpha: 0.40)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4.5;
+
+    for (int i = 0; i < 11; i++) {
+      final double angle = (i * 0.20) - 1.0;
+      final Offset rayEnd = Offset(
+        flagMonumentPos.dx + math.cos(angle) * 85,
+        flagMonumentPos.dy - 55 + math.sin(angle) * 85,
+      );
+      canvas.drawLine(
+        Offset(flagMonumentPos.dx, flagMonumentPos.dy - 55),
+        rayEnd,
+        sunburstRayPaint,
+      );
+    }
+
+    // B) 3D Mountain Peak Rocks & Boulders (Larger 96px Base Platform!)
+    final mountainBaseShadow = Paint()
+      ..color = const Color(0x35000000)
+      ..style = PaintingStyle.fill;
+
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: Offset(flagMonumentPos.dx, flagMonumentPos.dy + 24),
+        width: 96,
+        height: 26,
+      ),
+      mountainBaseShadow,
+    );
+
+    // Left Rock Peak
+    final leftRockPath = Path()
+      ..moveTo(flagMonumentPos.dx - 40, flagMonumentPos.dy + 22)
+      ..lineTo(flagMonumentPos.dx - 26, flagMonumentPos.dy - 18)
+      ..lineTo(flagMonumentPos.dx - 8, flagMonumentPos.dy + 22)
+      ..close();
+    canvas.drawPath(leftRockPath, rockDarkPaint);
+
+    // Center Main Flat-Top Rock Peak
+    final centerRockPath = Path()
+      ..moveTo(flagMonumentPos.dx - 22, flagMonumentPos.dy + 24)
+      ..lineTo(flagMonumentPos.dx - 14, flagMonumentPos.dy - 32)
+      ..lineTo(flagMonumentPos.dx + 20, flagMonumentPos.dy - 32)
+      ..lineTo(flagMonumentPos.dx + 32, flagMonumentPos.dy + 24)
+      ..close();
+    canvas.drawPath(centerRockPath, rockPaint);
+
+    // Flat Top Rock Platform
+    final topPlatformPath = Path()
+      ..moveTo(flagMonumentPos.dx - 14, flagMonumentPos.dy - 32)
+      ..lineTo(flagMonumentPos.dx + 20, flagMonumentPos.dy - 32)
+      ..lineTo(flagMonumentPos.dx + 14, flagMonumentPos.dy - 26)
+      ..lineTo(flagMonumentPos.dx - 9, flagMonumentPos.dy - 26)
+      ..close();
+    final topPlatformPaint = Paint()
+      ..color = const Color(0xFFCBD5E1)
+      ..style = PaintingStyle.fill;
+    canvas.drawPath(topPlatformPath, topPlatformPaint);
+
+    // C) Wooden Flagpole (Taller 96px Pole!)
+    final poleBaseY = flagMonumentPos.dy - 28;
+    final poleTopY = flagMonumentPos.dy - 124;
+    final poleX = flagMonumentPos.dx + 3;
+
+    final polePaint = Paint()
+      ..color = const Color(0xFF5C2C06)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 5.0
+      ..strokeCap = StrokeCap.round;
+    canvas.drawLine(
+      Offset(poleX, poleBaseY),
+      Offset(poleX, poleTopY),
+      polePaint,
+    );
+
+    // Golden Finial Sphere on Pole Top
+    final finialPaint = Paint()
+      ..color = const Color(0xFFFFD166)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(Offset(poleX, poleTopY - 3), 5.5, finialPaint);
+
+    // D) Waving 3D Indian Tricolor Flag (54px wide, 36px high with Waving Bezier Ripples!)
+    // Saffron Top Stripe (#FF9933)
+    final saffronPath = Path()
+      ..moveTo(poleX, poleTopY)
+      ..cubicTo(
+        poleX + 18,
+        poleTopY - 6,
+        poleX + 36,
+        poleTopY + 6,
+        poleX + 54,
+        poleTopY - 4,
+      )
+      ..lineTo(poleX + 54, poleTopY + 8)
+      ..cubicTo(
+        poleX + 36,
+        poleTopY + 18,
+        poleX + 18,
+        poleTopY + 6,
+        poleX,
+        poleTopY + 12,
+      )
+      ..close();
+    final saffronPaint = Paint()
+      ..color = const Color(0xFFFF9933)
+      ..style = PaintingStyle.fill;
+    canvas.drawPath(saffronPath, saffronPaint);
+
+    // White Middle Stripe (#FFFFFF)
+    final whitePath = Path()
+      ..moveTo(poleX, poleTopY + 12)
+      ..cubicTo(
+        poleX + 18,
+        poleTopY + 6,
+        poleX + 36,
+        poleTopY + 18,
+        poleX + 54,
+        poleTopY + 8,
+      )
+      ..lineTo(poleX + 54, poleTopY + 20)
+      ..cubicTo(
+        poleX + 36,
+        poleTopY + 30,
+        poleX + 18,
+        poleTopY + 18,
+        poleX,
+        poleTopY + 24,
+      )
+      ..close();
+    final whitePaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill;
+    canvas.drawPath(whitePath, whitePaint);
+
+    // Navy Blue Ashoka Chakra Wheel (#000080) centered on white stripe
+    final chakraCenter = Offset(poleX + 26, poleTopY + 16);
+    final chakraOuterPaint = Paint()
+      ..color = const Color(0xFF000080)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.6;
+    final chakraDotPaint = Paint()
+      ..color = const Color(0xFF000080)
+      ..style = PaintingStyle.fill;
+
+    canvas.drawCircle(chakraCenter, 5.0, chakraOuterPaint);
+    canvas.drawCircle(chakraCenter, 1.6, chakraDotPaint);
+    for (int i = 0; i < 12; i++) {
+      final double spokeAngle = i * (math.pi / 6);
+      canvas.drawLine(
+        chakraCenter,
+        Offset(
+          chakraCenter.dx + math.cos(spokeAngle) * 4.8,
+          chakraCenter.dy + math.sin(spokeAngle) * 4.8,
+        ),
+        chakraOuterPaint,
+      );
+    }
+
+    // India Green Bottom Stripe (#138808)
+    final greenStripePath = Path()
+      ..moveTo(poleX, poleTopY + 24)
+      ..cubicTo(
+        poleX + 18,
+        poleTopY + 18,
+        poleX + 36,
+        poleTopY + 30,
+        poleX + 54,
+        poleTopY + 20,
+      )
+      ..lineTo(poleX + 54, poleTopY + 32)
+      ..cubicTo(
+        poleX + 36,
+        poleTopY + 42,
+        poleX + 18,
+        poleTopY + 30,
+        poleX,
+        poleTopY + 36,
+      )
+      ..close();
+    final greenStripePaint = Paint()
+      ..color = const Color(0xFF138808)
+      ..style = PaintingStyle.fill;
+    canvas.drawPath(greenStripePath, greenStripePaint);
+
+    // E) Floating Gold Sparkles around Flag
+    final sparklePaint = Paint()
+      ..color = const Color(0xFFFFD166)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(
+      Offset(flagMonumentPos.dx - 35, flagMonumentPos.dy - 65),
+      3.0,
+      sparklePaint,
+    );
+    canvas.drawCircle(
+      Offset(flagMonumentPos.dx + 65, flagMonumentPos.dy - 85),
+      3.5,
+      sparklePaint,
+    );
+    canvas.drawCircle(
+      Offset(flagMonumentPos.dx + 48, flagMonumentPos.dy - 20),
+      2.5,
+      sparklePaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _SubtleEnvironmentMapPainter oldDelegate) =>
+      false;
+}
+
+/// Elevated yellow tile with a curved convex bulge at the top — like the Minion background slope.
+class _OnboardingElevatedTile extends StatelessWidget {
+  final double screenHeight;
+  const _OnboardingElevatedTile({required this.screenHeight});
+
+  @override
+  Widget build(BuildContext context) {
+    // Tile occupies bottom ~48% of the screen
+    final tileHeight = screenHeight * 0.48;
+    // Gentle bulge peak height
+    final bulgePeakRise = tileHeight * 0.08;
+
+    return SizedBox(
+      height: tileHeight + bulgePeakRise,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          // Offset the tile down by bulgePeakRise so the bulge peeks above
+          Positioned(
+            top: bulgePeakRise,
+            left: 0,
+            right: 0,
+            child: SizedBox(
+              height: tileHeight,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  // Soft shadow strip above the tile for 3D elevation
+                  Positioned(
+                    top: -16,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      height: 32,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Color(0x00000000),
+                            Color(0x25000000),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // The elevated tile with a gentle convex bulge ClipPath
+                  ClipPath(
+                    clipper: _OnboardingTileClipper(),
+                    child: Container(
+                      width: double.infinity,
+                      height: tileHeight,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0xFFFFD54F), // Luminous Rich Warm Gold
+                            Color(0xFFFFB300), // Vibrant Amber Gold
+                            Color(0xFFFF8F00), // Deep Golden Orange
+                          ],
+                          stops: [0.0, 0.50, 1.0],
+                        ),
+                      ),
+                      child: Stack(
+                        children: [
+                          // Top-right organic white bubble circle highlight
+                          Positioned(
+                            top: 15,
+                            right: -15,
+                            child: Container(
+                              width: 95,
+                              height: 95,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.24),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 75,
+                            right: 60,
+                            child: Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.20),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                          // Top-left organic white bubble accent
+                          Positioned(
+                            top: 15,
+                            left: 20,
+                            child: Container(
+                              width: 70,
+                              height: 70,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.20),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Inner top-edge shimmer highlight for 3D depth
+                  Positioned(
+                    top: 24,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      height: 3,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Color(0x00FFFFFF),
+                            Color(0x70FFFFFF),
+                            Color(0x00FFFFFF),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Blinking eyes positioned comfortably on top of the lower yellow tile!
+          Positioned(
+            top: 35,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: BlinkingEyesWidget(
+                accentDark: const Color(0xFF4A2900),
+                scale: 1.50,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// ClipPath that creates a gentle convex upward-bulge slope at the top of the tile.
+class _OnboardingTileClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    // Bottom-left
+    path.moveTo(0, size.height);
+    // Bottom-right
+    path.lineTo(size.width, size.height);
+    // Right side up
+    path.lineTo(size.width, size.height * 0.08);
+    // Gentle convex cubic bezier bulge
+    path.cubicTo(
+      size.width * 0.72, -size.height * 0.08,
+      size.width * 0.28, -size.height * 0.08,
+      0, size.height * 0.08,
+    );
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
+}
+
+/// Custom Painter drawing TURBULENT wavy distorted grid lines across the onboarding background.
+/// Uses multi-frequency sine wave distortion to create an organic, field-like warped grid effect.
+class GridLinesBackgroundPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..strokeWidth = 1.1
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..color = const Color(0x289E9E9E); // Visible but soft gray on white bg
+
+    const double step = 32.0;
+    const int segments = 80; // Points per line for smooth curves
+
+    // --- Turbulent Horizontal Lines ---
+    for (double y = 0; y <= size.height + step; y += step) {
+      final path = Path();
+      bool started = false;
+      for (int i = 0; i <= segments; i++) {
+        final double t = i / segments;
+        final double x = t * size.width;
+        // Multi-layer sine distortion for turbulent look
+        final double distortion =
+            10.0 * _sin(t * 6.28 + y * 0.04) +
+            5.0 * _sin(t * 12.56 + y * 0.09 + 1.3) +
+            3.0 * _sin(t * 20.0 + y * 0.02 + 2.7);
+        final double dy = y + distortion;
+        if (!started) {
+          path.moveTo(x, dy);
+          started = true;
+        } else {
+          path.lineTo(x, dy);
+        }
+      }
+      canvas.drawPath(path, paint);
+    }
+
+    // --- Turbulent Vertical Lines ---
+    for (double x = 0; x <= size.width + step; x += step) {
+      final path = Path();
+      bool started = false;
+      for (int i = 0; i <= segments; i++) {
+        final double t = i / segments;
+        final double y = t * size.height;
+        // Multi-layer sine distortion for turbulent look
+        final double distortion =
+            10.0 * _sin(t * 6.28 + x * 0.04) +
+            5.0 * _sin(t * 12.56 + x * 0.09 + 0.8) +
+            3.0 * _sin(t * 20.0 + x * 0.02 + 1.9);
+        final double dx = x + distortion;
+        if (!started) {
+          path.moveTo(dx, y);
+          started = true;
+        } else {
+          path.lineTo(dx, y);
+        }
+      }
+      canvas.drawPath(path, paint);
+    }
+  }
+
+  // Fast sin approximation
+  double _sin(double radians) {
+    return (radians % (2 * 3.14159265358979))
+        .let((r) => r > 3.14159265358979 ? r - 2 * 3.14159265358979 : r)
+        .let((r) {
+      // Taylor series sin approximation
+      final r2 = r * r;
+      return r * (1 - r2 / 6.0 * (1 - r2 / 20.0 * (1 - r2 / 42.0)));
+    });
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+extension _NumLet<T> on T {
+  R let<R>(R Function(T) block) => block(this);
+}
 
