@@ -7,7 +7,12 @@ import '../core/models/child_profile.dart';
 /// Screen that loads and presents the interactive 1913 Game Map web application
 /// overlayed with live Child Profile HUD (Level, XP, Streak, Name).
 class GameMap1913Screen extends StatelessWidget {
-  const GameMap1913Screen({super.key});
+  final String? chapterId;
+
+  const GameMap1913Screen({
+    super.key,
+    this.chapterId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +22,7 @@ class GameMap1913Screen extends StatelessWidget {
         children: [
           // 1. Embedded 1913 Game Map Webview / Iframe
           Positioned.fill(
-            child: getGameMap1913View(),
+            child: getGameMap1913View(chapterId: chapterId),
           ),
 
           // 2. Vintage Top Control Bar with Back Button & Child Profile HUD

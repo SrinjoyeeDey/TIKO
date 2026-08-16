@@ -527,7 +527,7 @@ class _ParentDashboardState extends State<ParentDashboard> {
           ),
           _buildBulletItem('Total Vocalizations / Speech Attempts: ${speech.totalVocalizations}'),
           _buildBulletItem('Lip Movement Checkpoints Detected: ${speech.mouthMovementDetectedCount}'),
-          _buildBulletItem('Average Processing Response Delay: ${speech.averageResponseDelaySeconds}s'),
+          _buildBulletItem('Average Processing Response Delay: ${speech.averageResponseDelaySeconds < 0 ? "N/A" : "${speech.averageResponseDelaySeconds}s"}'),
           if (speech.successfulWords.isNotEmpty) ...[
             const SizedBox(height: 4),
             Padding(

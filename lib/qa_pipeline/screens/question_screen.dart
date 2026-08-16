@@ -26,6 +26,7 @@ import 'level_clear_screen.dart';
 import '../../core/api/activity_api.dart';
 import '../../core/models/activity_model.dart';
 import '../../core/widgets/activity_renderer.dart';
+import '../../core/services/event_service.dart';
 
 /// Manages the full question flow for a level:
 ///   MCQ → Descriptive → Sequence (drag-and-drop) → Level Clear.
@@ -166,6 +167,18 @@ class _QuestionScreenState extends State<QuestionScreen> {
     );
 
     await QuestionAttemptRepository.saveAttempt(attempt);
+
+    EventService.logEvent(
+      activityId: 'netaji_${widget.level.id}_q$questionId',
+      eventType: isCorrect ? 'ANSWER_CORRECT' : 'ANSWER_WRONG',
+      data: {
+        'questionType': questionType,
+        'isCorrect': isCorrect,
+        'similarityScore': similarityScore,
+        'userAnswer': userAnswer,
+        'timeTakenSeconds': timeTaken,
+      },
+    );
 
     // Advance to next question or level-clear.
     if (_currentIndex < _allQuestions.length - 1) {
@@ -512,6 +525,11 @@ class _QuestionScreenState extends State<QuestionScreen> {
         question: question,
         questionNumber: phaseInfo.numberInPhase,
         onAnswered: (isCorrect) => _onQuestionAnswered(isCorrect),
+        onAnsweredDetailed: (isCorrect, score, transcript) => _onQuestionAnswered(
+          isCorrect,
+          similarityScore: score.toDouble(),
+          userAnswer: transcript,
+        ),
       );
     }
 

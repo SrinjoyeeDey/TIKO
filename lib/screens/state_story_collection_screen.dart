@@ -1,12 +1,11 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../data/west_bengal_stories_database.dart';
 import '../models/interactive_story_models.dart';
-import 'interactive_story_screen.dart';
-import '../qa_pipeline/screens/intro_screen.dart';
 import '../qa_pipeline/services/content_discovery_service.dart';
-import '../qa_pipeline/screens/level_selection_screen.dart';
+import '../qa_pipeline/database/progress_repository.dart';
 import '../qa_pipeline/screens/video_player_screen.dart';
 import '../qa_pipeline/screens/level_clear_screen.dart';
 import '../qa_pipeline/models/learning_content.dart';
@@ -21,10 +20,12 @@ import '../core/state/child_state.dart';
 /// - Worn, tea-stained 80s Showa vintage paper edges
 class StateStoryCollectionScreen extends StatefulWidget {
   final String stateId;
+  final String? chapterId;
 
   const StateStoryCollectionScreen({
     super.key,
     required this.stateId,
+    this.chapterId,
   });
 
   @override
@@ -35,9 +36,13 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
     with SingleTickerProviderStateMixin {
   late PageController _pageController;
   late StateStoriesCollection _collection;
-  int _selectedStoryIndex = 1; // Default center featured story
+  int _selectedStoryIndex = 0;
   int? _animatingIndex;
   bool _isTransitioningToStory = false;
+
+  List<LearningLevel> _levels = [];
+  Map<String, bool> _completedLevels = {};
+  int _highestUnlockedIndex = 0;
 
   // Interactive 3D Drag Tilt State
   double _tiltX = 0.0;
@@ -56,56 +61,92 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
   @override
   void initState() {
     super.initState();
-    debugPrint("StateStoryCollectionScreen: initState called for stateId: ${widget.stateId}");
+    debugPrint("StateStoryCollectionScreen: initState called for stateId: ${widget.stateId}, chapterId: ${widget.chapterId}");
     _collection = IndianStoriesDatabase.getCollectionForState(widget.stateId) ?? 
         StateStoriesCollection(stateId: widget.stateId, stateName: widget.stateId, tagline: '', atmosphericImage: 'assets/images/nimo_splash.png', stories: []);
     
-    // For Calcutta (West Bengal), use dynamic QA pipeline chapters instead of static stories
-    if (widget.stateId == 'west_bengal') {
-      debugPrint("StateStoryCollectionScreen: Setting up dynamic chapters for West Bengal");
-      _isLoadingDynamic = true;
-      _loadQAChaptersAsStories();
-    }
+    _isLoadingDynamic = true;
+    _loadQAChaptersAsStories();
 
     _pageController = PageController(
       viewportFraction: 0.46, // Increased spacing between cards
-      initialPage: _selectedStoryIndex.clamp(0, _collection.stories.isNotEmpty ? _collection.stories.length - 1 : 0),
+      initialPage: 0,
     );
   }
 
   Future<void> _loadQAChaptersAsStories() async {
+    final childId = ChildState.instance.currentProfile.id;
     final chapters = await ContentDiscoveryService.discoverContent();
+    if (chapters.isEmpty) {
+      if (mounted) setState(() => _isLoadingDynamic = false);
+      return;
+    }
+
+    // Target chapter selected from Main Episodes screen
+    final targetChapterId = widget.chapterId ?? chapters.first.id;
+    final chapter = chapters.where((c) => c.id.toLowerCase() == targetChapterId.toLowerCase()).firstOrNull ?? chapters.first;
+
+    _levels = chapter.levels;
+
+    // Load progress from SQLite
+    final allProgress = await ProgressRepository.getAllProgress(childId);
+    final completedMap = <String, bool>{};
+    for (final p in allProgress) {
+      if (p.chapterId == chapter.id && p.completed) {
+        completedMap[p.levelId] = true;
+      }
+    }
+
+    // Sequential unlock calculation
+    int highestUnlocked = 0;
+    for (int i = 0; i < _levels.length; i++) {
+      final lvl = _levels[i];
+      if (completedMap[lvl.id] == true) {
+        highestUnlocked = i + 1;
+      } else {
+        break;
+      }
+    }
+    if (highestUnlocked >= _levels.length) {
+      highestUnlocked = _levels.length - 1;
+    }
+
     final List<StoryData> mappedStories = [];
-    
-    for (final chapter in chapters) {
-      final coverPath = await ContentDiscoveryService.findCoverImage(chapter.id) ?? 'assets/images/nimo_splash.png';
+    for (int i = 0; i < _levels.length; i++) {
+      final lvl = _levels[i];
+      final levelImg = await ContentDiscoveryService.findLevelImage(chapter.id, lvl.id)
+          ?? await ContentDiscoveryService.findCoverImage(chapter.id)
+          ?? 'assets/images/nimo_splash.png';
+
       mappedStories.add(
         StoryData(
-          id: chapter.id, // e.g. "Netaji"
-          stateId: 'west_bengal_dynamic', // special flag
+          id: lvl.id,
+          stateId: 'episode_dynamic',
           title: chapter.name,
-          subtitle: 'QA Challenge',
-          taglineOrQuote: 'Explore the learning levels of ${chapter.name}',
-          imagePath: coverPath,
-          scenes: [], // No scenes needed, we intercept onTap
-        )
+          subtitle: 'Episode ${i + 1}',
+          taglineOrQuote: 'Episode ${i + 1} of ${chapter.name} adventure',
+          imagePath: levelImg,
+          scenes: [],
+        ),
       );
     }
-    
+
     if (mounted) {
       setState(() {
+        _completedLevels = completedMap;
+        _highestUnlockedIndex = highestUnlocked;
         _collection = StateStoriesCollection(
           stateId: widget.stateId,
-          stateName: widget.stateId,
-          tagline: 'Explore QA Chapters',
+          stateName: chapter.name,
+          tagline: 'Explore ${chapter.name} Episodes',
           atmosphericImage: 'assets/images/nimo_splash.png',
           stories: mappedStories,
         );
         _isLoadingDynamic = false;
-        _selectedStoryIndex = 0;
+        _selectedStoryIndex = _selectedStoryIndex.clamp(0, mappedStories.isNotEmpty ? mappedStories.length - 1 : 0);
         _pageController = PageController(
           viewportFraction: 0.46,
-          initialPage: 0,
+          initialPage: _selectedStoryIndex,
         );
       });
     }
@@ -162,6 +203,18 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
 
     if (_isTransitioningToStory) return;
 
+    if (index > _highestUnlockedIndex) {
+      HapticFeedback.heavyImpact();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('🔒 Complete Episode $index first to unlock Episode ${index + 1}!'),
+          backgroundColor: const Color(0xFF2E1C12),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
     setState(() {
       _animatingIndex = index;
       _isTransitioningToStory = true;
@@ -177,28 +230,23 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
     await ChildState.instance.startNewSession(storyId: selectedStory.id);
     if (!mounted) return;
 
-    Widget nextScreen;
-    if (selectedStory.stateId == 'west_bengal_dynamic') {
-      // Dynamic QA Chapter selected - skip sub-level map and launch video directly
-      final allChapters = await ContentDiscoveryService.discoverContent();
-      if (!mounted) return;
-      final chapter = allChapters.firstWhere((c) => c.id == selectedStory.id);
-      final level = chapter.levels.isNotEmpty ? chapter.levels.first : null;
-      if (level != null) {
-        nextScreen = VideoPlayerScreen(childId: 'child_1', level: level);
-      } else {
-        nextScreen = LevelSelectionScreen(childId: 'child_1', chapter: chapter);
-      }
-    } else if (selectedStory.id == 'british_power') {
-      nextScreen = const IntroScreen(childId: 'child_1');
-    } else {
-      nextScreen = InteractiveStoryScreen(story: selectedStory);
+    final level = index < _levels.length ? _levels[index] : null;
+    if (level == null) {
+      setState(() {
+        _animatingIndex = null;
+        _isTransitioningToStory = false;
+      });
+      return;
     }
+
+    final childId = ChildState.instance.currentProfile.id;
 
     Navigator.of(context).push(
       PageRouteBuilder(
-        settings: RouteSettings(name: nextScreen is LevelSelectionScreen ? 'level_selection' : null),
-        pageBuilder: (context, animation, secondaryAnimation) => nextScreen,
+        pageBuilder: (context, animation, secondaryAnimation) => VideoPlayerScreen(
+          childId: childId,
+          level: level,
+        ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
@@ -210,6 +258,7 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
           _animatingIndex = null;
           _isTransitioningToStory = false;
         });
+        _loadQAChaptersAsStories();
       }
     });
   }
@@ -416,32 +465,7 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
                                   child: Transform.rotate(
                                     angle: rotation,
                                     child: InkWell(
-                                      onTap: () async {
-                                        final navigator = Navigator.of(context);
-                                        final messenger = ScaffoldMessenger.of(context);
-                                        final chapters = await ContentDiscoveryService.discoverContent();
-                                        if (!mounted) return;
-                                        final chapter = chapters.where((c) => c.id == story.id).firstOrNull;
-                                        
-                                        if (chapter != null && chapter.levels.isNotEmpty) {
-                                          final level = chapter.levels.first;
-                                          navigator.push(
-                                            MaterialPageRoute(
-                                              builder: (_) => VideoPlayerScreen(
-                                                childId: 'default_child',
-                                                level: level,
-                                              ),
-                                            ),
-                                          );
-                                        } else {
-                                          messenger.showSnackBar(
-                                            SnackBar(
-                                              content: Text('Starting ${story.title}...'),
-                                              backgroundColor: const Color(0xFF8B4513),
-                                            ),
-                                          );
-                                        }
-                                      },
+                                      onTap: () => _onCardTap(index),
                                       child: _buildPostcardStampCard(story, index, isSelected, isAnimating),
                                     ),
                                   ),
@@ -537,6 +561,9 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
 
   // 80s Showa Worn Postcard Stamp Card (Dull B&W Side Cards -> Bright Vibrant Color Center Card)
   Widget _buildPostcardStampCard(StoryData story, int index, bool isSelected, bool isAnimating) {
+    final bool isLocked = index > _highestUnlockedIndex;
+    final bool isCompleted = index < _levels.length && (_completedLevels[_levels[index].id] == true);
+
     // Card Container Layout (Center card is wider 295w x 355h vs side cards 210w x 275h)
     Widget cardContent = AnimatedContainer(
       duration: const Duration(milliseconds: 280),
@@ -602,7 +629,65 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
                                 ),
                               ),
 
-                              // Vintage 80s Showa Japan Watermark Accent (æ˜­å’Œ80s)
+                              // Lock Overlay for Locked Episodes
+                              if (isLocked)
+                                Positioned.fill(
+                                  child: Container(
+                                    color: Colors.black.withValues(alpha: 0.52),
+                                    child: Center(
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF2E1C12).withValues(alpha: 0.90),
+                                          borderRadius: BorderRadius.circular(10),
+                                          border: Border.all(color: const Color(0xFFD4AF37), width: 1.2),
+                                        ),
+                                        child: const Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(Icons.lock_rounded, color: Color(0xFFD4AF37), size: 14),
+                                            SizedBox(width: 4),
+                                            Text(
+                                              'LOCKED',
+                                              style: TextStyle(
+                                                fontFamily: 'Outfit',
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w900,
+                                                color: Color(0xFFD4AF37),
+                                                letterSpacing: 1.0,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                              // Completed Badge
+                              if (isCompleted)
+                                Positioned(
+                                  top: 6,
+                                  right: 6,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF2E7D32),
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: Colors.white, width: 1.5),
+                                      boxShadow: const [
+                                        BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
+                                      ],
+                                    ),
+                                    child: const Icon(
+                                      Icons.check_rounded,
+                                      color: Colors.white,
+                                      size: 13,
+                                    ),
+                                  ),
+                                ),
+
+                              // Vintage 80s Showa Japan Watermark Accent (昭和80s)
                               Positioned(
                                 bottom: 8,
                                 right: 8,
@@ -618,7 +703,7 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
                                       borderRadius: BorderRadius.circular(3),
                                     ),
                                     child: Text(
-                                      'æ˜­å’Œ80s Â· æ—…',
+                                      '昭和80s · 旅',
                                       style: TextStyle(
                                         fontSize: 9,
                                         fontWeight: FontWeight.w900,
@@ -657,7 +742,7 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            story.title,
+                            isLocked ? 'Locked' : (isCompleted ? '${story.title} ✓' : story.title),
                             textAlign: TextAlign.center,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -707,12 +792,12 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
       ),
     );
 
-    // Apply Dull Black & White Desaturation Filter to Side Cards
-    if (!isSelected) {
+    // Apply Dull Black & White Desaturation Filter to Side Cards or Locked Cards
+    if (!isSelected || isLocked) {
       cardContent = ColorFiltered(
         colorFilter: const ColorFilter.matrix(_grayscaleMatrix),
         child: Opacity(
-          opacity: 0.75, // Dull & desaturated side cards
+          opacity: isLocked ? 0.70 : 0.75, // Dull & desaturated side or locked cards
           child: cardContent,
         ),
       );

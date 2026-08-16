@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../models/learning_content.dart';
+import '../database/progress_repository.dart';
 
 /// Dynamically discovers chapters and levels from the `assets/` directory
 /// using the AssetManifest.
@@ -286,5 +287,66 @@ class ContentDiscoveryService {
       debugPrint('ContentDiscoveryService: findLevelImage failed for $chapterId/$levelId: $e');
     }
     return null;
+  }
+
+  /// Clears cached chapters to force discovery re-evaluation
+  static void invalidateCache() {
+    _cachedChapters = null;
+  }
+
+  /// Checks if a specific level is marked completed
+  static Future<bool> isLevelCompleted(String childId, String chapterId, String levelId) async {
+    final progress = await ProgressRepository.getLevelProgress(childId, chapterId, levelId);
+    return progress != null && progress.completed;
+  }
+
+  /// Checks if all levels of a chapter are completed
+  static Future<bool> isChapterCompleted(String childId, String chapterId) async {
+    final chapters = await discoverContent();
+    final chapter = chapters.where((c) => c.id == chapterId).firstOrNull;
+    if (chapter == null || chapter.levels.isEmpty) return false;
+
+    final allProgress = await ProgressRepository.getAllProgress(childId);
+    final completedLevelIds = allProgress
+        .where((p) => p.chapterId == chapterId && p.completed)
+        .map((p) => p.levelId)
+        .toSet();
+
+    return chapter.levels.every((l) => completedLevelIds.contains(l.id));
+  }
+
+  /// Gets the highest unlocked level index for a chapter (0-based)
+  static Future<int> getHighestUnlockedLevelIndex(String childId, String chapterId) async {
+    final chapters = await discoverContent();
+    final chapter = chapters.where((c) => c.id == chapterId).firstOrNull;
+    if (chapter == null || chapter.levels.isEmpty) return 0;
+
+    final allProgress = await ProgressRepository.getAllProgress(childId);
+    final completedMap = {
+      for (final p in allProgress.where((p) => p.chapterId == chapterId && p.completed))
+        p.levelId: true
+    };
+
+    for (int i = 0; i < chapter.levels.length; i++) {
+      final level = chapter.levels[i];
+      if (completedMap[level.id] != true) {
+        return i; // This is the first uncompleted level -> currently accessible
+      }
+    }
+    return chapter.levels.length - 1; // All completed
+  }
+
+  /// Gets the highest unlocked chapter index (0-based)
+  static Future<int> getHighestUnlockedChapterIndex(String childId) async {
+    final chapters = await discoverContent();
+    if (chapters.isEmpty) return 0;
+
+    for (int i = 0; i < chapters.length; i++) {
+      final isComp = await isChapterCompleted(childId, chapters[i].id);
+      if (!isComp) {
+        return i; // This chapter is the active accessible one
+      }
+    }
+    return chapters.length - 1; // All chapters completed
   }
 }

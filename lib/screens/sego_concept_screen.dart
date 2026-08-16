@@ -7,6 +7,9 @@ import 'auth_mode_selection_screen.dart';
 import 'game_map_1913_screen.dart';
 import 'leaderboard_screen.dart';
 import '../widgets/smoke_bomb_transition.dart';
+import '../qa_pipeline/models/learning_content.dart';
+import '../qa_pipeline/services/content_discovery_service.dart';
+import '../core/state/child_state.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // AGE THEME DATA CLASS
@@ -191,6 +194,10 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
   Offset _cursorPos = const Offset(-200, -200);
   bool _isCursorInside = false;
 
+  List<LearningChapter> _chapters = [];
+  Map<String, String?> _stageCoverImages = {};
+  int _unlockedStageIndex = 0;
+
   @override
   void dispose() {
     _waterWaveController.dispose();
@@ -223,6 +230,27 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
       vsync: this,
       duration: const Duration(milliseconds: 950),
     );
+
+    _loadDynamicChapters();
+  }
+
+  Future<void> _loadDynamicChapters() async {
+    final childId = ChildState.instance.currentProfile.id;
+    final chapters = await ContentDiscoveryService.discoverContent();
+    final covers = <String, String?>{};
+    for (final c in chapters) {
+      covers[c.id] = await ContentDiscoveryService.findCoverImage(c.id);
+    }
+    final highestUnlocked = await ContentDiscoveryService.getHighestUnlockedChapterIndex(childId);
+
+    if (mounted) {
+      setState(() {
+        _chapters = chapters;
+        _stageCoverImages = covers;
+        _unlockedStageIndex = highestUnlocked;
+        _unlockedLevelIndex = highestUnlocked;
+      });
+    }
   }
 
   void _onAgeChanged(double age) {
@@ -1221,8 +1249,32 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
   }
 
   void _completeLevelAndUnlockNext(int levelIndex, [Offset? tapOffset, Color? buttonColor]) {
-    debugPrint("_completeLevelAndUnlockNext called for levelIndex=$levelIndex");
+    debugPrint("_completeLevelAndUnlockNext called for stageIndex=$levelIndex");
     SystemSound.play(SystemSoundType.click);
+
+    final effectiveChapters = _chapters.isNotEmpty
+        ? _chapters
+        : [
+            LearningChapter(id: 'Netaji', name: 'Netaji', levels: []),
+            LearningChapter(id: 'Success', name: 'Success', levels: []),
+          ];
+
+    if (levelIndex >= effectiveChapters.length) return;
+    final chapter = effectiveChapters[levelIndex];
+    final bool isLocked = levelIndex > _unlockedStageIndex;
+
+    if (isLocked) {
+      HapticFeedback.heavyImpact();
+      final prevName = levelIndex > 0 ? effectiveChapters[levelIndex - 1].name : 'previous stage';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('🔒 Complete $prevName first to unlock ${chapter.name}!'),
+          backgroundColor: const Color(0xFF2E1C12),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
 
     final origin = tapOffset ??
         Offset(
@@ -1231,15 +1283,17 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
         );
     final initialColor = buttonColor ?? const Color(0xFF94D561);
 
-    // Clicking the first level (level 0) or any level triggers the Smoke Bomb Time-Travel Transition to 1913 World Map
+    // Clicking an unlocked stage node triggers the Smoke Bomb Time-Travel Transition to 1913 Game Map
     Navigator.of(context).push(
       SmokeBombPageRoute(
-        page: const GameMap1913Screen(),
+        page: GameMap1913Screen(chapterId: chapter.id),
         originOffset: origin,
         buttonColor: initialColor,
         vintageMapColor: const Color(0xFFF4E8C1),
       ),
-    );
+    ).then((_) {
+      _loadDynamicChapters();
+    });
   }
 
   Widget _buildEmergingLevelStone({
@@ -1300,10 +1354,24 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
           curve: Curves.easeInOutCubic,
         ).value;
 
+        final effectiveChapters = _chapters.isNotEmpty
+            ? _chapters
+            : [
+                LearningChapter(id: 'Netaji', name: 'Netaji', levels: []),
+                LearningChapter(id: 'Success', name: 'Success', levels: []),
+              ];
+
+        final stageCount = effectiveChapters.length;
+        const double verticalSpacing = 140.0;
+        final double totalPathHeight = math.max(750.0, (stageCount * verticalSpacing) + 260.0);
+
+        final xMultipliers = [0.48, 0.72, 0.54, 0.36, 0.18, 0.36, 0.54, 0.72];
+
         return SizedBox(
-          height: 1100,
+          height: totalPathHeight,
           width: w,
           child: Stack(
+            clipBehavior: Clip.none,
             children: [
               // Top Hanging Creamy Drip Banner Accent
               Positioned(
@@ -1319,41 +1387,18 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                 ),
               ),
 
-              // Stone 1 (Level 0 - Top Left Curve: STARTS UNLOCKED AT TOP!)
-              _buildEmergingLevelStone(
-                levelIndex: 0,
-                top: 22,
-                left: w * 0.48 - 36,
-                animVal: animVal,
-              ),
+              // Dynamic Stages from Discovered Chapters
+              for (int i = 0; i < stageCount; i++)
+                _buildEmergingLevelStone(
+                  levelIndex: i,
+                  top: 22.0 + (i * verticalSpacing),
+                  left: (w * xMultipliers[i % xMultipliers.length]) - 36.0,
+                  animVal: animVal,
+                ),
 
-              // Stone 2 (Level 1 - Heavy Right Turn)
-              _buildEmergingLevelStone(
-                levelIndex: 1,
-                top: 88,
-                left: w * 0.72 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 3 (Level 2 - Mid Right Curve)
-              _buildEmergingLevelStone(
-                levelIndex: 2,
-                top: 154,
-                left: w * 0.54 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 4 (Level 3 - Swing Back Center)
-              _buildEmergingLevelStone(
-                levelIndex: 3,
-                top: 220,
-                left: w * 0.36 - 36,
-                animVal: animVal,
-              ),
-
-              // BUMP 3 - Buff Altar: 2x XP (Top Region, Coral Orange)
+              // Side Road Bumps
               Positioned(
-                top: 260,
+                top: 180,
                 right: 35,
                 child: SideRoadBumpWidget(
                   bumpColor: const Color(0xFFFF8A65),
@@ -1364,33 +1409,8 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                 ),
               ),
 
-              // Stone 5 (Level 4 - Boss Crown Node 👑)
-              _buildEmergingLevelStone(
-                levelIndex: 4,
-                top: 286,
-                left: w * 0.18 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 6 (Level 5 - Mid Left Curve)
-              _buildEmergingLevelStone(
-                levelIndex: 5,
-                top: 352,
-                left: w * 0.36 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 7 (Level 6 - Mid Right Curve)
-              _buildEmergingLevelStone(
-                levelIndex: 6,
-                top: 418,
-                left: w * 0.54 - 36,
-                animVal: animVal,
-              ),
-
-              // BUMP 2 - Achievement Mound: 7-Day Streak (Mid Region, Fresh Green)
               Positioned(
-                top: 460,
+                top: 360,
                 left: 35,
                 child: SideRoadBumpWidget(
                   bumpColor: const Color(0xFF78C850),
@@ -1401,92 +1421,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                 ),
               ),
 
-              // Stone 8 (Level 7 - Heavy Right Turn)
-              _buildEmergingLevelStone(
-                levelIndex: 7,
-                top: 484,
-                left: w * 0.72 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 9 (Level 8 - Mid Right Curve)
-              _buildEmergingLevelStone(
-                levelIndex: 8,
-                top: 550,
-                left: w * 0.54 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 10 (Level 9 - Swing Back Center)
-              _buildEmergingLevelStone(
-                levelIndex: 9,
-                top: 616,
-                left: w * 0.36 - 36,
-                animVal: animVal,
-              ),
-
-              // BUMP 1 - Crystal Relic: XP (Lower Region, Warm Gold)
-              Positioned(
-                top: 660,
-                right: 35,
-                child: SideRoadBumpWidget(
-                  bumpColor: const Color(0xFFF4C95D),
-                  bumpType: SideRoadBumpType.crystalRelic,
-                  label: '1,240 XP',
-                  sublabel: 'TOTAL',
-                  icon: Icons.star_rounded,
-                ),
-              ),
-
-              // Stone 11 (Level 10 - Heavy Left Turn)
-              _buildEmergingLevelStone(
-                levelIndex: 10,
-                top: 682,
-                left: w * 0.18 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 12 (Level 11 - Mid Left Curve)
-              _buildEmergingLevelStone(
-                levelIndex: 11,
-                top: 748,
-                left: w * 0.36 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 13 (Level 12 - Mid Right Curve)
-              _buildEmergingLevelStone(
-                levelIndex: 12,
-                top: 814,
-                left: w * 0.54 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 14 (Level 13 - Bottom Right Curve)
-              _buildEmergingLevelStone(
-                levelIndex: 13,
-                top: 880,
-                left: w * 0.72 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 15 (Level 14 - Winding Loop Level)
-              _buildEmergingLevelStone(
-                levelIndex: 14,
-                top: 946,
-                left: w * 0.54 - 36,
-                animVal: animVal,
-              ),
-
-              // Stone 16 (Level 15 - Winding Loop Level)
-              _buildEmergingLevelStone(
-                levelIndex: 15,
-                top: 1012,
-                left: w * 0.36 - 36,
-                animVal: animVal,
-              ),
-
-              // Bottom Creamy Drip Pool (Rendered IN FRONT of lower stones so stones emerge from behind it as you scroll!)
+              // Bottom Creamy Drip Pool (Rendered IN FRONT of lower stones)
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -1508,6 +1443,91 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     );
   }
 
+  Widget _buildStageHoverCard(
+    LearningChapter chapter,
+    int stageIndex,
+    bool isLocked,
+    bool isCompleted,
+    String? coverImage,
+  ) {
+    return Container(
+      width: 170,
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: const Color(0xFF13300C), // Deep Forest Green Panel
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: isLocked ? const Color(0xFF757575) : const Color(0xFFFFD166),
+          width: 1.8,
+        ),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black54,
+            blurRadius: 16,
+            offset: Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: SizedBox(
+              width: double.infinity,
+              height: 95,
+              child: coverImage != null
+                  ? Image.asset(
+                      coverImage,
+                      fit: BoxFit.cover,
+                      errorBuilder: (ctx, err, stack) => Container(
+                        color: const Color(0xFF0D180B),
+                        child: const Icon(Icons.movie_filter_rounded, color: Color(0xFFFFD166), size: 36),
+                      ),
+                    )
+                  : Container(
+                      color: const Color(0xFF0D180B),
+                      child: const Icon(Icons.movie_filter_rounded, color: Color(0xFFFFD166), size: 36),
+                    ),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            chapter.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontFamily: 'Outfit',
+              fontSize: 13,
+              fontWeight: FontWeight.w900,
+              color: Color(0xFFFFD166),
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            isLocked
+                ? '🔒 LOCKED'
+                : isCompleted
+                    ? '✓ ${chapter.levels.length} Episodes Completed'
+                    : '▶ ${chapter.levels.length} Episodes',
+            style: TextStyle(
+              fontFamily: 'Outfit',
+              fontSize: 10,
+              fontWeight: FontWeight.w800,
+              color: isLocked
+                  ? const Color(0xFFAAAAAA)
+                  : isCompleted
+                      ? const Color(0xFF78C850)
+                      : Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _build3DSteppingStone({
     required int levelIndex,
     required double unlockAnimValue,
@@ -1519,6 +1539,15 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     final bool isLocked = levelIndex > _unlockedLevelIndex && !isUnlocking;
     final bool isBossNode = (levelIndex + 1) % 5 == 0;
     final bool isHovered = _hoveredLevelIndex == levelIndex;
+
+    final effectiveChapters = _chapters.isNotEmpty
+        ? _chapters
+        : [
+            LearningChapter(id: 'Netaji', name: 'Netaji', levels: []),
+            LearningChapter(id: 'Success', name: 'Success', levels: []),
+          ];
+    final chapter = levelIndex < effectiveChapters.length ? effectiveChapters[levelIndex] : null;
+    final coverImage = chapter != null ? _stageCoverImages[chapter.id] : null;
 
     Color topColor;
     Color bevelColor;
@@ -1605,8 +1634,10 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // XP Badge Sitting Above Active / Boss Levels
-              if (isActive || isBossNode || isHovered)
+              // Dynamic COVER_IMG Preview on Hover OR XP Badge
+              if (isHovered && chapter != null)
+                _buildStageHoverCard(chapter, levelIndex, isLocked, isCompleted, coverImage)
+              else if (isActive || isBossNode)
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 250),
                   margin: const EdgeInsets.only(bottom: 4),
@@ -1614,8 +1645,6 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                   decoration: BoxDecoration(
                     color: isBossNode
                         ? const Color(0xFFFFAB00)
-                        : isHovered
-                        ? topColor
                         : const Color(0xFF183018),
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
@@ -1631,7 +1660,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w900,
-                      color: isBossNode ? const Color(0xFF2E1A00) : isHovered ? const Color(0xFF183018) : Colors.white,
+                      color: isBossNode ? const Color(0xFF2E1A00) : Colors.white,
                       letterSpacing: 0.4,
                     ),
                   ),
@@ -1900,6 +1929,20 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
   }
 
   Widget _buildDuolingoUnitBanner(Size size) {
+    final effectiveChapters = _chapters.isNotEmpty
+        ? _chapters
+        : [
+            LearningChapter(id: 'Netaji', name: 'Netaji', levels: []),
+            LearningChapter(id: 'Success', name: 'Success', levels: []),
+          ];
+
+    final activeChapter = _unlockedStageIndex < effectiveChapters.length
+        ? effectiveChapters[_unlockedStageIndex]
+        : effectiveChapters.first;
+
+    final stageNumber = _unlockedStageIndex + 1;
+    final stageTitle = activeChapter.name;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
@@ -1935,20 +1978,20 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
-                          'SECTION 1, UNIT 1',
-                          style: TextStyle(
+                          'SECTION 1, STAGE $stageNumber',
+                          style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w800,
                             color: Color(0xFFFFD166), // Warm Yellow Accent
                             letterSpacing: 0.8,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
-                          'Netaji: Where there is courage, there is a way.',
-                          style: TextStyle(
+                          '$stageTitle: Where there is courage, there is a way.',
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w900,
                             color: Colors.white,

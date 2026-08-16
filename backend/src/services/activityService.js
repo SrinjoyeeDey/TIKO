@@ -71,8 +71,7 @@ const seedActivities = [
     correctAnswer: 0,
     maxAttempts: 3,
     reward: 40,
-<<<<<<< HEAD
-    order: 3
+    order: 4
   }),
   new Activity({
     activityId: 'netaji_q04',
@@ -88,9 +87,7 @@ const seedActivities = [
     correctAnswer: 'Give me blood, and I shall give you freedom!',
     maxAttempts: 3,
     reward: 50,
-=======
->>>>>>> 3ed1f09e68861014137874920196c9a01496d771
-    order: 4
+    order: 5
   })
 ];
 

@@ -47,12 +47,10 @@ class _CameraEngagementOverlayState extends State<CameraEngagementOverlay> {
 
   Future<void> _initializeCameraAndTracking() async {
     // Re-initialize on web route transitions so a fresh, live HtmlElementView is bound
-    final ready = await MediaCaptureService.instance.ensureCameraReady(forceReinit: kIsWeb);
+    await MediaCaptureService.instance.ensureCameraReady(forceReinit: kIsWeb);
     if (!mounted) return;
     setState(() {});
-    if (ready) {
-      _startPeriodicFrameAnalysis();
-    }
+    _startPeriodicFrameAnalysis();
   }
 
   @override

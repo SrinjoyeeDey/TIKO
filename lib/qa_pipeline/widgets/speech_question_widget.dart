@@ -13,12 +13,14 @@ class SpeechQuestionWidget extends StatefulWidget {
   final SpeechQuestion question;
   final int questionNumber;
   final ValueChanged<bool> onAnswered;
+  final void Function(bool isCorrect, int score, String transcript)? onAnsweredDetailed;
 
   const SpeechQuestionWidget({
     super.key,
     required this.question,
     required this.questionNumber,
     required this.onAnswered,
+    this.onAnsweredDetailed,
   });
 
   @override
@@ -415,7 +417,10 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
                         child: SizedBox(
                           height: 50,
                           child: ElevatedButton.icon(
-                            onPressed: () => widget.onAnswered(_passed),
+                            onPressed: () {
+                              widget.onAnswered(_passed);
+                              widget.onAnsweredDetailed?.call(_passed, _pronunciationScore, _recognizedTranscript);
+                            },
                             icon: const Icon(Icons.arrow_forward_rounded, size: 20),
                             label: const Text(
                               'SUBMIT',

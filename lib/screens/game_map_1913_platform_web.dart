@@ -7,12 +7,13 @@ import 'state_story_collection_screen.dart';
 
 bool _isViewRegistered = false;
 
-Widget getPlatformGameMap1913View() {
-  return const WebGameMapView();
+Widget getPlatformGameMap1913View({String? chapterId}) {
+  return WebGameMapView(chapterId: chapterId);
 }
 
 class WebGameMapView extends StatefulWidget {
-  const WebGameMapView({super.key});
+  final String? chapterId;
+  const WebGameMapView({super.key, this.chapterId});
 
   @override
   State<WebGameMapView> createState() => _WebGameMapViewState();
@@ -30,7 +31,12 @@ class _WebGameMapViewState extends State<WebGameMapView> {
       if (data == 'open_calcutta' || data == '"open_calcutta"' || (data != null && data.contains('open_calcutta'))) {
         if (!mounted) return;
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const StateStoryCollectionScreen(stateId: 'west_bengal')),
+          MaterialPageRoute(
+            builder: (_) => StateStoryCollectionScreen(
+              stateId: 'west_bengal',
+              chapterId: widget.chapterId,
+            ),
+          ),
         );
       }
     });

@@ -164,7 +164,9 @@ class _ParentLevelReportState extends State<ParentLevelReport> {
   Widget _buildSectionSummary() {
     final mcq = AnalyticsService.findSection(_sectionStats, 'mcq');
     final desc = AnalyticsService.findSection(_sectionStats, 'descriptive');
+    final speech = AnalyticsService.findSection(_sectionStats, 'speech');
     final seq = AnalyticsService.findSection(_sectionStats, 'sequence');
+    final imgMatch = AnalyticsService.findSection(_sectionStats, 'imageMatching');
 
     return _buildCard(
       title: 'Section Summary',
@@ -174,7 +176,11 @@ class _ParentLevelReportState extends State<ParentLevelReport> {
           const Divider(color: Colors.white12, height: 24),
           _buildSectionRow('Descriptive', desc, Icons.edit_note),
           const Divider(color: Colors.white12, height: 24),
+          _buildSectionRow('Speech Pronunciation', speech, Icons.record_voice_over),
+          const Divider(color: Colors.white12, height: 24),
           _buildSectionRow('Sequence', seq, Icons.format_list_numbered),
+          const Divider(color: Colors.white12, height: 24),
+          _buildSectionRow('Image Matching', imgMatch, Icons.image_search),
         ],
       ),
     );

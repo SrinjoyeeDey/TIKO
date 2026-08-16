@@ -5,7 +5,7 @@ import '../qa_pipeline/database/child_repository.dart';
 import '../screens/onboarding_screen.dart';
 import 'game_map_1913_screen.dart';
 import '../widgets/smoke_bomb_transition.dart';
-import '../core/api/child_api.dart';
+import '../core/models/child_profile.dart';
 import '../core/state/child_state.dart';
 
 /// Japanese-Inspired Child Profile Selection Screen ("Who are you?")
@@ -37,14 +37,7 @@ class _ChildProfileSelectionScreenState extends State<ChildProfileSelectionScree
 
   final List<_CherryBlossomPetal> _petals = [];
 
-  final List<Map<String, dynamic>> _profiles = [
-    {
-      'name': 'Tinna',
-      'avatar': 'assets/images/nimo_child_avatar.png',
-      'level': 4,
-      'streak': 5,
-    },
-  ];
+  List<Map<String, dynamic>> _profiles = [];
 
   @override
   void initState() {
@@ -65,23 +58,51 @@ class _ChildProfileSelectionScreenState extends State<ChildProfileSelectionScree
     )..repeat();
 
     _generatePetals();
-    _loadBackendProfile();
+    _loadSqliteProfiles();
   }
 
-  Future<void> _loadBackendProfile() async {
+  Future<void> _loadSqliteProfiles() async {
     try {
-      final profile = await ChildApi.getChildProfile('A001');
-      ChildState.instance.setProfile(profile);
+      final dbChildren = await ChildRepository.getAllChildren();
+      if (dbChildren.isEmpty) {
+        // Register default profile if first launch
+        final defaultChild = await ChildRepository.loginOrRegisterChild(
+          name: 'Tinna',
+          age: 6,
+          className: 'Grade 1',
+          rememberMe: true,
+        );
+        dbChildren.add(defaultChild);
+      }
+
+      final rememberedId = await ChildRepository.getRememberedChildId() ?? dbChildren.first.id;
+
+      final List<Map<String, dynamic>> loaded = [];
+      int activeIndex = 0;
+
+      for (int i = 0; i < dbChildren.length; i++) {
+        final c = dbChildren[i];
+        if (c.id == rememberedId) {
+          activeIndex = i;
+        }
+        loaded.add({
+          'id': c.id,
+          'name': c.name,
+          'avatar': 'assets/images/nimo_child_avatar.png',
+          'level': 4,
+          'streak': 5,
+          'xp': 350,
+        });
+      }
+
       if (mounted) {
         setState(() {
-          _profiles[0]['name'] = profile.name;
-          _profiles[0]['level'] = profile.level;
-          _profiles[0]['streak'] = profile.streak;
-          _profiles[0]['xp'] = profile.xp;
+          _profiles = loaded;
+          _selectedChildIndex = activeIndex.clamp(0, loaded.length - 1);
         });
       }
     } catch (e) {
-      debugPrint('Error loading backend profile: $e');
+      debugPrint('Error loading SQLite profiles: $e');
     }
   }
 
@@ -112,26 +133,32 @@ class _ChildProfileSelectionScreenState extends State<ChildProfileSelectionScree
   }
 
   Future<void> _startAdventure() async {
+    if (_profiles.isEmpty) return;
+
     final selectedMap = _profiles[_selectedChildIndex];
     final name = selectedMap['name'] as String;
 
-    // Load or create child profile & store in ChildState
-    final profile = await ChildApi.getChildProfile('A001');
-    ChildState.instance.setProfile(profile.copyWith(
+    // Login or register child in SQLite with stable deterministic ID & Remember Me
+    final childProfile = await ChildRepository.loginOrRegisterChild(
       name: name,
-      level: selectedMap['level'] as int? ?? profile.level,
-      streak: selectedMap['streak'] as int? ?? profile.streak,
-    ));
+      rememberMe: true,
+    );
+
+    // Set active ChildState profile for the session
+    ChildState.instance.setProfile(
+      ChildProfile(
+        id: childProfile.id,
+        name: childProfile.name,
+        level: selectedMap['level'] as int? ?? 4,
+        streak: selectedMap['streak'] as int? ?? 5,
+        xp: selectedMap['xp'] as int? ?? 350,
+      ),
+      remember: true,
+    );
 
     // Start Session on Backend -> Session ID generated
     final session = await ChildState.instance.startNewSession(storyId: 'netaji');
-    debugPrint('🚀 Session Started! Session ID: ${session?.sessionId}, Story: ${session?.storyId}');
-
-    // Keep analytics / parent database in sync
-    final existingProfile = await ChildRepository.getChildByName(name);
-    if (existingProfile == null) {
-      await ChildRepository.createChild(name: name);
-    }
+    debugPrint('🚀 Session Started! Child ID: ${childProfile.id}, Session ID: ${session?.sessionId}, Story: ${session?.storyId}');
 
     if (!mounted) return;
     if (widget.onStartAdventure != null) {
@@ -211,18 +238,23 @@ class _ChildProfileSelectionScreenState extends State<ChildProfileSelectionScree
               backgroundColor: const Color(0xFFEF6C6C),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             ),
-            onPressed: () {
-              if (nameController.text.trim().isNotEmpty) {
-                setState(() {
-                  _profiles.add({
-                    'name': nameController.text.trim(),
-                    'avatar': 'assets/images/nimo_child_avatar.png',
-                    'level': 1,
-                    'streak': 1,
+            onPressed: () async {
+              final rawName = nameController.text.trim();
+              if (rawName.isNotEmpty) {
+                final newChild = await ChildRepository.loginOrRegisterChild(
+                  name: rawName,
+                  rememberMe: true,
+                );
+                await _loadSqliteProfiles();
+                final idx = _profiles.indexWhere((p) => p['id'] == newChild.id);
+                if (mounted && idx != -1) {
+                  setState(() {
+                    _selectedChildIndex = idx;
                   });
-                  _selectedChildIndex = _profiles.length - 1;
-                });
-                Navigator.of(context).pop();
+                }
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
               }
             },
             child: const Text('Add Profile', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),

@@ -107,6 +107,45 @@ void _ensureRecorderInjected() {
       }
     };
   }
+
+  if (!window.nimoAudioRecorderStart) {
+    window.nimoAudioRecorderStart = function() {
+      return window.nimoAudioRecorder ? window.nimoAudioRecorder.start() : Promise.resolve(false);
+    };
+  }
+
+  if (!window.nimoAudioRecorderStop) {
+    window.nimoAudioRecorderStop = function() {
+      return window.nimoAudioRecorder ? window.nimoAudioRecorder.stop() : Promise.resolve('{}');
+    };
+  }
+
+  if (!window.nimoCaptureVideoFrame) {
+    window.nimoCaptureVideoFrame = function() {
+      try {
+        const videos = document.querySelectorAll('video');
+        let video = null;
+        for (let v of videos) {
+          if (v.videoWidth > 0 && v.readyState >= 2) {
+            video = v;
+            break;
+          }
+        }
+        if (!video) return '';
+        const canvas = document.createElement('canvas');
+        const scale = Math.min(1.0, 480 / video.videoWidth);
+        canvas.width = Math.round(video.videoWidth * scale);
+        canvas.height = Math.round(video.videoHeight * scale);
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.65);
+        return dataUrl.includes(',') ? dataUrl.split(',')[1] : '';
+      } catch(e) {
+        console.warn('Video frame capture error:', e);
+        return '';
+      }
+    };
+  }
   ''';
   try {
     _jsEval(jsCode.toJS);

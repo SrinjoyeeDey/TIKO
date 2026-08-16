@@ -7,8 +7,9 @@
   },
   "target_age": 12,
   "question_pattern": {
-    "main_questions": "5 MCQs followed by 2 descriptive questions.",
+    "main_questions": "5 MCQs, 2 descriptive questions, followed by 3 voice pronunciation speech questions.",
     "descriptive_evaluation": "The learner may answer in their own words. Compare the learner answer with the reference answer using cosine similarity.",
+    "speech_evaluation": "Learner speaks the historical term or phrase. ML speech engine calculates pronunciation accuracy and aligns tokens.",
     "sequence_test": "After the main questions, ask multiple-choice questions that test whether the learner remembers the events in the correct order.",
     "image_matching": "Match each image with its correct description."
   },
@@ -111,13 +112,52 @@
       ],
       "cosine_similarity_threshold": 0.7,
       "difficulty": "medium"
+    },
+    {
+      "id": 8,
+      "type": "speech",
+      "question": "Pronounce the name of our great leader clearly into the microphone:",
+      "target_phrase": "Subhas Chandra Bose",
+      "reference_answer": "Subhas Chandra Bose",
+      "key_concepts": [
+        "Subhas",
+        "Chandra",
+        "Bose"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "easy"
+    },
+    {
+      "id": 9,
+      "type": "speech",
+      "question": "Pronounce the name of the famous college where his journey began:",
+      "target_phrase": "Presidency College",
+      "reference_answer": "Presidency College",
+      "key_concepts": [
+        "Presidency",
+        "College"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "medium"
+    },
+    {
+      "id": 10,
+      "type": "speech",
+      "question": "Pronounce this powerful historical word describing his character:",
+      "target_phrase": "Nationalist",
+      "reference_answer": "Nationalist",
+      "key_concepts": [
+        "Nationalist"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "medium"
     }
   ],
   "sequence_test": {
     "description": "These questions test whether the learner understood the order of events in the first 30 seconds of the video.",
     "questions": [
       {
-        "id": 8,
+        "id": 11,
         "type": "sequence_mcq",
         "question": "What happened first?",
         "options": {
@@ -130,7 +170,7 @@
         "answer_text": "The first event mentioned was the birth of Subhas Chandra Bose on 23rd January 1897."
       },
       {
-        "id": 9,
+        "id": 12,
         "type": "sequence_mcq",
         "question": "What happened after information about Bose's parents was introduced?",
         "options": {
@@ -143,7 +183,7 @@
         "answer_text": "After introducing his parents, the transcript describes how his nationalist temperament first came to light at Presidency College."
       },
       {
-        "id": 10,
+        "id": 13,
         "type": "sequence_mcq",
         "question": "What happened after Bose's nationalist temperament came to light at Presidency College?",
         "options": {
@@ -156,7 +196,7 @@
         "answer_text": "The transcript states that he was rusticated for assaulting Professor Oaten over his anti-India comments."
       },
       {
-        "id": 11,
+        "id": 14,
         "type": "sequence_mcq",
         "question": "Which sequence correctly describes the events in the first 30 seconds?",
         "options": {
@@ -172,7 +212,7 @@
   },
   "image_matching": [
     {
-      "id": 12,
+      "id": 15,
       "type": "image_matching",
       "question": "Match each picture with the correct description.",
       "images": [

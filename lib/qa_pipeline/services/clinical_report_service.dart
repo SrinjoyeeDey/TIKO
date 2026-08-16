@@ -2,6 +2,7 @@ import '../../core/services/event_service.dart';
 import '../../core/models/event_model.dart';
 import '../../core/state/child_state.dart';
 import '../database/progress_repository.dart';
+import '../database/question_attempt_repository.dart';
 import '../models/clinical_report_model.dart';
 
 /// Service responsible for generating the Post-Play Clinical & Parental Report
@@ -10,11 +11,12 @@ class ClinicalReportService {
   static Future<ClinicalReport> generateReport(String childId) async {
     final List<EventModel> events = await EventService.getEvents(childId: childId);
     final progressList = await ProgressRepository.getAllProgress(childId);
+    final attempts = await QuestionAttemptRepository.getAllAttempts(childId);
 
     final sessionId = ChildState.instance.currentSessionId ??
         (events.isNotEmpty ? events.first.sessionId : 'SES_001');
 
-    if (events.isEmpty && progressList.isEmpty) {
+    if (events.isEmpty && progressList.isEmpty && attempts.isEmpty) {
       return ClinicalReport.empty(childId: childId, sessionId: sessionId);
     }
 
@@ -159,28 +161,75 @@ class ClinicalReportService {
       }
     }
 
+    // Process SQLite question attempts to complement events
+    if (speechScoredEvents == 0) {
+      for (final attempt in attempts) {
+        if (attempt.questionType == 'speech') {
+          vocalizationsCount++;
+          final score = attempt.similarityScore ?? (attempt.isCorrect ? 100.0 : 0.0);
+          sumPronunciationScore += score;
+          speechScoredEvents++;
+          if (score >= 50.0) {
+            final word = attempt.userAnswer?.trim();
+            if (word != null && word.isNotEmpty) {
+              successfulWordsSet.add(word);
+            }
+          }
+        }
+      }
+    }
+
+    if (memoryCount == 0 && sequencingCount == 0 && motorCount == 0) {
+      for (final attempt in attempts) {
+        if (attempt.questionType == 'sequence') {
+          sequencingSum += attempt.isCorrect ? 100.0 : 0.0;
+          sequencingCount++;
+        } else if (attempt.questionType == 'mcq') {
+          memorySum += attempt.isCorrect ? 100.0 : 0.0;
+          memoryCount++;
+        } else if (attempt.questionType != 'speech') {
+          motorSum += attempt.isCorrect ? 100.0 : 0.0;
+          motorCount++;
+        }
+      }
+    }
+
+    // Derive Timestamps from SQLite attempts
+    for (final attempt in attempts) {
+      if (firstEventTime == null || attempt.startedAt.isBefore(firstEventTime)) {
+        firstEventTime = attempt.startedAt;
+      }
+      if (lastEventTime == null || attempt.completedAt.isAfter(lastEventTime)) {
+        lastEventTime = attempt.completedAt;
+      }
+    }
+
     // Derive Duration Minutes
     double durationMinutes = 0.0;
     if (firstEventTime != null && lastEventTime != null) {
       final diff = lastEventTime.difference(firstEventTime).inSeconds;
       durationMinutes = (diff / 60.0).clamp(0.0, 180.0);
     }
+    if (durationMinutes <= 0.0 && attempts.isNotEmpty) {
+      final sumSec = attempts.fold(0, (sum, a) => sum + a.timeTakenSeconds);
+      durationMinutes = (sumSec / 60.0).clamp(0.1, 180.0);
+    }
 
-    // Derive Sensory & Attention Scores
+    // Derive Sensory & Attention Scores (-1.0 signifies camera not active / not recorded)
     double visualEngagementScore = engagementEventsCount > 0
         ? (sumEngagementScore / engagementEventsCount).clamp(0.0, 100.0)
-        : (events.isNotEmpty ? 85.0 : 0.0);
+        : -1.0;
 
     double screenGazeAlignment = engagementEventsCount > 0
         ? ((gazeLockedCount / engagementEventsCount) * 100.0).clamp(0.0, 100.0)
-        : (events.isNotEmpty ? 82.0 : 0.0);
+        : -1.0;
 
     double focusStability = engagementEventsCount > 0
         ? ((1.0 - (distractionCount / engagementEventsCount).clamp(0.0, 1.0)) * 100.0).clamp(0.0, 100.0)
-        : (events.isNotEmpty ? 88.0 : 0.0);
+        : -1.0;
 
-    String overallEngagement = 'No Data';
-    if (engagementEventsCount > 0 || events.isNotEmpty) {
+    String overallEngagement = 'No Camera Data Yet';
+    if (engagementEventsCount > 0) {
       if (visualEngagementScore >= 75.0) {
         overallEngagement = 'High';
       } else if (visualEngagementScore >= 50.0) {
@@ -188,31 +237,38 @@ class ClinicalReportService {
       } else {
         overallEngagement = 'Low';
       }
+    } else if (activitiesCompleted > 0) {
+      overallEngagement = 'Active ($activitiesCompleted completed)';
     }
 
+    // Derive Speech & Communication (-1.0 signifies not attempted yet)
+    double pronunciationAccuracy = speechScoredEvents > 0
+        ? (sumPronunciationScore / speechScoredEvents).clamp(0.0, 100.0)
+        : -1.0;
+
+    double averageResponseDelay = speechResponseTimeEvents > 0
+        ? (sumResponseTime / speechResponseTimeEvents).clamp(0.0, 60.0)
+        : -1.0;
+
+    double lipMovementPercent = engagementEventsCount > 0
+        ? ((mouthMovementCount / engagementEventsCount) * 100.0).clamp(0.0, 100.0)
+        : -1.0;
+
     List<String> sensoryPreferences = [];
-    if (engagementEventsCount > 0 || events.isNotEmpty) {
-      sensoryPreferences.add('Visual & auditory multimodal storytelling');
-      if (visualEngagementScore > 75.0) {
+    if (engagementEventsCount > 0) {
+      if (visualEngagementScore >= 75.0) {
         sensoryPreferences.add('Strong screen focus and eye gaze lock');
+      }
+      if (distractionCount == 0 && engagementEventsCount >= 3) {
+        sensoryPreferences.add('High focus stability (0 distractions)');
       }
       if (mouthMovementCount > 0) {
         sensoryPreferences.add('Active vocal & physical lip responsiveness');
       }
     }
-
-    // Derive Speech & Communication
-    double pronunciationAccuracy = speechScoredEvents > 0
-        ? (sumPronunciationScore / speechScoredEvents).clamp(0.0, 100.0)
-        : (vocalizationsCount > 0 ? 88.0 : 0.0);
-
-    double averageResponseDelay = speechResponseTimeEvents > 0
-        ? (sumResponseTime / speechResponseTimeEvents).clamp(0.0, 60.0)
-        : (vocalizationsCount > 0 ? 2.4 : 0.0);
-
-    double lipMovementPercent = engagementEventsCount > 0
-        ? ((mouthMovementCount / engagementEventsCount) * 100.0).clamp(0.0, 100.0)
-        : (vocalizationsCount > 0 ? 75.0 : 0.0);
+    if (speechScoredEvents > 0 && pronunciationAccuracy >= 70.0) {
+      sensoryPreferences.add('Clear verbal articulation');
+    }
 
     // Derive Cognitive & Motor Skills (-1.0 signifies not attempted yet)
     double memoryScore = memoryCount > 0
@@ -262,15 +318,15 @@ class ClinicalReportService {
     }
 
     List<String> forDoctors = [];
-    if (engagementEventsCount > 0 || events.isNotEmpty) {
+    if (engagementEventsCount > 0) {
       forDoctors.add('Visual concentration averaged ${visualEngagementScore.toStringAsFixed(1)}/100 across $engagementEventsCount telemetry checks with $distractionCount distraction event(s) and ${screenGazeAlignment.toStringAsFixed(1)}% gaze alignment.');
       forDoctors.add('Physical lip & speech movement was detected in $mouthMovementCount checkpoint(s) (${lipMovementPercent.toStringAsFixed(1)}% articulation activity).');
     } else {
-      forDoctors.add('Vision engagement telemetry: Activities in progress.');
+      forDoctors.add('Vision engagement telemetry: Camera tracking pending / no video session recorded yet.');
     }
 
-    if (speechScoredEvents > 0 || vocalizationsCount > 0) {
-      forDoctors.add('Speech response latency averaged ${averageResponseDelay.toStringAsFixed(1)}s with average pronunciation fidelity of ${pronunciationAccuracy.toStringAsFixed(1)}% across $vocalizationsCount verbal attempt(s).');
+    if (speechScoredEvents > 0) {
+      forDoctors.add('Speech response latency averaged ${averageResponseDelay > 0 ? averageResponseDelay.toStringAsFixed(1) : "0"}s with average pronunciation fidelity of ${pronunciationAccuracy.toStringAsFixed(1)}% across $vocalizationsCount verbal attempt(s).');
     } else {
       forDoctors.add('Speech telemetry: No verbal prompts answered yet.');
     }

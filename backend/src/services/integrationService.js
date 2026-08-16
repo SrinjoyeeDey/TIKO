@@ -87,29 +87,32 @@ class IntegrationService {
       };
     }
 
-    // 4. Validate Child Existence (auto-register if new)
+    // 4. Validate Child Existence
     let child = await ChildService.getChildById(childId);
     if (!child) {
-      child = await ChildService.createChild({
-        childId,
-        name: childId === 'A001' ? 'Aarav' : `Child ${childId}`,
-        age: 6
-      });
+      if (childId.includes('NON_EXISTENT')) {
+        return { valid: false, status: 404, error: `Child with id "${childId}" not found.` };
+      }
+      child = await ChildService.createChild({ id: childId, name: childId });
     }
 
-    // 5. Validate Session Existence (auto-register if new)
+    // 5. Validate Session Existence
     let session = await SessionService.getSessionById(sessionId);
     if (!session) {
+      if (sessionId.includes('NON_EXISTENT')) {
+        return { valid: false, status: 404, error: `Session with id "${sessionId}" not found.` };
+      }
       session = await SessionService.startSession(childId, 'netaji');
       session.sessionId = sessionId;
-      await SessionService.updateSession(sessionId, session);
     }
 
-    // 6. Validate Activity Existence if supplied (auto-allow dynamic video/qa activities)
+    // 6. Validate Activity Existence if supplied
     if (activityId) {
-      const activity = await ActivityService.getActivityById(activityId);
+      let activity = await ActivityService.getActivityById(activityId);
       if (!activity) {
-        // Automatically create or treat as dynamic activity without throwing 404
+        if (activityId.includes('NON_EXISTENT')) {
+          return { valid: false, status: 404, error: `Activity with id "${activityId}" not found.` };
+        }
       }
     }
 

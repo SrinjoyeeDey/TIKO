@@ -80,8 +80,7 @@ class EventApi {
       debugPrint('EventApi.getEvents network exception: $e');
     }
 
-    // Return buffered events matching childId or all if childId matches
-    final localMatches = _localEventBuffer.where((e) => e.childId == childId || childId.isEmpty).toList();
-    return localMatches.isNotEmpty ? localMatches : List.from(_localEventBuffer);
+    // Return buffered events matching childId
+    return _localEventBuffer.where((e) => childId.isEmpty || e.childId == childId).toList();
   }
 }
