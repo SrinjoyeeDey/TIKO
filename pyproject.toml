@@ -2,13 +2,11 @@
 include = ["ai_services"]
 extraPaths = [
     ".",
-    "ai_services",
-    "C:/Users/SRINJOYEE/AppData/Local/Programs/Python/Python314/Lib/site-packages"
+    "ai_services"
 ]
 
 [tool.pylance]
 extraPaths = [
     ".",
-    "ai_services",
-    "C:/Users/SRINJOYEE/AppData/Local/Programs/Python/Python314/Lib/site-packages"
+    "ai_services"
 ]

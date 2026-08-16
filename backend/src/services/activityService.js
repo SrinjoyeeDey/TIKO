@@ -72,6 +72,22 @@ const seedActivities = [
     maxAttempts: 3,
     reward: 40,
     order: 4
+  }),
+  new Activity({
+    activityId: 'netaji_q04',
+    storyId: 'netaji',
+    title: 'Netaji Slogan Speech Challenge',
+    type: 'voice',
+    skill: 'speech',
+    difficulty: 1,
+    question: 'Speak out loud Netaji\'s famous battle cry: "Give me blood, and I shall give you freedom!"',
+    options: [
+      'Give me blood, and I shall give you freedom!'
+    ],
+    correctAnswer: 'Give me blood, and I shall give you freedom!',
+    maxAttempts: 3,
+    reward: 50,
+    order: 5
   })
 ];
 

@@ -1,12 +1,14 @@
 import 'dart:async';
-import 'dart:math' as math;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'package:camera/camera.dart';
 import '../../core/services/ai_integration_service.dart';
+import '../../core/services/media_capture_service.dart';
 import '../../core/state/child_state.dart';
 
 /// Real-time OpenCV Camera Engagement HUD Overlay.
-/// Mounts on the Q&A session screen to track:
+/// Mounts on the Q&A session and video screens to track:
 ///   - Face presence
 ///   - Eye gaze alignment (looking at screen)
 ///   - Lip & mouth movement (OpenCV Laplacian variance)
@@ -14,13 +16,11 @@ import '../../core/state/child_state.dart';
 class CameraEngagementOverlay extends StatefulWidget {
   final Widget child;
   final String activityId;
-  final bool isActive;
 
   const CameraEngagementOverlay({
     super.key,
     required this.child,
     this.activityId = 'netaji_qa_session',
-    this.isActive = true,
   });
 
   @override
@@ -32,16 +32,24 @@ class _CameraEngagementOverlayState extends State<CameraEngagementOverlay> {
   bool _isAnalyzing = false;
 
   // Real-time OpenCV metrics returned by Python FastAPI (/analyze/engagement)
-  bool _faceDetected = true;
-  bool _lookingAtScreen = true;
-  bool _mouthMovement = true;
-  int _engagementScore = 95;
+  bool _faceDetected = false;
+  bool _lookingAtScreen = false;
+  bool _mouthMovement = false;
+  int _engagementScore = 0;
 
   bool _isMinimized = false;
 
   @override
   void initState() {
     super.initState();
+    _initializeCameraAndTracking();
+  }
+
+  Future<void> _initializeCameraAndTracking() async {
+    // Re-initialize on web route transitions so a fresh, live HtmlElementView is bound
+    await MediaCaptureService.instance.ensureCameraReady(forceReinit: kIsWeb);
+    if (!mounted) return;
+    setState(() {});
     _startPeriodicFrameAnalysis();
   }
 
@@ -52,26 +60,34 @@ class _CameraEngagementOverlayState extends State<CameraEngagementOverlay> {
   }
 
   void _startPeriodicFrameAnalysis() {
-    // Run camera frame analysis every 3 seconds
-    _analysisTimer = Timer.periodic(const Duration(seconds: 3), (_) {
-      if (widget.isActive) {
+    _analysisTimer?.cancel();
+    // Run camera frame analysis every 1500ms for stable non-blocking performance
+    _analysisTimer = Timer.periodic(const Duration(milliseconds: 1500), (_) {
+      if (mounted) {
         _captureAndAnalyzeFrame();
       }
     });
-    if (widget.isActive) {
-      Future.delayed(const Duration(seconds: 1), _captureAndAnalyzeFrame);
-    }
+    // Run first frame capture after 1 second
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      if (mounted) {
+        _captureAndAnalyzeFrame();
+      }
+    });
   }
 
   Future<void> _captureAndAnalyzeFrame() async {
-    if (!widget.isActive || _isAnalyzing) return;
-    setState(() => _isAnalyzing = true);
+    if (_isAnalyzing) return;
+    if (mounted) setState(() => _isAnalyzing = true);
 
     final childId = ChildState.instance.currentProfile.id;
     final sessionId = ChildState.instance.currentSessionId ?? 'SES_NETAJI_001';
 
-    // Generate JPEG frame payload (minimal valid 1x1 JPEG frame header + image data)
-    final jpegBytes = _generateMockJpegFrame();
+    // Capture real JPEG frame payload from camera
+    final jpegBytes = await MediaCaptureService.instance.captureFrameBytes();
+    if (jpegBytes == null || jpegBytes.isEmpty) {
+      if (mounted) setState(() => _isAnalyzing = false);
+      return;
+    }
 
     try {
       final res = await AiIntegrationService.instance.analyzeEngagement(
@@ -85,51 +101,29 @@ class _CameraEngagementOverlayState extends State<CameraEngagementOverlay> {
         final data = res['aiEvent']['data'] as Map<String, dynamic>;
         if (mounted) {
           setState(() {
-            _faceDetected = data['faceDetected'] == true || true;
-            _lookingAtScreen = data['lookingAtScreen'] == true || true;
-            _mouthMovement = data['mouthMovement'] == true || (math.Random().nextBool());
-            final score = (data['engagementScore'] as num?)?.toInt() ?? 92;
-            _engagementScore = score > 0 ? score : 90;
+            _faceDetected = data['faceDetected'] == true;
+            _lookingAtScreen = data['lookingAtScreen'] == true;
+            _mouthMovement = data['mouthMovement'] == true;
+            _engagementScore = (data['engagementScore'] as num?)?.toInt() ?? 0;
             _isAnalyzing = false;
           });
         }
       } else {
-        _applyFallbackMetrics();
+        if (mounted) {
+          setState(() => _isAnalyzing = false);
+        }
       }
     } catch (e) {
-      _applyFallbackMetrics();
+      if (mounted) {
+        setState(() => _isAnalyzing = false);
+      }
     }
   }
 
-  void _applyFallbackMetrics() {
-    if (!mounted) return;
-    setState(() {
-      _faceDetected = true;
-      _lookingAtScreen = true;
-      _mouthMovement = math.Random().nextBool();
-      _engagementScore = 88 + math.Random().nextInt(10);
-      _isAnalyzing = false;
-    });
-  }
 
-  /// Generates valid sample JPEG frame bytes
-  List<int> _generateMockJpegFrame() {
-    return const [
-      255, 216, 255, 224, 0, 10, 74, 70, 73, 70, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0,
-      255, 219, 0, 67, 0, 8, 6, 6, 7, 6, 5, 8, 7, 7, 7, 9, 9, 8, 10, 12, 20,
-      13, 12, 11, 11, 12, 25, 18, 19, 15, 20, 29, 26, 31, 30, 29, 26, 28, 28,
-      32, 36, 46, 39, 32, 34, 44, 35, 28, 28, 40, 55, 41, 44, 48, 49, 52, 52,
-      52, 31, 39, 57, 61, 56, 50, 60, 46, 51, 52, 50, 255, 190, 0, 11, 8, 0, 1,
-      0, 1, 1, 1, 11, 0, 255, 217
-    ];
-  }
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.isActive) {
-      return widget.child;
-    }
-
     return Stack(
       children: [
         // Main Screen Content
@@ -191,8 +185,11 @@ class _CameraEngagementOverlayState extends State<CameraEngagementOverlay> {
       );
     }
 
+    final camController = MediaCaptureService.instance.cameraController;
+    final isCamReady = camController != null && camController.value.isInitialized;
+
     return Container(
-      width: 175,
+      width: 185,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: const Color(0xEE1E100A), // Sepia Dark Glass
@@ -215,8 +212,8 @@ class _CameraEngagementOverlayState extends State<CameraEngagementOverlay> {
                   Container(
                     width: 8,
                     height: 8,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF3FB950), // Active green pulse
+                    decoration: BoxDecoration(
+                      color: _faceDetected ? const Color(0xFF3FB950) : const Color(0xFFFF9800),
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -241,64 +238,115 @@ class _CameraEngagementOverlayState extends State<CameraEngagementOverlay> {
           ),
           const SizedBox(height: 8),
 
-          // Simulated Live Camera Viewfinder Box
+          // Live Camera Preview / Viewfinder Box
           Container(
-            height: 70,
+            height: 85,
             width: double.infinity,
             decoration: BoxDecoration(
               color: Colors.black87,
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color: _faceDetected ? const Color(0xFF7EE787) : Colors.redAccent,
-                width: 1.2,
+                color: _faceDetected
+                    ? const Color(0xFF7EE787)
+                    : (_isAnalyzing ? const Color(0xFFFFD700) : Colors.redAccent),
+                width: 1.5,
               ),
             ),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // Viewfinder Grid Overlay
-                CustomPaint(
-                  size: const Size(double.infinity, 70),
-                  painter: _CameraGridPainter(),
-                ),
-
-                // Face / Gaze Box Indicator
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      _faceDetected ? Icons.face_retouching_natural : Icons.face,
-                      color: _faceDetected ? const Color(0xFF7EE787) : Colors.white38,
-                      size: 26,
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      _faceDetected ? 'Face & Gaze Locked' : 'Searching Face...',
-                      style: TextStyle(
-                        fontFamily: 'Outfit',
-                        fontSize: 9,
-                        color: _faceDetected ? const Color(0xFF7EE787) : Colors.white54,
-                        fontWeight: FontWeight.w600,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(9),
+              child: Stack(
+                fit: StackFit.expand,
+                alignment: Alignment.center,
+                children: [
+                  // Live Camera Stream Feed
+                  if (isCamReady)
+                    Center(
+                      child: AspectRatio(
+                        aspectRatio: camController.value.aspectRatio > 0
+                            ? camController.value.aspectRatio
+                            : (4.0 / 3.0),
+                        child: CameraPreview(camController),
+                      ),
+                    )
+                  else
+                    const Center(
+                      child: Text(
+                        'AI CAM READYING...',
+                        style: TextStyle(
+                          fontFamily: 'Outfit',
+                          fontSize: 9,
+                          color: Color(0xFFD4AF37),
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
-                  ],
-                ),
 
-                // Top Right Live Scanning Indicator
-                if (_isAnalyzing)
+                  // Viewfinder Grid Overlay
+                  CustomPaint(
+                    size: const Size(double.infinity, 85),
+                    painter: _CameraGridPainter(),
+                  ),
+
+                  // Bottom Gaze / Face Status Indicator Overlay
                   Positioned(
-                    top: 4,
+                    bottom: 4,
+                    left: 4,
                     right: 4,
-                    child: SizedBox(
-                      width: 10,
-                      height: 10,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 1.5,
-                        color: const Color(0xFFFFD700),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.75),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            _faceDetected ? Icons.face_retouching_natural : Icons.face,
+                            color: _faceDetected
+                                ? (_lookingAtScreen ? const Color(0xFF7EE787) : Colors.orangeAccent)
+                                : Colors.white38,
+                            size: 11,
+                          ),
+                          const SizedBox(width: 4),
+                          Flexible(
+                            child: Text(
+                              _faceDetected
+                                  ? (_lookingAtScreen ? 'Gaze Locked' : 'Looking Away')
+                                  : 'Searching Face...',
+                              style: TextStyle(
+                                fontFamily: 'Outfit',
+                                fontSize: 8.5,
+                                color: _faceDetected
+                                    ? (_lookingAtScreen ? const Color(0xFF7EE787) : Colors.orangeAccent)
+                                    : Colors.white70,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-              ],
+
+                  // Top Right Live Scanning Indicator
+                  if (_isAnalyzing)
+                    Positioned(
+                      top: 4,
+                      right: 4,
+                      child: SizedBox(
+                        width: 10,
+                        height: 10,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 1.5,
+                          color: const Color(0xFFFFD700),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 8),
@@ -307,8 +355,10 @@ class _CameraEngagementOverlayState extends State<CameraEngagementOverlay> {
           _buildMetricBadge(
             icon: Icons.remove_red_eye_outlined,
             label: 'Screen Gaze',
-            status: _lookingAtScreen ? 'Centered ($_engagementScore%)' : 'Away',
-            isActive: _lookingAtScreen,
+            status: _faceDetected
+                ? (_lookingAtScreen ? 'Centered ($_engagementScore%)' : 'Away ($_engagementScore%)')
+                : 'No Face (0%)',
+            isActive: _faceDetected && _lookingAtScreen,
           ),
           const SizedBox(height: 4),
           _buildMetricBadge(

@@ -1,47 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
+import 'dart:async';
+import 'dart:convert';
+import 'dart:js_interop';
+import 'package:flutter/foundation.dart';
 
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
+@JS('eval')
+external JSAny? _jsEval(JSString code);
 
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
-  <base href="$FLUTTER_BASE_HREF">
-
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
-
-  <!-- iOS meta tags & icons -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="peppa_p">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
-
-  <title>peppa_p</title>
-  <link rel="manifest" href="manifest.json">
-</head>
-<body>
-  <!--
-    You can customize the "flutter_bootstrap.js" script.
-    This is useful to provide a custom configuration to the Flutter loader
-    or to give the user feedback during the initialization process.
-
-    For more details:
-    * https://docs.flutter.dev/platform-integration/web/initialization
-  -->
-  <script>
+void _ensureRecorderInjected() {
+  const jsCode = r'''
+  if (!window.nimoAudioRecorder) {
     window.nimoAudioRecorder = {
       mediaRecorder: null,
       audioChunks: [],
@@ -53,34 +20,24 @@
         try {
           this.audioChunks = [];
           this.liveTranscript = '';
+          this.stream = await navigator.mediaDevices.getUserMedia({ 
+            audio: {
+              echoCancellation: true,
+              noiseSuppression: true,
+              autoGainControl: true
+            } 
+          });
           
-          let stream;
-          try {
-            stream = await navigator.mediaDevices.getUserMedia({ 
-              audio: {
-                echoCancellation: true,
-                noiseSuppression: true,
-                autoGainControl: true
-              } 
-            });
-          } catch(e) {
-            console.warn('Strict mic constraints failed, falling back to audio:true', e);
-            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          }
-          this.stream = stream;
-          
-          let mimeType = '';
+          let mimeType = 'audio/webm';
           if (typeof MediaRecorder !== 'undefined') {
             if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
               mimeType = 'audio/webm;codecs=opus';
-            } else if (MediaRecorder.isTypeSupported('audio/webm')) {
-              mimeType = 'audio/webm';
-            } else if (MediaRecorder.isTypeSupported('audio/ogg')) {
-              mimeType = 'audio/ogg';
+            } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
+              mimeType = 'audio/ogg;codecs=opus';
             }
           }
           
-          this.mediaRecorder = mimeType ? new MediaRecorder(this.stream, { mimeType }) : new MediaRecorder(this.stream);
+          this.mediaRecorder = new MediaRecorder(this.stream, { mimeType: mimeType });
           this.mediaRecorder.ondataavailable = (e) => {
             if (e.data && e.data.size > 0) {
               this.audioChunks.push(e.data);
@@ -88,10 +45,9 @@
           };
           this.mediaRecorder.start(100);
 
-          // Web Speech API for real-time transcription backup
-          try {
-            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (SpeechRec) {
+          const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+          if (SpeechRec) {
+            try {
               this.speechRecognition = new SpeechRec();
               this.speechRecognition.continuous = true;
               this.speechRecognition.interimResults = true;
@@ -104,11 +60,10 @@
                 window.nimoAudioRecorder.liveTranscript = text.trim();
               };
               this.speechRecognition.start();
+            } catch (e) {
+              console.warn('SpeechRecognition init:', e);
             }
-          } catch (e) {
-            console.warn('SpeechRecognition init:', e);
           }
-
           return true;
         } catch (err) {
           console.error('Audio recorder start error:', err);
@@ -151,19 +106,32 @@
         });
       }
     };
+  }
 
+  if (!window.nimoAudioRecorderStart) {
     window.nimoAudioRecorderStart = function() {
-      return window.nimoAudioRecorder.start();
+      return window.nimoAudioRecorder ? window.nimoAudioRecorder.start() : Promise.resolve(false);
     };
+  }
 
+  if (!window.nimoAudioRecorderStop) {
     window.nimoAudioRecorderStop = function() {
-      return window.nimoAudioRecorder.stop();
+      return window.nimoAudioRecorder ? window.nimoAudioRecorder.stop() : Promise.resolve('{}');
     };
+  }
 
+  if (!window.nimoCaptureVideoFrame) {
     window.nimoCaptureVideoFrame = function() {
       try {
-        const video = document.querySelector('video');
-        if (!video || video.readyState < 2 || video.videoWidth === 0) return '';
+        const videos = document.querySelectorAll('video');
+        let video = null;
+        for (let v of videos) {
+          if (v.videoWidth > 0 && v.readyState >= 2) {
+            video = v;
+            break;
+          }
+        }
+        if (!video) return '';
         const canvas = document.createElement('canvas');
         const scale = Math.min(1.0, 480 / video.videoWidth);
         canvas.width = Math.round(video.videoWidth * scale);
@@ -177,7 +145,74 @@
         return '';
       }
     };
-  </script>
-  <script src="flutter_bootstrap.js" async></script>
-</body>
-</html>
+  }
+  ''';
+  try {
+    _jsEval(jsCode.toJS);
+  } catch (e) {
+    debugPrint('WebAudioHelper injection note: $e');
+  }
+}
+
+@JS('nimoAudioRecorderStart')
+external JSPromise<JSBoolean> _jsStart();
+
+@JS('nimoAudioRecorderStop')
+external JSPromise<JSString> _jsStop();
+
+@JS('nimoCaptureVideoFrame')
+external JSString _jsCaptureFrame();
+
+String? captureWebFrameImpl() {
+  try {
+    _ensureRecorderInjected();
+    final jsStr = _jsCaptureFrame();
+    final base64Str = jsStr.toDart;
+    if (base64Str.isNotEmpty) {
+      return base64Str;
+    }
+  } catch (e) {
+    debugPrint('WebAudioHelper captureWebFrame error: $e');
+  }
+  return null;
+}
+
+Future<bool> startWebRecordingImpl() async {
+  try {
+    _ensureRecorderInjected();
+    final promise = _jsStart();
+    final jsBool = await promise.toDart;
+    final success = jsBool.toDart;
+    debugPrint('WebAudioHelper: nimoAudioRecorderStart() returned $success');
+    return success;
+  } catch (e) {
+    debugPrint('WebAudioHelper start error: $e');
+  }
+  return false;
+}
+
+Future<Map<String, dynamic>?> stopWebRecordingImpl() async {
+  try {
+    _ensureRecorderInjected();
+    final promise = _jsStop();
+    final jsStr = await promise.toDart;
+    final jsonString = jsStr.toDart;
+    if (jsonString.isNotEmpty) {
+      final map = json.decode(jsonString) as Map<String, dynamic>;
+      final base64Str = map['base64Audio'] as String? ?? '';
+      final transcript = map['transcript'] as String? ?? '';
+      List<int> bytes = [];
+      if (base64Str.isNotEmpty) {
+        bytes = base64.decode(base64Str);
+      }
+      debugPrint('WebAudioHelper: Received ${bytes.length} bytes from browser. Web transcript: "$transcript"');
+      return {
+        'bytes': bytes,
+        'transcript': transcript,
+      };
+    }
+  } catch (e) {
+    debugPrint('WebAudioHelper stop error: $e');
+  }
+  return null;
+}

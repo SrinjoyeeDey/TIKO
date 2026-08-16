@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'screens/sego_concept_screen.dart';
 import 'services/app_asset_preloader.dart';
+import 'core/state/child_state.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,7 +43,10 @@ class _BootStrapWrapperState extends State<BootStrapWrapper> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_isReady) {
-      AppAssetPreloader.precacheBootAssets(context).then((_) {
+      Future.wait([
+        AppAssetPreloader.precacheBootAssets(context),
+        ChildState.instance.initRememberedProfile(),
+      ]).then((_) {
         if (mounted) {
           setState(() {
             _isReady = true;

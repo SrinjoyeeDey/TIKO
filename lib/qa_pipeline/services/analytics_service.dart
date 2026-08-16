@@ -82,6 +82,10 @@ class AnalyticsService {
           title: 'Descriptive & Keyword',
           sectionKey: 'descriptive',
           sectionType: 'descriptive'),
+      'speech': SectionStatistics(
+          title: 'Speech Pronunciation',
+          sectionKey: 'speech',
+          sectionType: 'speech'),
       'sequence': SectionStatistics(
           title: 'Sequencing', sectionKey: 'sequence', sectionType: 'sequence'),
       'imageMatching': SectionStatistics(
@@ -98,6 +102,26 @@ class AnalyticsService {
     }
 
     return stats.values.toList();
+  }
+
+  /// Calculates average pronunciation accuracy (0-100) from SQLite question attempts.
+  static Future<double> getAveragePronunciationAccuracy(String childId) async {
+    final attempts = await QuestionAttemptRepository.getAllAttempts(childId);
+    final speechAttempts = attempts.where((a) => a.questionType == 'speech').toList();
+    if (speechAttempts.isEmpty) return 0.0;
+
+    double totalScore = 0.0;
+    int count = 0;
+    for (final a in speechAttempts) {
+      if (a.similarityScore != null) {
+        totalScore += a.similarityScore!;
+        count++;
+      } else {
+        totalScore += (a.isCorrect ? 100.0 : 0.0);
+        count++;
+      }
+    }
+    return count > 0 ? (totalScore / count).clamp(0.0, 100.0) : 0.0;
   }
 
   /// Gets all question attempts for a specific level.

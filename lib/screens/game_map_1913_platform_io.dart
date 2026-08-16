@@ -4,9 +4,9 @@ import 'package:path/path.dart' as p;
 import 'package:webview_windows/webview_windows.dart';
 import 'state_story_collection_screen.dart';
 
-Widget getPlatformGameMap1913View() {
+Widget getPlatformGameMap1913View({String? chapterId}) {
   if (Platform.isWindows) {
-    return const WindowsGameMapView();
+    return WindowsGameMapView(chapterId: chapterId);
   }
   return const Center(
     child: Text(
@@ -17,7 +17,8 @@ Widget getPlatformGameMap1913View() {
 }
 
 class WindowsGameMapView extends StatefulWidget {
-  const WindowsGameMapView({super.key});
+  final String? chapterId;
+  const WindowsGameMapView({super.key, this.chapterId});
 
   @override
   State<WindowsGameMapView> createState() => _WindowsGameMapViewState();
@@ -74,7 +75,12 @@ class _WindowsGameMapViewState extends State<WindowsGameMapView> {
             Future.delayed(const Duration(milliseconds: 300), () {
               if (!mounted) return;
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const StateStoryCollectionScreen(stateId: 'west_bengal')),
+                MaterialPageRoute(
+                  builder: (_) => StateStoryCollectionScreen(
+                    stateId: 'west_bengal',
+                    chapterId: widget.chapterId,
+                  ),
+                ),
               ).then((_) {
                 if (mounted) {
                   // Reinitialize Webview entirely when returning

@@ -49,4 +49,9 @@ class EventService {
     final event = await EventApi.postEvent(payload);
     return event;
   }
+
+  /// Fetch all events for a specific child
+  static Future<List<EventModel>> getEvents({required String childId}) async {
+    return await EventApi.getEvents(childId: childId);
+  }
 }

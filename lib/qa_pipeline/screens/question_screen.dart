@@ -26,6 +26,7 @@ import 'level_clear_screen.dart';
 import '../../core/api/activity_api.dart';
 import '../../core/models/activity_model.dart';
 import '../../core/widgets/activity_renderer.dart';
+import '../../core/services/event_service.dart';
 
 /// Manages the full question flow for a level:
 ///   MCQ → Descriptive → Sequence (drag-and-drop) → Level Clear.
@@ -167,6 +168,18 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
     await QuestionAttemptRepository.saveAttempt(attempt);
 
+    EventService.logEvent(
+      activityId: 'netaji_${widget.level.id}_q$questionId',
+      eventType: isCorrect ? 'ANSWER_CORRECT' : 'ANSWER_WRONG',
+      data: {
+        'questionType': questionType,
+        'isCorrect': isCorrect,
+        'similarityScore': similarityScore,
+        'userAnswer': userAnswer,
+        'timeTakenSeconds': timeTaken,
+      },
+    );
+
     // Advance to next question or level-clear.
     if (_currentIndex < _allQuestions.length - 1) {
       setState(() {
@@ -210,14 +223,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
       backgroundColor: const Color(0xFFC5AE79), // Vintage Paper Canvas
       body: CameraEngagementOverlay(
         activityId: 'netaji_${widget.level.id}',
-        isActive: _allQuestions.isNotEmpty &&
-            _currentIndex < _allQuestions.length &&
-            (_allQuestions[_currentIndex] is SpeechQuestion ||
-                (_allQuestions[_currentIndex] is ActivityModel &&
-                    ((_allQuestions[_currentIndex] as ActivityModel).type == 'speech' ||
-                        (_allQuestions[_currentIndex] as ActivityModel).type == 'voice'))),
         child: Stack(
         children: [
+
           // 1. GENERATED WEST BENGAL HISTORY MAP BACKGROUND
           Positioned.fill(
             child: Image.asset(
@@ -391,18 +399,6 @@ class _QuestionScreenState extends State<QuestionScreen> {
     final phaseInfo = _getPhaseInfo(question);
     final widgetKey = ValueKey('q_${_currentIndex}_${question.hashCode}');
 
-    if (question is ImageMatchingQuestion) {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.landscapeRight,
-        DeviceOrientation.landscapeLeft,
-      ]);
-    } else {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-      ]);
-    }
-
     return Column(
       children: [
         // Vintage Brass Compass & Progress Header
@@ -529,6 +525,11 @@ class _QuestionScreenState extends State<QuestionScreen> {
         question: question,
         questionNumber: phaseInfo.numberInPhase,
         onAnswered: (isCorrect) => _onQuestionAnswered(isCorrect),
+        onAnsweredDetailed: (isCorrect, score, transcript) => _onQuestionAnswered(
+          isCorrect,
+          similarityScore: score.toDouble(),
+          userAnswer: transcript,
+        ),
       );
     }
 

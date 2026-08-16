@@ -146,21 +146,7 @@ class _ActivityRendererState extends State<ActivityRenderer> {
     }
   }
 
-  Widget _buildSpeechWidget() {
-    final sq = SpeechQuestion(
-      id: widget.questionNumber,
-      questionText: widget.activity.question,
-      targetPhrase: widget.activity.targetPhrase ?? widget.activity.question,
-      referenceAnswer: widget.activity.question,
-      keyConcepts: widget.activity.title.split(' '),
-    );
 
-    return SpeechQuestionWidget(
-      question: sq,
-      questionNumber: widget.questionNumber,
-      onAnswered: _handleAnswerSubmitted,
-    );
-  }
 
   Widget _buildMcqWidget() {
     final Map<String, String> optionsMap = {};
@@ -256,6 +242,31 @@ class _ActivityRendererState extends State<ActivityRenderer> {
       onCompleted: (correctMatchesCount, totalMatchesCount) {
         _handleAnswerSubmitted(correctMatchesCount == totalMatchesCount);
       },
+    );
+  }
+
+  Widget _buildSpeechWidget() {
+    String targetPhrase = widget.activity.question;
+    if (widget.activity.options.isNotEmpty) {
+      targetPhrase = widget.activity.options.first.toString();
+    }
+    if (widget.activity.correctAnswer != null && widget.activity.correctAnswer is String) {
+      targetPhrase = widget.activity.correctAnswer as String;
+    }
+
+    final speechQ = SpeechQuestion(
+      id: widget.activity.order > 0 ? widget.activity.order : 4,
+      questionText: widget.activity.question,
+      targetPhrase: targetPhrase,
+      referenceAnswer: targetPhrase,
+      keyConcepts: targetPhrase.split(' '),
+      minScoreThreshold: 60,
+    );
+
+    return SpeechQuestionWidget(
+      question: speechQ,
+      questionNumber: widget.questionNumber,
+      onAnswered: _handleAnswerSubmitted,
     );
   }
 

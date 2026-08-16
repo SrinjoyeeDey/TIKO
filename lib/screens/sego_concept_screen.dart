@@ -16,6 +16,9 @@ import '../features/activities/turn_nimo/screens/turn_nimo_screen.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import '../widgets/smoke_bomb_transition.dart';
+import '../qa_pipeline/models/learning_content.dart';
+import '../qa_pipeline/services/content_discovery_service.dart';
+import '../core/state/child_state.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // AGE THEME DATA CLASS
@@ -213,6 +216,10 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
   bool _showParentPin = false;
   String _parentPinInput = '';
 
+  List<LearningChapter> _chapters = [];
+  Map<String, String?> _stageCoverImages = {};
+  int _unlockedStageIndex = 0;
+
   @override
   void dispose() {
     _bgVideoPlayer.dispose();
@@ -249,6 +256,27 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
       vsync: this,
       duration: const Duration(milliseconds: 950),
     );
+
+    _loadDynamicChapters();
+  }
+
+  Future<void> _loadDynamicChapters() async {
+    final childId = ChildState.instance.currentProfile.id;
+    final chapters = await ContentDiscoveryService.discoverContent();
+    final covers = <String, String?>{};
+    for (final c in chapters) {
+      covers[c.id] = await ContentDiscoveryService.findCoverImage(c.id);
+    }
+    final highestUnlocked = await ContentDiscoveryService.getHighestUnlockedChapterIndex(childId);
+
+    if (mounted) {
+      setState(() {
+        _chapters = chapters;
+        _stageCoverImages = covers;
+        _unlockedStageIndex = highestUnlocked;
+        _unlockedLevelIndex = highestUnlocked;
+      });
+    }
   }
 
   Future<void> _initBgVideoPlayer() async {
@@ -2415,6 +2443,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     );
   }
 
+<<<<<<< HEAD
   void _completeLevelAndUnlockNext(
     int levelIndex, [
     Offset? tapOffset,
@@ -2425,12 +2454,44 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
 
     final origin =
         tapOffset ??
+=======
+  void _completeLevelAndUnlockNext(int levelIndex, [Offset? tapOffset, Color? buttonColor]) {
+    debugPrint("_completeLevelAndUnlockNext called for stageIndex=$levelIndex");
+    SystemSound.play(SystemSoundType.click);
+
+    final effectiveChapters = _chapters.isNotEmpty
+        ? _chapters
+        : [
+            LearningChapter(id: 'Netaji', name: 'Netaji', levels: []),
+            LearningChapter(id: 'Success', name: 'Success', levels: []),
+          ];
+
+    if (levelIndex >= effectiveChapters.length) return;
+    final chapter = effectiveChapters[levelIndex];
+    final bool isLocked = levelIndex > _unlockedStageIndex;
+
+    if (isLocked) {
+      HapticFeedback.heavyImpact();
+      final prevName = levelIndex > 0 ? effectiveChapters[levelIndex - 1].name : 'previous stage';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('🔒 Complete $prevName first to unlock ${chapter.name}!'),
+          backgroundColor: const Color(0xFF2E1C12),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    final origin = tapOffset ??
+>>>>>>> 2b1902009b3ee1f22a9bbac93dcd2cf465b67e6e
         Offset(
           MediaQuery.of(context).size.width / 2,
           MediaQuery.of(context).size.height / 2,
         );
     final initialColor = buttonColor ?? const Color(0xFF94D561);
 
+<<<<<<< HEAD
     // Clicking Level 2 node (levelIndex == 1) redirects to Catch NIMO Activity!
     if (levelIndex == 1) {
       Navigator.of(
@@ -2480,14 +2541,19 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     }
 
     // Clicking the first level (level 0) or any other level triggers the Smoke Bomb Time-Travel Transition to 1913 World Map
+=======
+    // Clicking an unlocked stage node triggers the Smoke Bomb Time-Travel Transition to 1913 Game Map
+>>>>>>> 2b1902009b3ee1f22a9bbac93dcd2cf465b67e6e
     Navigator.of(context).push(
       SmokeBombPageRoute(
-        page: const GameMap1913Screen(),
+        page: GameMap1913Screen(chapterId: chapter.id),
         originOffset: origin,
         buttonColor: initialColor,
         vintageMapColor: const Color(0xFFF4E8C1),
       ),
-    );
+    ).then((_) {
+      _loadDynamicChapters();
+    });
   }
 
   static const List<String> _levelTitles = [
@@ -2607,10 +2673,28 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
           curve: Curves.easeInOutCubic,
         ).value;
 
+        final effectiveChapters = _chapters.isNotEmpty
+            ? _chapters
+            : [
+                LearningChapter(id: 'Netaji', name: 'Netaji', levels: []),
+                LearningChapter(id: 'Success', name: 'Success', levels: []),
+              ];
+
+        final stageCount = effectiveChapters.length;
+        const double verticalSpacing = 140.0;
+        final double totalPathHeight = math.max(750.0, (stageCount * verticalSpacing) + 260.0);
+
+        final xMultipliers = [0.48, 0.72, 0.54, 0.36, 0.18, 0.36, 0.54, 0.72];
+
         return SizedBox(
+<<<<<<< HEAD
           height: 1300,
+=======
+          height: totalPathHeight,
+>>>>>>> 2b1902009b3ee1f22a9bbac93dcd2cf465b67e6e
           width: w,
           child: Stack(
+            clipBehavior: Clip.none,
             children: [
               // 1. Environmental Accents (Grass & Environment Painter)
               Positioned.fill(
@@ -2619,6 +2703,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                 ),
               ),
 
+<<<<<<< HEAD
               // 1A. Red Fort Monument - Centered in Row 1->2 meadow (top ~100-190, center)
               // Road nodes row 1 ends at top~130, row 2 starts at top~202. Clear meadow: top 155-190.
               // Images placed at center-left well INSIDE the meadow, far from road edges.
@@ -2639,6 +2724,53 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                       fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) =>
                           const SizedBox.shrink(),
+=======
+              // Dynamic Stages from Discovered Chapters
+              for (int i = 0; i < stageCount; i++)
+                _buildEmergingLevelStone(
+                  levelIndex: i,
+                  top: 22.0 + (i * verticalSpacing),
+                  left: (w * xMultipliers[i % xMultipliers.length]) - 36.0,
+                  animVal: animVal,
+                ),
+
+              // Side Road Bumps
+              Positioned(
+                top: 180,
+                right: 35,
+                child: SideRoadBumpWidget(
+                  bumpColor: const Color(0xFFFF8A65),
+                  bumpType: SideRoadBumpType.buffAltar,
+                  label: '2x XP',
+                  sublabel: 'BUFF',
+                  icon: Icons.flash_on_rounded,
+                ),
+              ),
+
+              Positioned(
+                top: 360,
+                left: 35,
+                child: SideRoadBumpWidget(
+                  bumpColor: const Color(0xFF78C850),
+                  bumpType: SideRoadBumpType.achievement,
+                  label: '7 DAYS',
+                  sublabel: 'STREAK',
+                  icon: Icons.local_fire_department_rounded,
+                ),
+              ),
+
+              // Bottom Creamy Drip Pool (Rendered IN FRONT of lower stones)
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: 125,
+                child: IgnorePointer(
+                  child: CustomPaint(
+                    painter: CreamyDripsPainter(
+                      creamColor: const Color(0xFFFFF8E7),
+                      isHangingDown: false,
+>>>>>>> 2b1902009b3ee1f22a9bbac93dcd2cf465b67e6e
                     ),
                   ),
                 ),
@@ -2786,7 +2918,96 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     );
   }
 
+<<<<<<< HEAD
   Widget _buildBookLevelNode({
+=======
+  Widget _buildStageHoverCard(
+    LearningChapter chapter,
+    int stageIndex,
+    bool isLocked,
+    bool isCompleted,
+    String? coverImage,
+  ) {
+    return Container(
+      width: 170,
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: const Color(0xFF13300C), // Deep Forest Green Panel
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: isLocked ? const Color(0xFF757575) : const Color(0xFFFFD166),
+          width: 1.8,
+        ),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black54,
+            blurRadius: 16,
+            offset: Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: SizedBox(
+              width: double.infinity,
+              height: 95,
+              child: coverImage != null
+                  ? Image.asset(
+                      coverImage,
+                      fit: BoxFit.cover,
+                      errorBuilder: (ctx, err, stack) => Container(
+                        color: const Color(0xFF0D180B),
+                        child: const Icon(Icons.movie_filter_rounded, color: Color(0xFFFFD166), size: 36),
+                      ),
+                    )
+                  : Container(
+                      color: const Color(0xFF0D180B),
+                      child: const Icon(Icons.movie_filter_rounded, color: Color(0xFFFFD166), size: 36),
+                    ),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            chapter.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontFamily: 'Outfit',
+              fontSize: 13,
+              fontWeight: FontWeight.w900,
+              color: Color(0xFFFFD166),
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            isLocked
+                ? '🔒 LOCKED'
+                : isCompleted
+                    ? '✓ ${chapter.levels.length} Episodes Completed'
+                    : '▶ ${chapter.levels.length} Episodes',
+            style: TextStyle(
+              fontFamily: 'Outfit',
+              fontSize: 10,
+              fontWeight: FontWeight.w800,
+              color: isLocked
+                  ? const Color(0xFFAAAAAA)
+                  : isCompleted
+                      ? const Color(0xFF78C850)
+                      : Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _build3DSteppingStone({
+>>>>>>> 2b1902009b3ee1f22a9bbac93dcd2cf465b67e6e
     required int levelIndex,
     required double unlockAnimValue,
   }) {
@@ -2795,9 +3016,24 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
         levelIndex == _unlockedLevelIndex && _animatingUnlockingIndex == null;
     final bool isHovered = _hoveredLevelIndex == levelIndex;
 
+<<<<<<< HEAD
     final String title = levelIndex < _levelTitles.length
         ? _levelTitles[levelIndex].replaceAll('\n', ' ')
         : 'Level ${levelIndex + 1}';
+=======
+    final effectiveChapters = _chapters.isNotEmpty
+        ? _chapters
+        : [
+            LearningChapter(id: 'Netaji', name: 'Netaji', levels: []),
+            LearningChapter(id: 'Success', name: 'Success', levels: []),
+          ];
+    final chapter = levelIndex < effectiveChapters.length ? effectiveChapters[levelIndex] : null;
+    final coverImage = chapter != null ? _stageCoverImages[chapter.id] : null;
+
+    Color topColor;
+    Color bevelColor;
+    Color borderColor;
+>>>>>>> 2b1902009b3ee1f22a9bbac93dcd2cf465b67e6e
 
     // 3D Closed Hardcover Book Dimensions
     final double bookWidth = isActive ? 96.0 : (isCompleted ? 88.0 : 82.0);
@@ -2860,7 +3096,43 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
             alignment: Alignment.center,
             clipBehavior: Clip.none,
             children: [
+<<<<<<< HEAD
               // 2. Main 3D Closed Storybook Container (Opens into 2-page storybook spread on Hover!)
+=======
+              // Dynamic COVER_IMG Preview on Hover OR XP Badge
+              if (isHovered && chapter != null)
+                _buildStageHoverCard(chapter, levelIndex, isLocked, isCompleted, coverImage)
+              else if (isActive || isBossNode)
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 250),
+                  margin: const EdgeInsets.only(bottom: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 2.5),
+                  decoration: BoxDecoration(
+                    color: isBossNode
+                        ? const Color(0xFFFFAB00)
+                        : const Color(0xFF183018),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: isBossNode ? const Color(0x60FFAB00) : const Color(0x30000000),
+                        blurRadius: isBossNode ? 10 : 6,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    isBossNode ? '+200 XP' : '+50 XP',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      color: isBossNode ? const Color(0xFF2E1A00) : Colors.white,
+                      letterSpacing: 0.4,
+                    ),
+                  ),
+                ),
+
+              // 3D Stone Block with Smooth Animated Container Color Morphing
+>>>>>>> 2b1902009b3ee1f22a9bbac93dcd2cf465b67e6e
               AnimatedContainer(
                 duration: const Duration(milliseconds: 250),
                 curve: Curves.easeOutBack,
@@ -3742,6 +4014,20 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
   }
 
   Widget _buildDuolingoUnitBanner(Size size) {
+    final effectiveChapters = _chapters.isNotEmpty
+        ? _chapters
+        : [
+            LearningChapter(id: 'Netaji', name: 'Netaji', levels: []),
+            LearningChapter(id: 'Success', name: 'Success', levels: []),
+          ];
+
+    final activeChapter = _unlockedStageIndex < effectiveChapters.length
+        ? effectiveChapters[_unlockedStageIndex]
+        : effectiveChapters.first;
+
+    final stageNumber = _unlockedStageIndex + 1;
+    final stageTitle = activeChapter.name;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
@@ -3760,6 +4046,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
         ),
         child: Row(
           children: [
+<<<<<<< HEAD
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -3773,6 +4060,45 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                         0xFF4ADE80,
                       ), // Bright Mint Green Label Accent matching reference image!
                       letterSpacing: 0.8,
+=======
+            // Inner Complementary Deep Forest Green Section #13300C
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              decoration: BoxDecoration(
+                color: const Color(0xFF13300C), // Deep Forest Green Inner Panel
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.15),
+                  width: 1.0,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'SECTION 1, STAGE $stageNumber',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFFFFD166), // Warm Yellow Accent
+                            letterSpacing: 0.8,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '$stageTitle: Where there is courage, there is a way.',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+>>>>>>> 2b1902009b3ee1f22a9bbac93dcd2cf465b67e6e
                     ),
                   ),
                   SizedBox(height: 6),

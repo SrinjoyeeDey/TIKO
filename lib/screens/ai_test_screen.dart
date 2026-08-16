@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/services/ai_integration_service.dart';
+import '../core/services/media_capture_service.dart';
 import '../core/state/child_state.dart';
 
 /// Standalone Development-Only AI Integration Test Screen.
@@ -60,15 +61,38 @@ class _AiTestScreenState extends State<AiTestScreen> {
     final childId = ChildState.instance.currentProfile.id;
     final sessionId = ChildState.instance.currentSessionId ?? 'SES_001';
 
-    // Mock WAV sample payload (minimal 44-byte WAV header)
-    final mockWavBytes = <int>[
-      82, 73, 70, 70, 36, 0, 0, 0, 87, 65, 86, 69, 102, 109, 116, 32,
-      16, 0, 0, 0, 1, 0, 1, 0, 68, 172, 0, 0, 136, 88, 1, 0, 2, 0, 16, 0,
-      100, 97, 116, 97, 0, 0, 0, 0
-    ];
+    // Capture 3 seconds of real audio
+    final started = await MediaCaptureService.instance.startAudioRecording();
+    if (!started) {
+      setState(() {
+        _isTestingSpeech = false;
+        _statusMessage = 'Speech test error: Microphone access denied or failed.';
+      });
+      return;
+    }
+
+    setState(() {
+      _statusMessage = 'Recording audio for 3 seconds...';
+    });
+
+    await Future.delayed(const Duration(seconds: 3));
+
+    final wavBytes = await MediaCaptureService.instance.stopAudioRecordingAndGetBytes();
+    
+    if (wavBytes == null || wavBytes.isEmpty) {
+      setState(() {
+        _isTestingSpeech = false;
+        _statusMessage = 'Speech test error: Failed to capture audio bytes.';
+      });
+      return;
+    }
+
+    setState(() {
+      _statusMessage = 'Sending audio to backend...';
+    });
 
     final res = await AiIntegrationService.instance.analyzeSpeech(
-      audioBytes: mockWavBytes,
+      audioBytes: wavBytes,
       childId: childId,
       sessionId: sessionId,
       activityId: 'netaji_q01',
@@ -98,11 +122,18 @@ class _AiTestScreenState extends State<AiTestScreen> {
     final childId = ChildState.instance.currentProfile.id;
     final sessionId = ChildState.instance.currentSessionId ?? 'SES_001';
 
-    // Mock JPEG frame sample payload
-    final mockJpegBytes = <int>[255, 216, 255, 224, 0, 10, 74, 70, 73, 70, 0, 1, 1, 0, 0, 1, 255, 217];
+    // Capture real JPEG frame payload from camera
+    final jpegBytes = await MediaCaptureService.instance.captureFrameBytes();
+    if (jpegBytes == null || jpegBytes.isEmpty) {
+      setState(() {
+        _isTestingVision = false;
+        _statusMessage = 'Vision test error: Camera access denied or failed.';
+      });
+      return;
+    }
 
     final res = await AiIntegrationService.instance.analyzeEngagement(
-      imageBytes: mockJpegBytes,
+      imageBytes: jpegBytes,
       childId: childId,
       sessionId: sessionId,
       activityId: 'netaji_q01',

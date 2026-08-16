@@ -179,6 +179,100 @@ class ProgressService {
     const list = snapshotsMap.get(childId) || [];
     return list.map(s => s.toJSON());
   }
+
+  /**
+   * Generate Post-Play Clinical & Parental Report JSON Schema
+   */
+  static async generateClinicalReport(childId = 'A001') {
+    const skills = await this.getProgress(childId);
+    const history = await this.getProgressHistory(childId);
+
+    const memoryScore = skills.memory ? skills.memory.score : null;
+    const sequencingScore = skills.sequencing ? skills.sequencing.score : null;
+    const motorScore = skills.motor ? skills.motor.score : null;
+    const speechScore = skills.speech ? skills.speech.score : null;
+    const attentionScore = skills.attention ? skills.attention.score : null;
+
+    let overallEngagement = 'No Data';
+    if (attentionScore !== null) {
+      overallEngagement = attentionScore >= 75 ? 'High' : (attentionScore >= 50 ? 'Moderate' : 'Low');
+    }
+
+    const areasOfStruggle = [];
+    if (sequencingScore !== null && sequencingScore < 60) areasOfStruggle.push('Story Sequencing & Chronology');
+    if (memoryScore !== null && memoryScore < 60) areasOfStruggle.push('Detail Recall & Memory');
+    if (speechScore !== null && speechScore < 60) areasOfStruggle.push('Complex Word Articulation');
+
+    const sensoryPreferences = [];
+    if (attentionScore !== null && attentionScore >= 75) {
+      sensoryPreferences.push('Visual storytelling engagement');
+      sensoryPreferences.push('Preferred high-contrast visual theme');
+    }
+
+    const forParents = [];
+    if (areasOfStruggle.length > 0) {
+      forParents.push(`Child practiced ${areasOfStruggle.join(', ')} today. Try reinforcing these skills at home!`);
+    } else if (history.length > 0) {
+      forParents.push("Great progress and engagement during recent interactive play sessions!");
+    } else {
+      forParents.push("Play more story chapters to generate personalized home activities!");
+    }
+
+    const forDoctors = [];
+    if (attentionScore !== null) {
+      forDoctors.push(`Visual engagement score: ${attentionScore.toFixed(1)}/100.`);
+    }
+    if (speechScore !== null) {
+      forDoctors.push(`Pronunciation accuracy: ${speechScore.toFixed(1)}%.`);
+    }
+    const milestones = [];
+    if (memoryScore !== null) milestones.push(`Memory (${memoryScore}%)`);
+    if (sequencingScore !== null) milestones.push(`Sequencing (${sequencingScore}%)`);
+    if (motorScore !== null) milestones.push(`Motor (${motorScore}%)`);
+    if (milestones.length > 0) {
+      forDoctors.push(`Cognitive milestones: ${milestones.join(', ')}.`);
+    }
+
+    return {
+      metadata: {
+        reportId: `RPT_${Date.now()}`,
+        childId,
+        sessionId: 'SES_001',
+        date: new Date().toISOString()
+      },
+      sessionSummary: {
+        durationMinutes: history.length > 0 ? Number((history.length * 3.5).toFixed(1)) : 0.0,
+        activitiesCompleted: history.length,
+        overallEngagement
+      },
+      sensoryAndAttention: {
+        visualEngagementScore: attentionScore !== null ? Number(attentionScore.toFixed(1)) : 0.0,
+        distractionEvents: attentionScore !== null && attentionScore < 70 ? 2 : 0,
+        sensoryPreferences
+      },
+      speechAndCommunication: {
+        totalVocalizations: speechScore !== null ? 1 : 0,
+        pronunciationAccuracy: speechScore !== null ? Number(speechScore.toFixed(1)) : 0.0,
+        successfulWords: [],
+        averageResponseDelaySeconds: 0.0
+      },
+      cognitiveAndMotorSkills: {
+        memory: memoryScore !== null ? Number(memoryScore.toFixed(1)) : -1.0,
+        sequencing: sequencingScore !== null ? Number(sequencingScore.toFixed(1)) : -1.0,
+        fineMotorControl: motorScore !== null ? Number(motorScore.toFixed(1)) : -1.0,
+        areasOfStruggle
+      },
+      behavioralObservations: {
+        hintsRequested: 0,
+        abandonedActivities: 0,
+        frustrationIndicators: 0
+      },
+      actionableInsights: {
+        forParents,
+        forDoctors
+      }
+    };
+  }
 }
 
 module.exports = ProgressService;

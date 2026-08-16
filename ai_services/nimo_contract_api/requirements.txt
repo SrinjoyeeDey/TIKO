@@ -3,6 +3,9 @@ fastapi
 uvicorn[standard]
 python-multipart
 pydantic
-SpeechRecognition
-opencv-python-headless
+# Provides Recognizer.recognize_google used by the speech endpoint.
+SpeechRecognition==3.17.0
+opencv-python-headless<5
+# Supplies cv2 type information for Pylance/Pyright; it does not replace OpenCV.
+opencv-stubs==0.1.3
 numpy

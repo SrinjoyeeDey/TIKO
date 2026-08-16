@@ -12,6 +12,7 @@ import '../api/progress_api.dart';
 import '../api/adaptive_api.dart';
 import '../api/recommendation_api.dart';
 import '../services/event_service.dart';
+import '../../qa_pipeline/database/child_repository.dart';
 
 /// Central reactive state store for active Child Profile, Session, Skill Progress, Adaptive Engine, & Recommendation Engine.
 class ChildState {
@@ -105,9 +106,31 @@ class ChildState {
   }
 
   /// Update in-memory profile and notify listeners
-  void setProfile(ChildProfile profile) {
+  void setProfile(ChildProfile profile, {bool remember = true}) {
     activeProfileNotifier.value = profile;
     loadProgress(profile.id);
+    if (remember) {
+      ChildRepository.rememberChild(profile.id);
+    }
+  }
+
+  /// Restore remembered profile from SQLite on app startup
+  Future<void> initRememberedProfile() async {
+    try {
+      final remembered = await ChildRepository.getActiveChild();
+      if (remembered != null) {
+        activeProfileNotifier.value = ChildProfile(
+          id: remembered.id,
+          name: remembered.name,
+          xp: 350,
+          level: 4,
+          streak: 5,
+        );
+        loadProgress(remembered.id);
+      }
+    } catch (e) {
+      debugPrint('ChildState: initRememberedProfile error: $e');
+    }
   }
 
   /// Add XP to active child profile

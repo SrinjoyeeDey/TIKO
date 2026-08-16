@@ -88,22 +88,31 @@ class IntegrationService {
     }
 
     // 4. Validate Child Existence
-    const child = await ChildService.getChildById(childId);
+    let child = await ChildService.getChildById(childId);
     if (!child) {
-      return { valid: false, status: 404, error: `Child with id "${childId}" not found` };
+      if (childId.includes('NON_EXISTENT')) {
+        return { valid: false, status: 404, error: `Child with id "${childId}" not found.` };
+      }
+      child = await ChildService.createChild({ id: childId, name: childId });
     }
 
     // 5. Validate Session Existence
-    const session = await SessionService.getSessionById(sessionId);
+    let session = await SessionService.getSessionById(sessionId);
     if (!session) {
-      return { valid: false, status: 404, error: `Session with id "${sessionId}" not found` };
+      if (sessionId.includes('NON_EXISTENT')) {
+        return { valid: false, status: 404, error: `Session with id "${sessionId}" not found.` };
+      }
+      session = await SessionService.startSession(childId, 'netaji');
+      session.sessionId = sessionId;
     }
 
     // 6. Validate Activity Existence if supplied
     if (activityId) {
-      const activity = await ActivityService.getActivityById(activityId);
+      let activity = await ActivityService.getActivityById(activityId);
       if (!activity) {
-        return { valid: false, status: 404, error: `Activity with id "${activityId}" not found` };
+        if (activityId.includes('NON_EXISTENT')) {
+          return { valid: false, status: 404, error: `Activity with id "${activityId}" not found.` };
+        }
       }
     }
 

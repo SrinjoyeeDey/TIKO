@@ -1,15 +1,86 @@
-import 'package:uuid/uuid.dart';
-
+import 'package:sqflite/sqflite.dart';
 import '../models/child_profile.dart';
 import 'database_helper.dart';
 
-/// Repository for child profile CRUD operations.
+/// Repository for child profile CRUD operations with stable deterministic IDs and Remember Me support.
 class ChildRepository {
   static const _table = 'child_profiles';
-  static const _uuid = Uuid();
+  static const String _rememberedChildKey = 'remembered_child_id';
 
-  /// Returns the active (most recently created) child profile, or `null`.
+  /// Generates a deterministic stable ID from a child's name/username.
+  static String generateChildId(String name) {
+    final cleaned = name.trim().toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '_');
+    return cleaned.isEmpty ? 'child_user' : 'child_$cleaned';
+  }
+
+  /// Logs in an existing child by username or registers a new one with a stable deterministic ID.
+  static Future<ChildProfile> loginOrRegisterChild({
+    required String name,
+    int? age,
+    String? className,
+    bool rememberMe = true,
+  }) async {
+    final trimmedName = name.trim().isEmpty ? 'Explorer' : name.trim();
+    final childId = generateChildId(trimmedName);
+
+    final existing = await getChildById(childId) ?? await getChildByName(trimmedName);
+    if (existing != null) {
+      if (rememberMe) {
+        await rememberChild(existing.id);
+      }
+      return existing;
+    }
+
+    final profile = ChildProfile(
+      id: childId,
+      name: trimmedName,
+      age: age ?? 6,
+      className: className ?? 'Grade 1',
+      createdAt: DateTime.now(),
+    );
+
+    final db = await DatabaseHelper.instance.database;
+    await db.insert(
+      _table,
+      profile.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
+    if (rememberMe) {
+      await rememberChild(profile.id);
+    }
+
+    return profile;
+  }
+
+  /// Sets the remembered child ID in SQLite app settings.
+  static Future<void> rememberChild(String childId) async {
+    await DatabaseHelper.instance.setSetting(_rememberedChildKey, childId);
+  }
+
+  /// Gets the remembered child ID from SQLite app settings.
+  static Future<String?> getRememberedChildId() async {
+    return await DatabaseHelper.instance.getSetting(_rememberedChildKey);
+  }
+
+  /// Clears the remembered child ID (logout).
+  static Future<void> clearRememberedChild() async {
+    final db = await DatabaseHelper.instance.database;
+    await db.delete(
+      'app_settings',
+      where: 'key = ?',
+      whereArgs: [_rememberedChildKey],
+    );
+  }
+
+  /// Returns the remembered child profile, or the most recently active one, or `null`.
   static Future<ChildProfile?> getActiveChild() async {
+    final rememberedId = await getRememberedChildId();
+    if (rememberedId != null && rememberedId.isNotEmpty) {
+      final rememberedProfile = await getChildById(rememberedId);
+      if (rememberedProfile != null) return rememberedProfile;
+    }
+
     final db = await DatabaseHelper.instance.database;
     final results = await db.query(
       _table,
@@ -39,7 +110,7 @@ class ChildRepository {
     final results = await db.query(
       _table,
       where: 'name = ?',
-      whereArgs: [name],
+      whereArgs: [name.trim()],
       orderBy: 'created_at DESC',
       limit: 1,
     );
@@ -60,18 +131,14 @@ class ChildRepository {
     required String name,
     int? age,
     String? className,
+    bool rememberMe = true,
   }) async {
-    final profile = ChildProfile(
-      id: _uuid.v4(),
+    return await loginOrRegisterChild(
       name: name,
       age: age,
       className: className,
-      createdAt: DateTime.now(),
+      rememberMe: rememberMe,
     );
-
-    final db = await DatabaseHelper.instance.database;
-    await db.insert(_table, profile.toMap());
-    return profile;
   }
 
   /// Returns all child profiles, ordered by creation date descending.

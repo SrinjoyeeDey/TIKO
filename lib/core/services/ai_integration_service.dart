@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../api/api_config.dart';
+import '../api/event_api.dart';
 import '../models/event_model.dart';
 
 enum AiServiceStatus {
@@ -67,6 +68,10 @@ class AiIntegrationService {
         final eventJson = json.decode(response.body) as Map<String, dynamic>;
         debugPrint('🎙️ [AI Service] Speech Analyzed: ${eventJson['data']}');
 
+        // Immediately buffer locally in EventApi for reporting
+        final localEvt = EventModel.fromJson(eventJson);
+        EventApi.bufferLocalEvent(localEvt);
+
         // Automatically forward observation event to NIMO Express Backend
         final backendRes = await _forwardToBackend(eventJson);
 
@@ -112,6 +117,10 @@ class AiIntegrationService {
         final eventJson = json.decode(response.body) as Map<String, dynamic>;
         debugPrint('👁️ [AI Service] Engagement Analyzed: ${eventJson['data']}');
 
+        // Immediately buffer locally in EventApi for reporting
+        final localEvt = EventModel.fromJson(eventJson);
+        EventApi.bufferLocalEvent(localEvt);
+
         // Automatically forward observation event to NIMO Express Backend
         final backendRes = await _forwardToBackend(eventJson);
 
@@ -148,7 +157,9 @@ class AiIntegrationService {
       if (res.statusCode == 201 || res.statusCode == 200) {
         final body = json.decode(res.body);
         if (body['success'] == true && body['event'] != null) {
-          return EventModel.fromJson(Map<String, dynamic>.from(body['event'] as Map));
+          final serverEvt = EventModel.fromJson(Map<String, dynamic>.from(body['event'] as Map));
+          EventApi.bufferLocalEvent(serverEvt);
+          return serverEvt;
         }
       }
       debugPrint('Backend integration endpoint failed [${res.statusCode}]: ${res.body}');
