@@ -22,11 +22,14 @@ class DescriptiveQuestion extends Question {
     required this.keyConcepts,
     required this.similarityThreshold,
     super.difficulty,
+    super.difficultyPercentage,
+    super.difficultyLevel,
   }) : super(type: QuestionType.descriptive);
 
   /// Creates a [DescriptiveQuestion] from a JSON map.
   factory DescriptiveQuestion.fromJson(Map<String, dynamic> json) {
     final conceptsRaw = json['key_concepts'] as List<dynamic>? ?? [];
+    final diff = json['difficulty'] as String?;
 
     return DescriptiveQuestion(
       id: json['id'] as int,
@@ -35,7 +38,11 @@ class DescriptiveQuestion extends Question {
       keyConcepts: conceptsRaw.map((e) => e.toString()).toList(),
       similarityThreshold:
           (json['cosine_similarity_threshold'] as num?)?.toDouble() ?? 0.6,
-      difficulty: json['difficulty'] as String?,
+      difficulty: diff,
+      difficultyPercentage: (json['difficulty_percentage'] as num?)?.toInt() ??
+          Question.derivePercentageFromDifficulty(diff),
+      difficultyLevel: json['difficulty_level'] as String? ??
+          Question.deriveLevelFromDifficulty(diff),
     );
   }
 }

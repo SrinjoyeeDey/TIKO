@@ -6,8 +6,10 @@ import 'package:uuid/uuid.dart';
 
 import '../../widgets/wooden_back_button.dart';
 import '../../widgets/game_textured_text.dart';
+import '../../widgets/child_profile_badge.dart';
 
 import '../database/question_attempt_repository.dart';
+import '../database/child_repository.dart';
 import '../models/descriptive_question.dart';
 import '../models/image_matching_question.dart';
 import '../models/learning_content.dart';
@@ -29,6 +31,7 @@ import '../../core/models/activity_model.dart';
 import '../../core/widgets/activity_renderer.dart';
 import '../../core/widgets/panda_character.dart';
 import '../../core/services/event_service.dart';
+import '../../core/state/child_state.dart';
 
 /// Manages the full question flow for a level:
 ///   MCQ → Descriptive → Sequence (drag-and-drop) → Level Clear.
@@ -93,8 +96,18 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   Future<void> _loadQuestions() async {
     try {
-      // 1. Load local level JSON questions (MCQ, Descriptive, Speech, Sequence, Matching)
-      final qs = await QuestionService.loadQuestions(widget.level.questionsPath);
+      // 0. Fetch child's calibrated difficulty from SQLite / ChildState
+      final profile = await ChildRepository.getChildProfile(widget.childId);
+      final diffPct = profile?.difficultyPercentage ?? ChildState.instance.currentProfile.difficultyPercentage;
+      final diffLevel = profile?.difficultyLevel ?? ChildState.instance.currentProfile.difficultyLevel;
+
+      // 1. Load local level JSON questions tailored to child's calibrated difficulty level
+      final qs = await QuestionService.loadQuestionsForChild(
+        widget.level.questionsPath,
+        childDifficultyPercentage: diffPct,
+        childDifficultyLevel: diffLevel,
+      );
+
       _allQuestions
         ..addAll(qs.mcqQuestions)
         ..addAll(qs.descriptiveQuestions)
@@ -302,11 +315,15 @@ class _QuestionScreenState extends State<QuestionScreen> {
                             WoodenBackButton(
                               onTap: _onBackPressed,
                             ),
+                            const SizedBox(width: 10),
+                            ChildProfileBadge(
+                              childId: widget.childId,
+                            ),
                             Expanded(
                               child: Center(
                                 child: GameTexturedText(
-                                  text: 'NETAJI QUIZ',
-                                  fontSize: 24,
+                                  text: widget.level.chapterName.toUpperCase(),
+                                  fontSize: 22,
                                 ),
                               ),
                             ),

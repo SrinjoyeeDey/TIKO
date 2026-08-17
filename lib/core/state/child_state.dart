@@ -135,7 +135,13 @@ class ChildState {
       if (remembered != null) {
         activeProfileNotifier.value = ChildProfile(
           id: remembered.id,
+          parentId: remembered.parentId,
           name: remembered.name,
+          age: remembered.age,
+          className: remembered.className,
+          difficultyPercentage: remembered.difficultyPercentage,
+          difficultyLevel: remembered.difficultyLevel,
+          difficultyReasoning: remembered.difficultyReasoning,
           xp: 350,
           level: 4,
           streak: 5,

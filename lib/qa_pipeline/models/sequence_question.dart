@@ -19,12 +19,11 @@ class SequenceQuestion extends Question {
     required this.correctOrder,
     this.answerText,
     super.difficulty,
+    super.difficultyPercentage,
+    super.difficultyLevel,
   }) : super(type: QuestionType.sequenceMcq);
 
   /// Creates a [SequenceQuestion] from a `sequence_test` JSON question.
-  ///
-  /// Extracts the option values as reorderable items and derives the
-  /// correct order from the sorted option keys (A, B, C, D → correct order).
   factory SequenceQuestion.fromJson(Map<String, dynamic> json) {
     final optionsRaw = json['options'] as Map<String, dynamic>;
     final sortedKeys = optionsRaw.keys.toList()..sort();
@@ -35,6 +34,7 @@ class SequenceQuestion extends Question {
 
     // Shuffle the items for presentation.
     final shuffled = List<String>.from(correctOrder)..shuffle();
+    final diff = json['difficulty'] as String?;
 
     return SequenceQuestion(
       id: json['id'] as int,
@@ -43,7 +43,11 @@ class SequenceQuestion extends Question {
       items: shuffled,
       correctOrder: correctOrder,
       answerText: json['answer_text'] as String?,
-      difficulty: json['difficulty'] as String?,
+      difficulty: diff,
+      difficultyPercentage: (json['difficulty_percentage'] as num?)?.toInt() ??
+          Question.derivePercentageFromDifficulty(diff),
+      difficultyLevel: json['difficulty_level'] as String? ??
+          Question.deriveLevelFromDifficulty(diff),
     );
   }
 

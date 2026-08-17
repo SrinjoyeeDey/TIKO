@@ -22,10 +22,13 @@ class SpeechQuestion extends Question {
     required this.keyConcepts,
     this.minScoreThreshold = 85,
     super.difficulty,
+    super.difficultyPercentage,
+    super.difficultyLevel,
   }) : super(type: QuestionType.speech);
 
   factory SpeechQuestion.fromJson(Map<String, dynamic> json) {
     final conceptsRaw = json['key_concepts'] as List<dynamic>? ?? [];
+    final diff = json['difficulty'] as String?;
 
     return SpeechQuestion(
       id: json['id'] as int,
@@ -34,7 +37,11 @@ class SpeechQuestion extends Question {
       referenceAnswer: json['reference_answer'] as String? ?? '',
       keyConcepts: conceptsRaw.map((e) => e.toString()).toList(),
       minScoreThreshold: (json['min_score_threshold'] as num?)?.toInt() ?? 85,
-      difficulty: json['difficulty'] as String?,
+      difficulty: diff,
+      difficultyPercentage: (json['difficulty_percentage'] as num?)?.toInt() ??
+          Question.derivePercentageFromDifficulty(diff),
+      difficultyLevel: json['difficulty_level'] as String? ??
+          Question.deriveLevelFromDifficulty(diff),
     );
   }
 }
