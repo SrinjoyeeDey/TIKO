@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 external JSAny? _jsEval(JSString code);
 
 void _ensureRecorderInjected() {
-  const jsCode = r'''
+  const jsCode = r''';
   if (!window.nimoAudioRecorder) {
     window.nimoAudioRecorder = {
       mediaRecorder: null,
@@ -219,6 +219,38 @@ void _ensureRecorderInjected() {
       }
     };
   }
+
+
+  if (!window.nimoSpeakText) {
+    window.nimoSpeakText = function(text) {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-US';
+        u.rate = 0.95;
+        window.speechSynthesis.speak(u);
+      }
+    };
+  }
+
+  if (!window.nimoCancelSpeech) {
+    window.nimoCancelSpeech = function() {
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+      if (window.nimoCurrentAudio) {
+        try { window.nimoCurrentAudio.pause(); } catch(_) {}
+        window.nimoCurrentAudio = null;
+      }
+    };
+  }
+
+  if (!window.nimoPlayAudioSrc) {
+    window.nimoPlayAudioSrc = function(src) {
+      if (window.nimoCancelSpeech) window.nimoCancelSpeech();
+      const audio = new Audio(src);
+      window.nimoCurrentAudio = audio;
+      audio.play().catch(e => console.warn('Audio play error:', e));
+    };
+  }
   ''';
   try {
     _jsEval(jsCode.toJS);
@@ -238,6 +270,15 @@ external JSString _jsCaptureFrame();
 
 @JS('nimoEnsureWebcam')
 external JSPromise<JSBoolean> _jsEnsureWebcam();
+
+@JS('nimoSpeakText')
+external void _jsSpeakText(JSString text);
+
+@JS('nimoCancelSpeech')
+external void _jsCancelSpeech();
+
+@JS('nimoPlayAudioSrc')
+external void _jsPlayAudioSrc(JSString src);
 
 Future<bool> ensureWebCameraReadyImpl() async {
   try {
@@ -293,14 +334,40 @@ Future<Map<String, dynamic>?> stopWebRecordingImpl() async {
       if (base64Str.isNotEmpty) {
         bytes = base64.decode(base64Str);
       }
-      debugPrint('WebAudioHelper: Received ${bytes.length} bytes from browser. Web transcript: "$transcript"');
-      return {
-        'bytes': bytes,
-        'transcript': transcript,
-      };
+      debugPrint(
+        'WebAudioHelper: Received ${bytes.length} bytes from browser. Web transcript: "$transcript"',
+      );
+      return {'bytes': bytes, 'transcript': transcript};
     }
   } catch (e) {
     debugPrint('WebAudioHelper stop error: $e');
   }
   return null;
+}
+
+void speakWebTextImpl(String text, VoidCallback onEnded) {
+  try {
+    _ensureRecorderInjected();
+    _jsSpeakText(text.toJS);
+  } catch (e) {
+    debugPrint('speakWebTextImpl error: $e');
+  }
+}
+
+void cancelWebSpeechImpl() {
+  try {
+    _ensureRecorderInjected();
+    _jsCancelSpeech();
+  } catch (e) {
+    debugPrint('cancelWebSpeechImpl error: $e');
+  }
+}
+
+void playWebAudioSourceImpl(String src, VoidCallback onEnded) {
+  try {
+    _ensureRecorderInjected();
+    _jsPlayAudioSrc(src.toJS);
+  } catch (e) {
+    debugPrint('playWebAudioSourceImpl error: $e');
+  }
 }
