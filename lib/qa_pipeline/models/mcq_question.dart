@@ -22,6 +22,8 @@ class McqQuestion extends Question {
     required this.correctAnswerKey,
     this.answerText,
     super.difficulty,
+    super.difficultyPercentage,
+    super.difficultyLevel,
   });
 
   /// Creates an [McqQuestion] from a JSON map.
@@ -31,6 +33,7 @@ class McqQuestion extends Question {
     final optionsRaw = json['options'] as Map<String, dynamic>;
     final options =
         optionsRaw.map((key, value) => MapEntry(key, value.toString()));
+    final diff = json['difficulty'] as String?;
 
     return McqQuestion(
       id: json['id'] as int,
@@ -39,7 +42,11 @@ class McqQuestion extends Question {
       options: options,
       correctAnswerKey: json['answer'] as String,
       answerText: json['answer_text'] as String?,
-      difficulty: json['difficulty'] as String?,
+      difficulty: diff,
+      difficultyPercentage: (json['difficulty_percentage'] as num?)?.toInt() ??
+          Question.derivePercentageFromDifficulty(diff),
+      difficultyLevel: json['difficulty_level'] as String? ??
+          Question.deriveLevelFromDifficulty(diff),
     );
   }
 

@@ -44,6 +44,136 @@ class AiIntegrationService {
     };
   }
 
+  /// Calculate personalized quest difficulty percentage via Groq LLM Python Service (port 8001)
+  Future<Map<String, dynamic>> calculateDifficulty({
+    required String childId,
+    required String name,
+    required int age,
+    required String standard,
+    String language = 'en',
+    String learningPace = 'normal',
+  }) async {
+    final url = Uri.parse('$aiServiceBaseUrl/calculate/difficulty');
+    try {
+      final response = await http
+          .post(
+            url,
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode({
+              'childId': childId,
+              'name': name,
+              'age': age,
+              'standard': standard,
+              'language': language,
+              'learningPace': learningPace,
+            }),
+          )
+          .timeout(const Duration(seconds: 12));
+
+      if (response.statusCode == 200) {
+        final body = json.decode(response.body) as Map<String, dynamic>;
+        final diffPct = (body['difficultyPercentage'] as num?)?.toInt() ?? 50;
+        final diffLevel = (body['difficultyLevel'] as String?) ?? 'Balanced Explorer';
+        final diffReason = (body['reasoning'] as String?) ?? '';
+        final model = (body['modelUsed'] as String?) ?? 'Groq LLM';
+        debugPrint('🧠 [Groq LLM Structured Output] $diffPct% ($diffLevel) via $model');
+        return {
+          'success': true,
+          'difficultyPercentage': diffPct,
+          'difficultyLevel': diffLevel,
+          'reasoning': diffReason,
+          'modelUsed': model,
+        };
+      }
+    } catch (e) {
+      debugPrint('AiIntegrationService.calculateDifficulty exception: $e');
+    }
+
+    // Default fallback only if network fails completely
+    int fallbackPct = (age <= 4) ? 25 : (age == 5 ? (standard.toLowerCase().contains('grade 1') ? 50 : 30) : 50);
+    return {
+      'success': true,
+      'difficultyPercentage': fallbackPct,
+      'difficultyLevel': 'Balanced Explorer',
+      'reasoning': 'Calibrated quest difficulty for age $age ($standard).',
+      'modelUsed': 'offline-fallback',
+    };
+  }
+
+  /// Calculate updated adaptive quest difficulty via Groq LLM after level completion
+  Future<Map<String, dynamic>> calculateAdaptiveDifficulty({
+    required String childId,
+    required String name,
+    required int age,
+    required String standard,
+    String? chapterId,
+    String? levelId,
+    required String currentAbility,
+    required String previousPerformance,
+    required String preferredInteraction,
+    required String speechAbility,
+    required String motorPerformance,
+    required String attentionPattern,
+    required String learningHistory,
+    required int currentDifficultyPercentage,
+  }) async {
+    final url = Uri.parse('$aiServiceBaseUrl/calculate/adaptive-difficulty');
+    try {
+      final response = await http
+          .post(
+            url,
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode({
+              'childId': childId,
+              'name': name,
+              'age': age,
+              'standard': standard,
+              'chapterId': chapterId,
+              'levelId': levelId,
+              'currentAbility': currentAbility,
+              'previousPerformance': previousPerformance,
+              'preferredInteraction': preferredInteraction,
+              'speechAbility': speechAbility,
+              'motorPerformance': motorPerformance,
+              'attentionPattern': attentionPattern,
+              'learningHistory': learningHistory,
+              'currentDifficultyPercentage': currentDifficultyPercentage,
+            }),
+          )
+          .timeout(const Duration(seconds: 12));
+
+      if (response.statusCode == 200) {
+        final body = json.decode(response.body) as Map<String, dynamic>;
+        final diffPct = (body['difficultyPercentage'] as num?)?.toInt() ?? currentDifficultyPercentage;
+        final diffLevel = (body['difficultyLevel'] as String?) ?? 'Balanced Explorer';
+        final diffReason = (body['reasoning'] as String?) ?? '';
+        final recs = (body['recommendationsForNextSession'] as List?)?.map((e) => e.toString()).toList() ?? <String>[];
+        final model = (body['modelUsed'] as String?) ?? 'Groq LLM';
+        debugPrint('🧠 [Groq LLM Adaptive Output] $diffPct% ($diffLevel) via $model');
+        return {
+          'success': true,
+          'difficultyPercentage': diffPct,
+          'difficultyLevel': diffLevel,
+          'reasoning': diffReason,
+          'recommendations': recs,
+          'modelUsed': model,
+        };
+      }
+    } catch (e) {
+      debugPrint('AiIntegrationService.calculateAdaptiveDifficulty exception: $e');
+    }
+
+    // Heuristic fallback
+    return {
+      'success': true,
+      'difficultyPercentage': currentDifficultyPercentage,
+      'difficultyLevel': 'Balanced Explorer',
+      'reasoning': 'Calibrated quest difficulty based on completed level performance.',
+      'recommendations': <String>[],
+      'modelUsed': 'offline-fallback',
+    };
+  }
+
   /// Analyze WAV speech audio via Python AI Service (port 8001) and forward event to NIMO Express Backend (port 3000)
   Future<Map<String, dynamic>> analyzeSpeech({
     required List<int> audioBytes,

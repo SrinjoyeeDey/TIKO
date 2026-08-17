@@ -1,17 +1,20 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import '../core/models/child_profile.dart' as core;
 import '../core/models/parent_account.dart';
+import '../core/services/ai_integration_service.dart';
 import '../core/services/parent_repository.dart';
 import '../core/state/child_state.dart';
-import '../qa_pipeline/models/child_profile.dart';
+import '../qa_pipeline/models/child_profile.dart' as qa;
 import '../qa_pipeline/screens/parent_dashboard.dart';
-import 'game_map_1913_screen.dart';
+import '../qa_pipeline/services/child_difficulty_service.dart';
 import 'sego_concept_screen.dart';
 
 enum ParentAuthMode {
   signup,
   createChild,
+  personalizingExperience,
   createPin,
   confirmPin,
   loginPin,
@@ -48,8 +51,17 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
 
   // Controllers for Child Creation
   final _childNameController = TextEditingController();
-  int _childAge = 6;
+  int _childAge = 5;
+  String _selectedStandard = 'Grade 1';
   String _selectedLanguage = 'English';
+  String _learningPace = 'normal';
+
+  // Personalizing AI State
+  int _personalizedDifficulty = 50;
+  String _personalizedLevel = 'Balanced Explorer';
+  String _personalizedReasoning = '';
+  String _personalizingStatusText = 'Connecting to NIMO AI Pediatric Engine...';
+  double _personalizingProgress = 0.0;
 
   // PIN inputs
   final List<String> _pinDigits = [];
@@ -62,7 +74,7 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
 
   // Created Parent & Child transient state
   ParentAccount? _createdParent;
-  ChildProfile? _createdChild;
+  qa.ChildProfile? _createdChild;
 
   @override
   void initState() {
@@ -122,7 +134,7 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
     }
   }
 
-  // Handle Child Profile Creation
+  // Handle Child Profile Creation with Groq AI Difficulty Assessment & Personalizing Screen
   Future<void> _handleCreateChild() async {
     setState(() => _errorMessage = null);
 
@@ -132,19 +144,83 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
       return;
     }
 
-    setState(() => _isLoading = true);
+    setState(() {
+      _currentMode = ParentAuthMode.personalizingExperience;
+      _personalizingProgress = 0.15;
+      _personalizingStatusText = 'Connecting to NIMO AI Pediatric Engine...';
+    });
 
     try {
       final parentId = _createdParent?.id ?? (await ParentRepository.getActiveParent())?.id ?? 'parent_default';
+      final tempChildId = ParentRepository.generateChildId();
 
+      await Future.delayed(const Duration(milliseconds: 400));
+      if (mounted) {
+        setState(() {
+          _personalizingProgress = 0.45;
+          _personalizingStatusText = 'Analyzing learning milestones for Age $_childAge in $_selectedStandard...';
+        });
+      }
+
+      // Call Groq LLM AI Microservice (Port 8001 /calculate/difficulty)
+      final aiRes = await AiIntegrationService.instance.calculateDifficulty(
+        childId: tempChildId,
+        name: childName,
+        age: _childAge,
+        standard: _selectedStandard,
+        language: _selectedLanguage,
+        learningPace: _learningPace,
+      );
+
+      final diffPct = (aiRes['difficultyPercentage'] as num?)?.toInt() ?? 50;
+      final diffLevel = (aiRes['difficultyLevel'] as String?) ?? 'Balanced Explorer';
+      final diffReason = (aiRes['reasoning'] as String?) ??
+          'Personalized $diffPct% quest difficulty configured for age $_childAge ($_selectedStandard).';
+
+      if (mounted) {
+        setState(() {
+          _personalizedDifficulty = diffPct;
+          _personalizedLevel = diffLevel;
+          _personalizedReasoning = diffReason;
+          _personalizingProgress = 0.85;
+          _personalizingStatusText = 'Saving personalized profile to SQLite database...';
+        });
+      }
+
+      // Store child in SQLite under that child with difficulty level
       final child = await ParentRepository.createChildProfile(
         parentId: parentId,
         name: childName,
         age: _childAge,
-        className: 'Grade 1',
+        className: _selectedStandard,
+        difficultyPercentage: diffPct,
+        difficultyLevel: diffLevel,
+        difficultyReasoning: diffReason,
       );
 
       _createdChild = child;
+      ChildState.instance.setProfile(
+        core.ChildProfile(
+          id: child.id,
+          parentId: child.parentId,
+          name: child.name,
+          age: child.age,
+          className: child.className,
+          difficultyPercentage: diffPct,
+          difficultyLevel: diffLevel,
+          difficultyReasoning: diffReason,
+        ),
+        remember: true,
+      );
+
+      if (mounted) {
+        setState(() {
+          _personalizingProgress = 1.0;
+          _personalizingStatusText = 'Difficulty Calibrated: $diffPct% ($diffLevel) ✓';
+        });
+      }
+
+      await Future.delayed(const Duration(milliseconds: 1100));
 
       if (mounted) {
         setState(() {
@@ -157,7 +233,8 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
       if (mounted) {
         setState(() {
           _isLoading = false;
-          _errorMessage = 'Failed to create child profile: $e';
+          _currentMode = ParentAuthMode.createChild;
+          _errorMessage = 'Failed to personalize experience: $e';
         });
       }
     }
@@ -755,6 +832,7 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
                             children: [
                               if (_currentMode == ParentAuthMode.signup) _buildSignupForm(),
                               if (_currentMode == ParentAuthMode.createChild) _buildCreateChildForm(),
+                              if (_currentMode == ParentAuthMode.personalizingExperience) _buildPersonalizingLoadingView(),
                             ],
                           ),
                         ),
@@ -782,6 +860,10 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
       case ParentAuthMode.createChild:
         title = 'Create Learner';
         subtitle = 'Set up your child learner profile';
+        break;
+      case ParentAuthMode.personalizingExperience:
+        title = 'Personalizing... 🐾';
+        subtitle = 'NIMO AI is calibrating quest difficulty';
         break;
       case ParentAuthMode.createPin:
         title = 'Create Parent PIN';
@@ -1266,7 +1348,7 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.face_rounded, color: Color(0xFFFC6B6B), size: 24),
+                    const Icon(Icons.cake_rounded, color: Color(0xFFFC6B6B), size: 24),
                     const SizedBox(width: 10),
                     Text(
                       'Age: $_childAge Years Old',
@@ -1297,6 +1379,103 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
                 ),
               ],
             ),
+          ),
+        ),
+        const SizedBox(height: 16),
+
+        // Standard / Class Dropdown Selector
+        const Text(
+          "Standard / Grade (Class)",
+          style: TextStyle(
+            fontFamily: 'Outfit',
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF444444),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF9F9F9),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: _selectedStandard,
+              isExpanded: true,
+              icon: const Icon(Icons.school_rounded, color: Color(0xFFFC6B6B)),
+              items: [
+                'Preschool / Nursery',
+                'LKG',
+                'UKG',
+                'Grade 1',
+                'Grade 2',
+                'Grade 3',
+                'Grade 4',
+                'Grade 5',
+              ].map((std) => DropdownMenuItem(
+                value: std,
+                child: Text(
+                  std,
+                  style: const TextStyle(fontFamily: 'Outfit', fontWeight: FontWeight.w600),
+                ),
+              )).toList(),
+              onChanged: (val) {
+                if (val != null) setState(() => _selectedStandard = val);
+              },
+            ),
+          ),
+        ),
+        const SizedBox(height: 14),
+
+        // AI Personalization Info Badge Card
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFF5F5),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: const Color(0xFFFC6B6B).withValues(alpha: 0.35), width: 1.2),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFFC6B6B),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.auto_awesome, color: Colors.white, size: 16),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Groq LLM Dynamic Calibration',
+                      style: TextStyle(
+                        fontFamily: 'Outfit',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFFFC6B6B),
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'AI calculates personalized difficulty percentage for Age $_childAge in $_selectedStandard',
+                      style: const TextStyle(
+                        fontFamily: 'Outfit',
+                        fontSize: 11,
+                        color: Color(0xFF555555),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 16),
@@ -1333,7 +1512,7 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
           ),
         ),
 
-        const SizedBox(height: 32),
+        const SizedBox(height: 28),
 
         // Continue Button
         SizedBox(
@@ -1347,24 +1526,208 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
               shadowColor: const Color(0x66FC6B6B),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
             ),
-            child: _isLoading
-                ? const SizedBox(
-                    width: 22,
-                    height: 22,
-                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
-                  )
-                : const Text(
-                    'Save & Create PIN',
-                    style: TextStyle(
-                      fontFamily: 'Outfit',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                    ),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Personalize & Continue',
+                  style: TextStyle(
+                    fontFamily: 'Outfit',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
                   ),
+                ),
+                SizedBox(width: 8),
+                Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 20),
+              ],
+            ),
           ),
         ),
       ],
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // PERSONALIZING EXPERIENCE LOADING VIEW
+  // ─────────────────────────────────────────────────────────────────────────
+  Widget _buildPersonalizingLoadingView() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(height: 10),
+
+          // Animated Pulsing Mascot Radar
+          Center(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  width: 110,
+                  height: 110,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color(0xFFFC6B6B).withValues(alpha: 0.12),
+                  ),
+                ),
+                Container(
+                  width: 86,
+                  height: 86,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color(0xFFFC6B6B).withValues(alpha: 0.25),
+                  ),
+                ),
+                Container(
+                  width: 66,
+                  height: 66,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color(0xFFFC6B6B),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0x66FC6B6B),
+                        blurRadius: 16,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: const Center(
+                    child: Icon(Icons.auto_awesome, color: Colors.white, size: 32),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 24),
+
+          // Title
+          const Text(
+            'Personalizing Your Experience...',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'Outfit',
+              fontSize: 20,
+              fontWeight: FontWeight.w900,
+              color: Color(0xFF2B2B2B),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'Calibrating NIMO cognitive quest difficulty for ${_childNameController.text.trim().isEmpty ? 'Learner' : _childNameController.text.trim()}',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontFamily: 'Outfit',
+              fontSize: 12,
+              color: Color(0xFF71717A),
+            ),
+          ),
+
+          const SizedBox(height: 24),
+
+          // Progress Bar
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: LinearProgressIndicator(
+              value: _personalizingProgress > 0 ? _personalizingProgress : null,
+              minHeight: 8,
+              backgroundColor: Colors.grey.shade200,
+              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFFC6B6B)),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // Dynamic Status Text
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFF0F3),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFFFC6B6B).withValues(alpha: 0.3)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Color(0xFFFC6B6B),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Flexible(
+                  child: Text(
+                    _personalizingStatusText,
+                    style: const TextStyle(
+                      fontFamily: 'Outfit',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFFFC6B6B),
+                    ),
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          // Summary Card once ready
+          if (_personalizingProgress >= 0.8)
+            AnimatedOpacity(
+              duration: const Duration(milliseconds: 300),
+              opacity: 1.0,
+              child: Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF4FBF7),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: const Color(0xFF22C55E).withValues(alpha: 0.4), width: 1.5),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.check_circle, color: Color(0xFF22C55E), size: 18),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Quest Level: $_personalizedDifficulty% ($_personalizedLevel)',
+                          style: const TextStyle(
+                            fontFamily: 'Outfit',
+                            fontSize: 13,
+                            fontWeight: FontWeight.w900,
+                            color: Color(0xFF15803D),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (_personalizedReasoning.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        _personalizedReasoning,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontFamily: 'Outfit',
+                          fontSize: 11,
+                          color: Color(0xFF166534),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 
