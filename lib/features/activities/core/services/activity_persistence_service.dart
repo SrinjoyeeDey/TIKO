@@ -25,10 +25,32 @@ class ActivityPersistenceService {
       isPersonalBest = session.bestReactionTimeMs > 0;
     }
 
-    // Sync XP to NIMO ChildState store
+    // Sync XP and Telemetry Event to NIMO ChildState store
     try {
       await ChildState.instance.updateProgress(addedXp: session.totalXP);
-      debugPrint('ActivityPersistenceService: Synced +${session.totalXP} XP to active NIMO profile!');
+
+      final calcAccuracy = session.totalRounds > 0 ? session.successfulRounds / session.totalRounds : 0.0;
+
+      await ChildState.instance.logActivityEvent(
+        activityId: session.activityId,
+        skill: 'cognition',
+        difficulty: session.difficultyReached,
+        success: calcAccuracy >= 0.5,
+        accuracy: calcAccuracy,
+        reactionTimeMs: session.averageReactionTimeMs.toInt(),
+        errors: session.incorrectTaps,
+        attemptNumber: 1,
+        inputType: 'touch',
+        extraData: {
+          'totalXP': session.totalXP,
+          'bestReactionTimeMs': session.bestReactionTimeMs,
+          'successfulRounds': session.successfulRounds,
+          'totalRounds': session.totalRounds,
+          'accuracyPercentage': session.accuracyPercentage,
+        },
+      );
+
+      debugPrint('ActivityPersistenceService: Logged telemetry & synced +${session.totalXP} XP for ${session.activityId}');
     } catch (e) {
       debugPrint('ActivityPersistenceService: Local ChildState update warning: $e');
     }

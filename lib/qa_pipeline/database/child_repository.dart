@@ -7,23 +7,24 @@ class ChildRepository {
   static const _table = 'child_profiles';
   static const String _rememberedChildKey = 'remembered_child_id';
 
-  /// Generates a deterministic stable ID from a child's name/username.
+  /// Generates a persistent unique ID for child profile (e.g. `child_29ab4e`).
   static String generateChildId(String name) {
     final cleaned = name.trim().toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '_');
-    return cleaned.isEmpty ? 'child_user' : 'child_$cleaned';
+    final randHex = DateTime.now().microsecondsSinceEpoch.toRadixString(16).substring(4);
+    return cleaned.isEmpty ? 'child_$randHex' : 'child_${cleaned}_$randHex';
   }
 
   /// Logs in an existing child by username or registers a new one with a stable deterministic ID.
   static Future<ChildProfile> loginOrRegisterChild({
     required String name,
+    String? parentId,
     int? age,
     String? className,
     bool rememberMe = true,
   }) async {
     final trimmedName = name.trim().isEmpty ? 'Explorer' : name.trim();
-    final childId = generateChildId(trimmedName);
 
-    final existing = await getChildById(childId) ?? await getChildByName(trimmedName);
+    final existing = await getChildByName(trimmedName);
     if (existing != null) {
       if (rememberMe) {
         await rememberChild(existing.id);
@@ -31,8 +32,10 @@ class ChildRepository {
       return existing;
     }
 
+    final childId = generateChildId(trimmedName);
     final profile = ChildProfile(
       id: childId,
+      parentId: parentId,
       name: trimmedName,
       age: age ?? 6,
       className: className ?? 'Grade 1',

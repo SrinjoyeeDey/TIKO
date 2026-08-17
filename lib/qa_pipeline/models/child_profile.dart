@@ -1,6 +1,7 @@
 /// Represents a child learner's profile stored locally.
 class ChildProfile {
   final String id;
+  final String? parentId;
   final String name;
   final int? age;
   final String? className;
@@ -8,6 +9,7 @@ class ChildProfile {
 
   const ChildProfile({
     required this.id,
+    this.parentId,
     required this.name,
     this.age,
     this.className,
@@ -18,10 +20,13 @@ class ChildProfile {
   factory ChildProfile.fromMap(Map<String, dynamic> map) {
     return ChildProfile(
       id: map['id'] as String,
+      parentId: map['parent_id'] as String?,
       name: map['name'] as String,
       age: map['age'] as int?,
       className: map['class_name'] as String?,
-      createdAt: DateTime.parse(map['created_at'] as String),
+      createdAt: map['created_at'] != null 
+          ? DateTime.parse(map['created_at'] as String) 
+          : DateTime.now(),
     );
   }
 
@@ -29,6 +34,7 @@ class ChildProfile {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'parent_id': parentId,
       'name': name,
       'age': age,
       'class_name': className,

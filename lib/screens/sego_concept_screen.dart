@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'auth_mode_selection_screen.dart';
+import 'parent_auth_screen.dart';
 import 'game_map_1913_screen.dart';
 import 'leaderboard_screen.dart';
+import '../core/services/parent_repository.dart';
+import '../qa_pipeline/screens/parent_dashboard.dart';
 import '../features/activities/catch_nimo/screens/catch_nimo_screen.dart';
 import '../features/activities/remember_nimo/screens/remember_nimo_screen.dart';
 import '../features/activities/echo_nimo/screens/echo_nimo_screen.dart';
@@ -158,7 +161,8 @@ _AgeTheme _lerpedTheme(double age) {
 // SEGO CONCEPT SCREEN
 // ─────────────────────────────────────────────────────────────────────────────
 class SegoConceptScreen extends StatefulWidget {
-  const SegoConceptScreen({super.key});
+  final int initialPage;
+  const SegoConceptScreen({super.key, this.initialPage = 0});
 
   @override
   State<SegoConceptScreen> createState() => _SegoConceptScreenState();
@@ -264,7 +268,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
       vsync: this,
       duration: const Duration(milliseconds: 7800),
     );
-    _takeoverPageController = PageController(initialPage: 0);
+    _takeoverPageController = PageController(initialPage: widget.initialPage);
     _unlockAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 950),
@@ -425,8 +429,8 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     if (_takeoverPageController.hasClients) {
       _takeoverPageController.animateToPage(
         3,
-        duration: const Duration(milliseconds: 700),
-        curve: Curves.easeOutQuart,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOutCubic,
       );
     }
   }
@@ -1350,26 +1354,76 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
           child: SafeArea(
             child: Column(
               children: [
-                // Close button
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16, top: 12),
-                    child: GestureDetector(
-                      onTap: () => setState(() {
-                        _showParentPin = false;
-                        _parentPinInput = '';
-                      }),
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF27272A),
-                          shape: BoxShape.circle,
+                // Top Action Bar with Sign Up & Close button
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16, top: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Sign Up Action Pill
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _showParentPin = false;
+                            _parentPinInput = '';
+                          });
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const ParentAuthScreen(
+                                initialMode: ParentAuthMode.signup,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFC6B6B),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color(0x33FC6B6B),
+                                blurRadius: 8,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: const Row(
+                            children: [
+                              Icon(Icons.person_add_alt_1_rounded, color: Colors.white, size: 16),
+                              SizedBox(width: 6),
+                              Text(
+                                'SIGN UP',
+                                style: TextStyle(
+                                  fontFamily: 'Outfit',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.white,
+                                  letterSpacing: 0.8,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        child: const Icon(Icons.close, color: Colors.white, size: 20),
                       ),
-                    ),
+
+                      // Close button
+                      GestureDetector(
+                        onTap: () => setState(() {
+                          _showParentPin = false;
+                          _parentPinInput = '';
+                        }),
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF27272A),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.close, color: Colors.white, size: 20),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
@@ -1463,6 +1517,38 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                           _buildPinKey('0'),
                           _buildPinBackspace(),
                         ],
+                      ),
+                      const SizedBox(height: 24),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _showParentPin = false;
+                            _parentPinInput = '';
+                          });
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const ParentAuthScreen(
+                                initialMode: ParentAuthMode.signup,
+                              ),
+                            ),
+                          );
+                        },
+                        child: RichText(
+                          text: const TextSpan(
+                            text: "Don't have an Account ? ",
+                            style: TextStyle(fontFamily: 'Outfit', color: Colors.grey, fontSize: 13),
+                            children: [
+                              TextSpan(
+                                text: 'Sign up',
+                                style: TextStyle(
+                                  fontFamily: 'Outfit',
+                                  color: Color(0xFFFF2A6D),
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -2097,12 +2183,8 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => AuthModeSelectionScreen(
-                                onBeginJourney: () {
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(builder: (_) => const GameMap1913Screen()),
-                                  );
-                                },
+                              builder: (_) => const ParentAuthScreen(
+                                initialMode: ParentAuthMode.signup,
                               ),
                             ),
                           );
@@ -2214,7 +2296,17 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                                       titleColor: const Color(0xFF831843),
                                       onTap: () {
                                         HapticFeedback.mediumImpact();
-                                        _goToQuestCategoryScreen();
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (_) => ParentAuthScreen(
+                                              initialMode: ParentAuthMode.childLogin,
+                                              onAuthSuccess: () {
+                                                Navigator.of(context).pop(); // Pop Auth screen
+                                                _goToQuestCategoryScreen(); // Show Ready to Play Category page
+                                              },
+                                            ),
+                                          ),
+                                        );
                                       },
                                     ),
                                   ),
@@ -2232,12 +2324,27 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                                         colors: [Color(0xFFE0F2FE), Color(0xFFBAE6FD)], // Soft Sky Blue
                                       ),
                                       titleColor: const Color(0xFF1E3A8A),
-                                      onTap: () {
+                                      onTap: () async {
                                         HapticFeedback.selectionClick();
-                                        setState(() {
-                                          _showParentPin = true;
-                                          _parentPinInput = '';
-                                        });
+                                        final hasAccount = await ParentRepository.hasParentAccount();
+                                        if (!mounted) return;
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (_) => ParentAuthScreen(
+                                              initialMode: hasAccount ? ParentAuthMode.loginPin : ParentAuthMode.signup,
+                                              onAuthSuccess: () {
+                                                Navigator.of(context).pop(); // Pop Auth screen
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (_) => ParentDashboard(
+                                                      childId: ChildState.instance.currentProfile.id,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        );
                                       },
                                     ),
                                   ),

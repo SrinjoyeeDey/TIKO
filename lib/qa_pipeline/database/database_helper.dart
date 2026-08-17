@@ -13,7 +13,7 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._();
 
   static const String _dbName = 'qs_ans_learning_v2.db';
-  static const int _dbVersion = 3;
+  static const int _dbVersion = 4;
 
   Database? _database;
 
@@ -63,16 +63,81 @@ class DatabaseHelper {
       await db.execute('ALTER TABLE question_attempts ADD COLUMN correct_matches INTEGER');
       await db.execute('ALTER TABLE question_attempts ADD COLUMN total_matches INTEGER');
     }
+    if (oldVersion < 4) {
+      try {
+        await db.execute('ALTER TABLE child_profiles ADD COLUMN parent_id TEXT');
+      } catch (_) {}
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS parents (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          email TEXT NOT NULL UNIQUE,
+          password_hash TEXT NOT NULL,
+          pin_hash TEXT,
+          created_at TEXT NOT NULL,
+          updated_at TEXT NOT NULL
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS sessions (
+          id TEXT PRIMARY KEY,
+          child_id TEXT NOT NULL,
+          parent_id TEXT NOT NULL,
+          started_at TEXT NOT NULL,
+          ended_at TEXT,
+          duration_seconds INTEGER
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS activity_events (
+          id TEXT PRIMARY KEY,
+          child_id TEXT NOT NULL,
+          session_id TEXT NOT NULL,
+          activity_id TEXT NOT NULL,
+          skill TEXT NOT NULL,
+          difficulty INTEGER,
+          success INTEGER,
+          accuracy REAL,
+          reaction_time_ms INTEGER,
+          errors INTEGER,
+          attempt_number INTEGER,
+          input_type TEXT,
+          timestamp TEXT NOT NULL,
+          synced INTEGER NOT NULL DEFAULT 0
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS event_queue (
+          id TEXT PRIMARY KEY,
+          event_json TEXT NOT NULL,
+          created_at TEXT NOT NULL
+        )
+      ''');
+    }
   }
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
+      CREATE TABLE parents (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL UNIQUE,
+        password_hash TEXT NOT NULL,
+        pin_hash TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+      )
+    ''');
+
+    await db.execute('''
       CREATE TABLE child_profiles (
         id TEXT PRIMARY KEY,
+        parent_id TEXT,
         name TEXT NOT NULL,
         age INTEGER,
         class_name TEXT,
-        created_at TEXT NOT NULL
+        created_at TEXT NOT NULL,
+        FOREIGN KEY (parent_id) REFERENCES parents(id)
       )
     ''');
 
@@ -106,6 +171,44 @@ class DatabaseHelper {
         correct_matches INTEGER,
         total_matches INTEGER,
         FOREIGN KEY (child_id) REFERENCES child_profiles(id)
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE sessions (
+        id TEXT PRIMARY KEY,
+        child_id TEXT NOT NULL,
+        parent_id TEXT NOT NULL,
+        started_at TEXT NOT NULL,
+        ended_at TEXT,
+        duration_seconds INTEGER
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE activity_events (
+        id TEXT PRIMARY KEY,
+        child_id TEXT NOT NULL,
+        session_id TEXT NOT NULL,
+        activity_id TEXT NOT NULL,
+        skill TEXT NOT NULL,
+        difficulty INTEGER,
+        success INTEGER,
+        accuracy REAL,
+        reaction_time_ms INTEGER,
+        errors INTEGER,
+        attempt_number INTEGER,
+        input_type TEXT,
+        timestamp TEXT NOT NULL,
+        synced INTEGER NOT NULL DEFAULT 0
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE event_queue (
+        id TEXT PRIMARY KEY,
+        event_json TEXT NOT NULL,
+        created_at TEXT NOT NULL
       )
     ''');
 

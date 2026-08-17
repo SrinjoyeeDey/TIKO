@@ -2,6 +2,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import 'child_profile_selection_screen.dart';
+import 'parent_auth_screen.dart';
+import '../core/services/parent_repository.dart';
 import '../qa_pipeline/screens/parent_dashboard.dart';
 import '../qa_pipeline/database/child_repository.dart';
 
@@ -114,146 +116,17 @@ class _AuthModeSelectionScreenState extends State<AuthModeSelectionScreen>
     );
   }
 
-  void _openParentPinModal() {
-    final List<String> enteredPin = [];
+  void _openParentPinModal() async {
+    final hasAccount = await ParentRepository.hasParentAccount();
+    if (!mounted) return;
 
-    showDialog(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setModalState) {
-          return AlertDialog(
-            backgroundColor: const Color(0xFFFAF6EE),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-              side: const BorderSide(color: Color(0xFF7CB342), width: 1.5),
-            ),
-            title: Column(
-              children: const [
-                Icon(Icons.lock_rounded, size: 36, color: Color(0xFF558B2F)),
-                SizedBox(height: 6),
-                Text(
-                  'Parent Access / 保護者確認',
-                  style: TextStyle(
-                    fontFamily: 'Outfit',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w900,
-                    color: Color(0xFF33691E),
-                  ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  'Enter 4-Digit PIN to access Parent Dashboard',
-                  style: TextStyle(
-                    fontFamily: 'Outfit',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF689F38),
-                  ),
-                ),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(4, (index) {
-                    final isFilled = index < enteredPin.length;
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
-                      width: 18,
-                      height: 18,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isFilled ? const Color(0xFF558B2F) : Colors.transparent,
-                        border: Border.all(color: const Color(0xFF689F38), width: 2),
-                      ),
-                    );
-                  }),
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: 230,
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 12,
-                    runSpacing: 12,
-                    children: [
-                      for (int i = 1; i <= 9; i++)
-                        _buildPinKey(i.toString(), () {
-                          if (enteredPin.length < 4) {
-                            setModalState(() => enteredPin.add(i.toString()));
-                            if (enteredPin.length == 4) {
-                              Navigator.of(context).pop();
-                              _showParentDashboardSnackBar();
-                              _openParentDashboard();
-                            }
-                          }
-                        }),
-                      _buildPinKey('C', () {
-                        setModalState(() => enteredPin.clear());
-                      }),
-                      _buildPinKey('0', () {
-                        if (enteredPin.length < 4) {
-                          setModalState(() => enteredPin.add('0'));
-                          if (enteredPin.length == 4) {
-                            Navigator.of(context).pop();
-                            _showParentDashboardSnackBar();
-                            _openParentDashboard();
-                          }
-                        }
-                      }),
-                      _buildPinKey('⌫', () {
-                        if (enteredPin.isNotEmpty) {
-                          setModalState(() => enteredPin.removeLast());
-                        }
-                      }),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            actionsAlignment: MainAxisAlignment.center,
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cancel', style: TextStyle(color: Color(0xFF689F38), fontWeight: FontWeight.bold)),
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildPinKey(String label, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 52,
-        height: 52,
-        decoration: BoxDecoration(
-          color: const Color(0xFFE8F5E9),
-          shape: BoxShape.circle,
-          border: Border.all(color: const Color(0xFFC5E1A5), width: 1.5),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: const TextStyle(
-              fontFamily: 'Outfit',
-              fontSize: 17,
-              fontWeight: FontWeight.w800,
-              color: Color(0xFF33691E),
-            ),
-          ),
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ParentAuthScreen(
+          initialMode: hasAccount ? ParentAuthMode.loginPin : ParentAuthMode.signup,
+          onAuthSuccess: () {
+            _openParentDashboard();
+          },
         ),
       ),
     );

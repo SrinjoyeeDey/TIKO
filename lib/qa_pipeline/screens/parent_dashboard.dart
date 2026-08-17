@@ -13,6 +13,9 @@ import '../services/analytics_service.dart';
 import '../models/clinical_report_model.dart';
 import '../services/clinical_report_service.dart';
 
+import '../../core/state/child_state.dart';
+import '../../screens/parent_auth_screen.dart';
+
 /// Parent dashboard showing the child's overall learning analytics.
 ///
 /// Displays profile info, progress, section accuracy, time analysis,
@@ -38,7 +41,24 @@ class _ParentDashboardState extends State<ParentDashboard> {
   @override
   void initState() {
     super.initState();
-    _loadData();
+    _verifyRoleAndLoad();
+  }
+
+  Future<void> _verifyRoleAndLoad() async {
+    // Role-based protection: require PARENT role
+    if (ChildState.instance.currentRole != 'PARENT') {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => const ParentAuthScreen(
+              initialMode: ParentAuthMode.loginPin,
+            ),
+          ),
+        );
+      });
+      return;
+    }
+    await _loadData();
   }
 
   Future<void> _loadData() async {

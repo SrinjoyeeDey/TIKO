@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../models/child_profile.dart';
+import '../models/parent_account.dart';
 import '../models/session_model.dart';
 import '../models/event_model.dart';
 import '../models/skill_progress_model.dart';
@@ -12,19 +13,23 @@ import '../api/progress_api.dart';
 import '../api/adaptive_api.dart';
 import '../api/recommendation_api.dart';
 import '../services/event_service.dart';
+import '../services/sync_service.dart';
 import '../../qa_pipeline/database/child_repository.dart';
 
-/// Central reactive state store for active Child Profile, Session, Skill Progress, Adaptive Engine, & Recommendation Engine.
+/// Central reactive state store for active Parent Account, Child Profile, Session, Role, & Telemetry.
 class ChildState {
   ChildState._privateConstructor();
 
   static final ChildState instance = ChildState._privateConstructor();
 
+  /// Reactive active Parent Account
+  final ValueNotifier<ParentAccount?> activeParentNotifier = ValueNotifier<ParentAccount?>(null);
+
   /// Reactive active ChildProfile
   final ValueNotifier<ChildProfile?> activeProfileNotifier = ValueNotifier<ChildProfile?>(
     const ChildProfile(
-      id: 'A001',
-      name: 'Tinna',
+      id: 'child_default',
+      name: 'Aarav',
       xp: 350,
       level: 4,
       streak: 5,
@@ -33,6 +38,9 @@ class ChildState {
 
   /// Reactive active Session
   final ValueNotifier<SessionModel?> activeSessionNotifier = ValueNotifier<SessionModel?>(null);
+
+  /// Reactive active Role ('PARENT' or 'CHILD')
+  final ValueNotifier<String> activeRoleNotifier = ValueNotifier<String>('CHILD');
 
   /// Reactive active Skill Progress map (skill -> SkillProgressModel)
   final ValueNotifier<Map<String, SkillProgressModel>> progressNotifier =
@@ -46,18 +54,24 @@ class ChildState {
   final ValueNotifier<RecommendationModel?> activeRecommendationNotifier =
       ValueNotifier<RecommendationModel?>(null);
 
+  /// Get current active parent
+  ParentAccount? get currentParent => activeParentNotifier.value;
+
+  /// Get current active role ('PARENT' or 'CHILD')
+  String get currentRole => activeRoleNotifier.value;
+
   /// Get current active profile synchronously
   ChildProfile get currentProfile =>
       activeProfileNotifier.value ??
       const ChildProfile(
-        id: 'A001',
-        name: 'Tinna',
+        id: 'child_default',
+        name: 'Aarav',
         xp: 350,
         level: 4,
         streak: 5,
       );
 
-  /// Get current session ID or null (e.g. SES_001)
+  /// Get current session ID
   String? get currentSessionId => activeSessionNotifier.value?.sessionId;
 
   /// Load child profile from backend by Child ID and store in app state
@@ -192,6 +206,58 @@ class ChildState {
       };
       await SessionApi.logInteraction(sid, interactionData);
     }
+  }
+
+  /// Set active Parent Account
+  void setActiveParent(ParentAccount parent) {
+    activeParentNotifier.value = parent;
+  }
+
+  /// Set active role ('PARENT' or 'CHILD')
+  void setRole(String role) {
+    activeRoleNotifier.value = role;
+  }
+
+  /// Log real activity performance event to local SQLite and sync queue
+  Future<void> logActivityEvent({
+    required String activityId,
+    required String skill,
+    int difficulty = 1,
+    bool success = true,
+    double accuracy = 1.0,
+    int reactionTimeMs = 0,
+    int errors = 0,
+    int attemptNumber = 1,
+    String inputType = 'touch',
+    Map<String, dynamic>? extraData,
+  }) async {
+    final childId = currentProfile.id;
+    final parentId = currentProfile.parentId ?? currentParent?.id ?? 'parent_default';
+    final sessionId = currentSessionId ?? 'session_${DateTime.now().millisecondsSinceEpoch}';
+
+    final event = EventModel(
+      eventId: 'evt_${DateTime.now().microsecondsSinceEpoch}',
+      childId: childId,
+      sessionId: sessionId,
+      activityId: activityId,
+      eventType: EventType.activityCompleted,
+      timestamp: DateTime.now().toIso8601String(),
+      data: {
+        'skill': skill,
+        'difficulty': difficulty,
+        'success': success,
+        'accuracy': accuracy,
+        'reactionTimeMs': reactionTimeMs,
+        'errors': errors,
+        'attemptNumber': attemptNumber,
+        'inputType': inputType,
+        'parentId': parentId,
+        ...?extraData,
+      },
+    );
+
+    incrementActivitiesCompleted();
+    await SyncService.instance.queueEvent(event);
   }
 
   /// Formally end active session: backend calculates duration = endedAt - startedAt

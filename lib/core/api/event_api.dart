@@ -48,7 +48,8 @@ class EventApi {
       }
       debugPrint('EventApi.postEvent failed [${response.statusCode}]: ${response.body}');
     } catch (e) {
-      debugPrint('EventApi.postEvent network exception: $e');
+      // Backend server unavailable (offline mode active, using local SQLite cache)
+      debugPrint('EventApi: Backend server offline (localhost:3000). Using local SQLite event buffer.');
     }
     return localFallback;
   }
