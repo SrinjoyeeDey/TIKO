@@ -1,0 +1,481 @@
+﻿{
+  "title": "Introduction to Bharatanatyam",
+  "section": {
+    "start": "00:00",
+    "end": "02:00",
+    "description": "Comprehensive pedagogical question set with multi-tier difficulty calibrated for all learner profiles (Gentle Starter, Balanced Explorer, Curious Adventurer, Challenger, Champion)."
+  },
+  "target_age": 12,
+  "question_pattern": {
+    "main_questions": "Multi-tier MCQs, progressive descriptive questions, and voice pronunciation speech questions.",
+    "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
+    "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
+    "sequence_test": "Chronological milestone ordering and sequence analysis.",
+    "image_matching": "Interactive visual matching connecting dance elements, terms, and descriptions."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "question": "From which Indian state did Bharatanatyam originate?",
+      "options": {
+        "A": "Kerala",
+        "B": "Tamil Nadu",
+        "C": "Odisha",
+        "D": "Rajasthan"
+      },
+      "answer": "B",
+      "answer_text": "Bharatanatyam originated from the state of Tamil Nadu in India.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "question": "What does 'Bha' or 'Bhava' mean in Bharatanatyam?",
+      "options": {
+        "A": "Music",
+        "B": "Dance",
+        "C": "Expression",
+        "D": "Beats"
+      },
+      "answer": "C",
+      "answer_text": "'Bha' or 'Bhava' means expression in Bharatanatyam.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "question": "What does 'Ra' or 'Raga' mean in Bharatanatyam?",
+      "options": {
+        "A": "Dance",
+        "B": "Music",
+        "C": "Expression",
+        "D": "Beats"
+      },
+      "answer": "B",
+      "answer_text": "'Ra' or 'Raga' or 'Ragam' means music in Bharatanatyam.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "question": "What does 'Ta' or 'Thala' mean in Bharatanatyam?",
+      "options": {
+        "A": "Expression",
+        "B": "Music",
+        "C": "Beats",
+        "D": "Dance"
+      },
+      "answer": "C",
+      "answer_text": "'Ta' or 'Thala' or 'Thalam' means beats in Bharatanatyam.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "question": "What does 'Natyam' mean in Bharatanatyam?",
+      "options": {
+        "A": "Beats",
+        "B": "Music",
+        "C": "Expression",
+        "D": "Dance"
+      },
+      "answer": "D",
+      "answer_text": "'Natya' or 'Natyam' means dance in Bharatanatyam.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "question": "What is Tamil?",
+      "options": {
+        "A": "A classical dance style from North India",
+        "B": "One of the oldest languages in the Indian subcontinent",
+        "C": "A type of musical instrument",
+        "D": "A type of rhythm in Bharatanatyam"
+      },
+      "answer": "B",
+      "answer_text": "Tamil is one of the oldest languages in the Indian subcontinent.",
+      "difficulty": "medium",
+      "difficulty_percentage": 40,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "question": "Which of the following best describes Bharatanatyam?",
+      "options": {
+        "A": "A Bollywood dance style from Mumbai",
+        "B": "A modern western performance art",
+        "C": "One of the oldest Indian classical dance forms with a rich heritage",
+        "D": "A folk dance from Rajasthan"
+      },
+      "answer": "C",
+      "answer_text": "Bharatanatyam is one of the oldest Indian classical dance forms with a rich and colorful heritage.",
+      "difficulty": "medium",
+      "difficulty_percentage": 45,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "question": "How many syllables does the word 'Bharatanatyam' have?",
+      "options": {
+        "A": "Two",
+        "B": "Three",
+        "C": "Four",
+        "D": "Five"
+      },
+      "answer": "C",
+      "answer_text": "The word Bharatanatyam has four syllables: Bha, Ra, Ta, Natyam.",
+      "difficulty": "medium",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "question": "What is the complete meaning of the term 'Bharatanatyam'?",
+      "options": {
+        "A": "A dance from Bharat performed by Nata performers",
+        "B": "A beautiful combination of expression, music, beats, and dance",
+        "C": "A classical music concert style",
+        "D": "A sacred ritual performed only in temples"
+      },
+      "answer": "B",
+      "answer_text": "Bharatanatyam is a beautiful combination of expression, music, beats, and dance coming together, creating complete harmony.",
+      "difficulty": "hard",
+      "difficulty_percentage": 65,
+      "difficulty_level": "Challenger"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "question": "Why is Bharatanatyam considered an important cultural heritage?",
+      "options": {
+        "A": "Because it was created by a British artist",
+        "B": "Because it is performed only during weddings",
+        "C": "Because it is one of the oldest dance forms unifying expression, music, rhythm, and movement from Tamil Nadu",
+        "D": "Because it was first performed in Hollywood"
+      },
+      "answer": "C",
+      "answer_text": "Bharatanatyam is important heritage because it is one of the oldest dance forms with a rich history unifying expression, music, beats, and movement rooted in Tamil Nadu culture.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion"
+    },
+    {
+      "id": 11,
+      "type": "descriptive",
+      "question": "What is Bharatanatyam and where did it originate?",
+      "reference_answer": "Bharatanatyam is one of the oldest Indian classical dance forms with a rich and colorful heritage. It originated from the state of Tamil Nadu in India.",
+      "key_concepts": [
+        "oldest",
+        "Indian classical dance form",
+        "Tamil Nadu",
+        "rich heritage"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 12,
+      "type": "descriptive",
+      "question": "Explain what each syllable of the word Bharatanatyam means.",
+      "reference_answer": "The word Bharatanatyam has four syllables. Bha or Bhava means expression. Ra or Raga means music. Ta or Thala means beats. And Natyam means dance.",
+      "key_concepts": [
+        "Bha",
+        "expression",
+        "Ra",
+        "music",
+        "Ta",
+        "beats",
+        "Natyam",
+        "dance"
+      ],
+      "cosine_similarity_threshold": 0.65,
+      "difficulty": "medium",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 13,
+      "type": "descriptive",
+      "question": "How would you define Bharatanatyam's overall meaning and significance as a classical art form?",
+      "reference_answer": "Bharatanatyam is a beautiful combination of expression, music, beats, and dance coming together to create complete harmony. It is one of the oldest dance forms from Tamil Nadu and is part of the rich cultural heritage of India.",
+      "key_concepts": [
+        "expression",
+        "music",
+        "beats",
+        "dance",
+        "harmony",
+        "Tamil Nadu",
+        "classical art form"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger"
+    },
+    {
+      "id": 14,
+      "type": "descriptive",
+      "question": "Critically discuss why understanding the etymology of the word 'Bharatanatyam' helps appreciate this classical art form more deeply.",
+      "reference_answer": "Understanding the etymology — Bha for Bhava (expression), Ra for Raga (music), Ta for Thalam (beats), and Natyam (dance) — reveals that Bharatanatyam is not merely movement, but a holistic art integrating emotional storytelling, melodic musicality, rhythmic precision, and graceful choreography into a unified experience rooted in the ancient Tamil cultural tradition.",
+      "key_concepts": [
+        "Bhava",
+        "expression",
+        "Raga",
+        "music",
+        "Thalam",
+        "beats",
+        "Natyam",
+        "holistic art",
+        "Tamil tradition"
+      ],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion"
+    },
+    {
+      "id": 15,
+      "type": "speech",
+      "question": "Say the name of this beautiful Indian classical dance form:",
+      "target_phrase": "Bharatanatyam",
+      "reference_answer": "Bharatanatyam",
+      "key_concepts": ["Bharatanatyam"],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 16,
+      "type": "speech",
+      "question": "Say the Indian state where Bharatanatyam originated:",
+      "target_phrase": "Tamil Nadu",
+      "reference_answer": "Tamil Nadu",
+      "key_concepts": ["Tamil", "Nadu"],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 17,
+      "type": "speech",
+      "question": "Pronounce the word that means expression in Bharatanatyam:",
+      "target_phrase": "Bhava",
+      "reference_answer": "Bhava",
+      "key_concepts": ["Bhava"],
+      "min_score_threshold": 70,
+      "difficulty": "medium",
+      "difficulty_percentage": 45,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 18,
+      "type": "speech",
+      "question": "Pronounce the word that means beats or rhythm in Bharatanatyam:",
+      "target_phrase": "Thalam",
+      "reference_answer": "Thalam",
+      "key_concepts": ["Thalam"],
+      "min_score_threshold": 70,
+      "difficulty": "medium",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 19,
+      "type": "speech",
+      "question": "Pronounce the word that means music or melody in Bharatanatyam:",
+      "target_phrase": "Ragam",
+      "reference_answer": "Ragam",
+      "key_concepts": ["Ragam"],
+      "min_score_threshold": 70,
+      "difficulty": "hard",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer"
+    },
+    {
+      "id": 20,
+      "type": "speech",
+      "question": "Pronounce this phrase that describes the four pillars of Bharatanatyam:",
+      "target_phrase": "Expression Music Beats Dance",
+      "reference_answer": "Expression Music Beats Dance",
+      "key_concepts": ["Expression", "Music", "Beats", "Dance"],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger"
+    },
+    {
+      "id": 21,
+      "type": "speech",
+      "question": "Pronounce this phrase describing Bharatanatyam's cultural status:",
+      "target_phrase": "Indian Classical Dance Heritage",
+      "reference_answer": "Indian Classical Dance Heritage",
+      "key_concepts": ["Indian", "Classical", "Dance", "Heritage"],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion"
+    }
+  ],
+  "sequence_test": {
+    "description": "These questions test whether the learner understands the breakdown of the syllables and meaning of Bharatanatyam in the correct order.",
+    "questions": [
+      {
+        "id": 22,
+        "type": "sequence_mcq",
+        "question": "What is the first syllable of Bharatanatyam and what does it mean?",
+        "options": {
+          "A": "Ta — meaning beats",
+          "B": "Bha — meaning expression",
+          "C": "Ra — meaning music",
+          "D": "Natyam — meaning dance"
+        },
+        "answer": "B",
+        "answer_text": "The first syllable is 'Bha' which means Bhava or expression.",
+        "difficulty": "easy",
+        "difficulty_percentage": 25,
+        "difficulty_level": "Gentle Starter"
+      },
+      {
+        "id": 23,
+        "type": "sequence_mcq",
+        "question": "Which syllable comes after 'Bha' in Bharatanatyam and what does it represent?",
+        "options": {
+          "A": "Natyam — dance",
+          "B": "Ta — beats",
+          "C": "Ra — music",
+          "D": "Bha — expression"
+        },
+        "answer": "C",
+        "answer_text": "After 'Bha' comes 'Ra' which represents Raga or Ragam meaning music.",
+        "difficulty": "medium",
+        "difficulty_percentage": 45,
+        "difficulty_level": "Balanced Explorer"
+      },
+      {
+        "id": 24,
+        "type": "sequence_mcq",
+        "question": "What is the correct order of syllables that make up the meaning of Bharatanatyam?",
+        "options": {
+          "A": "Natyam -> Bha -> Ra -> Ta",
+          "B": "Ra -> Ta -> Bha -> Natyam",
+          "C": "Bha -> Ra -> Ta -> Natyam",
+          "D": "Ta -> Bha -> Natyam -> Ra"
+        },
+        "answer": "C",
+        "answer_text": "The correct order is Bha (expression) -> Ra (music) -> Ta (beats) -> Natyam (dance).",
+        "difficulty": "medium",
+        "difficulty_percentage": 60,
+        "difficulty_level": "Curious Adventurer"
+      },
+      {
+        "id": 25,
+        "type": "sequence_mcq",
+        "question": "Which timeline correctly describes the conceptual elements of Bharatanatyam in order?",
+        "options": {
+          "A": "Dance -> Expression -> Beats -> Music",
+          "B": "Expression (Bha) -> Music (Ra) -> Beats (Ta) -> Dance (Natyam)",
+          "C": "Music -> Dance -> Expression -> Beats",
+          "D": "Beats -> Music -> Dance -> Expression"
+        },
+        "answer": "B",
+        "answer_text": "The correct sequence is Expression (Bha) -> Music (Ra) -> Beats (Ta) -> Dance (Natyam), creating harmony.",
+        "difficulty": "hard",
+        "difficulty_percentage": 75,
+        "difficulty_level": "Challenger"
+      },
+      {
+        "id": 26,
+        "type": "sequence_mcq",
+        "question": "How do the four elements of Bharatanatyam build upon each other to create a complete artistic experience?",
+        "options": {
+          "A": "They are unrelated elements that perform independently",
+          "B": "Expression sets the emotional tone, music provides melody, beats add rhythm, and dance unifies all into a harmonious whole",
+          "C": "Dance comes first, then music is added, expression is last",
+          "D": "Only beats and dance are essential; expression and music are optional"
+        },
+        "answer": "B",
+        "answer_text": "Expression (Bhava) sets emotional tone, Raga provides melody, Thalam adds rhythmic structure, and Natyam unifies all into complete harmony.",
+        "difficulty": "hard",
+        "difficulty_percentage": 88,
+        "difficulty_level": "Champion"
+      }
+    ]
+  },
+  "image_matching": [
+    {
+      "id": 27,
+      "type": "image_matching",
+      "question": "Match each element of Bharatanatyam with its correct meaning:",
+      "images": [
+        { "id": "img_1", "file": "images/bhava.jpg", "label": "Bhava" },
+        { "id": "img_2", "file": "images/ragam.jpg", "label": "Ragam" },
+        { "id": "img_3", "file": "images/thalam.jpg", "label": "Thalam" }
+      ],
+      "descriptions": [
+        { "id": "desc_1", "text": "The emotional expression shown through the face, eyes, and body of the dancer." },
+        { "id": "desc_2", "text": "The melodic music that forms the musical foundation of the dance." },
+        { "id": "desc_3", "text": "The rhythmic beats that give the dance its time structure and energy." }
+      ],
+      "correct_matches": { "img_1": "desc_1", "img_2": "desc_2", "img_3": "desc_3" },
+      "points": 3,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 28,
+      "type": "image_matching",
+      "question": "Match each Bharatanatyam concept to its deeper significance:",
+      "images": [
+        { "id": "img_1", "file": "images/bharatanatyam_dancer.jpg", "label": "Classical Dancer" },
+        { "id": "img_2", "file": "images/tamil_nadu.jpg", "label": "Tamil Nadu" },
+        { "id": "img_3", "file": "images/natyam.jpg", "label": "Natyam" }
+      ],
+      "descriptions": [
+        { "id": "desc_1", "text": "Represents the living tradition of unifying expression, music, beats, and dance into one harmonious art." },
+        { "id": "desc_2", "text": "The southern Indian state that gave birth to one of the world's oldest classical dance traditions." },
+        { "id": "desc_3", "text": "The Sanskrit word for dance that forms the final and completing syllable of Bharatanatyam." }
+      ],
+      "correct_matches": { "img_1": "desc_1", "img_2": "desc_2", "img_3": "desc_3" },
+      "points": 3,
+      "difficulty": "medium",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer"
+    }
+  ],
+  "scoring": {
+    "mcq": { "points_per_correct_answer": 1 },
+    "descriptive": {
+      "method": "cosine_similarity",
+      "description": "Calculate embedding cosine similarity against reference concepts.",
+      "suggested_interpretation": {
+        "0.80-1.00": "Outstanding Mastery",
+        "0.65-0.79": "Good Conceptual Understanding",
+        "0.50-0.64": "Developing Understanding",
+        "0.00-0.49": "Needs Reinforcement"
+      }
+    },
+    "speech": { "points_per_correct_answer": 1, "min_pass_score": 60 },
+    "sequence_test": { "points_per_correct_answer": 1 },
+    "image_matching": { "points_per_correct_match": 1, "total_points": 3 }
+  }
+}
