@@ -308,10 +308,14 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isSpeechQuestion = _allQuestions.isNotEmpty &&
+        _currentIndex < _allQuestions.length &&
+        _allQuestions[_currentIndex] is SpeechQuestion;
     return Scaffold(
       backgroundColor: const Color(0xFFC5AE79), // Vintage Paper Canvas
       body: CameraEngagementOverlay(
         activityId: 'netaji_${widget.level.id}',
+        isPronunciationScreen: isSpeechQuestion,
         child: Stack(
         children: [
 

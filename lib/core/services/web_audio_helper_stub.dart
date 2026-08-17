@@ -7,4 +7,5 @@ Future<bool> ensureWebCameraReadyImpl() async => false;
 void speakWebTextImpl(String text, VoidCallback onEnded) {}
 void cancelWebSpeechImpl() {}
 void playWebAudioSourceImpl(String src, VoidCallback onEnded) {}
+String? detectFaceLocalImpl() => null;
 

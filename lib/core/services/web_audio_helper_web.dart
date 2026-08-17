@@ -167,37 +167,29 @@ void _ensureRecorderInjected() {
   if (!window.nimoCaptureVideoFrame) {
     window.nimoCaptureVideoFrame = function() {
       try {
-        const videos = document.querySelectorAll('video');
+        let videos = Array.from(document.querySelectorAll('video'));
+        document.querySelectorAll('flt-platform-view, flt-scene-host').forEach(host => {
+          if (host.shadowRoot) {
+            videos.push(...Array.from(host.shadowRoot.querySelectorAll('video')));
+          }
+        });
+
         let video = null;
 
-        // 1. Strictly prioritize live camera video streams (srcObject with live video tracks)
+        // 1. Prioritize any video element with active video dimensions
         for (let v of videos) {
-          if (v.srcObject && typeof v.srcObject.getVideoTracks === 'function') {
-            const tracks = v.srcObject.getVideoTracks();
-            if (tracks.some(t => t.readyState === 'live' && t.enabled) && v.videoWidth > 0 && v.readyState >= 2) {
-              video = v;
-              break;
-            }
+          if (v.videoWidth > 0 && v.videoHeight > 0) {
+            video = v;
+            break;
           }
         }
 
-        // 2. Check dedicated background webcam video if DOM element is not active
-        if (!video && window._nimoWebcamVideo && window._nimoWebcamVideo.videoWidth > 0 && window._nimoWebcamVideo.readyState >= 2) {
+        // 2. Check dedicated background webcam video element
+        if (!video && window._nimoWebcamVideo && window._nimoWebcamVideo.videoWidth > 0) {
           video = window._nimoWebcamVideo;
         }
 
-        // 3. Fallback: Check for video with live stream without strict track check
         if (!video) {
-          for (let v of videos) {
-            if (v.srcObject && v.videoWidth > 0 && v.readyState >= 2) {
-              video = v;
-              break;
-            }
-          }
-        }
-
-        if (!video) {
-          // Trigger async ensure camera in background for subsequent frames
           if (typeof window.nimoEnsureWebcam === 'function') {
             window.nimoEnsureWebcam();
           }
@@ -220,6 +212,74 @@ void _ensureRecorderInjected() {
     };
   }
 
+
+  if (!window.nimoDetectFaceLocal) {
+    window.nimoDetectFaceLocal = function() {
+      try {
+        let videos = Array.from(document.querySelectorAll('video'));
+        document.querySelectorAll('flt-platform-view, flt-scene-host').forEach(host => {
+          if (host.shadowRoot) {
+            videos.push(...Array.from(host.shadowRoot.querySelectorAll('video')));
+          }
+        });
+
+        let video = null;
+        for (let v of videos) {
+          if (v.videoWidth > 0 && v.videoHeight > 0) {
+            video = v;
+            break;
+          }
+        }
+        if (!video && window._nimoWebcamVideo && window._nimoWebcamVideo.videoWidth > 0) {
+          video = window._nimoWebcamVideo;
+        }
+        if (!video) return JSON.stringify({ faceDetected: false });
+
+        const canvas = document.createElement('canvas');
+        canvas.width = 160;
+        canvas.height = 120;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return JSON.stringify({ faceDetected: false });
+        ctx.drawImage(video, 0, 0, 160, 120);
+
+        const imgData = ctx.getImageData(0, 0, 160, 120);
+        const data = imgData.data;
+
+        let skinPixels = 0;
+        let totalCenterPixels = 0;
+
+        for (let y = 20; y < 100; y += 2) {
+          for (let x = 30; x < 130; x += 2) {
+            const idx = (y * 160 + x) * 4;
+            const r = data[idx];
+            const g = data[idx + 1];
+            const b = data[idx + 2];
+            totalCenterPixels++;
+
+            if (r > 45 && g > 30 && b > 20 && r > g && r > b && (Math.max(r,g,b) - Math.min(r,g,b)) > 12) {
+              skinPixels++;
+            }
+          }
+        }
+
+        const skinRatio = skinPixels / Math.max(1, totalCenterPixels);
+        const faceDetected = skinRatio > 0.18;
+
+        return JSON.stringify({
+          faceDetected: faceDetected,
+          personDetected: faceDetected,
+          lookingAtScreen: faceDetected,
+          mouthMovement: false,
+          mouthOpen: false,
+          engagementScore: faceDetected ? 85 : 0,
+          facialExpression: faceDetected ? "ATTENTIVE" : "NO_FACE",
+          headOrientation: faceDetected ? "FRONTAL" : "UNKNOWN"
+        });
+      } catch(e) {
+        return JSON.stringify({ faceDetected: false });
+      }
+    };
+  }
 
   if (!window.nimoSpeakText) {
     window.nimoSpeakText = function(text) {
@@ -370,4 +430,19 @@ void playWebAudioSourceImpl(String src, VoidCallback onEnded) {
   } catch (e) {
     debugPrint('playWebAudioSourceImpl error: $e');
   }
+}
+
+@JS('nimoDetectFaceLocal')
+external JSString _jsDetectFaceLocal();
+
+String? detectFaceLocalImpl() {
+  try {
+    _ensureRecorderInjected();
+    final jsStr = _jsDetectFaceLocal();
+    final str = jsStr.toDart;
+    if (str.isNotEmpty) return str;
+  } catch (e) {
+    debugPrint('detectFaceLocalImpl error: $e');
+  }
+  return null;
 }

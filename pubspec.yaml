@@ -109,15 +109,15 @@ flutter:
     - assets/Netaji/Netaji_8/
     - assets/Netaji/Netaji_9/
     - assets/Netaji/Netaji_0/images/
-    - assets/Success/COVER_IMG/
-    - assets/Success/success_0/
-    - assets/Success/success_1/
-    - assets/Success/success_2/
-    - assets/Success/success_3/
-    - assets/Success/success_4/
-    - assets/Success/success_5/
-    - assets/Success/success_6/
-    - assets/Success/success_7/
+    - question_Answer_pipeline/assets/Success/COVER_IMG/
+    - question_Answer_pipeline/assets/Success/success_0/
+    - question_Answer_pipeline/assets/Success/success_1/
+    - question_Answer_pipeline/assets/Success/success_2/
+    - question_Answer_pipeline/assets/Success/success_3/
+    - question_Answer_pipeline/assets/Success/success_4/
+    - question_Answer_pipeline/assets/Success/success_5/
+    - question_Answer_pipeline/assets/Success/success_6/
+    - question_Answer_pipeline/assets/Success/success_7/
 
 
 

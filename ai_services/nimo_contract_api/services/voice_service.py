@@ -112,6 +112,16 @@ class VoiceInteractionService:
         elif interaction_type in ("LEVEL_COMPLETION", "CELEBRATION"):
             spoken_text, model_used = self._generate_level_celebration(req)
 
+        # ── 6. Looking Away Screen Focus Alert ──────────────────────────────
+        elif interaction_type in ("LOOKING_AWAY_ALERT", "LOOK_BACK"):
+            spoken_text = "Hey explorer! Look back at the screen, let's continue our adventure together!"
+            model_used = "Screen Focus Alert"
+
+        # ── 7. Mouth Open Hesitation Listening Prompt ────────────────────────
+        elif interaction_type in ("MOUTH_OPEN_LISTENING", "LISTENING_PROMPT"):
+            spoken_text = "Yes! I'm listening, go ahead and speak out loud!"
+            model_used = "Pronunciation Listening Encouragement"
+
         # ── Fallback / Direct Text ───────────────────────────────────────────
         else:
             spoken_text = req.customText or req.questionText or req.targetPhrase or "Let's explore together!"

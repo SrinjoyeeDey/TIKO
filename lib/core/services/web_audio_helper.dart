@@ -10,5 +10,6 @@ abstract class WebAudioHelper {
   static void speakText(String text, VoidCallback onEnded) => speakWebTextImpl(text, onEnded);
   static void cancelSpeech() => cancelWebSpeechImpl();
   static void playAudioSource(String src, VoidCallback onEnded) => playWebAudioSourceImpl(src, onEnded);
+  static String? detectFaceLocal() => detectFaceLocalImpl();
 }
 

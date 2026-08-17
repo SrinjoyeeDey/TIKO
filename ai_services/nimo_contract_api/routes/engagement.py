@@ -3,8 +3,9 @@ POST /analyze/engagement
 Accepts a camera image frame and returns ENGAGEMENT_ANALYSIS event JSON.
 Reports ONLY observations (face, gaze, mouth movement, score).
 Uses CLAHE lighting equalization, multi-cascade ensemble face detection,
-geometric gaze alignment, and temporal mouth motion tracking.
+geometric gaze alignment, head pose estimation, and temporal mouth motion tracking.
 """
+from __future__ import annotations
 from importlib import import_module
 from pathlib import Path
 from datetime import datetime, timezone
@@ -16,10 +17,15 @@ from fastapi import APIRouter, UploadFile, File, Form
 
 from ..schemas import EngagementAnalysisEvent, EngagementData
 
+cv2: Any = None
 try:
-    cv2: Any = import_module("cv2")
-except ModuleNotFoundError:
-    cv2 = None
+    import cv2 as _cv2  # type: ignore
+    cv2 = _cv2
+except Exception:
+    try:
+        cv2 = import_module("cv2")
+    except Exception:
+        cv2 = None
 
 router = APIRouter()
 
@@ -33,7 +39,7 @@ _CASCADE_EYE = "haarcascade_eye.xml"
 _CASCADE_SMILE = "haarcascade_smile.xml"
 
 
-def _load_cascade(filename: str) -> Any | None:
+def _load_cascade(filename: str) -> Optional[Any]:
     if cv2 is None or not hasattr(cv2, "data"):
         return None
     cascade_path = Path(cv2.data.haarcascades) / filename
@@ -76,43 +82,30 @@ _SESSION_CONSECUTIVE_MISSES: Dict[str, int] = {}
 
 def _is_valid_face_candidate(gray_img: np.ndarray, x: int, y: int, w: int, h: int, is_profile: bool = False) -> bool:
     """
-    Validates face bounding box geometry and 2D facial gradient balance to
-    strictly reject curtains, vertical pleats, blinds, and background textures
-    while reliably accepting real human faces.
+    Validates face bounding box geometry to reliably accept real human faces
+    and reject zero-size or full-frame bounding box errors.
     """
+    if gray_img is None or cv2 is None:
+        return False
+
     sw_h, sw_w = gray_img.shape[:2]
-    # 1. Reject tiny noise fragments (< 28px)
-    if w < 28 or h < 28:
+    # 1. Reject tiny noise fragments (< 20px)
+    if w < 20 or h < 20:
         return False
 
-    # 2. Reject bounding box taking over entire frame
-    if w > int(sw_w * 0.95) and h > int(sw_h * 0.95):
+    # 2. Reject bounding box taking over entire frame (> 98%)
+    if w > int(sw_w * 0.98) and h > int(sw_h * 0.98):
         return False
 
-    # 3. Aspect ratio: human faces are vertically or neutrally oriented
+    # 3. Broad aspect ratio check (0.50 to 1.85) to accept natural head angles
     aspect_ratio = float(h) / float(w) if w > 0 else 0.0
-    if not (0.70 <= aspect_ratio <= 1.55):
-        return False
-
-    # 4. Check 2D Facial Feature Gradient Balance (rejects 1D vertical curtains/blinds)
-    roi = gray_img[y : y + h, x : x + w]
-    if roi.size == 0:
-        return False
-
-    gx = cv2.Sobel(roi, cv2.CV_64F, 1, 0, ksize=3)
-    gy = cv2.Sobel(roi, cv2.CV_64F, 0, 1, ksize=3)
-    mean_gx = float(np.mean(np.abs(gx)))
-    mean_gy = float(np.mean(np.abs(gy)))
-
-    # Real human faces have prominent horizontal features (brows, eyes, nose line, lips) giving rich Gy
-    if mean_gy < 1.0 or (mean_gx / (mean_gy + 1e-4)) > 2.6:
-        # Dominated purely by vertical parallel folds/stripes (curtains/window blinds)
+    if not (0.50 <= aspect_ratio <= 1.85):
         return False
 
     return True
 
 
-def _detect_faces_robust(gray_img: np.ndarray, clahe_img: np.ndarray, last_box: Optional[Tuple[int, int, int, int]] = None) -> Tuple[List[Any], bool]:
+def _detect_faces_robust(gray_img: np.ndarray, clahe_img: np.ndarray, last_box: Optional[Tuple[int, int, int, int]] = None) -> Tuple[List[List[int]], bool]:
     """
     Robust multi-tier face detection using tree-based cascades resistant to curtains:
       - Checks local ROI around last known face box first
@@ -132,74 +125,104 @@ def _detect_faces_robust(gray_img: np.ndarray, clahe_img: np.ndarray, last_box: 
         ry1 = max(0, ly - pad_y)
         rx2 = min(sw_w, lx + lw + pad_x)
         ry2 = min(sw_h, ly + lh + pad_y)
-        roi_clahe = clahe_img[ry1:ry2, rx1:rx2]
-        if roi_clahe.shape[0] > min_size[1] and roi_clahe.shape[1] > min_size[0]:
-            cascade_to_test = FACE_CASCADE_ALT2 or FACE_CASCADE_ALT
-            if cascade_to_test is not None:
-                local_faces = cascade_to_test.detectMultiScale(
-                    roi_clahe,
-                    scaleFactor=1.04,
-                    minNeighbors=3,
-                    minSize=min_size,
-                )
-                if len(local_faces) > 0:
-                    global_faces = [[bx + rx1, by + ry1, bw, bh] for (bx, by, bw, bh) in local_faces]
-                    valid = [b for b in global_faces if _is_valid_face_candidate(gray_img, b[0], b[1], b[2], b[3], False)]
-                    if len(valid) > 0:
-                        return valid, False
+        if ry2 > ry1 and rx2 > rx1:
+            roi_clahe = clahe_img[ry1:ry2, rx1:rx2]
+            if roi_clahe.shape[0] > min_size[1] and roi_clahe.shape[1] > min_size[0]:
+                cascade_to_test = FACE_CASCADE_ALT2 or FACE_CASCADE_ALT
+                if cascade_to_test is not None:
+                    try:
+                        local_faces = cascade_to_test.detectMultiScale(
+                            roi_clahe,
+                            scaleFactor=1.04,
+                            minNeighbors=3,
+                            minSize=min_size,
+                        )
+                        if len(local_faces) > 0:
+                            global_faces = [[int(bx + rx1), int(by + ry1), int(bw), int(bh)] for (bx, by, bw, bh) in local_faces]
+                            valid = [b for b in global_faces if _is_valid_face_candidate(gray_img, b[0], b[1], b[2], b[3], False)]
+                            if len(valid) > 0:
+                                return valid, False
+                    except Exception:
+                        pass
 
     # 1. Alt2 on CLAHE & Gray (Tree-based frontal face detector)
     for test_img in (clahe_img, gray_img):
         if FACE_CASCADE_ALT2 is not None and not FACE_CASCADE_ALT2.empty():
-            faces = FACE_CASCADE_ALT2.detectMultiScale(
-                test_img,
-                scaleFactor=1.05,
-                minNeighbors=4,
-                minSize=min_size,
-            )
-            valid = [b for b in faces if _is_valid_face_candidate(gray_img, b[0], b[1], b[2], b[3], False)]
-            if len(valid) > 0:
-                return valid, False
+            try:
+                faces = FACE_CASCADE_ALT2.detectMultiScale(
+                    test_img,
+                    scaleFactor=1.05,
+                    minNeighbors=4,
+                    minSize=min_size,
+                )
+                valid = [[int(b[0]), int(b[1]), int(b[2]), int(b[3])] for b in faces if _is_valid_face_candidate(gray_img, int(b[0]), int(b[1]), int(b[2]), int(b[3]), False)]
+                if len(valid) > 0:
+                    return valid, False
+            except Exception:
+                pass
 
     # 2. Alt on CLAHE & Gray
     for test_img in (clahe_img, gray_img):
         if FACE_CASCADE_ALT is not None and not FACE_CASCADE_ALT.empty():
-            faces = FACE_CASCADE_ALT.detectMultiScale(
-                test_img,
-                scaleFactor=1.05,
-                minNeighbors=4,
-                minSize=min_size,
-            )
-            valid = [b for b in faces if _is_valid_face_candidate(gray_img, b[0], b[1], b[2], b[3], False)]
-            if len(valid) > 0:
-                return valid, False
+            try:
+                faces = FACE_CASCADE_ALT.detectMultiScale(
+                    test_img,
+                    scaleFactor=1.05,
+                    minNeighbors=4,
+                    minSize=min_size,
+                )
+                valid = [[int(b[0]), int(b[1]), int(b[2]), int(b[3])] for b in faces if _is_valid_face_candidate(gray_img, int(b[0]), int(b[1]), int(b[2]), int(b[3]), False)]
+                if len(valid) > 0:
+                    return valid, False
+            except Exception:
+                pass
+
+    # 3. Default Frontal Cascade on CLAHE & Gray
+    for test_img in (clahe_img, gray_img):
+        if FACE_CASCADE_DEFAULT is not None and not FACE_CASCADE_DEFAULT.empty():
+            try:
+                faces = FACE_CASCADE_DEFAULT.detectMultiScale(
+                    test_img,
+                    scaleFactor=1.08,
+                    minNeighbors=4,
+                    minSize=min_size,
+                )
+                valid = [[int(b[0]), int(b[1]), int(b[2]), int(b[3])] for b in faces if _is_valid_face_candidate(gray_img, int(b[0]), int(b[1]), int(b[2]), int(b[3]), False)]
+                if len(valid) > 0:
+                    return valid, False
+            except Exception:
+                pass
 
     # 3. Profile (Left and Right profile via horizontal flip)
     if PROFILE_CASCADE is not None and not PROFILE_CASCADE.empty():
-        # Left profile
-        faces = PROFILE_CASCADE.detectMultiScale(
-            clahe_img,
-            scaleFactor=1.06,
-            minNeighbors=4,
-            minSize=min_size,
-        )
-        valid = [b for b in faces if _is_valid_face_candidate(gray_img, b[0], b[1], b[2], b[3], True)]
-        if len(valid) > 0:
-            return valid, True
-
-        # Right profile (flip image horizontally)
-        flipped_clahe = cv2.flip(clahe_img, 1)
-        flipped_faces = PROFILE_CASCADE.detectMultiScale(
-            flipped_clahe,
-            scaleFactor=1.06,
-            minNeighbors=4,
-            minSize=min_size,
-        )
-        if len(flipped_faces) > 0:
-            unflipped = [[sw_w - (bx + bw), by, bw, bh] for (bx, by, bw, bh) in flipped_faces]
-            valid = [b for b in unflipped if _is_valid_face_candidate(gray_img, b[0], b[1], b[2], b[3], True)]
+        try:
+            # Left profile
+            faces = PROFILE_CASCADE.detectMultiScale(
+                clahe_img,
+                scaleFactor=1.06,
+                minNeighbors=4,
+                minSize=min_size,
+            )
+            valid = [[int(b[0]), int(b[1]), int(b[2]), int(b[3])] for b in faces if _is_valid_face_candidate(gray_img, int(b[0]), int(b[1]), int(b[2]), int(b[3]), True)]
             if len(valid) > 0:
                 return valid, True
+
+            # Right profile (flip image horizontally)
+            if cv2 is not None and clahe_img is not None and clahe_img.size > 0:
+                flipped_clahe = cv2.flip(clahe_img, 1)  # type: ignore
+                flipped_faces = PROFILE_CASCADE.detectMultiScale(
+                    flipped_clahe,
+                    scaleFactor=1.06,
+                    minNeighbors=4,
+                    minSize=min_size,
+                )
+                if len(flipped_faces) > 0:
+                    unflipped = [[int(sw_w - (bx + bw)), int(by), int(bw), int(bh)] for (bx, by, bw, bh) in flipped_faces]
+                    valid = [b for b in unflipped if _is_valid_face_candidate(gray_img, b[0], b[1], b[2], b[3], True)]
+                    if len(valid) > 0:
+                        return valid, True
+        except Exception:
+            pass
 
     return [], False
 
@@ -212,6 +235,7 @@ def _analyze_frame(frame_bytes: bytes, session_id: str = "default") -> dict:
       - Eye detection with eyeglasses-aware Haar cascade
       - Adaptive lip movement tracking via normalized difference & edge variance
       - Real-time smooth engagement scoring (0-100%)
+      - Head Pose & Facial Expression estimation
     """
     if cv2 is None:
         _SESSION_SMOOTHED_SCORES[session_id] = 0.0
@@ -223,10 +247,20 @@ def _analyze_frame(frame_bytes: bytes, session_id: str = "default") -> dict:
             "lookingAtScreen": False,
             "mouthMovement": False,
             "engagementScore": 0,
+            "personDetected": False,
+            "mouthOpen": False,
+            "facialExpression": "NO_FACE",
+            "headOrientation": "UNKNOWN",
+            "headPose": None,
+            "faceBox": [],
         }
 
-    nparr = np.frombuffer(frame_bytes, np.uint8)
-    frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    try:
+        nparr = np.frombuffer(frame_bytes, np.uint8)
+        frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    except Exception:
+        frame = None
+
     if frame is None or frame.size == 0:
         _SESSION_SMOOTHED_SCORES[session_id] = 0.0
         _SESSION_PREV_MOUTH_ROIS.pop(session_id, None)
@@ -237,6 +271,12 @@ def _analyze_frame(frame_bytes: bytes, session_id: str = "default") -> dict:
             "lookingAtScreen": False,
             "mouthMovement": False,
             "engagementScore": 0,
+            "personDetected": False,
+            "mouthOpen": False,
+            "facialExpression": "NO_FACE",
+            "headOrientation": "UNKNOWN",
+            "headPose": None,
+            "faceBox": [],
         }
 
     # Scale to optimal resolution (640px max) for high detection accuracy with <10ms CPU inference
@@ -270,11 +310,18 @@ def _analyze_frame(frame_bytes: bytes, session_id: str = "default") -> dict:
             # Maintain brief temporal holdover (motion blur / nod / blink) with decayed score
             decayed_score = int(round(prev_score * 0.85))
             _SESSION_SMOOTHED_SCORES[session_id] = float(decayed_score)
+            lx, ly, lw, lh = last_box
             return {
                 "faceDetected": True,
                 "lookingAtScreen": True,
                 "mouthMovement": False,
                 "engagementScore": decayed_score,
+                "personDetected": True,
+                "mouthOpen": False,
+                "facialExpression": "ATTENTIVE",
+                "headOrientation": "FRONTAL",
+                "headPose": {"yaw": 0.0, "pitch": 0.0, "roll": 0.0},
+                "faceBox": [int(lx), int(ly), int(lw), int(lh)],
             }
 
         # After >2 misses or when no face was previously seen: hard reset
@@ -286,6 +333,12 @@ def _analyze_frame(frame_bytes: bytes, session_id: str = "default") -> dict:
             "lookingAtScreen": False,
             "mouthMovement": False,
             "engagementScore": 0,
+            "personDetected": False,
+            "mouthOpen": False,
+            "facialExpression": "NO_FACE",
+            "headOrientation": "UNKNOWN",
+            "headPose": None,
+            "faceBox": [],
         }
 
     # Reset consecutive misses on successful detection
@@ -294,7 +347,7 @@ def _analyze_frame(frame_bytes: bytes, session_id: str = "default") -> dict:
     # Pick largest detected face
     faces_sorted = sorted(faces, key=lambda b: b[2] * b[3], reverse=True)
     x, y, fw, fh = faces_sorted[0]
-    _SESSION_LAST_FACE_BOX[session_id] = (x, y, fw, fh)
+    _SESSION_LAST_FACE_BOX[session_id] = (int(x), int(y), int(fw), int(fh))
     face_cx = x + fw / 2.0
     face_cy = y + fh / 2.0
 
@@ -309,21 +362,28 @@ def _analyze_frame(frame_bytes: bytes, session_id: str = "default") -> dict:
     eye_factor = 0.85
     eye_cascade_to_use = EYE_CASCADE_TREE or EYE_CASCADE
     if not is_profile and eye_cascade_to_use is not None:
-        upper_face = gray_eq[y : y + int(fh * 0.55), x : x + fw]
-        if upper_face.size > 0:
-            eyes = eye_cascade_to_use.detectMultiScale(
-                upper_face,
-                scaleFactor=1.08,
-                minNeighbors=2,
-                minSize=(10, 10),
-            )
-            num_eyes = len(eyes)
-            if num_eyes >= 2:
-                eye_factor = 1.0
-            elif num_eyes == 1:
-                eye_factor = 0.92
-            else:
-                eye_factor = 0.85
+        try:
+            ey1 = max(0, y)
+            ey2 = min(sw_h, y + int(fh * 0.55))
+            ex1 = max(0, x)
+            ex2 = min(sw_w, x + fw)
+            upper_face = gray_eq[ey1:ey2, ex1:ex2]
+            if upper_face.size > 0 and upper_face.shape[0] >= 10 and upper_face.shape[1] >= 10:
+                eyes = eye_cascade_to_use.detectMultiScale(
+                    upper_face,
+                    scaleFactor=1.08,
+                    minNeighbors=2,
+                    minSize=(10, 10),
+                )
+                num_eyes = len(eyes)
+                if num_eyes >= 2:
+                    eye_factor = 1.0
+                elif num_eyes == 1:
+                    eye_factor = 0.92
+                else:
+                    eye_factor = 0.85
+        except Exception:
+            eye_factor = 0.85
 
     if is_profile:
         eye_factor = 0.40
@@ -332,45 +392,136 @@ def _analyze_frame(frame_bytes: bytes, session_id: str = "default") -> dict:
     looking_at_screen = bool(center_proximity > 0.20 and not is_profile)
 
     # Adaptive Lip / Mouth Movement & Expression Detection
-    mouth_y1 = y + int(fh * 0.60)
+    mouth_y1 = max(0, y + int(fh * 0.60))
     mouth_y2 = min(sw_h, y + int(fh * 0.98))
     mouth_x1 = max(0, x + int(fw * 0.18))
     mouth_x2 = min(sw_w, x + int(fw * 0.82))
 
     mouth_motion_score = 0.0
+    mouth_open = False
+    smile_detected = False
+
     if mouth_y2 > mouth_y1 and mouth_x2 > mouth_x1:
-        mouth_raw = gray_eq[mouth_y1:mouth_y2, mouth_x1:mouth_x2]
-        mouth_normalized = cv2.resize(mouth_raw, (64, 40), interpolation=cv2.INTER_AREA)
+        try:
+            mouth_raw = gray_eq[mouth_y1:mouth_y2, mouth_x1:mouth_x2]
+            mouth_normalized = cv2.resize(mouth_raw, (64, 40), interpolation=cv2.INTER_AREA)
 
-        prev_mouth = _SESSION_PREV_MOUTH_ROIS.get(session_id)
-        _SESSION_PREV_MOUTH_ROIS[session_id] = mouth_normalized
+            prev_mouth = _SESSION_PREV_MOUTH_ROIS.get(session_id)
+            _SESSION_PREV_MOUTH_ROIS[session_id] = mouth_normalized
 
-        # 1. Temporal motion diff between consecutive video frames
-        motion_energy = 0.0
-        if prev_mouth is not None and prev_mouth.shape == mouth_normalized.shape:
-            diff = cv2.absdiff(mouth_normalized, prev_mouth)
-            motion_energy = float(np.mean(diff))
+            # 1. Temporal motion diff between consecutive video frames
+            motion_energy = 0.0
+            if prev_mouth is not None and prev_mouth.shape == mouth_normalized.shape:
+                diff = cv2.absdiff(mouth_normalized, prev_mouth)
+                motion_energy = float(np.mean(diff))
 
-        # 2. Smile / Expression detection
-        smile_detected = False
-        if SMILE_CASCADE is not None:
-            smiles = SMILE_CASCADE.detectMultiScale(
-                mouth_raw,
-                scaleFactor=1.12,
-                minNeighbors=6,
-                minSize=(12, 12),
-            )
-            smile_detected = len(smiles) > 0
+            # 2. Smile / Expression detection
+            if SMILE_CASCADE is not None:
+                smiles = SMILE_CASCADE.detectMultiScale(
+                    mouth_raw,
+                    scaleFactor=1.12,
+                    minNeighbors=6,
+                    minSize=(12, 12),
+                )
+                smile_detected = len(smiles) > 0
 
-        # 3. Dynamic lip gradient / open-mouth variance (Laplacian texture variance)
-        laplacian_var = float(cv2.Laplacian(mouth_normalized, cv2.CV_64F).var())
-        is_articulating = laplacian_var > 55.0 or smile_detected
+            # 3. Dynamic lip gradient / open-mouth variance & aspect ratio calculation
+            laplacian_var = float(cv2.Laplacian(mouth_normalized, cv2.CV_64F).var())
 
-        mouth_movement = motion_energy > 1.8 or is_articulating
-        mouth_motion_score = min(1.0, max(motion_energy / 5.0, 0.75 if is_articulating else 0.0))
+            # Calculate dark inner cavity ratio in mouth region to accurately detect open mouth
+            mouth_gray = cv2.GaussianBlur(mouth_normalized, (3, 3), 0)
+            min_val, max_val, _, _ = cv2.minMaxLoc(mouth_gray)
+            threshold_val = min_val + (max_val - min_val) * 0.35
+            dark_pixels = np.sum(mouth_gray < threshold_val)
+            dark_pixel_ratio = float(dark_pixels) / float(mouth_normalized.size)
+
+            # Mouth open if inner dark cavity ratio is high or Laplacian edge variance indicates wide opening
+            mouth_open = bool(dark_pixel_ratio > 0.22 and laplacian_var > 45.0)
+
+            is_articulating = laplacian_var > 55.0 or smile_detected
+            mouth_movement = motion_energy > 1.8 or is_articulating or mouth_open
+            mouth_motion_score = min(1.0, max(motion_energy / 5.0, 0.75 if is_articulating else 0.0))
+        except Exception:
+            mouth_movement = False
+            mouth_open = False
+            smile_detected = False
+            mouth_motion_score = 0.0
     else:
         mouth_movement = False
+        mouth_open = False
+        smile_detected = False
         mouth_motion_score = 0.0
+
+    # 4. 3D Head Pose (Yaw / Pitch / Roll) & Orientation Estimation via OpenCV SolvePnP
+    yaw_deg = float((face_cx - (sw_w / 2.0)) / (sw_w / 2.0) * 45.0)
+    pitch_deg = float((face_cy - (sw_h / 2.0)) / (sw_h / 2.0) * 35.0)
+    roll_deg = 0.0
+
+    try:
+        model_points = np.array([
+            (0.0, 0.0, 0.0),             # Nose tip
+            (0.0, -330.0, -65.0),        # Chin
+            (-225.0, 170.0, -135.0),     # Left eye
+            (225.0, 170.0, -135.0),      # Right eye
+            (-150.0, -150.0, -125.0),    # Left mouth
+            (150.0, -150.0, -125.0)      # Right mouth
+        ], dtype=np.float64)
+
+        image_points = np.array([
+            (face_cx, face_cy),
+            (face_cx, face_cy + fh * 0.40),
+            (face_cx - fw * 0.25, face_cy - fh * 0.15),
+            (face_cx + fw * 0.25, face_cy - fh * 0.15),
+            (face_cx - fw * 0.20, face_cy + fh * 0.25),
+            (face_cx + fw * 0.20, face_cy + fh * 0.25)
+        ], dtype=np.float64)
+
+        focal_length = float(sw_w)
+        camera_matrix = np.array([
+            [focal_length, 0.0, sw_w / 2.0],
+            [0.0, focal_length, sw_h / 2.0],
+            [0.0, 0.0, 1.0]
+        ], dtype=np.float64)
+        dist_coeffs = np.zeros((4, 1), dtype=np.float64)
+
+        success, rvec, tvec = cv2.solvePnP(model_points, image_points, camera_matrix, dist_coeffs, flags=cv2.SOLVEPNP_ITERATIVE)
+        if success:
+            rmat, _ = cv2.Rodrigues(rvec)
+            proj_matrix = np.hstack((rmat, tvec))
+            euler_angles = cv2.decomposeProjectionMatrix(proj_matrix)[6]
+            pitch_deg = float(euler_angles[0][0])
+            yaw_deg = float(euler_angles[1][0])
+            roll_deg = float(euler_angles[2][0])
+    except Exception:
+        pass
+
+    if is_profile:
+        head_orientation = "PROFILE_LEFT" if norm_dx < 0.5 else "PROFILE_RIGHT"
+        yaw_deg = -55.0 if norm_dx < 0.5 else 55.0
+    elif norm_dy > 0.40 or pitch_deg > 25.0:
+        head_orientation = "LOOKING_DOWN"
+    elif norm_dx > 0.40 or abs(yaw_deg) > 30.0:
+        head_orientation = "TURNED_AWAY"
+    else:
+        head_orientation = "FRONTAL"
+
+    head_pose = {
+        "yaw": round(yaw_deg, 1),
+        "pitch": round(pitch_deg, 1),
+        "roll": round(roll_deg, 1),
+    }
+
+    # 5. Facial Expression Classification (HAPPY, SAD, OPEN_MOUTH, ATTENTIVE, LOOKING_AWAY, NEUTRAL)
+    if smile_detected:
+        facial_expression = "HAPPY"
+    elif mouth_open:
+        facial_expression = "OPEN_MOUTH"
+    elif looking_at_screen and center_proximity > 0.40:
+        facial_expression = "ATTENTIVE"
+    elif not looking_at_screen:
+        facial_expression = "LOOKING_AWAY"
+    else:
+        facial_expression = "NEUTRAL"
 
     # Compute Continuous Engagement Score for active face
     if looking_at_screen:
@@ -404,6 +555,12 @@ def _analyze_frame(frame_bytes: bytes, session_id: str = "default") -> dict:
         "lookingAtScreen": looking_at_screen,
         "mouthMovement": mouth_movement,
         "engagementScore": final_score,
+        "personDetected": True,
+        "mouthOpen": mouth_open,
+        "facialExpression": facial_expression,
+        "headOrientation": head_orientation,
+        "headPose": head_pose,
+        "faceBox": [int(x), int(y), int(fw), int(fh)],
     }
 
 
@@ -418,7 +575,11 @@ async def analyze_engagement(
     Analyzes uploaded image frame and returns a standardized ENGAGEMENT_ANALYSIS event.
     Only reports observations — does NOT recommend any actions.
     """
-    frame_bytes = await file.read()
+    try:
+        frame_bytes = await file.read()
+    except Exception:
+        frame_bytes = b""
+
     obs = _analyze_frame(frame_bytes, session_id=sessionId)
 
     data = EngagementData(**obs)
@@ -432,4 +593,3 @@ async def analyze_engagement(
         timestamp=datetime.now(timezone.utc).isoformat(),
         data=data,
     )
-

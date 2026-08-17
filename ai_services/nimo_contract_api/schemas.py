@@ -51,6 +51,12 @@ class EngagementData(BaseModel):
     lookingAtScreen: bool
     mouthMovement: bool
     engagementScore: int       # 0 – 100
+    personDetected: Optional[bool] = True
+    mouthOpen: Optional[bool] = False
+    facialExpression: Optional[str] = "NEUTRAL"
+    headOrientation: Optional[str] = "FRONTAL"
+    headPose: Optional[Dict[str, Any]] = None
+    faceBox: Optional[List[int]] = None
 
 
 class EngagementAnalysisEvent(NIMOEvent):
