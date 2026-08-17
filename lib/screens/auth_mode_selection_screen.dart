@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'child_profile_selection_screen.dart';
 import 'parent_auth_screen.dart';
+import 'sego_concept_screen.dart';
+import '../core/state/child_state.dart';
 import '../core/services/parent_repository.dart';
 import '../qa_pipeline/screens/parent_dashboard.dart';
 import '../qa_pipeline/database/child_repository.dart';
@@ -122,6 +124,7 @@ class _AuthModeSelectionScreenState extends State<AuthModeSelectionScreen>
         builder: (_) => ParentAuthScreen(
           initialMode: ParentAuthMode.loginPin,
           onAuthSuccess: () {
+            Navigator.of(context).pop(); // Pop Auth screen modal
             _openParentDashboard();
           },
         ),
@@ -151,21 +154,30 @@ class _AuthModeSelectionScreenState extends State<AuthModeSelectionScreen>
           borderRadius: BorderRadius.circular(14),
           side: const BorderSide(color: Color(0xFFAED581), width: 1.2),
         ),
-        duration: const Duration(seconds: 3),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
 
   void _openParentDashboard() async {
-    await Future.delayed(const Duration(milliseconds: 1000));
-    if (!mounted) return;
-    
-    var child = await ChildRepository.getActiveChild();
-    // The profile picker in the main app starts with Tinna. Create the linked
-    // analytics profile once so the Parent section never falls back to Unknown.
-    child ??= await ChildRepository.createChild(name: 'Tinna');
-    final childId = child.id;
-    
+    final activeParent = await ParentRepository.getActiveParent();
+    final parentId = activeParent?.id ?? 'default_parent';
+    final isCompleted = await ParentRepository.isOnboardingCompleted(parentId);
+
+    if (!isCompleted) {
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => const SegoConceptScreen(initialPage: 1),
+          ),
+        );
+      }
+      return;
+    }
+
+    final children = await ParentRepository.getChildrenForParent(parentId);
+    final childId = children.isNotEmpty ? children.first.id : 'child_demo';
+
     if (mounted) {
       Navigator.of(context).push(
         MaterialPageRoute(

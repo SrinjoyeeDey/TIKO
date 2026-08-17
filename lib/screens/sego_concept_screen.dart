@@ -399,41 +399,114 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
 
   void _goToAgeSelection() {
     if (_takeoverPageController.hasClients) {
-      _takeoverPageController.animateToPage(
-        1,
-        duration: const Duration(milliseconds: 700),
-        curve: Curves.easeOutQuart,
-      );
+      _takeoverPageController.jumpToPage(1);
     }
   }
 
+  void _showRegistrationSuccessDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogCtx) {
+        return BackdropFilter(
+          filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Dialog(
+            backgroundColor: const Color(0xEE18181B),
+            elevation: 16,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(28),
+              side: BorderSide(color: const Color(0xFF10B981).withValues(alpha: 0.6), width: 1.5),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 64,
+                    height: 64,
+                    decoration: BoxDecoration(
+                      color: const Color(0x2210B981),
+                      shape: BoxShape.circle,
+                      border: Border.all(color: const Color(0xFF10B981), width: 2),
+                      boxShadow: const [
+                        BoxShadow(color: Color(0x4410B981), blurRadius: 18, spreadRadius: 2),
+                      ],
+                    ),
+                    child: const Center(
+                      child: Icon(Icons.check_circle_rounded, color: Color(0xFF10B981), size: 36),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Registration Successful ✓',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Outfit',
+                      fontSize: 21,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Learner age (${_currentAge.round()} Years) saved. Proceed to complete child developmental assessment.',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontFamily: 'Outfit',
+                      fontSize: 13,
+                      color: Color(0xFF9CA3AF),
+                      height: 1.3,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(dialogCtx).pop();
+                        if (_takeoverPageController.hasClients) {
+                          _takeoverPageController.jumpToPage(2);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF10B981),
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Continue to Questionnaire', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 14)),
+                          SizedBox(width: 8),
+                          Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 18),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void _goToSpeechLevelScreen() {
-    if (_takeoverPageController.hasClients) {
-      _takeoverPageController.animateToPage(
-        2,
-        duration: const Duration(milliseconds: 700),
-        curve: Curves.easeOutQuart,
-      );
-    }
+    _showRegistrationSuccessDialog();
   }
 
   void _goToTakeoverScreen() {
     if (_takeoverPageController.hasClients) {
-      _takeoverPageController.animateToPage(
-        0,
-        duration: const Duration(milliseconds: 700),
-        curve: Curves.easeOutQuart,
-      );
+      _takeoverPageController.jumpToPage(0);
     }
   }
 
   void _goToQuestCategoryScreen() {
     if (_takeoverPageController.hasClients) {
-      _takeoverPageController.animateToPage(
-        3,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOutCubic,
-      );
+      _takeoverPageController.jumpToPage(3);
     }
   }
 
@@ -500,12 +573,12 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
               // Topo Lines
               Positioned.fill(child: CustomPaint(painter: TopoLinesPainter())),
 
-              // 3-Page Vertical Navigation (Permanently Mounted)
+              // 5-Page Navigation (Programmatic Flow Controlled - NeverScrollable)
               Positioned.fill(
                 child: PageView(
                   controller: _takeoverPageController,
                   scrollDirection: Axis.vertical,
-                  physics: const BouncingScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   children: [
                     // Page 0: Expression Entry Screen ("How was your day?")
                     _buildOnboardingSplashScreen(context),
@@ -1998,125 +2071,55 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
 
   // SCREEN 2: SPEECH LEVEL SELECTION SCREEN (PRELIMINARY Question & Assessment Flow)
   Widget _buildSpeechLevelScreen(BuildContext context, _AgeTheme theme) {
-    final double progressPercent = (_assessmentStep + 1) / 16.0;
+    const int totalQuestions = 29;
 
-    return GestureDetector(
-      onVerticalDragEnd: (details) {
-        if (details.primaryVelocity != null &&
-            details.primaryVelocity! < -150) {
-          if (_assessmentStep < 15) {
-            setState(() => _assessmentStep++);
-          } else {
-            _goToQuestCategoryScreen();
-          }
-        }
-      },
-      behavior: HitTestBehavior.translucent,
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF3B82F6),
+            Color(0xFF6366F1),
+            Color(0xFFDBEAFE),
+          ],
+        ),
+      ),
       child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Top Bar Navigation & Progress
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Back Button
-                  GestureDetector(
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                      if (_assessmentStep > 0) {
-                        setState(() => _assessmentStep--);
-                      } else {
-                        _goToAgeSelection();
-                      }
-                    },
-                    child: Container(
-                      width: 44,
-                      height: 44,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x15000000),
-                            blurRadius: 10,
-                            offset: Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back_ios_new_rounded,
-                        color: Color(0xFF0F172A),
-                        size: 18,
-                      ),
-                    ),
-                  ),
-
-                  // Progress Bar Pill (Dynamic 16-Step Fill)
-                  Container(
-                    width: 140,
-                    height: 10,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.35),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeOutCubic,
-                        width: 140.0 * progressPercent,
-                        height: 10,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF10B981),
-                          borderRadius: BorderRadius.circular(5),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0x35000000),
-                              blurRadius: 4,
-                            ),
-                          ],
+        child: Center(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            child: _SpeechLevelSelectorWidget(
+              theme: theme,
+              step: _assessmentStep,
+              childName: _childName,
+              onNextStep: () async {
+                if (_assessmentStep < totalQuestions - 1) {
+                  setState(() => _assessmentStep++);
+                } else {
+                  final parent = await ParentRepository.getActiveParent();
+                  final parentId = parent?.id ?? 'default_parent';
+                  await ParentRepository.setOnboardingCompleted(parentId);
+                  if (mounted) {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (_) => ParentDashboard(
+                          childId: ChildState.instance.currentProfile.id,
                         ),
                       ),
-                    ),
-                  ),
-
-                  const SizedBox(width: 44),
-                ],
-              ),
-
-              const SizedBox(height: 12),
-
-              // Main Content Card
-              Expanded(
-                child: Center(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: _SpeechLevelSelectorWidget(
-                      theme: theme,
-                      step: _assessmentStep,
-                      childName: _childName,
-                      onNextStep: () {
-                        if (_assessmentStep < 15) {
-                          setState(() => _assessmentStep++);
-                        } else {
-                          _goToQuestCategoryScreen();
-                        }
-                      },
-                      onPrevStep: () {
-                        if (_assessmentStep > 0) {
-                          setState(() => _assessmentStep--);
-                        } else {
-                          _goToAgeSelection();
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ),
-            ],
+                    );
+                  }
+                }
+              },
+              onPrevStep: () {
+                if (_assessmentStep > 0) {
+                  setState(() => _assessmentStep--);
+                } else {
+                  _goToAgeSelection();
+                }
+              },
+            ),
           ),
         ),
       ),
@@ -2366,7 +2369,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                                       ),
                                       titleColor: const Color(0xFF1E3A8A),
                                       gridColor: const Color(0x3838BDF8),
-                                      onTap: () async {
+                                      onTap: () {
                                         HapticFeedback.selectionClick();
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
@@ -5363,43 +5366,22 @@ class _MonsterAgeSelectorWidgetState extends State<MonsterAgeSelectorWidget>
                 ),
                 const SizedBox(height: 12),
 
-                // Scroll Up Prompt Indicator (Clean text only, no capsule pill container or border)
-                GestureDetector(
-                  onTap: () => widget.onNext?.call(),
-                  behavior: HitTestBehavior.opaque,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.keyboard_arrow_up_rounded,
-                          color: Colors.white,
-                          size: 22,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Swipe Up to Continue',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white.withValues(alpha: 0.95),
-                            letterSpacing: 0.4,
-                            shadows: const [
-                              Shadow(
-                                color: Colors.black26,
-                                blurRadius: 4,
-                                offset: Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                const SizedBox(height: 12),
+                ElevatedButton(
+                  onPressed: () => widget.onNext?.call(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.accentDark,
+                    padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                    elevation: 4,
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('CONFIRM AGE', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 14)),
+                      SizedBox(width: 6),
+                      Icon(Icons.check_circle_rounded, color: Colors.white, size: 18),
+                    ],
                   ),
                 ),
               ],
@@ -9286,28 +9268,11 @@ class _SpeechLevelSelectorWidget extends StatefulWidget {
 }
 
 class _SpeechLevelSelectorWidgetState extends State<_SpeechLevelSelectorWidget> {
-  // Store single-select answer per step
-  final Map<int, String> _singleAnswers = {
-    0: 'Nonverbal but can tell yes / no',
-    1: 'No',
-    3: 'Yes',
-    4: 'Yes',
-    5: 'Yes',
-    6: 'Yes',
-    7: 'Yes',
-    8: 'Yes',
-    10: 'Yes',
-    11: 'Yes',
-    12: 'Yes',
-    13: 'Gets frustrated - but tries again',
-    14: 'I don\'t know where to start',
-  };
+  // Store single-select answer per step (Starts empty for clean onboarding!)
+  final Map<int, String> _singleAnswers = {};
 
   // Store multi-select checkbox answers per step
-  final Map<int, Set<String>> _multiAnswers = {
-    2: {'Speech Delay'},
-    9: {'b — ball, baby, cub'},
-  };
+  final Map<int, Set<String>> _multiAnswers = {};
 
   // Store final speech level slider progress (step 15)
   double _speechLevelSliderValue = 0.5;
@@ -9325,57 +9290,104 @@ class _SpeechLevelSelectorWidgetState extends State<_SpeechLevelSelectorWidget> 
     final List<String> options = List<String>.from(q['options'] as List);
 
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-      width: 480,
+      width: 440,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(36),
+        borderRadius: BorderRadius.circular(32),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x18000000),
+            color: Color(0x1F000000),
             blurRadius: 36,
-            offset: Offset(0, 16),
+            offset: Offset(0, 14),
             spreadRadius: 2,
           ),
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+        padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 22.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top Category / Step Badge
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF1F5F9),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                tag,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontFamily: 'Outfit',
-                  fontSize: 10.5,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xFF64748B),
-                  letterSpacing: 0.8,
+            // SlothUI Top Header Bar: Logo Badge & Progress Counter
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 32,
+                      height: 32,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF4F46E5),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'T',
+                          style: TextStyle(
+                            fontFamily: 'Outfit',
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Text(
+                      'TIKO Onboarding',
+                      style: TextStyle(
+                        fontFamily: 'Outfit',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFF0F172A),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
+                Text(
+                  '${safeStep + 1}/${questions.length}',
+                  style: const TextStyle(
+                    fontFamily: 'Outfit',
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF64748B),
+                  ),
+                ),
+              ],
             ),
 
             const SizedBox(height: 14),
 
-            // Question Title
+            // SlothUI Thin Pill Progress Bar
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: LinearProgressIndicator(
+                value: (safeStep + 1) / questions.length.toDouble(),
+                minHeight: 6,
+                backgroundColor: const Color(0xFFE2E8F0),
+                valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF4F46E5)),
+              ),
+            ),
+
+            const SizedBox(height: 18),
+
+            // 4 Cartoon Avatars & Speech Bubbles Header Illustration
+            Center(child: _buildFourAvatarIllustration()),
+
+            const SizedBox(height: 16),
+
+            // Left-aligned Question Title
             Text(
               title,
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
               style: const TextStyle(
                 fontFamily: 'Outfit',
-                fontSize: 21,
+                fontSize: 22,
                 fontWeight: FontWeight.w800,
                 color: Color(0xFF0F172A),
                 height: 1.25,
@@ -9386,17 +9398,17 @@ class _SpeechLevelSelectorWidgetState extends State<_SpeechLevelSelectorWidget> 
               const SizedBox(height: 6),
               Text(
                 subtitle,
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.left,
                 style: const TextStyle(
                   fontFamily: 'Outfit',
-                  fontSize: 13,
+                  fontSize: 13.5,
                   fontWeight: FontWeight.w500,
                   color: Color(0xFF64748B),
                 ),
               ),
             ],
 
-            const SizedBox(height: 18),
+            const SizedBox(height: 20),
 
             // Question Content based on type
             if (type == 'single_radio')
@@ -9406,43 +9418,85 @@ class _SpeechLevelSelectorWidgetState extends State<_SpeechLevelSelectorWidget> 
             else if (type == 'slider_level')
               _buildSpeechLevelSlider(),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
 
-            // Action Button ("Continue" or "Finish Assessment 🎉")
-            GestureDetector(
-              onTap: () {
-                HapticFeedback.mediumImpact();
-                widget.onNextStep();
-              },
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF10B981), Color(0xFF059669)],
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0x3010B981),
-                      blurRadius: 12,
-                      offset: Offset(0, 5),
+            // SlothUI Bottom Row: [< Back] [Continue >]
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      widget.onPrevStep();
+                    },
+                    child: Container(
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(color: const Color(0xFFE2E8F0), width: 1.2),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Icon(Icons.chevron_left_rounded, color: Color(0xFF1E293B), size: 20),
+                          SizedBox(width: 4),
+                          Text(
+                            'Back',
+                            style: TextStyle(
+                              fontFamily: 'Outfit',
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF1E293B),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
+                  ),
                 ),
-                child: Center(
-                  child: Text(
-                    safeStep == questions.length - 1 ? 'Finish Assessment 🎉' : 'Continue',
-                    style: const TextStyle(
-                      fontFamily: 'Outfit',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                      letterSpacing: 0.5,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      HapticFeedback.mediumImpact();
+                      widget.onNextStep();
+                    },
+                    child: Container(
+                      height: 48,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF4F46E5), Color(0xFF4338CA)],
+                        ),
+                        borderRadius: BorderRadius.circular(24),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x354F46E5),
+                            blurRadius: 10,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            safeStep == questions.length - 1 ? 'Finish 🎉' : 'Continue',
+                            style: const TextStyle(
+                              fontFamily: 'Outfit',
+                              fontSize: 15,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          const Icon(Icons.chevron_right_rounded, color: Colors.white, size: 20),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
           ],
         ),
@@ -9450,9 +9504,155 @@ class _SpeechLevelSelectorWidgetState extends State<_SpeechLevelSelectorWidget> 
     );
   }
 
-  // Build Single-Radio Choice Options
+  // 4 Cartoon Avatars & Speech Bubbles Header Illustration (Arranged in 2 Lines / 2x2 Grid)
+  Widget _buildFourAvatarIllustration() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFF1F5F9), width: 1.2),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Line 1: Green Speech Bubble & Boy Avatar
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 38,
+                height: 38,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF10B981),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(14),
+                    topRight: Radius.circular(14),
+                    bottomLeft: Radius.circular(14),
+                    bottomRight: Radius.circular(4),
+                  ),
+                ),
+                child: const Center(
+                  child: Icon(Icons.notes_rounded, color: Colors.white, size: 20),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFED7AA),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFFEA580C), width: 1.8),
+                ),
+                child: const Center(
+                  child: Text('👦', style: TextStyle(fontSize: 20)),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          // Line 2: Girl Avatar & Orange Speech Bubble
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFBCFE8),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFFDB2777), width: 1.8),
+                ),
+                child: const Center(
+                  child: Text('👧', style: TextStyle(fontSize: 20)),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Container(
+                width: 38,
+                height: 38,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF97316),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(14),
+                    topRight: Radius.circular(14),
+                    bottomLeft: Radius.circular(4),
+                    bottomRight: Radius.circular(14),
+                  ),
+                ),
+                child: const Center(
+                  child: Icon(Icons.notes_rounded, color: Colors.white, size: 20),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // SlothUI Left Circular Option Icon Helper
+  Widget _getOptionIcon(String opt, bool isSelected) {
+    IconData iconData = Icons.dashboard_customize_rounded;
+    if (opt.contains('🔊') || opt.contains('Spoken') || opt.contains('sounds') || opt.contains('explanations')) {
+      iconData = Icons.volume_up_rounded;
+    } else if (opt.contains('📖') || opt.contains('Written')) {
+      iconData = Icons.menu_book_rounded;
+    } else if (opt.contains('🖼️') || opt.contains('Pictures') || opt.contains('icons')) {
+      iconData = Icons.photo_library_rounded;
+    } else if (opt.contains('💬') || opt.contains('language') || opt.contains('words')) {
+      iconData = Icons.chat_bubble_outline_rounded;
+    } else if (opt.contains('⚡') || opt.contains('Normal')) {
+      iconData = Icons.bolt_rounded;
+    } else if (opt.contains('🐢') || opt.contains('Slow') || opt.contains('More time')) {
+      iconData = Icons.hourglass_bottom_rounded;
+    } else if (opt.contains('🌿') || opt.contains('Very little') || opt.contains('Less busy')) {
+      iconData = Icons.eco_rounded;
+    } else if (opt.contains('🎵') || opt.contains('Music')) {
+      iconData = Icons.music_note_rounded;
+    } else if (opt.contains('🔔') || opt.contains('Sounds only')) {
+      iconData = Icons.notifications_active_rounded;
+    } else if (opt.contains('🔇') || opt.contains('No sounds')) {
+      iconData = Icons.volume_off_rounded;
+    } else if (opt.contains('🌈') || opt.contains('visual')) {
+      iconData = Icons.palette_rounded;
+    } else if (opt.contains('⏱️') || opt.contains('time')) {
+      iconData = Icons.timer_rounded;
+    } else if (opt.contains('∞')) {
+      iconData = Icons.all_inclusive_rounded;
+    } else if (opt == 'Yes' || opt == 'Yes, always' || opt == 'Yes, anytime') {
+      iconData = Icons.check_circle_outline_rounded;
+    } else if (opt == 'No') {
+      iconData = Icons.cancel_outlined;
+    } else if (opt.contains('Autism') || opt.contains('Speech') || opt.contains('ADHD') || opt.contains('Apraxia') || opt.contains('Delay')) {
+      iconData = Icons.medical_services_rounded;
+    }
+
+    return Container(
+      width: 44,
+      height: 44,
+      decoration: BoxDecoration(
+        color: isSelected ? const Color(0xFFEEF2FF) : const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: isSelected ? const Color(0xFFC7D2FE) : const Color(0xFFE2E8F0),
+          width: 1.2,
+        ),
+      ),
+      child: Center(
+        child: Icon(
+          iconData,
+          size: 22,
+          color: isSelected ? const Color(0xFF4F46E5) : const Color(0xFF64748B),
+        ),
+      ),
+    );
+  }
+
+  // Build Single-Radio Choice Options (Matching SlothUI Cards!)
   Widget _buildSingleRadioList(int step, List<String> options) {
-    final selectedValue = _singleAnswers[step] ?? options.first;
+    final selectedValue = _singleAnswers[step];
 
     return Column(
       children: options.map((opt) {
@@ -9472,34 +9672,48 @@ class _SpeechLevelSelectorWidgetState extends State<_SpeechLevelSelectorWidget> 
               curve: Curves.easeOutCubic,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFFF0FDF4) : const Color(0xFFF8FAFC),
+                color: isSelected ? const Color(0xFFEEF2FF) : Colors.white,
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(
-                  color: isSelected ? const Color(0xFF10B981) : const Color(0xFFE2E8F0),
-                  width: isSelected ? 2.0 : 1.0,
+                  color: isSelected ? const Color(0xFF4F46E5) : const Color(0xFFE2E8F0),
+                  width: isSelected ? 1.8 : 1.0,
                 ),
                 boxShadow: isSelected
-                    ? const [
+                    ? [
                         BoxShadow(
-                          color: Color(0x1210B981),
+                          color: const Color(0xFF4F46E5).withValues(alpha: 0.15),
                           blurRadius: 10,
-                          offset: Offset(0, 4),
+                          offset: const Offset(0, 4),
                         ),
                       ]
                     : [],
               ),
               child: Row(
                 children: [
+                  _getOptionIcon(opt, isSelected),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Text(
+                      opt,
+                      style: TextStyle(
+                        fontFamily: 'Outfit',
+                        fontSize: 14.5,
+                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w700,
+                        color: isSelected ? const Color(0xFF1E1B4B) : const Color(0xFF0F172A),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     width: 22,
                     height: 22,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: isSelected ? const Color(0xFF10B981) : Colors.transparent,
+                      color: isSelected ? const Color(0xFF4F46E5) : Colors.transparent,
                       border: Border.all(
-                        color: isSelected ? const Color(0xFF10B981) : const Color(0xFFCBD5E1),
-                        width: 2,
+                        color: isSelected ? const Color(0xFF4F46E5) : const Color(0xFFCBD5E1),
+                        width: 1.8,
                       ),
                     ),
                     child: isSelected
@@ -9510,18 +9724,6 @@ class _SpeechLevelSelectorWidgetState extends State<_SpeechLevelSelectorWidget> 
                           )
                         : null,
                   ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Text(
-                      opt,
-                      style: TextStyle(
-                        fontFamily: 'Outfit',
-                        fontSize: 14,
-                        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-                        color: isSelected ? const Color(0xFF065F46) : const Color(0xFF334155),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -9531,7 +9733,7 @@ class _SpeechLevelSelectorWidgetState extends State<_SpeechLevelSelectorWidget> 
     );
   }
 
-  // Build Multi-Checkbox Choice Options
+  // Build Multi-Checkbox Choice Options (Matching SlothUI Cards!)
   Widget _buildMultiCheckboxList(int step, List<String> options) {
     final selectedSet = _multiAnswers.putIfAbsent(step, () => <String>{});
 
@@ -9557,34 +9759,48 @@ class _SpeechLevelSelectorWidgetState extends State<_SpeechLevelSelectorWidget> 
               curve: Curves.easeOutCubic,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFFF0FDF4) : const Color(0xFFF8FAFC),
+                color: isSelected ? const Color(0xFFEEF2FF) : Colors.white,
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(
-                  color: isSelected ? const Color(0xFF10B981) : const Color(0xFFE2E8F0),
-                  width: isSelected ? 2.0 : 1.0,
+                  color: isSelected ? const Color(0xFF4F46E5) : const Color(0xFFE2E8F0),
+                  width: isSelected ? 1.8 : 1.0,
                 ),
                 boxShadow: isSelected
-                    ? const [
+                    ? [
                         BoxShadow(
-                          color: Color(0x1210B981),
+                          color: const Color(0xFF4F46E5).withValues(alpha: 0.15),
                           blurRadius: 10,
-                          offset: Offset(0, 4),
+                          offset: const Offset(0, 4),
                         ),
                       ]
                     : [],
               ),
               child: Row(
                 children: [
+                  _getOptionIcon(opt, isSelected),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Text(
+                      opt,
+                      style: TextStyle(
+                        fontFamily: 'Outfit',
+                        fontSize: 14.5,
+                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w700,
+                        color: isSelected ? const Color(0xFF1E1B4B) : const Color(0xFF0F172A),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     width: 22,
                     height: 22,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6),
-                      color: isSelected ? const Color(0xFF10B981) : Colors.transparent,
+                      shape: BoxShape.circle,
+                      color: isSelected ? const Color(0xFF4F46E5) : Colors.transparent,
                       border: Border.all(
-                        color: isSelected ? const Color(0xFF10B981) : const Color(0xFFCBD5E1),
-                        width: 2,
+                        color: isSelected ? const Color(0xFF4F46E5) : const Color(0xFFCBD5E1),
+                        width: 1.8,
                       ),
                     ),
                     child: isSelected
@@ -9594,18 +9810,6 @@ class _SpeechLevelSelectorWidgetState extends State<_SpeechLevelSelectorWidget> 
                             color: Colors.white,
                           )
                         : null,
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Text(
-                      opt,
-                      style: TextStyle(
-                        fontFamily: 'Outfit',
-                        fontSize: 14,
-                        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-                        color: isSelected ? const Color(0xFF065F46) : const Color(0xFF334155),
-                      ),
-                    ),
                   ),
                 ],
               ),
@@ -9728,22 +9932,7 @@ class _SpeechLevelSelectorWidgetState extends State<_SpeechLevelSelectorWidget> 
     final String displayName = childName.isNotEmpty ? childName : 'Your child';
 
     return [
-      // 1. Existing First Question
-      {
-        'tag': 'PRELIMINARY QUESTION',
-        'category': 'Speech Level',
-        'title': 'What is your child\'s speech level?',
-        'subtitle': 'This helps us adapt lessons to their communication abilities.',
-        'type': 'single_radio',
-        'options': [
-          'Nonverbal',
-          'Nonverbal but can tell yes / no',
-          'Cannot speak but knows words',
-          'Does speak but not everyone understands',
-        ],
-      },
-
-      // 2. Evaluation
+      // 1. Evaluation
       {
         'tag': 'EVALUATION',
         'category': 'Therapist Evaluation',
@@ -9906,7 +10095,180 @@ class _SpeechLevelSelectorWidgetState extends State<_SpeechLevelSelectorWidget> 
         ],
       },
 
-      // 16. Speech Level — Final Step
+      // 16. Accessibility & Sensory: How instructions understood best
+      {
+        'tag': 'ACCESSIBILITY & SENSORY',
+        'category': 'Accessibility & Sensory Preferences',
+        'title': 'How does your child understand instructions best?',
+        'subtitle': 'Select one option.',
+        'type': 'single_radio',
+        'options': [
+          'Spoken instructions',
+          'Written instructions',
+          'Spoken and written instructions',
+        ],
+      },
+
+      // 17. Accessibility & Sensory: Repeat button
+      {
+        'tag': 'ACCESSIBILITY & SENSORY',
+        'category': 'Accessibility & Sensory Preferences',
+        'title': 'Would your child benefit from a button to repeat instructions?',
+        'subtitle': 'Select one answer.',
+        'type': 'single_radio',
+        'options': ['Yes', 'No'],
+      },
+
+      // 18. Accessibility & Sensory: Easiest instruction type
+      {
+        'tag': 'ACCESSIBILITY & SENSORY',
+        'category': 'Accessibility & Sensory Preferences',
+        'title': 'Which type of instruction is easiest for your child to follow?',
+        'subtitle': 'Select one option.',
+        'type': 'single_radio',
+        'options': [
+          'Pictures and icons',
+          'Short and simple language',
+          'Spoken explanations',
+          'A combination of these',
+        ],
+      },
+
+      // 19. Accessibility & Sensory: Text size
+      {
+        'tag': 'ACCESSIBILITY & SENSORY',
+        'category': 'Accessibility & Sensory Preferences',
+        'title': 'What text size is most comfortable for your child?',
+        'subtitle': 'Select one option.',
+        'type': 'single_radio',
+        'options': ['Normal', 'Big', 'Very big'],
+      },
+
+      // 20. Accessibility & Sensory: Animation speed
+      {
+        'tag': 'ACCESSIBILITY & SENSORY',
+        'category': 'Accessibility & Sensory Preferences',
+        'title': 'What animation speed is most comfortable for your child?',
+        'subtitle': 'Select one option.',
+        'type': 'single_radio',
+        'options': [
+          'Normal',
+          'Slow',
+          'Very little movement',
+        ],
+      },
+
+      // 21. Accessibility & Sensory: Reduced motion
+      {
+        'tag': 'ACCESSIBILITY & SENSORY',
+        'category': 'Accessibility & Sensory Preferences',
+        'title': 'Would your child benefit from reduced motion on the screen?',
+        'subtitle': 'Select one answer.',
+        'type': 'single_radio',
+        'options': ['Yes', 'No'],
+      },
+
+      // 22. Accessibility & Sensory: Sound level
+      {
+        'tag': 'ACCESSIBILITY & SENSORY',
+        'category': 'Accessibility & Sensory Preferences',
+        'title': 'What level of sound or music is most comfortable for your child?',
+        'subtitle': 'Select one option.',
+        'type': 'single_radio',
+        'options': [
+          'Music and sounds',
+          'Sounds only',
+          'No sounds',
+        ],
+      },
+
+      // 23. Accessibility & Sensory: Subtitles / Text alternatives
+      {
+        'tag': 'ACCESSIBILITY & SENSORY',
+        'category': 'Accessibility & Sensory Preferences',
+        'title': 'When TIKO provides spoken instructions, would your child benefit from subtitles or text alternatives?',
+        'subtitle': 'Select one option.',
+        'type': 'single_radio',
+        'options': [
+          'Yes, always',
+          'Only sometimes',
+          'No, I can listen',
+        ],
+      },
+
+      // 24. Accessibility & Sensory: Visual environment
+      {
+        'tag': 'ACCESSIBILITY & SENSORY',
+        'category': 'Accessibility & Sensory Preferences',
+        'title': 'Which type of visual environment is most comfortable for your child?',
+        'subtitle': 'Select one option.',
+        'type': 'single_radio',
+        'options': [
+          'Normal',
+          'Less busy',
+          'Very simple',
+        ],
+      },
+
+      // 25. Accessibility & Sensory: Pause or break option
+      {
+        'tag': 'ACCESSIBILITY & SENSORY',
+        'category': 'Accessibility & Sensory Preferences',
+        'title': 'Would your child benefit from having a pause or break option during activities?',
+        'subtitle': 'Select one answer.',
+        'type': 'single_radio',
+        'options': ['Yes', 'No'],
+      },
+
+      // 26. Accessibility & Sensory: Response time
+      {
+        'tag': 'ACCESSIBILITY & SENSORY',
+        'category': 'Accessibility & Sensory Preferences',
+        'title': 'How much response time does your child typically need?',
+        'subtitle': 'Select one option.',
+        'type': 'single_radio',
+        'options': [
+          'Normal time',
+          'More time',
+          'Take my time',
+        ],
+      },
+
+      // 27. Accessibility & Sensory: Predictable screen layout
+      {
+        'tag': 'ACCESSIBILITY & SENSORY',
+        'category': 'Accessibility & Sensory Preferences',
+        'title': 'Would your child benefit from consistent navigation and predictable screen layouts?',
+        'subtitle': 'Select one answer.',
+        'type': 'single_radio',
+        'options': ['Yes', 'No'],
+      },
+
+      // 28. Accessibility & Sensory: Important information communication
+      {
+        'tag': 'ACCESSIBILITY & SENSORY',
+        'category': 'Accessibility & Sensory Preferences',
+        'title': 'How should important information be communicated to your child?',
+        'subtitle': 'Select one option.',
+        'type': 'single_radio',
+        'options': [
+          'Pictures and words',
+          'Pictures, words, and sounds',
+          'Sounds and words',
+        ],
+      },
+
+      // 29. Accessibility & Sensory: Adjust preferences later
+      {
+        'tag': 'ACCESSIBILITY & SENSORY',
+        'category': 'Accessibility & Sensory Preferences',
+        'title': 'Would you like to be able to adjust these preferences later?',
+        'subtitle': 'Select one answer.',
+        'type': 'single_radio',
+        'options': ['Yes, anytime', 'No'],
+      },
+
+      // 30. Speech Level — Final Step
       {
         'tag': 'SPEECH LEVEL — FINAL STEP',
         'category': 'Speech Level Assessment',
