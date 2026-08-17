@@ -171,10 +171,10 @@ class _ParentDashboardState extends State<ParentDashboard> {
       backgroundColor: _bgCanvas,
       body: Stack(
         children: [
-          // 1. Rich Medium Purple Graph Grid Background (Image 12 exact match!)
+          // 1. Vibrant Soft Lavender Purple Graph Grid Background (Image 24 exact match!)
           Positioned.fill(
             child: Container(
-              color: const Color(0xFFA485EE),
+              color: const Color(0xFFB497F6),
               child: const CustomPaint(
                 painter: _GridGraphBackgroundPainter(),
               ),
@@ -3610,7 +3610,7 @@ class _SparklinePainter extends CustomPainter {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PURPLE GRAPH GRID BACKGROUND PAINTER (Image 9 Exact Match)
+// VIBRANT LAVENDER GRAPH GRID BACKGROUND PAINTER (Image 24 Exact Match)
 // ─────────────────────────────────────────────────────────────────────────────
 class _GridGraphBackgroundPainter extends CustomPainter {
   const _GridGraphBackgroundPainter();
@@ -3618,11 +3618,11 @@ class _GridGraphBackgroundPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0x30FFFFFF) // Crisp semi-transparent white grid lines matching Image 12!
+      ..color = const Color(0x40FFFFFF) // Crisp high-contrast white grid lines matching Image 24!
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.55;
+      ..strokeWidth = 0.85;
 
-    const double gridSpacing = 7.0; // Ultra-small micro-grid graph paper grid spacing!
+    const double gridSpacing = 28.0; // Clean, medium-sized graph grid squares matching Image 24!
 
     // Draw vertical grid lines
     for (double x = 0; x <= size.width; x += gridSpacing) {
