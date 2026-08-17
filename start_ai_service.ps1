@@ -8,7 +8,11 @@ if (Test-Path ".venv\Scripts\python.exe") {
 }
 
 Write-Host "Checking Python dependencies..." -ForegroundColor Yellow
-& $pythonCmd -m pip install -r ai_services/nimo_contract_api/requirements.txt
+if (Test-Path "requirements.txt") {
+    & $pythonCmd -m pip install -r requirements.txt
+} else {
+    & $pythonCmd -m pip install -r ai_services/nimo_contract_api/requirements.txt
+}
 
 Write-Host ""
 Write-Host "Launching FastAPI server on http://localhost:8001..." -ForegroundColor Green
