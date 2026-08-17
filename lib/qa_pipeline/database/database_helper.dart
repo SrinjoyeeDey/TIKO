@@ -13,7 +13,7 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._();
 
   static const String _dbName = 'qs_ans_learning_v2.db';
-  static const int _dbVersion = 4;
+  static const int _dbVersion = 6;
 
   Database? _database;
 
@@ -41,21 +41,53 @@ class DatabaseHelper {
       final dbPath = await getDatabasesPath();
       final path = join(dbPath, _dbName);
 
-      return await openDatabase(
+      final db = await openDatabase(
         path,
         version: _dbVersion,
         onCreate: _onCreate,
         onUpgrade: _onUpgrade,
       );
+
+      // Ensure evaluations table exists even if database was created earlier
+      await _ensureTablesExist(db);
+
+      return db;
     } catch (e) {
       debugPrint('DatabaseHelper: Primary database initialization failed ($e). Falling back to in-memory database.');
-      return await openDatabase(
+      final db = await openDatabase(
         inMemoryDatabasePath,
         version: _dbVersion,
         onCreate: _onCreate,
         onUpgrade: _onUpgrade,
       );
+      await _ensureTablesExist(db);
+      return db;
     }
+  }
+
+  static Future<void> _ensureTablesExist(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS session_clinical_evaluations (
+        id TEXT PRIMARY KEY,
+        child_id TEXT NOT NULL,
+        session_id TEXT NOT NULL,
+        chapter_id TEXT,
+        level_id TEXT,
+        current_ability TEXT,
+        previous_performance TEXT,
+        preferred_interaction TEXT,
+        speech_ability TEXT,
+        motor_performance TEXT,
+        attention_pattern TEXT,
+        learning_history TEXT,
+        difficulty_percentage INTEGER,
+        difficulty_level TEXT,
+        difficulty_reasoning TEXT,
+        recommendations TEXT,
+        created_at TEXT NOT NULL,
+        FOREIGN KEY (child_id) REFERENCES child_profiles(id)
+      )
+    ''');
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -114,6 +146,20 @@ class DatabaseHelper {
         )
       ''');
     }
+    if (oldVersion < 5) {
+      try {
+        await db.execute('ALTER TABLE child_profiles ADD COLUMN difficulty_percentage INTEGER DEFAULT 50');
+      } catch (_) {}
+      try {
+        await db.execute('ALTER TABLE child_profiles ADD COLUMN difficulty_level TEXT');
+      } catch (_) {}
+      try {
+        await db.execute('ALTER TABLE child_profiles ADD COLUMN difficulty_reasoning TEXT');
+      } catch (_) {}
+    }
+    if (oldVersion < 6) {
+      await _ensureTablesExist(db);
+    }
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -136,6 +182,9 @@ class DatabaseHelper {
         name TEXT NOT NULL,
         age INTEGER,
         class_name TEXT,
+        difficulty_percentage INTEGER DEFAULT 50,
+        difficulty_level TEXT,
+        difficulty_reasoning TEXT,
         created_at TEXT NOT NULL,
         FOREIGN KEY (parent_id) REFERENCES parents(id)
       )
@@ -218,6 +267,8 @@ class DatabaseHelper {
         value TEXT NOT NULL
       )
     ''');
+
+    await _ensureTablesExist(db);
 
     await db.execute('''
       CREATE INDEX idx_attempts_child_level

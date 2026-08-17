@@ -2,7 +2,8 @@ import 'package:sqflite/sqflite.dart';
 import '../models/child_profile.dart';
 import 'database_helper.dart';
 
-/// Repository for child profile CRUD operations with stable deterministic IDs and Remember Me support.
+/// Repository for child profile CRUD operations with stable deterministic IDs,
+/// difficulty level persistence, and Remember Me support.
 class ChildRepository {
   static const _table = 'child_profiles';
   static const String _rememberedChildKey = 'remembered_child_id';
@@ -20,6 +21,9 @@ class ChildRepository {
     String? parentId,
     int? age,
     String? className,
+    int difficultyPercentage = 50,
+    String? difficultyLevel,
+    String? difficultyReasoning,
     bool rememberMe = true,
   }) async {
     final trimmedName = name.trim().isEmpty ? 'Explorer' : name.trim();
@@ -39,6 +43,9 @@ class ChildRepository {
       name: trimmedName,
       age: age ?? 6,
       className: className ?? 'Grade 1',
+      difficultyPercentage: difficultyPercentage,
+      difficultyLevel: difficultyLevel,
+      difficultyReasoning: difficultyReasoning,
       createdAt: DateTime.now(),
     );
 
@@ -54,6 +61,26 @@ class ChildRepository {
     }
 
     return profile;
+  }
+
+  /// Updates difficulty metrics for an existing child profile in SQLite.
+  static Future<void> updateChildDifficulty({
+    required String childId,
+    required int difficultyPercentage,
+    String? difficultyLevel,
+    String? difficultyReasoning,
+  }) async {
+    final db = await DatabaseHelper.instance.database;
+    await db.update(
+      _table,
+      {
+        'difficulty_percentage': difficultyPercentage,
+        'difficulty_level': difficultyLevel,
+        'difficulty_reasoning': difficultyReasoning,
+      },
+      where: 'id = ?',
+      whereArgs: [childId],
+    );
   }
 
   /// Sets the remembered child ID in SQLite app settings.
@@ -107,6 +134,11 @@ class ChildRepository {
     return ChildProfile.fromMap(results.first);
   }
 
+  /// Alias for getChildById returning ChildProfile.
+  static Future<ChildProfile?> getChildProfile(String id) async {
+    return await getChildById(id);
+  }
+
   /// Returns an existing profile with this name, if one has been created.
   static Future<ChildProfile?> getChildByName(String name) async {
     final db = await DatabaseHelper.instance.database;
@@ -134,12 +166,18 @@ class ChildRepository {
     required String name,
     int? age,
     String? className,
+    int difficultyPercentage = 50,
+    String? difficultyLevel,
+    String? difficultyReasoning,
     bool rememberMe = true,
   }) async {
     return await loginOrRegisterChild(
       name: name,
       age: age,
       className: className,
+      difficultyPercentage: difficultyPercentage,
+      difficultyLevel: difficultyLevel,
+      difficultyReasoning: difficultyReasoning,
       rememberMe: rememberMe,
     );
   }

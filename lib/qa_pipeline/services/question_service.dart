@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 import '../models/descriptive_question.dart';
@@ -41,15 +41,10 @@ class QuestionSet {
   bool get isEmpty => totalCount == 0;
 }
 
-/// Loads and parses question JSON files from the app's asset bundle.
+/// Loads and parses question JSON files from the app's asset bundle,
+/// with intelligent pedagogical difficulty filtering matching the child learner.
 class QuestionService {
   /// Loads questions from the asset at [assetPath].
-  ///
-  /// Parses both the `questions` array (MCQ + descriptive + speech) and the
-  /// `sequence_test.questions` array (sequence MCQs).
-  ///
-  /// Returns an empty [QuestionSet] if [assetPath] is null, the file is
-  /// missing, or the JSON is malformed.
   static Future<QuestionSet> loadQuestions(String? assetPath) async {
     if (assetPath == null) {
       return const QuestionSet(
@@ -68,8 +63,7 @@ class QuestionService {
 
       return _parseQuestionSet(jsonData);
     } catch (e) {
-      // ignore: avoid_print
-      print('QuestionService: Failed to load questions at "$assetPath": $e');
+      debugPrint('QuestionService: Failed to load questions at "$assetPath": $e');
       return const QuestionSet(
         mcqQuestions: [],
         descriptiveQuestions: [],
@@ -79,6 +73,60 @@ class QuestionService {
         imageMatchingQuestions: [],
       );
     }
+  }
+
+  /// Loads and filters questions tailored to the child's calibrated difficulty percentage & level.
+  static Future<QuestionSet> loadQuestionsForChild(
+    String? assetPath, {
+    int? childDifficultyPercentage,
+    String? childDifficultyLevel,
+  }) async {
+    final fullSet = await loadQuestions(assetPath);
+    if (childDifficultyPercentage == null && childDifficultyLevel == null) {
+      return fullSet;
+    }
+
+    final targetPct = childDifficultyPercentage ?? 50;
+
+    bool matchesDifficulty(Question q) {
+      final qPct = q.difficultyPercentage ?? Question.derivePercentageFromDifficulty(q.difficulty);
+
+      if (targetPct <= 35) {
+        // Gentle Starter (e.g. 25-35%): easy/starter questions
+        return qPct <= 45;
+      } else if (targetPct <= 50) {
+        // Balanced Explorer (e.g. 40-50%): beginner to intermediate
+        return qPct >= 25 && qPct <= 60;
+      } else if (targetPct <= 65) {
+        // Curious Adventurer (e.g. 50-65%): active learning challenges
+        return qPct >= 40 && qPct <= 75;
+      } else if (targetPct <= 80) {
+        // Challenger (e.g. 70-80%): higher complexity questions
+        return qPct >= 50 && qPct <= 90;
+      } else {
+        // Champion (85%+): comprehensive mastery questions
+        return qPct >= 65;
+      }
+    }
+
+    final filteredMcq = fullSet.mcqQuestions.where(matchesDifficulty).toList();
+    final filteredDesc = fullSet.descriptiveQuestions.where(matchesDifficulty).toList();
+    final filteredSpeech = fullSet.speechQuestions.where(matchesDifficulty).toList();
+    final filteredSeqMcq = fullSet.sequenceQuestions.where(matchesDifficulty).toList();
+    final filteredSeqDrag = fullSet.sequenceDragQuestions.where(matchesDifficulty).toList();
+    final filteredMatching = fullSet.imageMatchingQuestions.where(matchesDifficulty).toList();
+
+    final filteredSet = QuestionSet(
+      mcqQuestions: filteredMcq.isNotEmpty ? filteredMcq : fullSet.mcqQuestions,
+      descriptiveQuestions: filteredDesc.isNotEmpty ? filteredDesc : fullSet.descriptiveQuestions,
+      speechQuestions: filteredSpeech.isNotEmpty ? filteredSpeech : fullSet.speechQuestions,
+      sequenceQuestions: filteredSeqMcq.isNotEmpty ? filteredSeqMcq : fullSet.sequenceQuestions,
+      sequenceDragQuestions: filteredSeqDrag.isNotEmpty ? filteredSeqDrag : fullSet.sequenceDragQuestions,
+      imageMatchingQuestions: filteredMatching.isNotEmpty ? filteredMatching : fullSet.imageMatchingQuestions,
+    );
+
+    debugPrint('QuestionService: Filtered questions for child difficulty $targetPct% (${childDifficultyLevel ?? "Custom"}) -> ${filteredSet.totalCount}/${fullSet.totalCount} selected.');
+    return filteredSet;
   }
 
   /// Parses the full JSON into a [QuestionSet].
@@ -105,9 +153,7 @@ class QuestionService {
           speechQuestions.add(SpeechQuestion.fromJson(map));
         }
       } catch (e) {
-        // Skip malformed individual questions rather than failing everything.
-        // ignore: avoid_print
-        print('QuestionService: Skipped malformed question: $e');
+        debugPrint('QuestionService: Skipped malformed question: $e');
       }
     }
 
@@ -120,11 +166,9 @@ class QuestionService {
         try {
           sequenceQuestions
               .add(McqQuestion.fromJson(map, QuestionType.sequenceMcq));
-          // Also parse as drag-and-drop sequence questions.
           sequenceDragQuestions.add(SequenceQuestion.fromJson(map));
         } catch (e) {
-          // ignore: avoid_print
-          print('QuestionService: Skipped malformed sequence question: $e');
+          debugPrint('QuestionService: Skipped malformed sequence question: $e');
         }
       }
     }
@@ -136,8 +180,7 @@ class QuestionService {
       try {
         imageMatchingQuestions.add(ImageMatchingQuestion.fromJson(map));
       } catch (e) {
-        // ignore: avoid_print
-        print('QuestionService: Skipped malformed image_matching question: $e');
+        debugPrint('QuestionService: Skipped malformed image_matching question: $e');
       }
     }
 
@@ -151,4 +194,3 @@ class QuestionService {
     );
   }
 }
-
