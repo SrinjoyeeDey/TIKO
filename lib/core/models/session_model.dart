@@ -3,6 +3,7 @@ class SessionModel {
   final String sessionId;
   final String id;
   final String childId;
+  final String parentId;
   final String storyId;
   final String startedAt;
   final String? endedAt;
@@ -15,6 +16,7 @@ class SessionModel {
     required this.sessionId,
     String? id,
     required this.childId,
+    this.parentId = 'parent_default',
     this.storyId = 'netaji',
     required this.startedAt,
     this.endedAt,
@@ -25,17 +27,18 @@ class SessionModel {
   }) : id = id ?? sessionId;
 
   factory SessionModel.fromJson(Map<String, dynamic> json) {
-    final activeSessionId = json['sessionId'] as String? ?? json['id'] as String? ?? 'SES_LOCAL';
+    final activeSessionId = json['sessionId'] as String? ?? json['id'] as String? ?? 'session_${DateTime.now().millisecondsSinceEpoch}';
     final start = json['startedAt'] as String? ?? json['startTime'] as String? ?? DateTime.now().toIso8601String();
     
     return SessionModel(
       sessionId: activeSessionId,
       id: activeSessionId,
-      childId: json['childId'] as String? ?? 'A001',
+      childId: json['childId'] as String? ?? json['child_id'] as String? ?? 'child_default',
+      parentId: json['parentId'] as String? ?? json['parent_id'] as String? ?? 'parent_default',
       storyId: json['storyId'] as String? ?? 'netaji',
       startedAt: start,
-      endedAt: json['endedAt'] as String? ?? json['endTime'] as String?,
-      duration: json['duration'] as int? ?? json['durationSeconds'] as int?,
+      endedAt: json['endedAt'] as String? ?? json['endTime'] as String? ?? json['ended_at'] as String?,
+      duration: json['duration'] as int? ?? json['durationSeconds'] as int? ?? json['duration_seconds'] as int?,
       status: json['status'] as String? ?? 'active',
       activitiesCompleted: json['activitiesCompleted'] as int? ?? 0,
       summary: json['summary'] != null ? Map<String, dynamic>.from(json['summary'] as Map) : null,
@@ -45,14 +48,28 @@ class SessionModel {
   Map<String, dynamic> toJson() {
     return {
       'sessionId': sessionId,
+      'id': sessionId,
       'childId': childId,
+      'parentId': parentId,
       'storyId': storyId,
       'startedAt': startedAt,
       'endedAt': endedAt,
       'duration': duration,
+      'durationSeconds': duration,
       'status': status,
       'activitiesCompleted': activitiesCompleted,
       if (summary != null) 'summary': summary,
+    };
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': sessionId,
+      'child_id': childId,
+      'parent_id': parentId,
+      'started_at': startedAt,
+      'ended_at': endedAt,
+      'duration_seconds': duration,
     };
   }
 

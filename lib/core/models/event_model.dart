@@ -85,8 +85,57 @@ class EventModel {
       'eventType': eventType,
       if (timestamp != null) 'timestamp': timestamp,
       if (serverReceivedAt != null) 'serverReceivedAt': serverReceivedAt,
+      'skill': data['skill'] ?? 'learning',
+      'difficulty': data['difficulty'] ?? 1,
+      'success': data['success'] ?? true,
+      'accuracy': data['accuracy'] ?? 1.0,
+      'reactionTimeMs': data['reactionTimeMs'] ?? 0,
+      'errors': data['errors'] ?? 0,
+      'attemptNumber': data['attemptNumber'] ?? 1,
+      'inputType': data['inputType'] ?? 'touch',
       'data': data,
     };
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': eventId ?? 'event_${DateTime.now().microsecondsSinceEpoch}',
+      'child_id': childId,
+      'session_id': sessionId,
+      'activity_id': activityId ?? 'general_activity',
+      'skill': data['skill']?.toString() ?? 'learning',
+      'difficulty': data['difficulty'] is int ? data['difficulty'] : 1,
+      'success': (data['success'] == true || data['success'] == 1) ? 1 : 0,
+      'accuracy': (data['accuracy'] is num) ? (data['accuracy'] as num).toDouble() : 1.0,
+      'reaction_time_ms': data['reactionTimeMs'] is int ? data['reactionTimeMs'] : 0,
+      'errors': data['errors'] is int ? data['errors'] : 0,
+      'attempt_number': data['attemptNumber'] is int ? data['attemptNumber'] : 1,
+      'input_type': data['inputType']?.toString() ?? 'touch',
+      'timestamp': timestamp ?? DateTime.now().toIso8601String(),
+      'synced': 0,
+    };
+  }
+
+  factory EventModel.fromMap(Map<String, dynamic> map) {
+    return EventModel(
+      eventId: map['id'] as String?,
+      childId: map['child_id'] as String? ?? 'child_default',
+      sessionId: map['session_id'] as String? ?? 'session_default',
+      activityId: map['activity_id'] as String?,
+      source: EventSource.flutter,
+      eventType: EventType.activityCompleted,
+      timestamp: map['timestamp'] as String?,
+      data: {
+        'skill': map['skill'],
+        'difficulty': map['difficulty'],
+        'success': map['success'] == 1,
+        'accuracy': map['accuracy'],
+        'reactionTimeMs': map['reaction_time_ms'],
+        'errors': map['errors'],
+        'attemptNumber': map['attempt_number'],
+        'inputType': map['input_type'],
+      },
+    );
   }
 
   @override

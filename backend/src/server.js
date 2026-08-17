@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const parentRoutes = require('./routes/parentRoutes');
 const childRoutes = require('./routes/childRoutes');
 const sessionRoutes = require('./routes/sessionRoutes');
 const activityRoutes = require('./routes/activityRoutes');
@@ -25,6 +26,7 @@ app.use((req, res, next) => {
 });
 
 // API Routes
+app.use('/api/parents', parentRoutes);
 app.use('/api/children', childRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/activities', activityRoutes);

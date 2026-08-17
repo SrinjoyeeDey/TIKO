@@ -60,6 +60,7 @@ class ChildSkills {
 /// Main Child Profile model mirroring backend API response.
 class ChildProfile {
   final String id;
+  final String? parentId;
   final String name;
   final String ageGroup;
   final String language;
@@ -71,6 +72,7 @@ class ChildProfile {
 
   const ChildProfile({
     required this.id,
+    this.parentId,
     required this.name,
     this.ageGroup = '4-6',
     this.language = 'en',
@@ -83,7 +85,8 @@ class ChildProfile {
 
   factory ChildProfile.fromJson(Map<String, dynamic> json) {
     return ChildProfile(
-      id: json['id'] as String? ?? 'A001',
+      id: (json['id'] ?? json['childId']) as String? ?? 'child_default',
+      parentId: (json['parentId'] ?? json['parent_id']) as String?,
       name: json['name'] as String? ?? 'Child',
       ageGroup: json['ageGroup'] as String? ?? '4-6',
       language: json['language'] as String? ?? 'en',
@@ -102,6 +105,8 @@ class ChildProfile {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'childId': id,
+      'parentId': parentId,
       'name': name,
       'ageGroup': ageGroup,
       'language': language,
