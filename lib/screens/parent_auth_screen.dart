@@ -608,6 +608,21 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
       }
 
       if (isValid) {
+        final activeParent = ChildState.instance.currentParent ?? await ParentRepository.getActiveParent();
+        if (activeParent != null) {
+          final children = await ParentRepository.getChildrenForParent(activeParent.id);
+          if (children.isNotEmpty) {
+            await ChildState.instance.loadProfile(children.first.id);
+          } else {
+            final newChild = await ParentRepository.createChildProfile(
+              parentId: activeParent.id,
+              name: 'Learner',
+              age: 6,
+            );
+            await ChildState.instance.loadProfile(newChild.id);
+          }
+        }
+
         ChildState.instance.setRole('CHILD');
         unawaited(ChildState.instance.startNewSession());
 
