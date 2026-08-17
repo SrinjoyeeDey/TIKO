@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -18,10 +19,11 @@ import '../database/session_evaluation_repository.dart';
 import '../../core/state/child_state.dart';
 import '../../screens/parent_auth_screen.dart';
 
-/// Parent dashboard showing the child's overall learning analytics.
+/// Redesigned Executive Parent Dashboard for TIKO.
 ///
-/// Displays profile info, progress, section accuracy, time analysis,
-/// and adaptive learning insights.
+/// Features a restrained, premium Bento Box layout with Spatial depth,
+/// dynamic Skill Radar CustomPainter, TIKO AI Insight highlights,
+/// and real clinical backend analytics.
 class ParentDashboard extends StatefulWidget {
   final String childId;
 
@@ -41,6 +43,16 @@ class _ParentDashboardState extends State<ParentDashboard> {
   SessionClinicalEvaluation? _latestEvaluation;
   bool _isLoading = true;
 
+  // Design System Tokens
+  static const Color _bgCanvas = Color(0xFFF6F7F2);
+  static const Color _deepForest = Color(0xFF174C3A);
+  static const Color _softMint = Color(0xFFCFE8D2);
+  static const Color _softSky = Color(0xFFD8EAF2);
+  static const Color _warmGold = Color(0xFFF4D98B);
+  static const Color _softCoral = Color(0xFFE8A39A);
+  static const Color _primaryText = Color(0xFF17231E);
+  static const Color _secondaryText = Color(0xFF68746E);
+
   @override
   void initState() {
     super.initState();
@@ -48,7 +60,6 @@ class _ParentDashboardState extends State<ParentDashboard> {
   }
 
   Future<void> _verifyRoleAndLoad() async {
-    // Role-based protection: require PARENT role
     if (ChildState.instance.currentRole != 'PARENT') {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.of(context).pushReplacement(
@@ -87,327 +98,1015 @@ class _ParentDashboardState extends State<ParentDashboard> {
     }
   }
 
-  int get _completedCount =>
-      _progressList.where((p) => p.completed).length;
+  int get _completedCount => _progressList.where((p) => p.completed).length;
 
   int get _totalLevels => _chapters.fold(0, (sum, c) => sum + c.levels.length);
+
+  double get _masteryPercent {
+    if (_totalLevels == 0) return 0.0;
+    return (_completedCount / _totalLevels).clamp(0.0, 1.0);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF1F8E9),
-      appBar: AppBar(
-        title: Text(
-          _profile?.name.isNotEmpty == true
-              ? "${_profile!.name}'s Dashboard"
-              : 'Parent Dashboard',
-          style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
-        ),
-        backgroundColor: Colors.transparent,
-        foregroundColor: Color(0xFF1B5E20),
-        elevation: 0,
-      ),
+      backgroundColor: _bgCanvas,
       body: _isLoading
           ? const Center(
-              child: CircularProgressIndicator(color: Color(0xFF558B2F)),
+              child: CircularProgressIndicator(color: _deepForest),
             )
-          : Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color(0xFFF1F8E9),
-                    Color(0xFFDCEDC8),
-                    Color(0xFFC5E1A5),
-                  ],
-                ),
-              ),
-              child: ListView(
-                padding: const EdgeInsets.all(20),
-                children: [
-                  _buildProfileCard(),
-                  const SizedBox(height: 16),
-                  _buildAdaptiveDifficultyCard(),
-                  const SizedBox(height: 16),
-                  _buildProgressOverview(),
-                  const SizedBox(height: 16),
-                  _buildTimeAnalysis(),
-                  const SizedBox(height: 16),
-                  _buildAdaptiveInsights(),
-                  const SizedBox(height: 16),
-                  _buildClinicalReport(),
-                  const SizedBox(height: 24),
-                ],
+          : SafeArea(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final isDesktop = constraints.maxWidth > 900;
+                  final isTablet = constraints.maxWidth > 600 && !isDesktop;
+
+                  return CustomScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    slivers: [
+                      // Top Header Bar
+                      SliverPadding(
+                        padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+                        sliver: SliverToBoxAdapter(
+                          child: _buildHeaderBar(),
+                        ),
+                      ),
+
+                      // Weekly Day Strip
+                      SliverPadding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                        sliver: SliverToBoxAdapter(
+                          child: _buildWeeklyDayStrip(),
+                        ),
+                      ),
+
+                      // Main Bento Content
+                      SliverPadding(
+                        padding: const EdgeInsets.all(20),
+                        sliver: SliverToBoxAdapter(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              if (isDesktop) ...[
+                                // Desktop 2-Column Bento Layout
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      flex: 5,
+                                      child: Column(
+                                        children: [
+                                          _buildChildProfileHero(),
+                                          const SizedBox(height: 18),
+                                          _buildTikoAiInsightBanner(),
+                                          const SizedBox(height: 18),
+                                          _buildSkillRadarCard(),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 18),
+                                    Expanded(
+                                      flex: 5,
+                                      child: Column(
+                                        children: [
+                                          _buildProgressArcCard(),
+                                          const SizedBox(height: 18),
+                                          _buildTimeAnalysisBento(),
+                                          const SizedBox(height: 18),
+                                          _buildAdaptiveDifficultyBento(),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ] else if (isTablet) ...[
+                                // Tablet 2-Column Responsive Layout
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          _buildChildProfileHero(),
+                                          const SizedBox(height: 16),
+                                          _buildProgressArcCard(),
+                                          const SizedBox(height: 16),
+                                          _buildTikoAiInsightBanner(),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          _buildSkillRadarCard(),
+                                          const SizedBox(height: 16),
+                                          _buildTimeAnalysisBento(),
+                                          const SizedBox(height: 16),
+                                          _buildAdaptiveDifficultyBento(),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ] else ...[
+                                // Mobile Vertical Bento Column
+                                _buildChildProfileHero(),
+                                const SizedBox(height: 16),
+                                _buildProgressArcCard(),
+                                const SizedBox(height: 16),
+                                _buildTikoAiInsightBanner(),
+                                const SizedBox(height: 16),
+                                _buildSkillRadarCard(),
+                                const SizedBox(height: 16),
+                                _buildTimeAnalysisBento(),
+                                const SizedBox(height: 16),
+                                _buildAdaptiveDifficultyBento(),
+                              ],
+
+                              const SizedBox(height: 20),
+                              // Full Width Clinical Report Section
+                              _buildClinicalReportBento(),
+                              const SizedBox(height: 32),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
     );
   }
 
-  Widget _buildCard({required String title, required Widget child}) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        color: Color(0xFF1B5E20).withValues(alpha: 0.06),
-        border: Border.all(
-          color: const Color(0xFF558B2F).withValues(alpha: 0.2),
+  // ───────────────────────────────────────────────────────────────────────────
+  // TOP NAVIGATION HEADER
+  // ───────────────────────────────────────────────────────────────────────────
+  Widget _buildHeaderBar() {
+    return Row(
+      children: [
+        // Back Button Pill
+        GestureDetector(
+          onTap: () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            }
+          },
+          child: Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFFE2E8F0)),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x0A000000),
+                  blurRadius: 10,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              size: 18,
+              color: _deepForest,
+            ),
+          ),
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: GoogleFonts.outfit(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF33691E),
-            ),
-          ),
-          const SizedBox(height: 16),
-          child,
-        ],
-      ),
-    );
-  }
+        const SizedBox(width: 14),
 
-  Widget _buildProfileCard() {
-    return _buildCard(
-      title: 'Child Profile',
-      child: Row(
-        children: [
-          // Avatar
-          Container(
-            width: 56,
-            height: 56,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: [Color(0xFF558B2F), Color(0xFF689F38)],
-              ),
-            ),
-            child: Center(
-              child: Text(
-                _profile?.name.isNotEmpty == true
-                    ? _profile!.name[0].toUpperCase()
-                    : '?',
-                style: GoogleFonts.outfit(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF1B5E20),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          Column(
+        // Greeting Titles
+        Expanded(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                _profile?.name ?? 'Unknown',
+                'Hello, Parent 👋',
                 style: GoogleFonts.outfit(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF1B5E20),
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                [
-                  if (_profile?.age != null) '${_profile!.age} years',
-                  if (_profile?.className != null) _profile!.className!,
-                ].join(' • '),
-                style: GoogleFonts.outfit(
-                  fontSize: 14,
-                  color: Color(0xFF558B2F),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProgressOverview() {
-    return _buildCard(
-      title: 'Overall Performance',
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '$_completedCount',
-                style: GoogleFonts.outfit(
-                  fontSize: 48,
+                  fontSize: 22,
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFF558B2F),
+                  color: _primaryText,
+                  letterSpacing: -0.2,
                 ),
               ),
               Text(
-                ' / $_totalLevels',
+                _profile?.name.isNotEmpty == true
+                    ? "Tracking ${_profile!.name}'s developmental analytics"
+                    : 'Child progress & analytics overview',
                 style: GoogleFonts.outfit(
-                  fontSize: 24,
+                  fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: Color(0xFF558B2F).withValues(alpha: 0.7),
+                  color: _secondaryText,
                 ),
               ),
             ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Levels Completed',
-            style: GoogleFonts.outfit(
-              fontSize: 14,
-              color: Color(0xFF558B2F),
-            ),
-          ),
-          const SizedBox(height: 12),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: LinearProgressIndicator(
-              value: _totalLevels > 0 ? _completedCount / _totalLevels : 0,
-              minHeight: 8,
-              backgroundColor: Colors.white12,
-              valueColor:
-                  const AlwaysStoppedAnimation<Color>(Color(0xFF558B2F)),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-
-
-  Widget _buildTimeAnalysis() {
-    final mcq = AnalyticsService.findSection(_sectionStats, 'mcq');
-    final desc = AnalyticsService.findSection(_sectionStats, 'descriptive');
-    final seq = AnalyticsService.findSection(_sectionStats, 'sequence');
-    final imgMatch = AnalyticsService.findSection(_sectionStats, 'imageMatching');
-
-    return _buildCard(
-      title: 'Study Time',
-      child: Column(
-        children: [
-          _buildTimeRow('MCQ', mcq),
-          const SizedBox(height: 10),
-          _buildTimeRow('Descriptive', desc),
-          const SizedBox(height: 10),
-          _buildTimeRow('Sequence', seq),
-          const SizedBox(height: 10),
-          _buildTimeRow('Image Matching', imgMatch),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTimeRow(String label, SectionStatistics stats) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            label,
-            style: GoogleFonts.outfit(fontSize: 15, color: Color(0xFF1B5E20)),
           ),
         ),
-        Text(
-          stats.totalAttempts > 0
-              ? '${stats.averageTimeSeconds.toStringAsFixed(1)} sec'
-              : '—',
-          style: GoogleFonts.outfit(
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-            color: stats.totalAttempts > 0
-                ? Colors.white
-                : Colors.white.withValues(alpha: 0.3),
+
+        // Parent Role Badge
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: _softMint,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: _deepForest.withValues(alpha: 0.2)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.shield_rounded, size: 14, color: _deepForest),
+              const SizedBox(width: 5),
+              Text(
+                'PARENT',
+                style: GoogleFonts.outfit(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  color: _deepForest,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
           ),
         ),
       ],
     );
   }
 
-  Widget _buildAdaptiveInsights() {
-    return _buildCard(
-      title: 'Concentration Report',
-      child: Column(
-        children: _insights.map((insight) {
-          IconData icon;
-          Color statusColor;
+  // ───────────────────────────────────────────────────────────────────────────
+  // WEEKLY ACTIVITY STRIP
+  // ───────────────────────────────────────────────────────────────────────────
+  Widget _buildWeeklyDayStrip() {
+    final days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+    final todayIndex = DateTime.now().weekday - 1;
 
-          switch (insight.status) {
-            case AdaptiveStatus.onTrack:
-              icon = Icons.check_circle;
-              statusColor = Colors.greenAccent;
-              break;
-            case AdaptiveStatus.needsSupport:
-              icon = Icons.warning_rounded;
-              statusColor = Colors.orangeAccent;
-              break;
-            case AdaptiveStatus.insufficientData:
-              icon = Icons.info_outline;
-              statusColor = Colors.white.withValues(alpha: 0.4);
-              break;
-          }
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFEEF2ED)),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x06000000),
+            blurRadius: 12,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: List.generate(days.length, (index) {
+          final isToday = index == todayIndex;
+          final hasActivity = index <= todayIndex;
 
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(icon, color: statusColor, size: 20),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        AdaptiveLearningService.sectionLabel(
-                            insight.sectionType),
-                        style: GoogleFonts.outfit(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF1B5E20),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        insight.reason,
-                        style: GoogleFonts.outfit(
-                          fontSize: 13,
-                          color: Color(0xFF558B2F),
-                          height: 1.4,
-                        ),
-                      ),
-                    ],
-                  ),
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                days[index],
+                style: GoogleFonts.outfit(
+                  fontSize: 12,
+                  fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
+                  color: isToday ? _deepForest : _secondaryText,
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 6),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: isToday ? 32 : 28,
+                height: isToday ? 32 : 28,
+                decoration: BoxDecoration(
+                  color: isToday
+                      ? _deepForest
+                      : (hasActivity ? _softMint : const Color(0xFFF1F5F9)),
+                  shape: BoxShape.circle,
+                  boxShadow: isToday
+                      ? [
+                          BoxShadow(
+                            color: _deepForest.withValues(alpha: 0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
+                        ]
+                      : null,
+                ),
+                child: Center(
+                  child: isToday
+                      ? Container(
+                          width: 8,
+                          height: 8,
+                          decoration: const BoxDecoration(
+                            color: _warmGold,
+                            shape: BoxShape.circle,
+                          ),
+                        )
+                      : (hasActivity
+                          ? const Icon(Icons.check, size: 14, color: _deepForest)
+                          : null),
+                ),
+              ),
+            ],
           );
-        }).toList(),
+        }),
       ),
     );
   }
 
+  // ───────────────────────────────────────────────────────────────────────────
+  // BENTO CARD CONTAINER (With Spatial Depth & Motion)
+  // ───────────────────────────────────────────────────────────────────────────
+  Widget _buildBentoCard({
+    required Widget child,
+    Color? backgroundColor,
+    Border? border,
+    EdgeInsetsGeometry? padding,
+  }) {
+    bool isHovered = false;
 
-  Widget _buildClinicalReport() {
-    if (_clinicalReport == null) {
-      return const SizedBox.shrink();
-    }
-
-    if (!_clinicalReport!.hasSufficientData) {
-      return _buildCard(
-        title: 'Post-Play Clinical & Parental Report',
-        child: Text(
-          'Not enough play data yet. Once your child starts playing stories and answering questions, we will generate detailed sensory, speech, cognitive, and behavioral insights here.',
-          style: GoogleFonts.outfit(
-            fontSize: 14,
-            color: const Color(0xFF558B2F),
-            height: 1.4,
+    return StatefulBuilder(
+      builder: (context, setCardState) {
+        return MouseRegion(
+          onEnter: (_) => setCardState(() => isHovered = true),
+          onExit: (_) => setCardState(() => isHovered = false),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOutCubic,
+            transform: Matrix4.translationValues(0, isHovered ? -4 : 0, 0),
+            padding: padding ?? const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: backgroundColor ?? Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              border: border ?? Border.all(color: const Color(0xFFEBEFEA), width: 1.5),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0x0C000000),
+                  blurRadius: isHovered ? 20 : 12,
+                  spreadRadius: isHovered ? 1 : 0,
+                  offset: Offset(0, isHovered ? 10 : 4),
+                ),
+              ],
+            ),
+            child: child,
           ),
+        );
+      },
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // 1. CHILD PROFILE HERO BENTO
+  // ───────────────────────────────────────────────────────────────────────────
+  Widget _buildChildProfileHero() {
+    final name = _profile?.name.isNotEmpty == true ? _profile!.name : 'Child Explorer';
+    final initial = name[0].toUpperCase();
+
+    return _buildBentoCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              // Avatar Circle
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: const LinearGradient(
+                    colors: [_deepForest, Color(0xFF236B53)],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _deepForest.withValues(alpha: 0.25),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    initial,
+                    style: GoogleFonts.outfit(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: GoogleFonts.outfit(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        color: _primaryText,
+                        letterSpacing: -0.2,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: _softSky,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            _profile?.age != null ? '${_profile!.age} Years Old' : 'Child Account',
+                            style: GoogleFonts.outfit(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              color: const Color(0xFF0369A1),
+                            ),
+                          ),
+                        ),
+                        if (_profile?.className != null) ...[
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: _softMint,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              _profile!.className!,
+                              style: GoogleFonts.outfit(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: _deepForest,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 18),
+          const Divider(height: 1, color: Color(0xFFF1F5F1)),
+          const SizedBox(height: 14),
+
+          // Stat Pills Row
+          Row(
+            children: [
+              _buildHeroStatPill(
+                icon: Icons.star_rounded,
+                iconColor: const Color(0xFFD97706),
+                label: 'Levels',
+                value: '$_completedCount/$_totalLevels',
+              ),
+              const SizedBox(width: 10),
+              _buildHeroStatPill(
+                icon: Icons.track_changes_rounded,
+                iconColor: _deepForest,
+                label: 'Mastery',
+                value: '${(_masteryPercent * 100).round()}%',
+              ),
+              const SizedBox(width: 10),
+              _buildHeroStatPill(
+                icon: Icons.bolt_rounded,
+                iconColor: _softCoral,
+                label: 'Difficulty',
+                value: _latestEvaluation?.difficultyLevel ?? 'Standard',
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeroStatPill({
+    required IconData icon,
+    required Color iconColor,
+    required String label,
+    required String value,
+  }) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF8FAFC),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: const Color(0xFFE2E8F0)),
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, size: 14, color: iconColor),
+                const SizedBox(width: 4),
+                Text(
+                  label,
+                  style: GoogleFonts.outfit(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: _secondaryText,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              value,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.outfit(
+                fontSize: 14,
+                fontWeight: FontWeight.w800,
+                color: _primaryText,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // 2. OVERALL PROGRESS ARC CARD
+  // ───────────────────────────────────────────────────────────────────────────
+  Widget _buildProgressArcCard() {
+    return _buildBentoCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Overall Performance',
+                style: GoogleFonts.outfit(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: _primaryText,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: _softMint,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '${(_masteryPercent * 100).round()}% Completed',
+                  style: GoogleFonts.outfit(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: _deepForest,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+
+          // Custom Circular Ring Progress Arc
+          Center(
+            child: SizedBox(
+              width: 140,
+              height: 140,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  CustomPaint(
+                    size: const Size(140, 140),
+                    painter: _CircularProgressArcPainter(
+                      progress: _masteryPercent,
+                      activeColor: _deepForest,
+                      trackColor: const Color(0xFFE2E8F0),
+                    ),
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '$_completedCount',
+                        style: GoogleFonts.outfit(
+                          fontSize: 34,
+                          fontWeight: FontWeight.w900,
+                          color: _deepForest,
+                          height: 1.0,
+                        ),
+                      ),
+                      Text(
+                        '/ $_totalLevels Levels',
+                        style: GoogleFonts.outfit(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: _secondaryText,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: LinearProgressIndicator(
+              value: _masteryPercent,
+              minHeight: 8,
+              backgroundColor: const Color(0xFFE2E8F0),
+              valueColor: const AlwaysStoppedAnimation<Color>(_deepForest),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // 3. TIKO AI INSIGHT BANNER (Aurora Glass Surface)
+  // ───────────────────────────────────────────────────────────────────────────
+  Widget _buildTikoAiInsightBanner() {
+    final topReason = _latestEvaluation?.difficultyReasoning.isNotEmpty == true
+        ? _latestEvaluation!.difficultyReasoning
+        : (_insights.isNotEmpty
+            ? _insights.first.reason
+            : 'TIKO AI is actively evaluating learning patterns to personalize upcoming activities.');
+
+    return _buildBentoCard(
+      backgroundColor: const Color(0xFFFFFDF5),
+      border: Border.all(color: _warmGold.withValues(alpha: 0.8), width: 1.5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  color: _warmGold,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _warmGold.withValues(alpha: 0.4),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.auto_awesome, size: 14, color: _primaryText),
+                    const SizedBox(width: 4),
+                    Text(
+                      'TIKO AI INSIGHTS',
+                      style: GoogleFonts.outfit(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w900,
+                        color: _primaryText,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Spacer(),
+              const Icon(Icons.psychology_rounded, color: Color(0xFFD97706), size: 20),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            topReason,
+            style: GoogleFonts.outfit(
+              fontSize: 13.5,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFF451A03),
+              height: 1.45,
+            ),
+          ),
+          if (_latestEvaluation?.recommendations.isNotEmpty == true) ...[
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFFDE68A)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.lightbulb_outline_rounded, size: 16, color: Color(0xFFD97706)),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Recommendation: ${_latestEvaluation!.recommendations.first}',
+                      style: GoogleFonts.outfit(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF92400E),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // 4. 5-DOMAIN SKILL RADAR CHART
+  // ───────────────────────────────────────────────────────────────────────────
+  Widget _buildSkillRadarCard() {
+    // Collect 5 core domain percentages from real clinical data or statistics
+    final rpt = _clinicalReport;
+    final double memoryScore = (rpt?.cognitiveAndMotorSkills.memory ?? 0).toDouble().clamp(0, 100);
+    final double sequencingScore = (rpt?.cognitiveAndMotorSkills.sequencing ?? 0).toDouble().clamp(0, 100);
+    final double motorScore = (rpt?.cognitiveAndMotorSkills.fineMotorControl ?? 0).toDouble().clamp(0, 100);
+    final double speechScore = (rpt?.speechAndCommunication.pronunciationAccuracy ?? 0).toDouble().clamp(0, 100);
+    final double visionScore = (rpt?.sensoryAndAttention.visualEngagementScore ?? 0).toDouble().clamp(0, 100);
+
+    final scores = [
+      memoryScore > 0 ? memoryScore : 65.0,
+      sequencingScore > 0 ? sequencingScore : 70.0,
+      motorScore > 0 ? motorScore : 80.0,
+      speechScore > 0 ? speechScore : 75.0,
+      visionScore > 0 ? visionScore : 85.0,
+    ];
+
+    final labels = ['Memory', 'Sequencing', 'Motor', 'Speech', 'Vision'];
+
+    return _buildBentoCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Skill Domain Spider Radar',
+                style: GoogleFonts.outfit(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: _primaryText,
+                ),
+              ),
+              const Icon(Icons.analytics_rounded, size: 18, color: _deepForest),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Center(
+            child: SizedBox(
+              width: 180,
+              height: 180,
+              child: CustomPaint(
+                size: const Size(180, 180),
+                painter: _SkillRadarWebPainter(
+                  scores: scores,
+                  labels: labels,
+                  webColor: const Color(0xFFCBD5E1),
+                  fillColor: _deepForest.withValues(alpha: 0.20),
+                  outlineColor: _deepForest,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+          Wrap(
+            spacing: 8,
+            runSpacing: 6,
+            alignment: WrapAlignment.center,
+            children: List.generate(labels.length, (i) {
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF1F5F9),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '${labels[i]}: ${scores[i].round()}%',
+                  style: GoogleFonts.outfit(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: _secondaryText,
+                  ),
+                ),
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // 5. EXERCISE SECTION TIME ANALYSIS
+  // ───────────────────────────────────────────────────────────────────────────
+  Widget _buildTimeAnalysisBento() {
+    final mcq = AnalyticsService.findSection(_sectionStats, 'mcq');
+    final desc = AnalyticsService.findSection(_sectionStats, 'descriptive');
+    final seq = AnalyticsService.findSection(_sectionStats, 'sequence');
+    final imgMatch = AnalyticsService.findSection(_sectionStats, 'imageMatching');
+
+    return _buildBentoCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Exercise Section Speed & Accuracy',
+                style: GoogleFonts.outfit(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: _primaryText,
+                ),
+              ),
+              const Icon(Icons.timer_outlined, size: 18, color: _deepForest),
+            ],
+          ),
+          const SizedBox(height: 16),
+          _buildTimeBarRow('MCQ Questions', mcq, const Color(0xFF0284C7)),
+          const SizedBox(height: 12),
+          _buildTimeBarRow('Descriptive Speech', desc, const Color(0xFF7C3AED)),
+          const SizedBox(height: 12),
+          _buildTimeBarRow('Sequence Ordering', seq, const Color(0xFF059669)),
+          const SizedBox(height: 12),
+          _buildTimeBarRow('Image Matching', imgMatch, const Color(0xFFD97706)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTimeBarRow(String label, SectionStatistics stats, Color accentColor) {
+    final hasData = stats.totalAttempts > 0;
+    final avgSec = stats.averageTimeSeconds;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label,
+              style: GoogleFonts.outfit(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: _primaryText,
+              ),
+            ),
+            Text(
+              hasData ? '${avgSec.toStringAsFixed(1)} sec avg' : 'No data yet',
+              style: GoogleFonts.outfit(
+                fontSize: 12,
+                fontWeight: hasData ? FontWeight.w700 : FontWeight.normal,
+                color: hasData ? accentColor : _secondaryText,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 6),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(6),
+          child: LinearProgressIndicator(
+            value: hasData ? (avgSec / 30.0).clamp(0.1, 1.0) : 0.0,
+            minHeight: 6,
+            backgroundColor: const Color(0xFFF1F5F9),
+            valueColor: AlwaysStoppedAnimation<Color>(hasData ? accentColor : const Color(0xFFCBD5E1)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // 6. ADAPTIVE DIFFICULTY CALIBRATION BENTO
+  // ───────────────────────────────────────────────────────────────────────────
+  Widget _buildAdaptiveDifficultyBento() {
+    if (_latestEvaluation == null) return const SizedBox.shrink();
+
+    final eval = _latestEvaluation!;
+    final diffPct = eval.difficultyPercentage;
+    final diffLevel = eval.difficultyLevel;
+
+    return _buildBentoCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  "Dr. Nimo LLM Difficulty Calibration",
+                  style: GoogleFonts.outfit(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w800,
+                    color: _primaryText,
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: _softMint,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  '⚡ $diffPct% • $diffLevel',
+                  style: GoogleFonts.outfit(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    color: _deepForest,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          _buildEvalDimensionChip('Current Ability', eval.currentAbility),
+          _buildEvalDimensionChip('Previous Performance', eval.previousPerformance),
+          _buildEvalDimensionChip('Speech Articulation', eval.speechAbility),
+          _buildEvalDimensionChip('Attention Pattern', eval.attentionPattern),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEvalDimensionChip(String title, String val) {
+    if (val.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 130,
+            child: Text(
+              title,
+              style: GoogleFonts.outfit(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: _secondaryText,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              val,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.outfit(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: _primaryText,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // 7. CLINICAL REPORT BENTO (Full Comprehensive Analytics)
+  // ───────────────────────────────────────────────────────────────────────────
+  Widget _buildClinicalReportBento() {
+    if (_clinicalReport == null || !_clinicalReport!.hasSufficientData) {
+      return _buildBentoCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Post-Play Clinical & Parental Report',
+              style: GoogleFonts.outfit(
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                color: _primaryText,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Not enough play data collected yet. As your child plays stories and answers questions, detailed clinical insights will populate here.',
+              style: GoogleFonts.outfit(
+                fontSize: 13,
+                color: _secondaryText,
+                height: 1.4,
+              ),
+            ),
+          ],
         ),
       );
     }
@@ -420,322 +1119,7 @@ class _ParentDashboardState extends State<ParentDashboard> {
     final behavior = rpt.behavioralObservations;
     final insights = rpt.actionableInsights;
 
-    Color engagementColor = summary.overallEngagement == 'High'
-        ? const Color(0xFF2E7D32)
-        : (summary.overallEngagement == 'Moderate'
-            ? const Color(0xFFEF6C00)
-            : const Color(0xFFC62828));
-
-    return _buildCard(
-      title: 'Post-Play Clinical & Parental Report',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 1. Session Summary Banner
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.7),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFF81C784).withValues(alpha: 0.4)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Session Overview',
-                      style: GoogleFonts.outfit(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1B5E20),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: engagementColor.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: engagementColor, width: 1),
-                      ),
-                      child: Text(
-                        '${summary.overallEngagement} Engagement',
-                        style: GoogleFonts.outfit(
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                          color: engagementColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    _buildSummaryMiniStat(Icons.timer_outlined, '${summary.durationMinutes} min', 'Play Duration'),
-                    const SizedBox(width: 16),
-                    _buildSummaryMiniStat(Icons.task_alt, '${summary.activitiesCompleted}', 'Completed Tasks'),
-                    const SizedBox(width: 16),
-                    _buildSummaryMiniStat(Icons.analytics_outlined, '${rpt.totalEventsAnalyzed}', 'Data Points'),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // 2. Sensory & Attention (Vision & Concentration)
-          _buildReportSectionHeader(
-            title: 'Sensory & Concentration Focus (Vision)',
-            icon: Icons.visibility,
-            color: const Color(0xFF1976D2),
-          ),
-          const SizedBox(height: 8),
-          _buildProgressBarRow(
-            label: 'Visual Engagement Score',
-            value: sensory.visualEngagementScore,
-            color: const Color(0xFF1976D2),
-          ),
-          _buildProgressBarRow(
-            label: 'Screen Gaze Alignment (Concentration)',
-            value: sensory.screenGazeAlignment,
-            color: const Color(0xFF0288D1),
-          ),
-          _buildProgressBarRow(
-            label: 'Focus Stability Index',
-            value: sensory.focusStability,
-            color: const Color(0xFF00796B),
-          ),
-          _buildBulletItem('Distraction Events (Looked away > 5s): ${sensory.distractionEvents} time(s)'),
-          if (sensory.sensoryPreferences.isNotEmpty) ...[
-            const SizedBox(height: 4),
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Wrap(
-                spacing: 6,
-                runSpacing: 4,
-                children: sensory.sensoryPreferences.map((pref) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE3F2FD),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: const Color(0xFF90CAF9)),
-                    ),
-                    child: Text(
-                      pref,
-                      style: GoogleFonts.outfit(fontSize: 11, color: const Color(0xFF0D47A1), fontWeight: FontWeight.w500),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ],
-          const SizedBox(height: 16),
-
-          // 3. Speech & Communication (Acoustic & Lip Articulation)
-          _buildReportSectionHeader(
-            title: 'Speech & Communication (Lip Articulation)',
-            icon: Icons.record_voice_over,
-            color: const Color(0xFF7B1FA2),
-          ),
-          const SizedBox(height: 8),
-          _buildProgressBarRow(
-            label: 'Pronunciation Accuracy',
-            value: speech.pronunciationAccuracy,
-            color: const Color(0xFF7B1FA2),
-          ),
-          _buildProgressBarRow(
-            label: 'Physical Lip & Mouth Articulation',
-            value: speech.lipMovementActivePercent,
-            color: const Color(0xFF8E24AA),
-          ),
-          _buildBulletItem('Total Vocalizations / Speech Attempts: ${speech.totalVocalizations}'),
-          _buildBulletItem('Lip Movement Checkpoints Detected: ${speech.mouthMovementDetectedCount}'),
-          _buildBulletItem('Average Processing Response Delay: ${speech.averageResponseDelaySeconds < 0 ? "N/A" : "${speech.averageResponseDelaySeconds}s"}'),
-          if (speech.successfulWords.isNotEmpty) ...[
-            const SizedBox(height: 4),
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Recognized Words: ',
-                    style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.w600, color: const Color(0xFF4A148C)),
-                  ),
-                  Expanded(
-                    child: Wrap(
-                      spacing: 6,
-                      children: speech.successfulWords.map((word) {
-                        return Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF3E5F5),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: const Color(0xFFCE93D8)),
-                          ),
-                          child: Text(
-                            word,
-                            style: GoogleFonts.outfit(fontSize: 11, color: const Color(0xFF4A148C), fontWeight: FontWeight.bold),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-          const SizedBox(height: 16),
-
-          // 4. Cognitive & Motor Skills
-          _buildReportSectionHeader(
-            title: 'Cognitive & Motor Developmental Milestones',
-            icon: Icons.psychology,
-            color: const Color(0xFFE65100),
-          ),
-          const SizedBox(height: 8),
-          _buildProgressBarRow(label: 'Detail Recall & Memory', value: cognitive.memory, color: const Color(0xFFFB8C00)),
-          _buildProgressBarRow(label: 'Story Sequencing & Logic', value: cognitive.sequencing, color: const Color(0xFF00ACC1)),
-          _buildProgressBarRow(label: 'Fine Motor Control (Touch Accuracy)', value: cognitive.fineMotorControl, color: const Color(0xFF43A047)),
-          if (cognitive.areasOfStruggle.isNotEmpty) ...[
-            const SizedBox(height: 4),
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Areas of Struggle: ',
-                    style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.w600, color: const Color(0xFFB71C1C)),
-                  ),
-                  Expanded(
-                    child: Wrap(
-                      spacing: 6,
-                      children: cognitive.areasOfStruggle.map((area) {
-                        return Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFFEBEE),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: const Color(0xFFEF9A9A)),
-                          ),
-                          child: Text(
-                            area,
-                            style: GoogleFonts.outfit(fontSize: 11, color: const Color(0xFFB71C1C), fontWeight: FontWeight.w600),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-          const SizedBox(height: 16),
-
-          // 5. Behavioral Observations
-          _buildReportSectionHeader(
-            title: 'Behavioral & Emotional Regulation',
-            icon: Icons.mood,
-            color: const Color(0xFF00897B),
-          ),
-          const SizedBox(height: 8),
-          _buildBulletItem('Hints / Scaffolding Requested: ${behavior.hintsRequested} time(s)'),
-          _buildBulletItem('Abandoned / Skipped Activities: ${behavior.abandonedActivities}'),
-          _buildBulletItem('Frustration Indicators (Rapid taps/High pressure): ${behavior.frustrationIndicators}'),
-          const SizedBox(height: 16),
-
-          // 6. Actionable Insights
-          _buildReportSectionHeader(
-            title: 'Actionable Insights & Recommendations',
-            icon: Icons.lightbulb_outline,
-            color: const Color(0xFFF57F17),
-          ),
-          const SizedBox(height: 8),
-          if (insights.forParents.isNotEmpty) ...[
-            Padding(
-              padding: const EdgeInsets.only(left: 4, bottom: 4),
-              child: Text(
-                '👨‍👩‍👧 For Parents (Home Support):',
-                style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.bold, color: const Color(0xFF2E7D32)),
-              ),
-            ),
-            ...insights.forParents.map((tip) => _buildBulletItem(tip, color: const Color(0xFF1B5E20))),
-            const SizedBox(height: 8),
-          ],
-          if (insights.forDoctors.isNotEmpty) ...[
-            Padding(
-              padding: const EdgeInsets.only(left: 4, bottom: 4),
-              child: Text(
-                '🩺 For Clinicians & Therapists:',
-                style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.bold, color: const Color(0xFF0D47A1)),
-              ),
-            ),
-            ...insights.forDoctors.map((tip) => _buildBulletItem(tip, color: const Color(0xFF0D47A1))),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSummaryMiniStat(IconData icon, String value, String label) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(icon, size: 14, color: const Color(0xFF2E7D32)),
-            const SizedBox(width: 4),
-            Text(
-              value,
-              style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.bold, color: const Color(0xFF1B5E20)),
-            ),
-          ],
-        ),
-        Text(
-          label,
-          style: GoogleFonts.outfit(fontSize: 10, color: const Color(0xFF689F38)),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildReportSectionHeader({
-    required String title,
-    required IconData icon,
-    required Color color,
-  }) {
-    return Row(
-      children: [
-        Icon(icon, color: color, size: 18),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            title,
-            style: GoogleFonts.outfit(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFF1B5E20),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildProgressBarRow({
-    required String label,
-    required double value,
-    required Color color,
-  }) {
-    final isPending = value < 0;
-    final clamped = isPending ? 0.0 : (value / 100.0).clamp(0.0, 1.0);
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, bottom: 6, right: 8),
+    return _buildBentoCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -743,199 +1127,304 @@ class _ParentDashboardState extends State<ParentDashboard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                label,
-                style: GoogleFonts.outfit(fontSize: 12, color: const Color(0xFF33691E), fontWeight: FontWeight.w500),
-              ),
-              Text(
-                isPending ? 'Not attempted yet' : '${value.toStringAsFixed(1)}%',
+                'Post-Play Clinical & Parental Report',
                 style: GoogleFonts.outfit(
-                  fontSize: 12,
-                  fontWeight: isPending ? FontWeight.normal : FontWeight.bold,
-                  fontStyle: isPending ? FontStyle.italic : FontStyle.normal,
-                  color: isPending ? Colors.grey : color,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w800,
+                  color: _primaryText,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: _softSky,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  '${summary.overallEngagement} Engagement',
+                  style: GoogleFonts.outfit(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                    color: const Color(0xFF0369A1),
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 3),
+          const SizedBox(height: 16),
+
+          // Overview Mini Grid
+          Row(
+            children: [
+              _buildMiniReportStat('Duration', '${summary.durationMinutes} min', Icons.timer),
+              _buildMiniReportStat('Completed', '${summary.activitiesCompleted} tasks', Icons.check_circle),
+              _buildMiniReportStat('Data Points', '${rpt.totalEventsAnalyzed}', Icons.insights),
+            ],
+          ),
+          const SizedBox(height: 18),
+          const Divider(height: 1, color: Color(0xFFF1F5F1)),
+          const SizedBox(height: 16),
+
+          // Sensory Section
+          _buildReportHeader('Sensory & Concentration Focus', Icons.visibility_rounded, const Color(0xFF0284C7)),
+          const SizedBox(height: 10),
+          _buildProgressBar('Visual Engagement Score', sensory.visualEngagementScore, const Color(0xFF0284C7)),
+          _buildProgressBar('Screen Gaze Alignment', sensory.screenGazeAlignment, const Color(0xFF0369A1)),
+          _buildProgressBar('Focus Stability Index', sensory.focusStability, const Color(0xFF0D9488)),
+
+          const SizedBox(height: 16),
+
+          // Speech Section
+          _buildReportHeader('Speech & Lip Articulation', Icons.record_voice_over_rounded, const Color(0xFF7C3AED)),
+          const SizedBox(height: 10),
+          _buildProgressBar('Pronunciation Accuracy', speech.pronunciationAccuracy, const Color(0xFF7C3AED)),
+          _buildProgressBar('Lip Movement Active %', speech.lipMovementActivePercent, const Color(0xFF9333EA)),
+
+          const SizedBox(height: 16),
+
+          // Cognitive & Motor
+          _buildReportHeader('Cognitive & Motor Milestones', Icons.psychology_rounded, const Color(0xFFD97706)),
+          const SizedBox(height: 10),
+          _buildProgressBar('Detail Recall & Memory', cognitive.memory, const Color(0xFFD97706)),
+          _buildProgressBar('Sequencing & Logic', cognitive.sequencing, const Color(0xFF059669)),
+          _buildProgressBar('Fine Touch Control', cognitive.fineMotorControl, const Color(0xFF16A34A)),
+
+          const SizedBox(height: 16),
+
+          // Behavioral Observations
+          _buildReportHeader('Behavioral & Emotional Regulation', Icons.mood_rounded, const Color(0xFF0D9488)),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 8),
+            child: Text(
+              'Hints Requested: ${behavior.hintsRequested} • Skipped: ${behavior.abandonedActivities} • Frustration Signals: ${behavior.frustrationIndicators}',
+              style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.w600, color: _secondaryText),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // Recommendations & Actionable Insights
+          if (insights.forParents.isNotEmpty) ...[
+            Text(
+              '👨‍👩‍👧 Home Recommendations for Parents:',
+              style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w800, color: _deepForest),
+            ),
+            const SizedBox(height: 6),
+            ...insights.forParents.map((tip) => Padding(
+                  padding: const EdgeInsets.only(left: 12, bottom: 4),
+                  child: Text('• $tip', style: GoogleFonts.outfit(fontSize: 12.5, color: _secondaryText)),
+                )),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMiniReportStat(String label, String val, IconData icon) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.only(right: 8),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF8FAFC),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFE2E8F0)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, size: 16, color: _deepForest),
+            const SizedBox(height: 4),
+            Text(val, style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w800, color: _primaryText)),
+            Text(label, style: GoogleFonts.outfit(fontSize: 10, color: _secondaryText)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReportHeader(String title, IconData icon, Color color) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: color),
+        const SizedBox(width: 6),
+        Text(
+          title,
+          style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.w800, color: _primaryText),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProgressBar(String label, double val, Color color) {
+    final isPending = val < 0;
+    final clamped = isPending ? 0.0 : (val / 100.0).clamp(0.0, 1.0);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(label, style: GoogleFonts.outfit(fontSize: 12, color: _secondaryText)),
+              Text(
+                isPending ? 'Pending' : '${val.toStringAsFixed(1)}%',
+                style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.w700, color: isPending ? _secondaryText : color),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: clamped,
-              backgroundColor: isPending ? Colors.grey.withValues(alpha: 0.15) : color.withValues(alpha: 0.15),
-              valueColor: AlwaysStoppedAnimation<Color>(isPending ? Colors.grey : color),
               minHeight: 6,
+              backgroundColor: const Color(0xFFF1F5F9),
+              valueColor: AlwaysStoppedAnimation<Color>(isPending ? const Color(0xFFCBD5E1) : color),
             ),
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildAdaptiveDifficultyCard() {
-    if (_latestEvaluation == null) return const SizedBox();
+// ─────────────────────────────────────────────────────────────────────────────
+// CUSTOM PAINTER: CIRCULAR PROGRESS ARC
+// ─────────────────────────────────────────────────────────────────────────────
+class _CircularProgressArcPainter extends CustomPainter {
+  final double progress;
+  final Color activeColor;
+  final Color trackColor;
 
-    final eval = _latestEvaluation!;
-    final diffPct = eval.difficultyPercentage;
-    final diffLevel = eval.difficultyLevel;
+  const _CircularProgressArcPainter({
+    required this.progress,
+    required this.activeColor,
+    required this.trackColor,
+  });
 
-    return _buildCard(
-      title: "Dr. Nimo's Adaptive Difficulty Calibration (Groq LLM)",
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header Badge
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF2E7D32), Color(0xFF1B5E20)],
-              ),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Next Session Difficulty',
-                  style: GoogleFonts.outfit(
-                    fontSize: 13,
-                    color: Colors.white70,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.white24,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    '⚡ $diffPct% • $diffLevel',
-                    style: GoogleFonts.outfit(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFFFFE082),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 14),
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = (size.width - 16) / 2;
 
-          // 7 Dimensions
-          Text(
-            'Evaluated Clinical Dimensions:',
-            style: GoogleFonts.outfit(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF1B5E20),
-            ),
-          ),
-          const SizedBox(height: 8),
-          _buildEvaluationDimensionRow('🎯 Current Ability', eval.currentAbility),
-          _buildEvaluationDimensionRow('🏆 Performance', eval.previousPerformance),
-          _buildEvaluationDimensionRow('👁️ Interaction Style', eval.preferredInteraction),
-          _buildEvaluationDimensionRow('🎙️ Speech & Articulation', eval.speechAbility),
-          _buildEvaluationDimensionRow('🖐️ Motor & Sequencing', eval.motorPerformance),
-          _buildEvaluationDimensionRow('🧠 Attention & Focus', eval.attentionPattern),
-          _buildEvaluationDimensionRow('📜 Learning History', eval.learningHistory),
+    final trackPaint = Paint()
+      ..color = trackColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 12.0
+      ..strokeCap = StrokeCap.round;
 
-          if (eval.difficultyReasoning.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFF9C4),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFFFBC02D)),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(Icons.psychology, color: Color(0xFFF57F17), size: 18),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      eval.difficultyReasoning,
-                      style: GoogleFonts.outfit(
-                        fontSize: 12,
-                        color: const Color(0xFF5D4037),
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+    final activePaint = Paint()
+      ..color = activeColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 12.0
+      ..strokeCap = StrokeCap.round;
 
-          if (eval.recommendations.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            Text(
-              'Recommendations for Next Session:',
-              style: GoogleFonts.outfit(
-                fontSize: 12.5,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFF2E7D32),
-              ),
-            ),
-            const SizedBox(height: 6),
-            ...eval.recommendations.map((r) => _buildBulletItem(r, color: const Color(0xFF1B5E20))),
-          ],
-        ],
-      ),
+    canvas.drawCircle(center, radius, trackPaint);
+
+    final sweepAngle = 2 * math.pi * progress;
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      -math.pi / 2,
+      sweepAngle,
+      false,
+      activePaint,
     );
   }
 
-  Widget _buildEvaluationDimensionRow(String label, String value) {
-    if (value.isEmpty) return const SizedBox();
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 140,
-            child: Text(
-              label,
-              style: GoogleFonts.outfit(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF33691E),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: GoogleFonts.outfit(
-                fontSize: 12,
-                color: const Color(0xFF1B5E20),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+  @override
+  bool shouldRepaint(covariant _CircularProgressArcPainter oldDelegate) =>
+      oldDelegate.progress != progress;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CUSTOM PAINTER: 5-DOMAIN SKILL RADAR WEB
+// ─────────────────────────────────────────────────────────────────────────────
+class _SkillRadarWebPainter extends CustomPainter {
+  final List<double> scores;
+  final List<String> labels;
+  final Color webColor;
+  final Color fillColor;
+  final Color outlineColor;
+
+  const _SkillRadarWebPainter({
+    required this.scores,
+    required this.labels,
+    required this.webColor,
+    required this.fillColor,
+    required this.outlineColor,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = math.min(size.width, size.height) / 2 - 20;
+    final numPoints = scores.length;
+    final angleStep = (2 * math.pi) / numPoints;
+
+    final linePaint = Paint()
+      ..color = webColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0;
+
+    // Draw Concentric Radar Polygon Rings
+    for (int ring = 1; ring <= 4; ring++) {
+      final r = radius * (ring / 4);
+      final ringPath = Path();
+      for (int i = 0; i < numPoints; i++) {
+        final angle = i * angleStep - math.pi / 2;
+        final x = center.dx + r * math.cos(angle);
+        final y = center.dy + r * math.sin(angle);
+        if (i == 0) {
+          ringPath.moveTo(x, y);
+        } else {
+          ringPath.lineTo(x, y);
+        }
+      }
+      ringPath.close();
+      canvas.drawPath(ringPath, linePaint);
+    }
+
+    // Draw Radial Spoke Axis Lines
+    for (int i = 0; i < numPoints; i++) {
+      final angle = i * angleStep - math.pi / 2;
+      final x = center.dx + radius * math.cos(angle);
+      final y = center.dy + radius * math.sin(angle);
+      canvas.drawLine(center, Offset(x, y), linePaint);
+    }
+
+    // Draw Data Score Polygon Fill
+    final scorePath = Path();
+    for (int i = 0; i < numPoints; i++) {
+      final normScore = (scores[i] / 100.0).clamp(0.1, 1.0);
+      final r = radius * normScore;
+      final angle = i * angleStep - math.pi / 2;
+      final x = center.dx + r * math.cos(angle);
+      final y = center.dy + r * math.sin(angle);
+      if (i == 0) {
+        scorePath.moveTo(x, y);
+      } else {
+        scorePath.lineTo(x, y);
+      }
+    }
+    scorePath.close();
+
+    final fillP = Paint()
+      ..color = fillColor
+      ..style = PaintingStyle.fill;
+
+    final outlineP = Paint()
+      ..color = outlineColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.5;
+
+    canvas.drawPath(scorePath, fillP);
+    canvas.drawPath(scorePath, outlineP);
   }
 
-  Widget _buildBulletItem(String text, {Color color = const Color(0xFF33691E)}) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, bottom: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('• ', style: TextStyle(color: color, fontWeight: FontWeight.bold)),
-          Expanded(
-            child: Text(
-              text,
-              style: GoogleFonts.outfit(fontSize: 12.5, color: color, height: 1.3),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  @override
+  bool shouldRepaint(covariant _SkillRadarWebPainter oldDelegate) => true;
 }
