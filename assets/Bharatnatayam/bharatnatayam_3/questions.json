@@ -1,0 +1,449 @@
+﻿{
+  "title": "Practicing Thattadavu - First and Second Adavu",
+  "section": {
+    "start": "08:00",
+    "end": "11:00",
+    "description": "Comprehensive pedagogical question set with multi-tier difficulty calibrated for all learner profiles (Gentle Starter, Balanced Explorer, Curious Adventurer, Challenger, Champion)."
+  },
+  "target_age": 12,
+  "question_pattern": {
+    "main_questions": "Multi-tier MCQs, progressive descriptive questions, and voice pronunciation speech questions.",
+    "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
+    "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
+    "sequence_test": "Chronological milestone ordering and sequence analysis.",
+    "image_matching": "Interactive visual matching connecting steps, rhythms, and descriptions."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "question": "In the first Thattadavu adavu, how many times does the dancer strike each foot?",
+      "options": {
+        "A": "Three times",
+        "B": "Once",
+        "C": "Twice",
+        "D": "Four times"
+      },
+      "answer": "B",
+      "answer_text": "In the first Thattadavu adavu, the dancer strikes each foot once starting with the right leg.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "question": "Which foot does the dancer start striking with in Thattadavu?",
+      "options": {
+        "A": "Left foot",
+        "B": "Either foot",
+        "C": "Right foot",
+        "D": "Both feet at the same time"
+      },
+      "answer": "C",
+      "answer_text": "The dancer starts striking with the right foot in Thattadavu.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "question": "What is the rhythmic syllable (tala) used in Thattadavu?",
+      "options": {
+        "A": "Tha dhi thom",
+        "B": "Theia thei",
+        "C": "Ta ka di mi",
+        "D": "Dha dhin dha"
+      },
+      "answer": "B",
+      "answer_text": "The tala for Thattadavu is 'Theia thei'.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "question": "In the second Thattadavu adavu, how many counts does each foot get?",
+      "options": {
+        "A": "One count",
+        "B": "Three counts",
+        "C": "Two counts",
+        "D": "Four counts"
+      },
+      "answer": "C",
+      "answer_text": "The second Thattadavu adavu has two counts on each foot.",
+      "difficulty": "medium",
+      "difficulty_percentage": 40,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "question": "What posture does the dancer start from at the beginning of each Thattadavu adavu?",
+      "options": {
+        "A": "Aramandi directly",
+        "B": "Samapadam",
+        "C": "Mandi",
+        "D": "A standing leap"
+      },
+      "answer": "B",
+      "answer_text": "The dancer starts from Samapadam (the first posture) and then transitions into Aramandi.",
+      "difficulty": "medium",
+      "difficulty_percentage": 45,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "question": "What does the dancer do after taking the Samapadam posture in Thattadavu?",
+      "options": {
+        "A": "Jumps into the air",
+        "B": "Sits down into Aramandi posture",
+        "C": "Spins around twice",
+        "D": "Raises both hands above the head"
+      },
+      "answer": "B",
+      "answer_text": "After Samapadam, the dancer sits down into Aramandi posture before striking the feet.",
+      "difficulty": "medium",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "question": "What is the difference between the first and second Thattadavu adavu?",
+      "options": {
+        "A": "The first uses Aramandi; the second uses Samapadam",
+        "B": "The first strikes each foot once; the second strikes each foot twice",
+        "C": "The first is slower; the second has a different tala",
+        "D": "The first is done in silence; the second has music"
+      },
+      "answer": "B",
+      "answer_text": "The first Thattadavu strikes each foot once; the second Thattadavu strikes each foot twice, with the same tala.",
+      "difficulty": "medium",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "question": "What is 'tala' in the context of Bharatanatyam adavus?",
+      "options": {
+        "A": "The costume worn during performance",
+        "B": "The rhythmic syllables that guide the timing of the dance steps",
+        "C": "The name of the teacher",
+        "D": "The type of music played on stage"
+      },
+      "answer": "B",
+      "answer_text": "Tala refers to the rhythmic syllables like 'Theia thei' that guide the timing of the dance steps.",
+      "difficulty": "hard",
+      "difficulty_percentage": 65,
+      "difficulty_level": "Challenger"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "question": "Why does practicing the same Thattadavu adavu at different speeds help a dancer?",
+      "options": {
+        "A": "It changes the meaning of the adavu",
+        "B": "It builds rhythmic control, muscle memory, and the ability to perform the step precisely at any tempo",
+        "C": "It allows the dancer to skip the Samapadam posture",
+        "D": "It is done only to impress the audience"
+      },
+      "answer": "B",
+      "answer_text": "Practicing at different speeds builds rhythmic control, muscle memory, and the precision needed to perform adavus at any tempo.",
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "question": "How does the progressive structure of the two Thattadavu adavus reflect Bharatanatyam's approach to learning?",
+      "options": {
+        "A": "It shows that there is no specific order to learning",
+        "B": "It demonstrates gradual complexity — mastering one count before progressing to two, building rhythmic intelligence incrementally",
+        "C": "It proves that the second adavu is more important than the first",
+        "D": "It shows that only the faster version matters in performance"
+      },
+      "answer": "B",
+      "answer_text": "The progression from one strike to two strikes per foot demonstrates Bharatanatyam's philosophy of incremental learning — mastering each stage before increasing complexity.",
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion"
+    },
+    {
+      "id": 11,
+      "type": "descriptive",
+      "question": "Describe how the first Thattadavu adavu is performed.",
+      "reference_answer": "The dancer starts in Samapadam posture and then sits down in Aramandi. The dancer strikes each foot once, starting with the right leg. The tala for this adavu is 'Theia thei'.",
+      "key_concepts": ["Samapadam", "Aramandi", "strikes each foot once", "right leg", "Theia thei"],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 12,
+      "type": "descriptive",
+      "question": "What is the difference between the first and second Thattadavu adavu?",
+      "reference_answer": "The first Thattadavu adavu has one count on each foot, striking each foot once starting with the right. The second Thattadavu adavu has two counts on each foot — striking each foot twice. Both adavus use the same tala 'Theia thei' and begin from Samapadam into Aramandi.",
+      "key_concepts": ["first adavu", "one count", "second adavu", "two counts", "right leg", "Theia thei"],
+      "cosine_similarity_threshold": 0.65,
+      "difficulty": "medium",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 13,
+      "type": "descriptive",
+      "question": "Explain how the tala 'Theia thei' guides the performance of Thattadavu adavus.",
+      "reference_answer": "The tala 'Theia thei' provides the rhythmic framework for both Thattadavu adavus. In the first adavu, 'Theia thei' corresponds to one strike on each foot. In the second adavu, 'Theia thei' corresponds to two strikes on each foot. The tala ensures the dancer maintains rhythmic consistency and can increase or decrease tempo while keeping precise timing.",
+      "key_concepts": ["Theia thei", "rhythmic framework", "one strike", "two strikes", "tempo", "timing"],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 72,
+      "difficulty_level": "Challenger"
+    },
+    {
+      "id": 14,
+      "type": "descriptive",
+      "question": "Critically analyze why Bharatanatyam training begins with slow practice of adavus before progressing to faster speeds.",
+      "reference_answer": "Starting slowly allows the dancer to internalize the correct posture, foot placement, and alignment before adding the challenge of speed. In Bharatanatyam, technical precision is paramount — a step performed incorrectly at high speed reinforces bad habits. Slow practice builds the muscle memory and neuromuscular pathways needed for accurate, expressive, and injury-free performance at faster tempos, embodying the principle that mastery of basics enables advanced artistry.",
+      "key_concepts": ["slow practice", "posture", "alignment", "muscle memory", "technical precision", "speed", "advanced artistry"],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion"
+    },
+    {
+      "id": 15,
+      "type": "speech",
+      "question": "Say the rhythmic syllable used in Thattadavu:",
+      "target_phrase": "Theia Thei",
+      "reference_answer": "Theia Thei",
+      "key_concepts": ["Theia", "Thei"],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 16,
+      "type": "speech",
+      "question": "Say which foot the dancer starts striking with in Thattadavu:",
+      "target_phrase": "Right Leg",
+      "reference_answer": "Right Leg",
+      "key_concepts": ["Right", "Leg"],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 17,
+      "type": "speech",
+      "question": "Pronounce the complete name of the striking steps adavu series:",
+      "target_phrase": "Thattadavu",
+      "reference_answer": "Thattadavu",
+      "key_concepts": ["Thattadavu"],
+      "min_score_threshold": 70,
+      "difficulty": "medium",
+      "difficulty_percentage": 40,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 18,
+      "type": "speech",
+      "question": "Pronounce both postures used at the start of every Thattadavu adavu:",
+      "target_phrase": "Samapadam Aramandi",
+      "reference_answer": "Samapadam Aramandi",
+      "key_concepts": ["Samapadam", "Aramandi"],
+      "min_score_threshold": 70,
+      "difficulty": "medium",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 19,
+      "type": "speech",
+      "question": "Pronounce the phrase describing the second Thattadavu adavu:",
+      "target_phrase": "Two Counts on Each Foot",
+      "reference_answer": "Two Counts on Each Foot",
+      "key_concepts": ["Two", "Counts", "Each", "Foot"],
+      "min_score_threshold": 70,
+      "difficulty": "hard",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer"
+    },
+    {
+      "id": 20,
+      "type": "speech",
+      "question": "Pronounce the tala used in Thattadavu four times in rhythm:",
+      "target_phrase": "Theia Thei Theia Thei",
+      "reference_answer": "Theia Thei Theia Thei",
+      "key_concepts": ["Theia", "Thei"],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 72,
+      "difficulty_level": "Challenger"
+    },
+    {
+      "id": 21,
+      "type": "speech",
+      "question": "Pronounce this phrase describing the practice principle in Bharatanatyam:",
+      "target_phrase": "Practice Slow Before Fast",
+      "reference_answer": "Practice Slow Before Fast",
+      "key_concepts": ["Practice", "Slow", "Fast"],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion"
+    }
+  ],
+  "sequence_test": {
+    "description": "These questions test whether the learner understands the correct sequence of events in performing and practicing Thattadavu adavus.",
+    "questions": [
+      {
+        "id": 22,
+        "type": "sequence_mcq",
+        "question": "What is the first action a dancer takes at the start of Thattadavu?",
+        "options": {
+          "A": "Immediately strike the foot",
+          "B": "Stand in Samapadam posture",
+          "C": "Sit in Mandi posture",
+          "D": "Play the tala instrument"
+        },
+        "answer": "B",
+        "answer_text": "The dancer first takes the Samapadam posture at the start of Thattadavu.",
+        "difficulty": "easy",
+        "difficulty_percentage": 20,
+        "difficulty_level": "Gentle Starter"
+      },
+      {
+        "id": 23,
+        "type": "sequence_mcq",
+        "question": "What happens after the dancer stands in Samapadam in Thattadavu?",
+        "options": {
+          "A": "The dancer jumps immediately",
+          "B": "The dancer sits down into Aramandi",
+          "C": "The dancer raises both hands",
+          "D": "The lesson ends"
+        },
+        "answer": "B",
+        "answer_text": "After Samapadam, the dancer transitions down into Aramandi posture.",
+        "difficulty": "medium",
+        "difficulty_percentage": 40,
+        "difficulty_level": "Balanced Explorer"
+      },
+      {
+        "id": 24,
+        "type": "sequence_mcq",
+        "question": "What is the correct sequence of performing the first Thattadavu adavu?",
+        "options": {
+          "A": "Aramandi -> Strike left -> Strike right -> Samapadam",
+          "B": "Samapadam -> Aramandi -> Strike right foot once -> Strike left foot once",
+          "C": "Strike both feet -> Samapadam -> Aramandi",
+          "D": "Aramandi -> Samapadam -> Strike right twice"
+        },
+        "answer": "B",
+        "answer_text": "The sequence is: Samapadam -> Aramandi -> Strike right foot once -> Strike left foot once, with 'Theia thei' tala.",
+        "difficulty": "medium",
+        "difficulty_percentage": 60,
+        "difficulty_level": "Curious Adventurer"
+      },
+      {
+        "id": 25,
+        "type": "sequence_mcq",
+        "question": "How does the second Thattadavu adavu differ from the first in terms of sequence?",
+        "options": {
+          "A": "The second starts with Aramandi directly, skipping Samapadam",
+          "B": "The second starts with Samapadam -> Aramandi -> strikes each foot twice instead of once",
+          "C": "The second uses a completely different tala",
+          "D": "The second is done in the opposite direction"
+        },
+        "answer": "B",
+        "answer_text": "The second adavu follows the same Samapadam -> Aramandi sequence but strikes each foot twice with the same tala.",
+        "difficulty": "hard",
+        "difficulty_percentage": 75,
+        "difficulty_level": "Challenger"
+      },
+      {
+        "id": 26,
+        "type": "sequence_mcq",
+        "question": "In what order should a student practice the Thattadavu adavus to build the best technique?",
+        "options": {
+          "A": "Start fast then slow down to check accuracy",
+          "B": "Practice at maximum speed first; alignment doesn't matter until advanced level",
+          "C": "Master first adavu (one count) at slow speed -> increase speed -> then learn second adavu (two counts) in the same manner",
+          "D": "Practice both adavus simultaneously from the start"
+        },
+        "answer": "C",
+        "answer_text": "The correct approach is to master the first adavu slowly, then increase speed, before building on that foundation to learn the second adavu with two counts per foot.",
+        "difficulty": "hard",
+        "difficulty_percentage": 88,
+        "difficulty_level": "Champion"
+      }
+    ]
+  },
+  "image_matching": [
+    {
+      "id": 27,
+      "type": "image_matching",
+      "question": "Match each Thattadavu element with its correct description:",
+      "images": [
+        { "id": "img_1", "file": "images/samapadam.jpg", "label": "Starting Posture" },
+        { "id": "img_2", "file": "images/thattadavu_1.jpg", "label": "First Adavu" },
+        { "id": "img_3", "file": "images/thattadavu_2.jpg", "label": "Second Adavu" }
+      ],
+      "descriptions": [
+        { "id": "desc_1", "text": "Samapadam — the upright starting posture before transitioning into Aramandi." },
+        { "id": "desc_2", "text": "Strikes each foot once in Aramandi with the tala Theia thei." },
+        { "id": "desc_3", "text": "Strikes each foot twice in Aramandi with the same tala Theia thei." }
+      ],
+      "correct_matches": { "img_1": "desc_1", "img_2": "desc_2", "img_3": "desc_3" },
+      "points": 3,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 28,
+      "type": "image_matching",
+      "question": "Match each Bharatanatyam practice concept with its correct explanation:",
+      "images": [
+        { "id": "img_1", "file": "images/tala.jpg", "label": "Theia Thei (Tala)" },
+        { "id": "img_2", "file": "images/right_foot.jpg", "label": "Right Foot First" },
+        { "id": "img_3", "file": "images/slow_fast.jpg", "label": "Slow to Fast" }
+      ],
+      "descriptions": [
+        { "id": "desc_1", "text": "The rhythmic syllable chanted aloud to keep the dancer in perfect time during Thattadavu." },
+        { "id": "desc_2", "text": "The tradition of always beginning the striking sequence with the right foot in Thattadavu." },
+        { "id": "desc_3", "text": "The practice method of mastering each adavu slowly before increasing speed for precision." }
+      ],
+      "correct_matches": { "img_1": "desc_1", "img_2": "desc_2", "img_3": "desc_3" },
+      "points": 3,
+      "difficulty": "medium",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer"
+    }
+  ],
+  "scoring": {
+    "mcq": { "points_per_correct_answer": 1 },
+    "descriptive": {
+      "method": "cosine_similarity",
+      "description": "Calculate embedding cosine similarity against reference concepts.",
+      "suggested_interpretation": {
+        "0.80-1.00": "Outstanding Mastery",
+        "0.65-0.79": "Good Conceptual Understanding",
+        "0.50-0.64": "Developing Understanding",
+        "0.00-0.49": "Needs Reinforcement"
+      }
+    },
+    "speech": { "points_per_correct_answer": 1, "min_pass_score": 60 },
+    "sequence_test": { "points_per_correct_answer": 1 },
+    "image_matching": { "points_per_correct_match": 1, "total_points": 3 }
+  }
+}
