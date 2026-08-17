@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import '../core/models/child_profile.dart' as core;
 import '../core/models/parent_account.dart';
 import '../core/services/ai_integration_service.dart';
+import '../core/services/ai_voice_service.dart';
 import '../core/services/parent_repository.dart';
 import '../core/state/child_state.dart';
 import '../qa_pipeline/models/child_profile.dart' as qa;
 import '../qa_pipeline/screens/parent_dashboard.dart';
-import '../qa_pipeline/services/child_difficulty_service.dart';
+import '../qa_pipeline/services/content_discovery_service.dart';
 import 'sego_concept_screen.dart';
 
 enum ParentAuthMode {
@@ -272,6 +273,24 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
   }
 
   void _showRegistrationSuccessModal() {
+    // 1. Dynamically discover real chapters from content service (Zero hardcoding)
+    ContentDiscoveryService.discoverContent().then((chapters) {
+      final childName = _childNameController.text.trim().isNotEmpty
+          ? _childNameController.text.trim()
+          : (_createdChild?.name ?? 'Explorer');
+      final chapterNames = chapters.map((c) => c.name).toList();
+      final firstChapter = chapterNames.isNotEmpty ? chapterNames.first : null;
+
+      // 2. Play dynamic AI-powered post-signup introduction grounded strictly in discovered content
+      AiVoiceService.instance.playPostSignupIntro(
+        childName: childName,
+        age: _childAge,
+        difficultyLevel: _personalizedLevel,
+        availableChapters: chapterNames,
+        firstChapter: firstChapter,
+      );
+    });
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -286,14 +305,14 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
               side: BorderSide(color: const Color(0xFF22C55E).withValues(alpha: 0.5), width: 1.5),
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Green Success Glow Badge
                   Container(
-                    width: 70,
-                    height: 70,
+                    width: 64,
+                    height: 64,
                     decoration: BoxDecoration(
                       color: const Color(0x2222C55E),
                       shape: BoxShape.circle,
@@ -301,17 +320,17 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
                       boxShadow: const [
                         BoxShadow(
                           color: Color(0x4422C55E),
-                          blurRadius: 20,
+                          blurRadius: 18,
                           spreadRadius: 2,
                         ),
                       ],
                     ),
                     child: const Center(
-                      child: Icon(Icons.check_circle_rounded, color: Color(0xFF22C55E), size: 40),
+                      child: Icon(Icons.check_circle_rounded, color: Color(0xFF22C55E), size: 36),
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
 
                   // Title
                   const Text(
@@ -319,36 +338,113 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Outfit',
-                      fontSize: 22,
+                      fontSize: 21,
                       fontWeight: FontWeight.w900,
                       color: Colors.white,
                       letterSpacing: 0.4,
                     ),
                   ),
 
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
 
                   // Subtitle
                   const Text(
-                    'Enjoy the learning journey as a parent!',
+                    'AI Voice Companion is ready for your learner!',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Outfit',
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF9CA3AF),
-                      height: 1.4,
+                      height: 1.3,
                     ),
                   ),
 
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 16),
+
+                  // Dynamic AI Voice Introduction Card
+                  ListenableBuilder(
+                    listenable: AiVoiceService.instance,
+                    builder: (context, _) {
+                      final voiceService = AiVoiceService.instance;
+                      final isSpeaking = voiceService.isSpeaking;
+                      final spokenText = voiceService.currentSpokenText ??
+                          'Welcome to NIMO The Warrior! Your personalized learning quest is ready.';
+
+                      return Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF27272A),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: isSpeaking ? const Color(0xFFFC6B6B) : const Color(0xFF3F3F46),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: isSpeaking ? const Color(0x33FC6B6B) : const Color(0x223F3F46),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    isSpeaking ? Icons.volume_up_rounded : Icons.record_voice_over_rounded,
+                                    color: isSpeaking ? const Color(0xFFFC6B6B) : Colors.white70,
+                                    size: 18,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  isSpeaking ? 'AI Companion Speaking...' : 'AI Voice Introduction',
+                                  style: TextStyle(
+                                    fontFamily: 'Outfit',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                    color: isSpeaking ? const Color(0xFFFC6B6B) : Colors.white70,
+                                  ),
+                                ),
+                                const Spacer(),
+                                IconButton(
+                                  icon: const Icon(Icons.replay_rounded, size: 18, color: Colors.white70),
+                                  tooltip: 'Replay Intro',
+                                  onPressed: () => AiVoiceService.instance.replayCurrent(),
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              spokenText,
+                              style: const TextStyle(
+                                fontFamily: 'Outfit',
+                                fontSize: 12,
+                                color: Color(0xFFD1D5DB),
+                                height: 1.35,
+                                fontStyle: FontStyle.italic,
+                              ),
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+
+                  const SizedBox(height: 20),
 
                   // "Continue to Learning →" Button
                   SizedBox(
                     width: double.infinity,
-                    height: 50,
+                    height: 48,
                     child: ElevatedButton(
                       onPressed: () {
+                        AiVoiceService.instance.stop();
                         Navigator.of(dialogCtx).pop();
                         if (widget.onAuthSuccess != null) {
                           widget.onAuthSuccess!();
