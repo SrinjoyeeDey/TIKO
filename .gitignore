@@ -1,47 +1,219 @@
-# Miscellaneous
-*.class
-*.log
-*.pyc
-*.swp
+# ==============================================================================
+# Gitignore for NIMO The Warrior
+# Covers: Flutter/Dart (Mobile/Desktop/Web), Android, iOS/macOS, Windows/Linux,
+#         Python (AI Services / FastAPI), Node.js (Backend), IDEs, & OS files.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Environment Variables & Secrets (NEVER COMMIT SENSITIVE DATA)
+# ------------------------------------------------------------------------------
+.env
+.env.*
+*.env
+!.env.example
+!.env.template
+*.pem
+*.key
+*.cert
+*.crt
+
+# ------------------------------------------------------------------------------
+# Operating System Files
+# ------------------------------------------------------------------------------
+# macOS
 .DS_Store
-.atom/
-.build/
-.buildlog/
-.history
-.svn/
-.swiftpm/
-migrate_working_dir/
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
 
-# IntelliJ related
-*.iml
-*.ipr
-*.iws
-.idea/
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+# Linux
+*~
+.directory
 
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
+# ------------------------------------------------------------------------------
+# Logs and Databases
+# ------------------------------------------------------------------------------
+*.log
+*.log.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+build_error.log
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
+
+# ------------------------------------------------------------------------------
+# Flutter / Dart
+# ------------------------------------------------------------------------------
 .dart_tool/
+.flutter-plugins
 .flutter-plugins-dependencies
+.packages
 .pub-cache/
 .pub/
 /build/
+**/build/
 /coverage/
+**/coverage/
+.test_runtime/
+.widget_preview/
+migrate_working_dir/
 
-# Symbolication related
+# Documentation and Symbols
+**/doc/api/
 app.*.symbols
-
-# Obfuscation related
 app.*.map.json
 
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
-# Widget Preview related
-.widget_preview/
+# ------------------------------------------------------------------------------
+# Android
+# ------------------------------------------------------------------------------
+**/android/.gradle/
+**/android/local.properties
+**/android/app/debug/
+**/android/app/profile/
+**/android/app/release/
+**/android/captures/
+**/android/.externalNativeBuild/
+**/android/.cxx/
+**/android/key.properties
+**/android/*.jks
+**/android/*.keystore
+*.keystore
+*.jks
+
+# ------------------------------------------------------------------------------
+# iOS & macOS (Flutter / Xcode)
+# ------------------------------------------------------------------------------
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/profile/
+**/ios/release/
+**/ios/DerivedData/
+
+**/macos/Flutter/ephemeral/
+**/macos/Pods/
+**/macos/.symlinks/
+**/macos/DerivedData/
+**/macos/Flutter/GeneratedPluginRegistrant.swift
+
+# Xcode user data
+*.xcscmblueprint
+*.xcuserdatad/
+xcuserdata/
+
+# ------------------------------------------------------------------------------
+# Windows & Linux (Flutter Desktop)
+# ------------------------------------------------------------------------------
+**/windows/flutter/ephemeral/
+**/windows/flutter/generated_plugins.cmake
+**/windows/flutter/generated_plugin_registrant.cc
+**/windows/flutter/generated_plugin_registrant.h
+
+**/linux/flutter/ephemeral/
+**/linux/flutter/generated_plugins.cmake
+**/linux/flutter/generated_plugin_registrant.cc
+**/linux/flutter/generated_plugin_registrant.h
+
+# ------------------------------------------------------------------------------
+# Python & AI Services
+# ------------------------------------------------------------------------------
+# Byte-compiled / optimized / DLL files
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# Distribution / Packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Testing & Type Checking
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# ------------------------------------------------------------------------------
+# Node.js & Backend
+# ------------------------------------------------------------------------------
+node_modules/
+**/node_modules/
+.pnpm-store/
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# ------------------------------------------------------------------------------
+# IDEs and Code Editors
+# ------------------------------------------------------------------------------
+# IntelliJ / Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Sublime Text / Atom / Vim / Misc Editors
+*.sublime-workspace
+*.sublime-project
+.atom/
+.history/
+*.swp
+*.swo
+*~

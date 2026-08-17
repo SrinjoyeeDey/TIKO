@@ -11,6 +11,7 @@ import 'parent_dashboard.dart';
 import '../../core/state/child_state.dart';
 import '../../core/services/media_capture_service.dart';
 import '../../core/services/event_service.dart';
+import '../../core/services/ai_voice_service.dart';
 import '../../core/models/event_model.dart';
 import '../../core/widgets/panda_character.dart';
 import '../services/clinical_report_service.dart';
@@ -142,7 +143,20 @@ class _LevelClearScreenState extends State<LevelClearScreen>
     final currentSessionId = ChildState.instance.currentSessionId ?? 'SES_${DateTime.now().millisecondsSinceEpoch}';
     await ChildState.instance.endCurrentSession();
 
-    // 5. Trigger generation of Post-Play Clinical & Parental Report and Adaptive Difficulty Calculation via Groq LLM
+    // 5. Trigger dynamic AI-powered Level Celebration Voice (Strictly grounded in completed level state)
+    final childName = ChildState.instance.currentProfile.name.isNotEmpty
+        ? ChildState.instance.currentProfile.name
+        : 'Explorer';
+    AiVoiceService.instance.playLevelCongratulation(
+      childName: childName,
+      chapterName: widget.level.chapterName,
+      levelName: widget.level.levelName,
+      stars: _stars,
+      totalCorrect: widget.totalCorrect,
+      totalQuestions: widget.totalQuestions,
+    );
+
+    // 6. Trigger generation of Post-Play Clinical & Parental Report and Adaptive Difficulty Calculation via Groq LLM
     try {
       final report = await ClinicalReportService.generateReport(widget.childId);
 
@@ -193,6 +207,7 @@ class _LevelClearScreenState extends State<LevelClearScreen>
 
   @override
   void dispose() {
+    AiVoiceService.instance.stop();
     _confettiController.dispose();
     _badgePulseController.dispose();
     _glareController.dispose();
@@ -292,19 +307,69 @@ class _LevelClearScreenState extends State<LevelClearScreen>
 
                       const SizedBox(height: 12),
 
-                      // Friendly performance message
-                      Text(
-                        _message,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontFamily: 'Outfit',
-                          fontSize: 15.5,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFFF5EAD4),
-                        ),
+                      // Dynamic AI Voice Celebration Card
+                      ListenableBuilder(
+                        listenable: AiVoiceService.instance,
+                        builder: (context, _) {
+                          final voice = AiVoiceService.instance;
+                          final isSpeaking = voice.isSpeaking;
+                          final text = (voice.currentSpokenText != null && voice.currentSpokenText!.isNotEmpty)
+                              ? voice.currentSpokenText!
+                              : _message;
+
+                          return Container(
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: const Color(0x772E1C12),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: isSpeaking ? const Color(0xFFFFD700) : const Color(0x668B6914),
+                                width: 1.4,
+                              ),
+                              boxShadow: isSpeaking
+                                  ? const [BoxShadow(color: Color(0x44FFD700), blurRadius: 10)]
+                                  : null,
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: isSpeaking ? const Color(0x44FFD700) : const Color(0x22FFFFFF),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    isSpeaking ? Icons.volume_up_rounded : Icons.campaign_rounded,
+                                    color: const Color(0xFFFFD700),
+                                    size: 18,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    text,
+                                    style: const TextStyle(
+                                      fontFamily: 'Outfit',
+                                      fontSize: 13.5,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFFFFF8E1),
+                                      height: 1.35,
+                                    ),
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.replay_rounded, color: Color(0xFFFFD700), size: 20),
+                                  tooltip: 'Replay AI Celebration',
+                                  onPressed: () => AiVoiceService.instance.replayCurrent(),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
 
-                      const SizedBox(height: 18),
+                      const SizedBox(height: 12),
 
                       // Reward & Remaining Progress Cards
                       _buildRewardStatCards(remainingLessons),
