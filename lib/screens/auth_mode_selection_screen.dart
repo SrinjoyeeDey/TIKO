@@ -116,14 +116,11 @@ class _AuthModeSelectionScreenState extends State<AuthModeSelectionScreen>
     );
   }
 
-  void _openParentPinModal() async {
-    final hasAccount = await ParentRepository.hasParentAccount();
-    if (!mounted) return;
-
+  void _openParentPinModal() {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => ParentAuthScreen(
-          initialMode: hasAccount ? ParentAuthMode.loginPin : ParentAuthMode.signup,
+          initialMode: ParentAuthMode.loginPin,
           onAuthSuccess: () {
             _openParentDashboard();
           },

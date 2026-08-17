@@ -2368,12 +2368,10 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                                       gridColor: const Color(0x3838BDF8),
                                       onTap: () async {
                                         HapticFeedback.selectionClick();
-                                        final hasAccount = await ParentRepository.hasParentAccount();
-                                        if (!mounted) return;
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (_) => ParentAuthScreen(
-                                              initialMode: hasAccount ? ParentAuthMode.loginPin : ParentAuthMode.signup,
+                                              initialMode: ParentAuthMode.loginPin,
                                               onAuthSuccess: () {
                                                 Navigator.of(context).pop(); // Pop Auth screen
                                                 Navigator.of(context).push(
