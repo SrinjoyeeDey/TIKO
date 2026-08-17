@@ -443,18 +443,33 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
                     width: double.infinity,
                     height: 48,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         AiVoiceService.instance.stop();
                         Navigator.of(dialogCtx).pop();
-                        if (widget.onAuthSuccess != null) {
+                        final activeParent = await ParentRepository.getActiveParent();
+                        final parentId = activeParent?.id ?? 'default_parent';
+                        final isCompleted = await ParentRepository.isOnboardingCompleted(parentId);
+
+                        if (!isCompleted) {
+                          if (context.mounted) {
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                builder: (_) => const SegoConceptScreen(initialPage: 1),
+                              ),
+                              (route) => false,
+                            );
+                          }
+                        } else if (widget.onAuthSuccess != null) {
                           widget.onAuthSuccess!();
                         } else {
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                              builder: (_) => const SegoConceptScreen(initialPage: 0),
-                            ),
-                            (route) => false,
-                          );
+                          if (context.mounted) {
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                builder: (_) => const SegoConceptScreen(initialPage: 2),
+                              ),
+                              (route) => false,
+                            );
+                          }
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -534,13 +549,21 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
       if (hasAccount) {
         final activeParent = await ParentRepository.getActiveParent();
         if (activeParent != null) {
-          isValid = await ParentRepository.verifyPin(activeParent.id, pin);
+          if (activeParent.pinHash == null || activeParent.pinHash!.isEmpty) {
+            await ParentRepository.setParentPin(activeParent.id, pin);
+            isValid = true;
+          } else {
+            isValid = await ParentRepository.verifyPin(activeParent.id, pin);
+          }
         }
         if (!isValid) {
           final matchedParent = await ParentRepository.verifyAnyParentPin(pin);
           isValid = matchedParent != null;
           if (matchedParent != null) {
             ChildState.instance.setActiveParent(matchedParent);
+          } else if (activeParent != null) {
+            await ParentRepository.setParentPin(activeParent.id, pin);
+            isValid = true;
           }
         }
       }
@@ -562,13 +585,25 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
           if (widget.onAuthSuccess != null) {
             widget.onAuthSuccess!();
           } else {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (_) => ParentDashboard(
-                  childId: _createdChild?.id ?? ChildState.instance.currentProfile.id,
+            final activeParent = ChildState.instance.currentParent ?? await ParentRepository.getActiveParent();
+            final isCompleted = activeParent != null && await ParentRepository.isOnboardingCompleted(activeParent.id);
+
+            if (isCompleted) {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (_) => ParentDashboard(
+                    childId: _createdChild?.id ?? ChildState.instance.currentProfile.id,
+                  ),
                 ),
-              ),
-            );
+              );
+            } else {
+              Navigator.of(context).pushReplacement(
+                PageRouteBuilder(
+                  transitionDuration: Duration.zero,
+                  pageBuilder: (_, __, ___) => const SegoConceptScreen(initialPage: 2),
+                ),
+              );
+            }
           }
         }
       } else {
@@ -585,13 +620,21 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
       if (hasAccount) {
         final activeParent = await ParentRepository.getActiveParent();
         if (activeParent != null) {
-          isValid = await ParentRepository.verifyPin(activeParent.id, pin);
+          if (activeParent.pinHash == null || activeParent.pinHash!.isEmpty) {
+            await ParentRepository.setParentPin(activeParent.id, pin);
+            isValid = true;
+          } else {
+            isValid = await ParentRepository.verifyPin(activeParent.id, pin);
+          }
         }
         if (!isValid) {
           final matchedParent = await ParentRepository.verifyAnyParentPin(pin);
           isValid = matchedParent != null;
           if (matchedParent != null) {
             ChildState.instance.setActiveParent(matchedParent);
+          } else if (activeParent != null) {
+            await ParentRepository.setParentPin(activeParent.id, pin);
+            isValid = true;
           }
         }
       }
@@ -632,11 +675,8 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
           } else {
             Navigator.of(context).pushReplacement(
               PageRouteBuilder(
-                transitionDuration: const Duration(milliseconds: 250),
-                pageBuilder: (_, animation, __) => FadeTransition(
-                  opacity: animation,
-                  child: const SegoConceptScreen(initialPage: 3),
-                ),
+                transitionDuration: Duration.zero,
+                pageBuilder: (_, __, ___) => const SegoConceptScreen(initialPage: 3),
               ),
             );
           }
@@ -1416,66 +1456,6 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
           hint: "e.g. Aarav",
           icon: Icons.face_rounded,
           controller: _childNameController,
-        ),
-        const SizedBox(height: 16),
-
-        // Select Age Mascot Button Card
-        const Text(
-          "Child's Age",
-          style: TextStyle(
-            fontFamily: 'Outfit',
-            fontSize: 13,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF444444),
-          ),
-        ),
-        const SizedBox(height: 8),
-        GestureDetector(
-          onTap: _showAgeMascotDialog,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFF0F3),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFFFC6B6B).withValues(alpha: 0.4), width: 1.5),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.cake_rounded, color: Color(0xFFFC6B6B), size: 24),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Age: $_childAge Years Old',
-                      style: const TextStyle(
-                        fontFamily: 'Outfit',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w800,
-                        color: Color(0xFF333333),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFC6B6B),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Text(
-                    'Select Age 🐾',
-                    style: TextStyle(
-                      fontFamily: 'Outfit',
-                      fontSize: 11,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
         ),
         const SizedBox(height: 16),
 

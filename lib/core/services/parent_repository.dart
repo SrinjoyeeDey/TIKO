@@ -191,4 +191,18 @@ class ParentRepository {
     );
     return results.map((m) => ChildProfile.fromMap(m)).toList();
   }
+
+  /// Checks if parent has completed first-time onboarding.
+  static Future<bool> isOnboardingCompleted(String parentId) async {
+    final flag = await DatabaseHelper.instance.getSetting('onboarding_completed_$parentId');
+    if (flag == 'true') return true;
+    final globalFlag = await DatabaseHelper.instance.getSetting('onboarding_completed');
+    return globalFlag == 'true';
+  }
+
+  /// Marks onboarding as completed for a parent account.
+  static Future<void> setOnboardingCompleted(String parentId) async {
+    await DatabaseHelper.instance.setSetting('onboarding_completed_$parentId', 'true');
+    await DatabaseHelper.instance.setSetting('onboarding_completed', 'true');
+  }
 }
