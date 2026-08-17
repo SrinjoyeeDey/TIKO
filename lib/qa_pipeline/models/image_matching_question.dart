@@ -48,6 +48,8 @@ class ImageMatchingQuestion extends Question {
     required super.type,
     required super.questionText,
     super.difficulty,
+    super.difficultyPercentage,
+    super.difficultyLevel,
     required this.images,
     required this.descriptions,
     required this.correctMatches,
@@ -58,12 +60,17 @@ class ImageMatchingQuestion extends Question {
     final imagesList = (json['images'] as List<dynamic>?) ?? [];
     final descriptionsList = (json['descriptions'] as List<dynamic>?) ?? [];
     final matchesMap = (json['correct_matches'] as Map<String, dynamic>?) ?? {};
+    final diff = json['difficulty'] as String?;
 
     return ImageMatchingQuestion(
       id: json['id'] as int,
       type: QuestionType.imageMatching,
       questionText: json['question'] as String,
-      difficulty: json['difficulty'] as String?,
+      difficulty: diff,
+      difficultyPercentage: (json['difficulty_percentage'] as num?)?.toInt() ??
+          Question.derivePercentageFromDifficulty(diff),
+      difficultyLevel: json['difficulty_level'] as String? ??
+          Question.deriveLevelFromDifficulty(diff),
       images: imagesList.map((e) => MatchingImage.fromJson(e as Map<String, dynamic>)).toList(),
       descriptions: descriptionsList.map((e) => MatchingDescription.fromJson(e as Map<String, dynamic>)).toList(),
       correctMatches: matchesMap.map((key, value) => MapEntry(key, value as String)),

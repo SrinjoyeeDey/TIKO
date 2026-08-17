@@ -155,6 +155,9 @@ class ParentRepository {
     required String name,
     int? age,
     String? className,
+    int difficultyPercentage = 50,
+    String? difficultyLevel,
+    String? difficultyReasoning,
   }) async {
     final childId = generateChildId();
     final now = DateTime.now();
@@ -165,6 +168,9 @@ class ParentRepository {
       name: name.trim(),
       age: age ?? 6,
       className: className ?? 'Grade 1',
+      difficultyPercentage: difficultyPercentage,
+      difficultyLevel: difficultyLevel,
+      difficultyReasoning: difficultyReasoning,
       createdAt: now,
     );
 
