@@ -172,6 +172,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
   int _screenIndex =
       0; // 0: Age Selection, 1: Monster Takeover, 2: Role Selection
   String? _selectedRole;
+  int _selectedSpeechLevelIndex = 1;
 
   late AnimationController _ballController;
   bool _isBouncingBallActive = false;
@@ -215,6 +216,18 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
   bool _roleCardLocked = false;
   bool _showParentPin = false;
   String _parentPinInput = '';
+
+  String _getEmotionTitleString(double t) {
+    if (t < 0.25) {
+      return 'sad';
+    } else if (t < 0.50) {
+      return 'grumpy';
+    } else if (t < 0.75) {
+      return 'silly';
+    } else {
+      return 'happy';
+    }
+  }
 
   List<LearningChapter> _chapters = [];
   Map<String, String?> _stageCoverImages = {};
@@ -388,7 +401,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     }
   }
 
-  void _goToTakeoverScreen() {
+  void _goToSpeechLevelScreen() {
     if (_takeoverPageController.hasClients) {
       _takeoverPageController.animateToPage(
         2,
@@ -398,10 +411,30 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     }
   }
 
-  void _goToRoleSelection() {
+  void _goToTakeoverScreen() {
+    if (_takeoverPageController.hasClients) {
+      _takeoverPageController.animateToPage(
+        0,
+        duration: const Duration(milliseconds: 700),
+        curve: Curves.easeOutQuart,
+      );
+    }
+  }
+
+  void _goToQuestCategoryScreen() {
     if (_takeoverPageController.hasClients) {
       _takeoverPageController.animateToPage(
         3,
+        duration: const Duration(milliseconds: 700),
+        curve: Curves.easeOutQuart,
+      );
+    }
+  }
+
+  void _goToRoleSelection() {
+    if (_takeoverPageController.hasClients) {
+      _takeoverPageController.animateToPage(
+        4,
         duration: const Duration(milliseconds: 700),
         curve: Curves.easeOutQuart,
       );
@@ -468,16 +501,19 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                   scrollDirection: Axis.vertical,
                   physics: const BouncingScrollPhysics(),
                   children: [
-                    // Page 0: Onboarding Splash Screen (before age selection)
+                    // Page 0: Expression Entry Screen ("How was your day?")
                     _buildOnboardingSplashScreen(context),
 
                     // Page 1: Age Selection Screen
                     _buildAgeScreen(context, theme),
 
-                    // Page 2: Monster Takeover Screen (Monster Face)
-                    _buildTakeoverScreen(context, theme),
+                    // Page 2 (Placement 3): Question & Answers Screen (Speech Level)
+                    _buildSpeechLevelScreen(context, theme),
 
-                    // Page 3: Level Map Screen (Stepping Stones)
+                    // Page 3 (Placement 4): Quest Page (Category / 6 Quests)
+                    _buildQuestCategoryScreen(context, theme),
+
+                    // Page 4: Level Map Screen (Stepping Stones)
                     _buildRoleScreen(context, theme),
                   ],
                 ),
@@ -919,204 +955,9 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     );
   }
 
-  // SCREEN -1: ONBOARDING SPLASH SCREEN (Before Age Selection)
+  // MAIN ENTRY SCREEN (Replaces "Who's joining Tiko?" with "How was your day?" Expression Entry Screen)
   Widget _buildOnboardingSplashScreen(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    return GestureDetector(
-      onVerticalDragEnd: (details) {
-        if (details.primaryVelocity != null && details.primaryVelocity! < -150) {
-          _goToAgeSelection();
-        }
-      },
-      behavior: HitTestBehavior.opaque,
-      child: Stack(
-        children: [
-          // --- Background: Clean White Grid Background matching reference image ---
-          Container(
-            decoration: const BoxDecoration(
-              color: Colors.white, // Pure white background matching reference image!
-            ),
-          ),
-
-          // --- Grid Lines Background Layer (Matching Reference Image!) ---
-          Positioned.fill(
-            child: CustomPaint(
-              painter: GridLinesBackgroundPainter(),
-            ),
-          ),
-
-          // --- Topo Wire Lines Contour Accent Layer (Matching Reference Image!) ---
-          Positioned.fill(
-            child: CustomPaint(
-              painter: TopoLinesPainter(),
-            ),
-          ),
-
-          // --- Top Sun & Wave Line Artwork Accent (Matching Reference Image!) ---
-          Positioned(
-            top: 40,
-            left: 0,
-            right: 0,
-            child: CustomPaint(
-              painter: SunAndWavesPainter(),
-              child: const SizedBox(height: 220),
-            ),
-          ),
-
-          // --- Elevated Yellow Tile with Curved Bulge Slope ---
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: _OnboardingElevatedTile(screenHeight: size.height),
-          ),
-
-          // --- Top content area: Child or Parent Selection Cards ---
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 40),
-
-                  // Header Prompt Text
-                  const Text(
-                    'SELECT YOUR ROLE',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w900,
-                      color: Color(0xFF1A1A2E), // Deep dark ink on white background!
-                      letterSpacing: 3.0,
-                    ),
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  // Two Role Cards: Child & Parent (Expanded Wide to Both Corners!)
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildOnboardingRoleCard(
-                          roleKey: 'child',
-                          title: 'Child',
-                          subtitle: 'Play & Explore',
-                          iconData: Icons.face_rounded,
-                          isSelected: _selectedOnboardingRole == 'child',
-                          onTap: () {
-                            setState(() {
-                              _selectedOnboardingRole = 'child';
-                            });
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: _buildOnboardingRoleCard(
-                          roleKey: 'parent',
-                          title: 'Parent',
-                          subtitle: 'Guide & Track',
-                          iconData: Icons.family_restroom_rounded,
-                          isSelected: _selectedOnboardingRole == 'parent',
-                          onTap: () {
-                            setState(() {
-                              _selectedOnboardingRole = 'parent';
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // --- Bottom tile text content ---
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: size.height * 0.09,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 36.0),
-              child: Column(
-                children: [
-                  const Text(
-                    'Begin Your Journey',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w900,
-                      color: Color(0xFF3E1F00),
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Learn. Play. Grow.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF5F3300),
-                      letterSpacing: 1.2,
-                    ),
-                  ),
-                  const SizedBox(height: 28),
-
-                  // Swipe up CTA
-                  GestureDetector(
-                    onTap: _goToAgeSelection,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 44,
-                        vertical: 18,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [
-                            Color(0xFF3E1F00),
-                            Color(0xFF5F3300),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(50),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x45000000),
-                            blurRadius: 18,
-                            offset: Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            "Let's Go",
-                            style: TextStyle(
-                              fontSize: 19,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
-                              letterSpacing: 0.8,
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Icon(Icons.arrow_upward_rounded,
-                              color: Colors.white, size: 22),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          // --- Parent PIN Overlay (appears on top of everything when Enter PIN is tapped) ---
-          if (_showParentPin) _buildParentPinOverlay(),
-        ],
-      ),
-    );
+    return _buildTakeoverScreen(context, _themeGreen);
   }
 
   Widget _buildOnboardingRoleCard({
@@ -1994,13 +1835,13 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     }
   }
 
-  // SCREEN 0: AGE SELECTION SCREEN
+  // SCREEN 1: AGE SELECTION SCREEN
   Widget _buildAgeScreen(BuildContext context, _AgeTheme theme) {
     return GestureDetector(
       onVerticalDragEnd: (details) {
         if (details.primaryVelocity != null &&
             details.primaryVelocity! < -150) {
-          _goToTakeoverScreen();
+          _goToSpeechLevelScreen();
         }
       },
       behavior: HitTestBehavior.translucent,
@@ -2053,9 +1894,115 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                         // Monster Teeth Age Selector Widget
                         MonsterAgeSelectorWidget(
                           onAgeChanged: _onAgeChanged,
-                          onNext: _goToTakeover,
+                          onNext: _goToSpeechLevelScreen,
                         ),
                       ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // SCREEN 2: SPEECH LEVEL SELECTION SCREEN (PRELIMINARY Question)
+  Widget _buildSpeechLevelScreen(BuildContext context, _AgeTheme theme) {
+    return GestureDetector(
+      onVerticalDragEnd: (details) {
+        if (details.primaryVelocity != null &&
+            details.primaryVelocity! < -150) {
+          _goToQuestCategoryScreen();
+        }
+      },
+      behavior: HitTestBehavior.translucent,
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Top Bar Navigation & Progress
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Back Button to Age Selection
+                  GestureDetector(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      _goToAgeSelection();
+                    },
+                    child: Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x15000000),
+                            blurRadius: 10,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        color: Color(0xFF0F172A),
+                        size: 18,
+                      ),
+                    ),
+                  ),
+
+                  // Progress Bar Pill
+                  Container(
+                    width: 140,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.35),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        width: 90,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF10B981),
+                          borderRadius: BorderRadius.circular(5),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x35000000),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 44),
+                ],
+              ),
+
+              const SizedBox(height: 12),
+
+              // Main Content Card
+              Expanded(
+                child: Center(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: _SpeechLevelSelectorWidget(
+                      theme: theme,
+                      selectedIndex: _selectedSpeechLevelIndex,
+                      onSpeechLevelChanged: (index) {
+                        setState(() {
+                          _selectedSpeechLevelIndex = index;
+                        });
+                      },
+                      onContinue: _goToQuestCategoryScreen,
                     ),
                   ),
                 ),
@@ -2077,280 +2024,736 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     }
   }
 
-  // SCREEN 1: FULLSCREEN MONSTER TAKEOVER SCREEN (4 Emotion States + Typewriter Reveal)
+  // SCREEN 1: PREMIUM EXPRESSION-BASED ENTRY SCREEN (Lavender Purple Straight Grid Theme)
   Widget _buildTakeoverScreen(BuildContext context, _AgeTheme theme) {
-    final size = MediaQuery.of(context).size;
-
-    // 4 Dynamic Emotion Background Colors: sad (Red), grumpy (Orange), silly (Green), happy (Gold)
-    // Synchronized 100% with inner card theme colors!
-    final bgTop = _lerp4Colors(
-      const Color(0xFFFF6B55), // sad (Red)
-      const Color(0xFFFF6D00), // grumpy (Orange)
-      const Color(0xFF94D561), // silly (Apple Lime Green from Age Selection!)
-      const Color(0xFFFFE082), // happy (Gold)
-      _emotionValue,
-    );
-
-    final bgBottom = _lerp4Colors(
-      const Color(0xFFE53935), // sad
-      const Color(0xFFE65100), // grumpy
-      const Color(0xFF3F771A), // silly (Deep Forest Green from Age Selection!)
-      const Color(0xFFFFB300), // happy
-      _emotionValue,
-    );
-
-    final pimpleColor = _lerp4Colors(
-      const Color(0xFFFF8A65),
-      const Color(0xFFFFAB91),
-      const Color(0xFFB5F280), // Glowing lime accent
-      const Color(0xFFFFE082),
-      _emotionValue,
-    );
-
     return Container(
       width: double.infinity,
       height: double.infinity,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [bgTop, bgBottom],
+          colors: [
+            Color(0xFFB497F8), // Lavender Purple background (Matches 2nd screenshot)
+            Color(0xFFA78BFA),
+          ],
         ),
       ),
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Background Sparkles/Bubble Dots Accent
+          // Straight Grid Pattern Background Layer
           Positioned.fill(
             child: CustomPaint(
-              painter: BiboPimplesPainter(
-                pimpleColor: pimpleColor.withValues(alpha: 0.35),
+              painter: CategoryGridPainter(),
+            ),
+          ),
+
+          // Main Screen Content Layout
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Top Navigation Header: Back Arrow & Sign Up
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          if (Navigator.of(context).canPop()) {
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: Container(
+                          width: 42,
+                          height: 42,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.25),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: Colors.white,
+                              width: 1.5,
+                            ),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color(0x10000000),
+                                blurRadius: 10,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.arrow_back_ios_new_rounded,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                        ),
+                      ),
+
+                      // Sign Up Action Pill
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => AuthModeSelectionScreen(
+                                onBeginJourney: () {
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(builder: (_) => const GameMap1913Screen()),
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(
+                              color: Colors.white,
+                              width: 1.5,
+                            ),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color(0x1A000000),
+                                blurRadius: 12,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: const Row(
+                            children: [
+                              Icon(
+                                Icons.person_add_alt_1_rounded,
+                                size: 16,
+                                color: Color(0xFF10B981),
+                              ),
+                              SizedBox(width: 6),
+                              Text(
+                                'SIGN UP',
+                                style: TextStyle(
+                                  fontFamily: 'Outfit',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w800,
+                                  color: Color(0xFF1E293B),
+                                  letterSpacing: 0.8,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  // Header Prompt: "How was your day?"
+                  const Text(
+                    'How was your day?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Outfit',
+                      fontSize: 28,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Express your mood & select your access path.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Outfit',
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white.withValues(alpha: 0.90),
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // Hero Expression Card & Access Path Cards
+                  Expanded(
+                    child: Center(
+                      child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Enlarged Expression Hero Card (Upper Layer Floating)
+                            _CompactEmotionCard(
+                              emotionValue: _emotionValue,
+                              onChanged: (val) {
+                                setState(() => _emotionValue = val);
+                              },
+                            ),
+
+                            const SizedBox(height: 20),
+
+                            // Two Pastel Access Cards: CHILD and PARENT
+                            ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 420),
+                              child: Row(
+                                children: [
+                                  // CHILD ACCESS CARD (Soft Pastel Pink Card)
+                                  Expanded(
+                                    child: _buildWhiteAccessCard(
+                                      title: 'CHILD',
+                                      subtext: "Let's Play 🎮",
+                                      iconData: Icons.face_rounded,
+                                      bgGradient: const LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [Color(0xFFFCE7F3), Color(0xFFFBCFE8)], // Soft Pastel Pink
+                                      ),
+                                      titleColor: const Color(0xFF831843),
+                                      onTap: () {
+                                        HapticFeedback.mediumImpact();
+                                        _goToQuestCategoryScreen();
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 14),
+
+                                  // PARENT ACCESS CARD (Soft Sky Blue Card)
+                                  Expanded(
+                                    child: _buildWhiteAccessCard(
+                                      title: 'PARENT',
+                                      subtext: 'Guide & Track 🔒',
+                                      iconData: Icons.family_restroom_rounded,
+                                      bgGradient: const LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [Color(0xFFE0F2FE), Color(0xFFBAE6FD)], // Soft Sky Blue
+                                      ),
+                                      titleColor: const Color(0xFF1E3A8A),
+                                      onTap: () {
+                                        HapticFeedback.selectionClick();
+                                        setState(() {
+                                          _showParentPin = true;
+                                          _parentPinInput = '';
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
 
-          // 1. Header Title & Typewriter Text Reveal (100% Visible!)
-          Positioned(
-            top: 75,
-            left: 20,
-            right: 20,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'How was your day?',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.fredoka(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                    letterSpacing: 0.8,
-                    shadows: const [
-                      Shadow(
-                        color: Color(0x40000000),
-                        blurRadius: 8,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
+          // Parent PIN Authentication Overlay
+          if (_showParentPin) _buildParentPinOverlay(),
+        ],
+      ),
+    );
+  }
+
+  // ACCESS CARD COMPONENT (Matching 2nd Screenshot Pastel Card Design)
+  Widget _buildWhiteAccessCard({
+    required String title,
+    required String subtext,
+    required IconData iconData,
+    required VoidCallback onTap,
+    Gradient? bgGradient,
+    Color? titleColor,
+  }) {
+    bool isPressed = false;
+    final Color textColor = titleColor ?? const Color(0xFF0F172A);
+
+    return StatefulBuilder(
+      builder: (context, setCardState) {
+        return GestureDetector(
+          onTapDown: (_) => setCardState(() => isPressed = true),
+          onTapUp: (_) => setCardState(() => isPressed = false),
+          onTapCancel: () => setCardState(() => isPressed = false),
+          onTap: onTap,
+          child: AnimatedScale(
+            scale: isPressed ? 0.96 : 1.0,
+            duration: const Duration(milliseconds: 150),
+            curve: Curves.easeOutCubic,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+              decoration: BoxDecoration(
+                gradient: bgGradient ?? const LinearGradient(
+                  colors: [Colors.white, Colors.white],
                 ),
-                if (_typedText.isNotEmpty) ...[
-                  const SizedBox(height: 6),
-                  Text(
-                    _typedText,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.fredoka(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white.withValues(alpha: 0.95),
-                      letterSpacing: 0.5,
-                      shadows: const [
-                        Shadow(
-                          color: Color(0x50000000),
-                          blurRadius: 6,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(
+                  color: isPressed ? textColor : Colors.white,
+                  width: 2.2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: textColor.withValues(alpha: 0.20),
+                    blurRadius: 18,
+                    spreadRadius: 1,
+                    offset: const Offset(0, 8),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.10),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Icon Container (White Circle)
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0x10000000),
+                          blurRadius: 8,
                           offset: Offset(0, 2),
                         ),
                       ],
                     ),
+                    child: Icon(
+                      iconData,
+                      size: 24,
+                      color: textColor,
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // Card Title
+                  Text(
+                    title,
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: textColor,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  // White Action Pill Button
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x12000000),
+                          blurRadius: 8,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      subtext,
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.poppins(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w700,
+                        color: textColor,
+                      ),
+                    ),
                   ),
                 ],
-              ],
-            ),
-          ),
-
-          // Compact Floating 3D Emotion Card
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 60),
-              child: _CompactEmotionCard(
-                emotionValue: _emotionValue,
-                onChanged: (val) {
-                  setState(() => _emotionValue = val);
-                },
               ),
             ),
           ),
+        );
+      },
+    );
+  }
 
-          // White Bouncing Ball Typewriter Overlay (if active)
-          if (_isTypewriterActive) _buildTypewriterBallOverlay(size),
+  // SCREEN 3.5: QUEST CATEGORY SELECTION SCREEN (6 Quests - Single Page Fit)
+  Widget _buildQuestCategoryScreen(BuildContext context, _AgeTheme theme) {
+    final List<Map<String, dynamic>> quests = [
+      {
+        'title': 'Cognitive Quest',
+        'emoji': '🧠',
+        'sub': '15 Courses',
+        'gradient': const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFFFB0B0), Color(0xFFFF6B6B)],
+        ),
+        'accent': const Color(0xFFFF5252),
+      },
+      {
+        'title': 'Communication Quest',
+        'emoji': '🗣️',
+        'sub': '12 Courses',
+        'gradient': const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF5CD2B5), Color(0xFF20B2AA)],
+        ),
+        'accent': const Color(0xFF009688),
+      },
+      {
+        'title': 'Motor Quest',
+        'emoji': '✋',
+        'sub': '10 Courses',
+        'gradient': const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF9FA8DA), Color(0xFF5C6BC0)],
+        ),
+        'accent': const Color(0xFF3F51B5),
+      },
+      {
+        'title': 'Heritage Quest',
+        'emoji': '🇮🇳',
+        'sub': '14 Courses',
+        'gradient': const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFFFCC80), Color(0xFFFB8C00)],
+        ),
+        'accent': const Color(0xFFF57C00),
+      },
+      {
+        'title': 'Social Quest',
+        'emoji': '🤝',
+        'sub': '8 Courses',
+        'gradient': const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFEF9A9A), Color(0xFFE53935)],
+        ),
+        'accent': const Color(0xFFD32F2F),
+      },
+      {
+        'title': 'Creative Quest',
+        'emoji': '🎨',
+        'sub': '16 Courses',
+        'gradient': const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFCE93D8), Color(0xFFAB47BC)],
+        ),
+        'accent': const Color(0xFF8E24AA),
+      },
+    ];
 
-          // Top-Right Sign Up Button
-          Positioned(
-            top: 24,
-            right: 20,
-            child: SafeArea(
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            AuthModeSelectionScreen(
-                              onBeginJourney: () {
-                                Navigator.of(context).pushReplacement(
-                                  PageRouteBuilder(
-                                    pageBuilder:
-                                        (
-                                          context,
-                                          animation,
-                                          secondaryAnimation,
-                                        ) => const GameMap1913Screen(),
-                                    transitionsBuilder:
-                                        (
-                                          context,
-                                          animation,
-                                          secondaryAnimation,
-                                          child,
-                                        ) => FadeTransition(
-                                          opacity: animation,
-                                          child: child,
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFFB497F8), // Soft Lavender Purple Header
+            Color(0xFFA78BFA),
+          ],
+        ),
+      ),
+      child: Stack(
+        children: [
+          // Grid Pattern Background Layer
+          Positioned.fill(
+            child: CustomPaint(
+              painter: CategoryGridPainter(),
+            ),
+          ),
+
+          SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Top Header (Compact)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              HapticFeedback.lightImpact();
+                              _goToTakeoverScreen();
+                            },
+                            child: Container(
+                              width: 38,
+                              height: 38,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.2),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.arrow_back_rounded,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          const Text(
+                            'Category',
+                            style: TextStyle(
+                              fontFamily: 'Outfit',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                              letterSpacing: 0.3,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+
+                      // Ready to learn? Headline Title
+                      const Text(
+                        'Ready to learn?',
+                        style: TextStyle(
+                          fontFamily: 'Outfit',
+                          fontSize: 26,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                          height: 1.1,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+
+                      // Choose your subject. Subtitle
+                      Text(
+                        'Choose your subject.',
+                        style: TextStyle(
+                          fontFamily: 'Outfit',
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white.withValues(alpha: 0.9),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                // White Sheet Container for Filter Tabs + Quests Grid
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFF8FAFC),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(32),
+                        topRight: Radius.circular(32),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0x1A000000),
+                          blurRadius: 20,
+                          offset: Offset(0, -6),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 16),
+
+                        // Filter Pill Tabs (All, Favourite, Recommended)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Row(
+                            children: [
+                              // "All" Active Tab
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF8B5CF6),
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Color(0x358B5CF6),
+                                      blurRadius: 8,
+                                      offset: Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: const Text(
+                                  'All',
+                                  style: TextStyle(
+                                    fontFamily: 'Outfit',
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+
+                              // "Favourite" Inactive Tab
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFEEF2FF),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: const Text(
+                                  'Favourite',
+                                  style: TextStyle(
+                                    fontFamily: 'Outfit',
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF6366F1),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+
+                              // "Recommended" Inactive Tab
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFEEF2FF),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: const Text(
+                                  'Recommended',
+                                  style: TextStyle(
+                                    fontFamily: 'Outfit',
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF6366F1),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // 2-Column Grid of 6 Quest Cards
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                            child: GridView.builder(
+                              physics: const BouncingScrollPhysics(),
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 14,
+                                mainAxisSpacing: 14,
+                                childAspectRatio: 1.05,
+                              ),
+                              itemCount: quests.length,
+                              itemBuilder: (context, index) {
+                                final item = quests[index];
+                                return GestureDetector(
+                                  onTap: () {
+                                    HapticFeedback.mediumImpact();
+                                    _goToRoleSelection();
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(14),
+                                    decoration: BoxDecoration(
+                                      gradient: item['gradient'] as Gradient,
+                                      borderRadius: BorderRadius.circular(22),
+                                      border: Border.all(
+                                        color: Colors.white,
+                                        width: 2.0,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: (item['accent'] as Color).withValues(alpha: 0.35),
+                                          blurRadius: 10,
+                                          offset: const Offset(0, 5),
                                         ),
-                                    transitionDuration: const Duration(
-                                      milliseconds: 600,
+                                      ],
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              item['title'] as String,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                fontFamily: 'Outfit',
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w800,
+                                                color: Colors.white,
+                                                height: 1.1,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              item['sub'] as String,
+                                              style: TextStyle(
+                                                fontFamily: 'Outfit',
+                                                fontSize: 10.5,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.white.withValues(alpha: 0.88),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+                                        // Center Emoji Circle Badge
+                                        Center(
+                                          child: Container(
+                                            width: 42,
+                                            height: 42,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white.withValues(alpha: 0.25),
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: Colors.white.withValues(alpha: 0.45),
+                                                width: 1.2,
+                                              ),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                item['emoji'] as String,
+                                                style: const TextStyle(fontSize: 21),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 );
                               },
                             ),
-                        transitionsBuilder:
-                            (context, animation, secondaryAnimation, child) {
-                              return FadeTransition(
-                                opacity: animation,
-                                child: ScaleTransition(
-                                  scale: Tween<double>(begin: 0.95, end: 1.0)
-                                      .animate(
-                                        CurvedAnimation(
-                                          parent: animation,
-                                          curve: Curves.easeOutCubic,
-                                        ),
-                                      ),
-                                  child: child,
-                                ),
-                              );
-                            },
-                        transitionDuration: const Duration(milliseconds: 400),
-                      ),
-                    );
-                  },
-                  borderRadius: BorderRadius.circular(30),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.25),
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.75),
-                        width: 1.6,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 26,
-                          height: 26,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.person_add_alt_1_rounded,
-                            size: 15,
-                            color: Color(0xFF333333),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        const Text(
-                          'SIGN UP',
-                          style: TextStyle(
-                            fontFamily: 'Outfit',
-                            fontSize: 13,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.white,
-                            letterSpacing: 1.0,
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-              ),
-            ),
-          ),
-
-          // Top Back Navigation Button
-          Positioned(
-            top: 24,
-            left: 20,
-            child: SafeArea(
-              child: GestureDetector(
-                onTap: _goToAgeSelection,
-                behavior: HitTestBehavior.opaque,
-                child: Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.25),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: const Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          // Bottom Swipe Up Prompt
-          Positioned(
-            bottom: 22,
-            child: Opacity(
-              opacity: 0.9,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  Icon(
-                    Icons.keyboard_arrow_up_rounded,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                  Text(
-                    'Swipe Up for Level Map',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                ],
-              ),
+              ],
             ),
           ),
         ],
@@ -8577,5 +8980,248 @@ class GridLinesBackgroundPainter extends CustomPainter {
 
 extension _NumLet<T> on T {
   R let<R>(R Function(T) block) => block(this);
+}
+
+/// Custom Painter drawing crisp, straight grid lines over the purple category background.
+class CategoryGridPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..strokeWidth = 1.0
+      ..style = PaintingStyle.stroke
+      ..color = Colors.white.withValues(alpha: 0.18);
+
+    const double step = 28.0;
+
+    // Draw straight vertical lines
+    for (double x = 0; x <= size.width; x += step) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+    }
+
+    // Draw straight horizontal lines
+    for (double y = 0; y <= size.height; y += step) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SPEECH LEVEL SELECTOR WIDGET (PRELIMINARY QUESTION)
+// ─────────────────────────────────────────────────────────────────────────────
+class _SpeechLevelSelectorWidget extends StatelessWidget {
+  final _AgeTheme theme;
+  final int selectedIndex;
+  final ValueChanged<int> onSpeechLevelChanged;
+  final VoidCallback onContinue;
+
+  const _SpeechLevelSelectorWidget({
+    required this.theme,
+    required this.selectedIndex,
+    required this.onSpeechLevelChanged,
+    required this.onContinue,
+  });
+
+  static const List<String> _options = [
+    'Nonverbal',
+    'Nonverbal but can tell yes / no',
+    'Cannot speak but knows words',
+    'Does speak but not everyone understands',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeInOut,
+      width: 480,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(36),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x18000000),
+            blurRadius: 36,
+            offset: Offset(0, 16),
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Top Tag Badge
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF1F5F9),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Text(
+                    'PRELIMINARY QUESTION',
+                    style: TextStyle(
+                      fontFamily: 'Outfit',
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF64748B),
+                      letterSpacing: 1.0,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // Question Title
+                const Text(
+                  'What is your child\'s speech level?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Outfit',
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF0F172A),
+                    height: 1.25,
+                  ),
+                ),
+
+                const SizedBox(height: 6),
+
+                const Text(
+                  'This helps us adapt lessons to their communication abilities.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Outfit',
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF64748B),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // 4 Speech Level Options
+                ...List.generate(_options.length, (index) {
+                  final isSelected = selectedIndex == index;
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        onSpeechLevelChanged(index);
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeOutCubic,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        decoration: BoxDecoration(
+                          color: isSelected ? const Color(0xFFF0FDF4) : const Color(0xFFF8FAFC),
+                          borderRadius: BorderRadius.circular(18),
+                          border: Border.all(
+                            color: isSelected ? const Color(0xFF10B981) : const Color(0xFFE2E8F0),
+                            width: isSelected ? 2.0 : 1.0,
+                          ),
+                          boxShadow: isSelected
+                              ? const [
+                                  BoxShadow(
+                                    color: Color(0x1210B981),
+                                    blurRadius: 10,
+                                    offset: Offset(0, 4),
+                                  ),
+                                ]
+                              : [],
+                        ),
+                        child: Row(
+                          children: [
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              width: 22,
+                              height: 22,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: isSelected ? const Color(0xFF10B981) : Colors.transparent,
+                                border: Border.all(
+                                  color: isSelected ? const Color(0xFF10B981) : const Color(0xFFCBD5E1),
+                                  width: 2,
+                                ),
+                              ),
+                              child: isSelected
+                                  ? const Icon(
+                                      Icons.check_rounded,
+                                      size: 14,
+                                      color: Colors.white,
+                                    )
+                                  : null,
+                            ),
+                            const SizedBox(width: 14),
+                            Expanded(
+                              child: Text(
+                                _options[index],
+                                style: TextStyle(
+                                  fontFamily: 'Outfit',
+                                  fontSize: 14,
+                                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                                  color: isSelected ? const Color(0xFF065F46) : const Color(0xFF334155),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+
+                const SizedBox(height: 14),
+
+                // Continue Action Button
+                GestureDetector(
+                  onTap: () {
+                    HapticFeedback.mediumImpact();
+                    onContinue();
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF10B981), Color(0xFF059669)],
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x3010B981),
+                          blurRadius: 12,
+                          offset: Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Continue',
+                        style: TextStyle(
+                          fontFamily: 'Outfit',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
