@@ -2133,18 +2133,35 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     }
   }
 
-  // SCREEN 1: PREMIUM EXPRESSION-BASED ENTRY SCREEN (Lavender Purple Straight Grid Theme)
+  // SCREEN 1: PREMIUM EXPRESSION-BASED ENTRY SCREEN (Dynamic Emotion Synced Theme)
   Widget _buildTakeoverScreen(BuildContext context, _AgeTheme theme) {
-    return Container(
+    final bgTopColor = _lerp4Colors(
+      const Color(0xFFEF4444), // sad (Red)
+      const Color(0xFFF97316), // grumpy (Burnt Orange)
+      const Color(0xFF84CC16), // silly (Apple Lime Green)
+      const Color(0xFFEAB308), // awesome (Gold)
+      _emotionValue,
+    );
+
+    final bgBottomColor = _lerp4Colors(
+      const Color(0xFF991B1B), // sad (Deep Crimson)
+      const Color(0xFFC2410C), // grumpy (Deep Burnt Orange)
+      const Color(0xFF4D7C0F), // silly (Deep Forest Green)
+      const Color(0xFFA16207), // awesome (Deep Amber)
+      _emotionValue,
+    );
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 150),
       width: double.infinity,
       height: double.infinity,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Color(0xFFB497F8), // Lavender Purple background (Matches 2nd screenshot)
-            Color(0xFFA78BFA),
+            bgTopColor,
+            bgBottomColor,
           ],
         ),
       ),
@@ -2254,7 +2271,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                     ],
                   ),
 
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 6),
 
                   // Header Prompt: "How was your day?"
                   const Text(
@@ -2262,19 +2279,19 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Outfit',
-                      fontSize: 28,
+                      fontSize: 26,
                       fontWeight: FontWeight.w900,
                       color: Colors.white,
                       letterSpacing: 0.2,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 2),
                   Text(
                     'Express your mood & select your access path.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Outfit',
-                      fontSize: 13.5,
+                      fontSize: 13,
                       fontWeight: FontWeight.w500,
                       color: Colors.white.withValues(alpha: 0.90),
                     ),
@@ -2298,14 +2315,14 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                               },
                             ),
 
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 14),
 
-                            // Two Pastel Access Cards: CHILD and PARENT
+                            // Two Pastel Access Cards: CHILD and PARENT (Slightly Enlarged)
                             ConstrainedBox(
-                              constraints: const BoxConstraints(maxWidth: 420),
+                              constraints: const BoxConstraints(maxWidth: 460),
                               child: Row(
                                 children: [
-                                  // CHILD ACCESS CARD (Soft Pastel Pink Card)
+                                  // CHILD ACCESS CARD (Soft Pastel Pink Card with Grid)
                                   Expanded(
                                     child: _buildWhiteAccessCard(
                                       title: 'CHILD',
@@ -2317,6 +2334,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                                         colors: [Color(0xFFFCE7F3), Color(0xFFFBCFE8)], // Soft Pastel Pink
                                       ),
                                       titleColor: const Color(0xFF831843),
+                                      gridColor: const Color(0x38F472B6),
                                       onTap: () {
                                         HapticFeedback.mediumImpact();
                                         Navigator.of(context).push(
@@ -2335,7 +2353,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                                   ),
                                   const SizedBox(width: 14),
 
-                                  // PARENT ACCESS CARD (Soft Sky Blue Card)
+                                  // PARENT ACCESS CARD (Soft Sky Blue Card with Grid)
                                   Expanded(
                                     child: _buildWhiteAccessCard(
                                       title: 'PARENT',
@@ -2347,6 +2365,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                                         colors: [Color(0xFFE0F2FE), Color(0xFFBAE6FD)], // Soft Sky Blue
                                       ),
                                       titleColor: const Color(0xFF1E3A8A),
+                                      gridColor: const Color(0x3838BDF8),
                                       onTap: () async {
                                         HapticFeedback.selectionClick();
                                         final hasAccount = await ParentRepository.hasParentAccount();
@@ -2391,7 +2410,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     );
   }
 
-  // ACCESS CARD COMPONENT (Matching 2nd Screenshot Pastel Card Design)
+  // ACCESS CARD COMPONENT (Matching Reference Card with Thick White Border, Grid Pattern & Hover Shadow)
   Widget _buildWhiteAccessCard({
     required String title,
     required String subtext,
@@ -2399,115 +2418,147 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     required VoidCallback onTap,
     Gradient? bgGradient,
     Color? titleColor,
+    Color? gridColor,
   }) {
     bool isPressed = false;
+    bool isHovered = false;
     final Color textColor = titleColor ?? const Color(0xFF0F172A);
+    final Color cardGridColor = gridColor ?? const Color(0x20000000);
 
     return StatefulBuilder(
       builder: (context, setCardState) {
-        return GestureDetector(
-          onTapDown: (_) => setCardState(() => isPressed = true),
-          onTapUp: (_) => setCardState(() => isPressed = false),
-          onTapCancel: () => setCardState(() => isPressed = false),
-          onTap: onTap,
-          child: AnimatedScale(
-            scale: isPressed ? 0.96 : 1.0,
-            duration: const Duration(milliseconds: 150),
-            curve: Curves.easeOutCubic,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-              decoration: BoxDecoration(
-                gradient: bgGradient ?? const LinearGradient(
-                  colors: [Colors.white, Colors.white],
+        return MouseRegion(
+          onEnter: (_) => setCardState(() => isHovered = true),
+          onExit: (_) => setCardState(() => isHovered = false),
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTapDown: (_) => setCardState(() => isPressed = true),
+            onTapUp: (_) => setCardState(() => isPressed = false),
+            onTapCancel: () => setCardState(() => isPressed = false),
+            onTap: onTap,
+            child: AnimatedScale(
+              scale: isPressed ? 0.96 : (isHovered ? 1.03 : 1.0),
+              duration: const Duration(milliseconds: 180),
+              curve: Curves.easeOutCubic,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                transform: Matrix4.translationValues(0, isHovered ? -5 : 0, 0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(28),
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 6.5,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: textColor.withValues(alpha: isHovered ? 0.32 : 0.18),
+                      blurRadius: isHovered ? 24 : 16,
+                      spreadRadius: isHovered ? 2 : 0,
+                      offset: Offset(0, isHovered ? 12 : 6),
+                    ),
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: isHovered ? 0.14 : 0.08),
+                      blurRadius: isHovered ? 14 : 8,
+                      offset: Offset(0, isHovered ? 6 : 3),
+                    ),
+                  ],
                 ),
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(
-                  color: isPressed ? textColor : Colors.white,
-                  width: 2.2,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: textColor.withValues(alpha: 0.20),
-                    blurRadius: 18,
-                    spreadRadius: 1,
-                    offset: const Offset(0, 8),
-                  ),
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.10),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Icon Container (White Circle)
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color(0x10000000),
-                          blurRadius: 8,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      iconData,
-                      size: 24,
-                      color: textColor,
-                    ),
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  // Card Title
-                  Text(
-                    title,
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: textColor,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // White Action Pill Button
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(21),
+                  child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0x12000000),
-                          blurRadius: 8,
-                          offset: Offset(0, 2),
+                      gradient: bgGradient ??
+                          const LinearGradient(
+                            colors: [Colors.white, Colors.white],
+                          ),
+                    ),
+                    child: Stack(
+                      children: [
+                        // In-Card Grid Background Layer
+                        Positioned.fill(
+                          child: CustomPaint(
+                            painter: InCardGridPainter(gridColor: cardGridColor),
+                          ),
+                        ),
+
+                        // Card Content
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Icon Container (White Circle)
+                              Container(
+                                width: 52,
+                                height: 52,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: textColor.withValues(alpha: 0.16),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: Icon(
+                                  iconData,
+                                  size: 28,
+                                  color: textColor,
+                                ),
+                              ),
+
+                              const SizedBox(height: 12),
+
+                              // Card Title
+                              Text(
+                                title,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w800,
+                                  color: textColor,
+                                  letterSpacing: 0.6,
+                                ),
+                              ),
+
+                              const SizedBox(height: 10),
+
+                              // White Action Pill Button
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Color(0x14000000),
+                                      blurRadius: 8,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Text(
+                                  subtext,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w700,
+                                    color: textColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                    child: Text(
-                      subtext,
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.poppins(
-                        fontSize: 11.5,
-                        fontWeight: FontWeight.w700,
-                        color: textColor,
-                      ),
-                    ),
                   ),
-                ],
+                ),
               ),
             ),
           ),
@@ -2521,12 +2572,12 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     final List<Map<String, dynamic>> quests = [
       {
         'title': 'Cognitive Quest',
-        'image': 'assets/images/cognitive.png',
-        'altImage': 'ui_assets/Cognitive quest.png',
+        'image': 'ui_assets/Cognitive quest.png',
+        'altImage': 'assets/images/Cognitive quest.png',
         'emoji': '🧠',
         'sub': '15 Courses',
-        'topPadding': 42.0,
-        'scale': 0.98,
+        'topPadding': 38.0,
+        'scale': 1.0,
         'gradient': const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -2536,12 +2587,12 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
       },
       {
         'title': 'Communication Quest',
-        'image': 'assets/images/communication.png',
-        'altImage': 'ui_assets/communication.png',
+        'image': 'ui_assets/communication.png',
+        'altImage': 'assets/images/communication.png',
         'emoji': '🗣️',
         'sub': '12 Courses',
-        'topPadding': 52.0,
-        'scale': 0.92,
+        'topPadding': 46.0,
+        'scale': 0.95,
         'gradient': const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -2551,12 +2602,12 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
       },
       {
         'title': 'Motor Quest',
-        'image': 'assets/images/motor.png',
-        'altImage': 'ui_assets/motor.png',
+        'image': 'ui_assets/motor.png',
+        'altImage': 'assets/images/motor.png',
         'emoji': '✋',
         'sub': '10 Courses',
-        'topPadding': 40.0,
-        'scale': 0.98,
+        'topPadding': 38.0,
+        'scale': 1.0,
         'gradient': const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -2566,12 +2617,12 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
       },
       {
         'title': 'Heritage Quest',
-        'image': 'assets/images/heritage.png',
-        'altImage': 'ui_assets/heritage.png',
+        'image': 'ui_assets/heritage.png',
+        'altImage': 'assets/images/heritage.png',
         'emoji': '🇮🇳',
         'sub': '14 Courses',
-        'topPadding': 46.0,
-        'scale': 0.95,
+        'topPadding': 42.0,
+        'scale': 0.98,
         'gradient': const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -2581,11 +2632,11 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
       },
       {
         'title': 'Social Quest',
-        'image': 'assets/images/social.png',
-        'altImage': 'ui_assets/social.png',
+        'image': 'ui_assets/social.png',
+        'altImage': 'assets/images/social.png',
         'emoji': '🤝',
         'sub': '8 Courses',
-        'topPadding': 42.0,
+        'topPadding': 38.0,
         'scale': 1.15,
         'gradient': const LinearGradient(
           begin: Alignment.topLeft,
@@ -2596,12 +2647,12 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
       },
       {
         'title': 'Creative Quest',
-        'image': 'assets/images/creative.png',
-        'altImage': 'ui_assets/creative.png',
+        'image': 'ui_assets/creative.png',
+        'altImage': 'assets/images/creative.png',
         'emoji': '🎨',
         'sub': '16 Courses',
-        'topPadding': 40.0,
-        'scale': 0.98,
+        'topPadding': 38.0,
+        'scale': 1.0,
         'gradient': const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -7383,12 +7434,11 @@ class _CompactEmotionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final cardW = math.min(size.width * 0.88, 340.0);
-    final cardH = math.min(size.height * 0.70, 500.0);
+    final cardW = math.min(size.width * 0.86, 320.0);
+    final cardH = math.min(size.height * 0.44, 330.0);
 
     final topColor = _getThemeTopColor(emotionValue);
     final bottomColor = _getThemeBottomColor(emotionValue);
-    final title = _getEmotionTitle(emotionValue);
 
     return Container(
       width: cardW,
@@ -7399,50 +7449,29 @@ class _CompactEmotionCard extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [topColor, bottomColor],
         ),
-        borderRadius: BorderRadius.circular(34),
+        borderRadius: BorderRadius.circular(32),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.38),
-            blurRadius: 32,
-            offset: const Offset(0, 16),
+            color: Colors.black.withValues(alpha: 0.32),
+            blurRadius: 28,
+            offset: const Offset(0, 14),
           ),
           BoxShadow(
-            color: topColor.withValues(alpha: 0.40),
-            blurRadius: 44,
-            offset: const Offset(0, 20),
+            color: topColor.withValues(alpha: 0.35),
+            blurRadius: 36,
+            offset: const Offset(0, 16),
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(32),
+        borderRadius: BorderRadius.circular(30),
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
-            // Top Emotion Title Text ("sad", "great", "awesome")
-            Positioned(
-              top: 24,
-              child: Text(
-                title,
-                style: GoogleFonts.fredoka(
-                  fontSize: 34,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white.withValues(alpha: 0.95),
-                  letterSpacing: 1.0,
-                  shadows: const [
-                    Shadow(
-                      color: Color(0x30000000),
-                      blurRadius: 6,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // Monster Face (Centered in top portion of card)
+            // Monster Face (Centered comfortably in colored section of card)
             Positioned.fill(
-              top: 48,
-              bottom: 110,
+              top: 4,
+              bottom: 78,
               child: InteractiveEmotionMonsterFaceWidget(
                 emotionValue: emotionValue,
                 chinColor: bottomColor,
@@ -7454,12 +7483,12 @@ class _CompactEmotionCard extends StatelessWidget {
               bottom: 0,
               left: 0,
               right: 0,
-              height: 120,
+              height: 78,
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: const BorderRadius.vertical(
-                    bottom: Radius.circular(32),
+                    bottom: Radius.circular(30),
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -7471,8 +7500,8 @@ class _CompactEmotionCard extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 16,
+                    horizontal: 20,
+                    vertical: 10,
                   ),
                   child: Center(
                     child: _CompactEmotionSlider(
@@ -7742,7 +7771,7 @@ class _InteractiveEmotionMonsterFacePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final cx = size.width / 2;
-    final cy = size.height / 2 - 10.0;
+    final cy = size.height / 2 + 28.0;
 
     // 1. EYEBROWS MORPHING (Distinct Expressive Curved Eyebrow Arches)
     final browPaint = Paint()
@@ -9183,6 +9212,30 @@ class GridLinesBackgroundPainter extends CustomPainter {
 
 extension _NumLet<T> on T {
   R let<R>(R Function(T) block) => block(this);
+}
+
+/// Custom Painter for Child & Parent In-Card Grid Background
+class InCardGridPainter extends CustomPainter {
+  final Color gridColor;
+  const InCardGridPainter({required this.gridColor});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = gridColor
+      ..strokeWidth = 1.0;
+
+    const double step = 12.0;
+    for (double x = 0; x < size.width; x += step) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+    }
+    for (double y = 0; y < size.height; y += step) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 /// Custom Painter drawing crisp, straight grid lines over the purple category background.

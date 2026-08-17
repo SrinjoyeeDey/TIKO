@@ -154,3 +154,67 @@ class AdaptiveDifficultyResponse(BaseModel):
     reasoning: str
     recommendationsForNextSession: List[str]
     modelUsed: str
+
+
+# ─── Dynamic AI Voice Interactions (ElevenLabs & Groq) ───────────────────────
+
+class VoiceInteractionRequest(BaseModel):
+    interactionType: str  # "POST_SIGNUP_INTRO", "READ_QUESTION", "PRONOUNCE_PHRASE", "RETRY_QUESTION", "LEVEL_COMPLETION", "CUSTOM"
+    childId: Optional[str] = "child_001"
+    childName: Optional[str] = "Explorer"
+    childAge: Optional[int] = 6
+    difficultyLevel: Optional[str] = "Balanced Explorer"
+    chapterId: Optional[str] = None
+    chapterName: Optional[str] = None
+    levelId: Optional[str] = None
+    levelName: Optional[str] = None
+    availableChapters: Optional[List[str]] = Field(default_factory=list)
+    questionId: Optional[int] = None
+    questionNumber: Optional[int] = None
+    questionText: Optional[str] = None
+    questionType: Optional[str] = None
+    options: Optional[Any] = None  # Dict or List of options
+    targetPhrase: Optional[str] = None
+    retryCount: Optional[int] = 1
+    stars: Optional[int] = None
+    totalCorrect: Optional[int] = None
+    totalQuestions: Optional[int] = None
+    customText: Optional[str] = None
+    voiceId: Optional[str] = None
+
+
+class VoiceInteractionResponse(BaseModel):
+    success: bool
+    interactionType: str
+    spokenText: str
+    audioId: Optional[str] = None
+    audioUrl: Optional[str] = None
+    audioBase64: Optional[str] = None
+    audioFormat: str = "audio/mpeg"
+    ttsStatus: str
+    modelUsed: str
+
+
+class TTSRequest(BaseModel):
+    text: str
+    voiceId: Optional[str] = None
+    stability: Optional[float] = 0.55
+    similarityBoost: Optional[float] = 0.80
+
+
+class TTSResponse(BaseModel):
+    success: bool
+    audioId: str
+    audioUrl: str
+    audioBase64: Optional[str] = None
+    audioFormat: str = "audio/mpeg"
+    status: str
+
+
+class VoiceStatusResponse(BaseModel):
+    status: str
+    elevenlabsConfigured: bool
+    groqConfigured: bool
+    defaultVoiceId: str
+    cachedAudioCount: int
+
