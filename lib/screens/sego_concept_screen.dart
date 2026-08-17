@@ -177,6 +177,8 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
       0; // 0: Age Selection, 1: Monster Takeover, 2: Role Selection
   String? _selectedRole;
   int _selectedSpeechLevelIndex = 1;
+  int _assessmentStep = 0;
+  final String _childName = 'Alex';
 
   late AnimationController _ballController;
   bool _isBouncingBallActive = false;
@@ -1994,13 +1996,19 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     );
   }
 
-  // SCREEN 2: SPEECH LEVEL SELECTION SCREEN (PRELIMINARY Question)
+  // SCREEN 2: SPEECH LEVEL SELECTION SCREEN (PRELIMINARY Question & Assessment Flow)
   Widget _buildSpeechLevelScreen(BuildContext context, _AgeTheme theme) {
+    final double progressPercent = (_assessmentStep + 1) / 16.0;
+
     return GestureDetector(
       onVerticalDragEnd: (details) {
         if (details.primaryVelocity != null &&
             details.primaryVelocity! < -150) {
-          _goToQuestCategoryScreen();
+          if (_assessmentStep < 15) {
+            setState(() => _assessmentStep++);
+          } else {
+            _goToQuestCategoryScreen();
+          }
         }
       },
       behavior: HitTestBehavior.translucent,
@@ -2014,11 +2022,15 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Back Button to Age Selection
+                  // Back Button
                   GestureDetector(
                     onTap: () {
                       HapticFeedback.lightImpact();
-                      _goToAgeSelection();
+                      if (_assessmentStep > 0) {
+                        setState(() => _assessmentStep--);
+                      } else {
+                        _goToAgeSelection();
+                      }
                     },
                     child: Container(
                       width: 44,
@@ -2042,7 +2054,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                     ),
                   ),
 
-                  // Progress Bar Pill
+                  // Progress Bar Pill (Dynamic 16-Step Fill)
                   Container(
                     width: 140,
                     height: 10,
@@ -2052,8 +2064,10 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                     ),
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Container(
-                        width: 90,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeOutCubic,
+                        width: 140.0 * progressPercent,
                         height: 10,
                         decoration: BoxDecoration(
                           color: const Color(0xFF10B981),
@@ -2082,13 +2096,22 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                     physics: const BouncingScrollPhysics(),
                     child: _SpeechLevelSelectorWidget(
                       theme: theme,
-                      selectedIndex: _selectedSpeechLevelIndex,
-                      onSpeechLevelChanged: (index) {
-                        setState(() {
-                          _selectedSpeechLevelIndex = index;
-                        });
+                      step: _assessmentStep,
+                      childName: _childName,
+                      onNextStep: () {
+                        if (_assessmentStep < 15) {
+                          setState(() => _assessmentStep++);
+                        } else {
+                          _goToQuestCategoryScreen();
+                        }
                       },
-                      onContinue: _goToQuestCategoryScreen,
+                      onPrevStep: () {
+                        if (_assessmentStep > 0) {
+                          setState(() => _assessmentStep--);
+                        } else {
+                          _goToAgeSelection();
+                        }
+                      },
                     ),
                   ),
                 ),
@@ -2498,8 +2521,12 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     final List<Map<String, dynamic>> quests = [
       {
         'title': 'Cognitive Quest',
+        'image': 'assets/images/cognitive.png',
+        'altImage': 'ui_assets/Cognitive quest.png',
         'emoji': '🧠',
         'sub': '15 Courses',
+        'topPadding': 42.0,
+        'scale': 0.98,
         'gradient': const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -2509,8 +2536,12 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
       },
       {
         'title': 'Communication Quest',
+        'image': 'assets/images/communication.png',
+        'altImage': 'ui_assets/communication.png',
         'emoji': '🗣️',
         'sub': '12 Courses',
+        'topPadding': 52.0,
+        'scale': 0.92,
         'gradient': const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -2520,8 +2551,12 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
       },
       {
         'title': 'Motor Quest',
+        'image': 'assets/images/motor.png',
+        'altImage': 'ui_assets/motor.png',
         'emoji': '✋',
         'sub': '10 Courses',
+        'topPadding': 40.0,
+        'scale': 0.98,
         'gradient': const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -2531,8 +2566,12 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
       },
       {
         'title': 'Heritage Quest',
+        'image': 'assets/images/heritage.png',
+        'altImage': 'ui_assets/heritage.png',
         'emoji': '🇮🇳',
         'sub': '14 Courses',
+        'topPadding': 46.0,
+        'scale': 0.95,
         'gradient': const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -2542,19 +2581,27 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
       },
       {
         'title': 'Social Quest',
+        'image': 'assets/images/social.png',
+        'altImage': 'ui_assets/social.png',
         'emoji': '🤝',
         'sub': '8 Courses',
+        'topPadding': 42.0,
+        'scale': 1.15,
         'gradient': const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFFEF9A9A), Color(0xFFE53935)],
+          colors: [Color(0xFF38BDF8), Color(0xFF0284C7)],
         ),
-        'accent': const Color(0xFFD32F2F),
+        'accent': const Color(0xFF0284C7),
       },
       {
         'title': 'Creative Quest',
+        'image': 'assets/images/creative.png',
+        'altImage': 'ui_assets/creative.png',
         'emoji': '🎨',
         'sub': '16 Courses',
+        'topPadding': 40.0,
+        'scale': 0.98,
         'gradient': const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -2779,7 +2826,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                                     _goToRoleSelection();
                                   },
                                   child: Container(
-                                    padding: const EdgeInsets.all(14),
+                                    clipBehavior: Clip.antiAlias,
                                     decoration: BoxDecoration(
                                       gradient: item['gradient'] as Gradient,
                                       borderRadius: BorderRadius.circular(22),
@@ -2795,57 +2842,106 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                                         ),
                                       ],
                                     ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    child: Stack(
                                       children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              item['title'] as String,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
-                                                fontFamily: 'Outfit',
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w800,
-                                                color: Colors.white,
-                                                height: 1.1,
+                                        // 1. Direct Card Image Illustration Fit (Clipped within Boundaries)
+                                        Positioned.fill(
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(20),
+                                            child: Padding(
+                                              padding: EdgeInsets.only(
+                                                top: (item['topPadding'] as double? ?? 40.0),
+                                                bottom: 6,
+                                                left: 6,
+                                                right: 6,
+                                              ),
+                                              child: Transform.scale(
+                                                scale: item['scale'] as double? ?? 1.0,
+                                                alignment: Alignment.bottomCenter,
+                                                child: Image.asset(
+                                                  item['image'] as String,
+                                                  fit: BoxFit.contain,
+                                                  alignment: Alignment.bottomCenter,
+                                                  errorBuilder: (context, error, stackTrace) {
+                                                    return Image.asset(
+                                                      item['altImage'] as String? ?? '',
+                                                      fit: BoxFit.contain,
+                                                      alignment: Alignment.bottomCenter,
+                                                      errorBuilder: (context, err, st) => Container(),
+                                                    );
+                                                  },
+                                                ),
                                               ),
                                             ),
-                                            const SizedBox(height: 2),
-                                            Text(
-                                              item['sub'] as String,
-                                              style: TextStyle(
-                                                fontFamily: 'Outfit',
-                                                fontSize: 10.5,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.white.withValues(alpha: 0.88),
-                                              ),
-                                            ),
-                                          ],
+                                          ),
                                         ),
 
-                                        // Center Emoji Circle Badge
-                                        Center(
+                                        // 2. Subtle Text Protection Shadow Gradient (Top)
+                                        Positioned(
+                                          top: 0,
+                                          left: 0,
+                                          right: 0,
+                                          height: 48,
                                           child: Container(
-                                            width: 42,
-                                            height: 42,
                                             decoration: BoxDecoration(
-                                              color: Colors.white.withValues(alpha: 0.25),
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: Colors.white.withValues(alpha: 0.45),
-                                                width: 1.2,
+                                              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                                              gradient: LinearGradient(
+                                                begin: Alignment.topCenter,
+                                                end: Alignment.bottomCenter,
+                                                colors: [
+                                                  Colors.black.withValues(alpha: 0.35),
+                                                  Colors.transparent,
+                                                ],
                                               ),
                                             ),
-                                            child: Center(
-                                              child: Text(
-                                                item['emoji'] as String,
-                                                style: const TextStyle(fontSize: 21),
+                                          ),
+                                        ),
+
+                                        // 3. Card Title & Courses Subtitle Text (Top Left)
+                                        Positioned(
+                                          top: 12,
+                                          left: 12,
+                                          right: 12,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                item['title'] as String,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                  fontFamily: 'Outfit',
+                                                  fontSize: 14.5,
+                                                  fontWeight: FontWeight.w800,
+                                                  color: Colors.white,
+                                                  shadows: [
+                                                    Shadow(
+                                                      color: Color(0x80000000),
+                                                      blurRadius: 4,
+                                                      offset: Offset(0, 1),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
+                                              const SizedBox(height: 2),
+                                              Text(
+                                                item['sub'] as String,
+                                                style: TextStyle(
+                                                  fontFamily: 'Outfit',
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.white.withValues(alpha: 0.92),
+                                                  shadows: const [
+                                                    Shadow(
+                                                      color: Color(0x70000000),
+                                                      blurRadius: 4,
+                                                      offset: Offset(0, 1),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
@@ -9116,32 +9212,69 @@ class CategoryGridPainter extends CustomPainter {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SPEECH LEVEL SELECTOR WIDGET (PRELIMINARY QUESTION)
+// SPEECH LEVEL & ASSESSMENT QUESTIONNAIRE SELECTOR WIDGET (16 QUESTIONS)
 // ─────────────────────────────────────────────────────────────────────────────
-class _SpeechLevelSelectorWidget extends StatelessWidget {
+class _SpeechLevelSelectorWidget extends StatefulWidget {
   final _AgeTheme theme;
-  final int selectedIndex;
-  final ValueChanged<int> onSpeechLevelChanged;
-  final VoidCallback onContinue;
+  final int step;
+  final String childName;
+  final VoidCallback onNextStep;
+  final VoidCallback onPrevStep;
 
   const _SpeechLevelSelectorWidget({
+    super.key,
     required this.theme,
-    required this.selectedIndex,
-    required this.onSpeechLevelChanged,
-    required this.onContinue,
+    required this.step,
+    required this.childName,
+    required this.onNextStep,
+    required this.onPrevStep,
   });
 
-  static const List<String> _options = [
-    'Nonverbal',
-    'Nonverbal but can tell yes / no',
-    'Cannot speak but knows words',
-    'Does speak but not everyone understands',
-  ];
+  @override
+  State<_SpeechLevelSelectorWidget> createState() => _SpeechLevelSelectorWidgetState();
+}
+
+class _SpeechLevelSelectorWidgetState extends State<_SpeechLevelSelectorWidget> {
+  // Store single-select answer per step
+  final Map<int, String> _singleAnswers = {
+    0: 'Nonverbal but can tell yes / no',
+    1: 'No',
+    3: 'Yes',
+    4: 'Yes',
+    5: 'Yes',
+    6: 'Yes',
+    7: 'Yes',
+    8: 'Yes',
+    10: 'Yes',
+    11: 'Yes',
+    12: 'Yes',
+    13: 'Gets frustrated - but tries again',
+    14: 'I don\'t know where to start',
+  };
+
+  // Store multi-select checkbox answers per step
+  final Map<int, Set<String>> _multiAnswers = {
+    2: {'Speech Delay'},
+    9: {'b — ball, baby, cub'},
+  };
+
+  // Store final speech level slider progress (step 15)
+  double _speechLevelSliderValue = 0.5;
 
   @override
   Widget build(BuildContext context) {
+    final questions = _getQuestions(widget.childName);
+    final safeStep = widget.step.clamp(0, questions.length - 1);
+    final q = questions[safeStep];
+
+    final String tag = q['tag'] as String;
+    final String title = q['title'] as String;
+    final String subtitle = q['subtitle'] as String;
+    final String type = q['type'] as String;
+    final List<String> options = List<String>.from(q['options'] as List);
+
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 400),
       curve: Curves.easeInOut,
       width: 480,
       clipBehavior: Clip.antiAlias,
@@ -9157,178 +9290,581 @@ class _SpeechLevelSelectorWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Top Tag Badge
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF1F5F9),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Text(
-                    'PRELIMINARY QUESTION',
-                    style: TextStyle(
-                      fontFamily: 'Outfit',
-                      fontSize: 11,
-                      fontWeight: FontWeight.w800,
-                      color: Color(0xFF64748B),
-                      letterSpacing: 1.0,
-                    ),
-                  ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Top Category / Step Badge
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF1F5F9),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                tag,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontFamily: 'Outfit',
+                  fontSize: 10.5,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xFF64748B),
+                  letterSpacing: 0.8,
                 ),
-
-                const SizedBox(height: 16),
-
-                // Question Title
-                const Text(
-                  'What is your child\'s speech level?',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Outfit',
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xFF0F172A),
-                    height: 1.25,
-                  ),
-                ),
-
-                const SizedBox(height: 6),
-
-                const Text(
-                  'This helps us adapt lessons to their communication abilities.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Outfit',
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xFF64748B),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // 4 Speech Level Options
-                ...List.generate(_options.length, (index) {
-                  final isSelected = selectedIndex == index;
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        HapticFeedback.selectionClick();
-                        onSpeechLevelChanged(index);
-                      },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeOutCubic,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                        decoration: BoxDecoration(
-                          color: isSelected ? const Color(0xFFF0FDF4) : const Color(0xFFF8FAFC),
-                          borderRadius: BorderRadius.circular(18),
-                          border: Border.all(
-                            color: isSelected ? const Color(0xFF10B981) : const Color(0xFFE2E8F0),
-                            width: isSelected ? 2.0 : 1.0,
-                          ),
-                          boxShadow: isSelected
-                              ? const [
-                                  BoxShadow(
-                                    color: Color(0x1210B981),
-                                    blurRadius: 10,
-                                    offset: Offset(0, 4),
-                                  ),
-                                ]
-                              : [],
-                        ),
-                        child: Row(
-                          children: [
-                            AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              width: 22,
-                              height: 22,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: isSelected ? const Color(0xFF10B981) : Colors.transparent,
-                                border: Border.all(
-                                  color: isSelected ? const Color(0xFF10B981) : const Color(0xFFCBD5E1),
-                                  width: 2,
-                                ),
-                              ),
-                              child: isSelected
-                                  ? const Icon(
-                                      Icons.check_rounded,
-                                      size: 14,
-                                      color: Colors.white,
-                                    )
-                                  : null,
-                            ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Text(
-                                _options[index],
-                                style: TextStyle(
-                                  fontFamily: 'Outfit',
-                                  fontSize: 14,
-                                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-                                  color: isSelected ? const Color(0xFF065F46) : const Color(0xFF334155),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-
-                const SizedBox(height: 14),
-
-                // Continue Action Button
-                GestureDetector(
-                  onTap: () {
-                    HapticFeedback.mediumImpact();
-                    onContinue();
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF10B981), Color(0xFF059669)],
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0x3010B981),
-                          blurRadius: 12,
-                          offset: Offset(0, 5),
-                        ),
-                      ],
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Continue',
-                        style: TextStyle(
-                          fontFamily: 'Outfit',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+
+            const SizedBox(height: 14),
+
+            // Question Title
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontFamily: 'Outfit',
+                fontSize: 21,
+                fontWeight: FontWeight.w800,
+                color: Color(0xFF0F172A),
+                height: 1.25,
+              ),
+            ),
+
+            if (subtitle.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Text(
+                subtitle,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontFamily: 'Outfit',
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFF64748B),
+                ),
+              ),
+            ],
+
+            const SizedBox(height: 18),
+
+            // Question Content based on type
+            if (type == 'single_radio')
+              _buildSingleRadioList(safeStep, options)
+            else if (type == 'multi_checkbox')
+              _buildMultiCheckboxList(safeStep, options)
+            else if (type == 'slider_level')
+              _buildSpeechLevelSlider(),
+
+            const SizedBox(height: 16),
+
+            // Action Button ("Continue" or "Finish Assessment 🎉")
+            GestureDetector(
+              onTap: () {
+                HapticFeedback.mediumImpact();
+                widget.onNextStep();
+              },
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF10B981), Color(0xFF059669)],
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x3010B981),
+                      blurRadius: 12,
+                      offset: Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    safeStep == questions.length - 1 ? 'Finish Assessment 🎉' : 'Continue',
+                    style: const TextStyle(
+                      fontFamily: 'Outfit',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  // Build Single-Radio Choice Options
+  Widget _buildSingleRadioList(int step, List<String> options) {
+    final selectedValue = _singleAnswers[step] ?? options.first;
+
+    return Column(
+      children: options.map((opt) {
+        final isSelected = selectedValue == opt;
+
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
+          child: GestureDetector(
+            onTap: () {
+              HapticFeedback.selectionClick();
+              setState(() {
+                _singleAnswers[step] = opt;
+              });
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOutCubic,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              decoration: BoxDecoration(
+                color: isSelected ? const Color(0xFFF0FDF4) : const Color(0xFFF8FAFC),
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(
+                  color: isSelected ? const Color(0xFF10B981) : const Color(0xFFE2E8F0),
+                  width: isSelected ? 2.0 : 1.0,
+                ),
+                boxShadow: isSelected
+                    ? const [
+                        BoxShadow(
+                          color: Color(0x1210B981),
+                          blurRadius: 10,
+                          offset: Offset(0, 4),
+                        ),
+                      ]
+                    : [],
+              ),
+              child: Row(
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: 22,
+                    height: 22,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: isSelected ? const Color(0xFF10B981) : Colors.transparent,
+                      border: Border.all(
+                        color: isSelected ? const Color(0xFF10B981) : const Color(0xFFCBD5E1),
+                        width: 2,
+                      ),
+                    ),
+                    child: isSelected
+                        ? const Icon(
+                            Icons.check_rounded,
+                            size: 14,
+                            color: Colors.white,
+                          )
+                        : null,
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Text(
+                      opt,
+                      style: TextStyle(
+                        fontFamily: 'Outfit',
+                        fontSize: 14,
+                        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                        color: isSelected ? const Color(0xFF065F46) : const Color(0xFF334155),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  // Build Multi-Checkbox Choice Options
+  Widget _buildMultiCheckboxList(int step, List<String> options) {
+    final selectedSet = _multiAnswers.putIfAbsent(step, () => <String>{});
+
+    return Column(
+      children: options.map((opt) {
+        final isSelected = selectedSet.contains(opt);
+
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
+          child: GestureDetector(
+            onTap: () {
+              HapticFeedback.selectionClick();
+              setState(() {
+                if (isSelected) {
+                  selectedSet.remove(opt);
+                } else {
+                  selectedSet.add(opt);
+                }
+              });
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOutCubic,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              decoration: BoxDecoration(
+                color: isSelected ? const Color(0xFFF0FDF4) : const Color(0xFFF8FAFC),
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(
+                  color: isSelected ? const Color(0xFF10B981) : const Color(0xFFE2E8F0),
+                  width: isSelected ? 2.0 : 1.0,
+                ),
+                boxShadow: isSelected
+                    ? const [
+                        BoxShadow(
+                          color: Color(0x1210B981),
+                          blurRadius: 10,
+                          offset: Offset(0, 4),
+                        ),
+                      ]
+                    : [],
+              ),
+              child: Row(
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: 22,
+                    height: 22,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      color: isSelected ? const Color(0xFF10B981) : Colors.transparent,
+                      border: Border.all(
+                        color: isSelected ? const Color(0xFF10B981) : const Color(0xFFCBD5E1),
+                        width: 2,
+                      ),
+                    ),
+                    child: isSelected
+                        ? const Icon(
+                            Icons.check_rounded,
+                            size: 14,
+                            color: Colors.white,
+                          )
+                        : null,
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Text(
+                      opt,
+                      style: TextStyle(
+                        fontFamily: 'Outfit',
+                        fontSize: 14,
+                        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                        color: isSelected ? const Color(0xFF065F46) : const Color(0xFF334155),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  // Build Final Step Interactive Speech Level Slider
+  Widget _buildSpeechLevelSlider() {
+    String levelLabel;
+    if (_speechLevelSliderValue <= 0.33) {
+      levelLabel = 'Getting started';
+    } else if (_speechLevelSliderValue <= 0.66) {
+      levelLabel = 'Great progress';
+    } else {
+      levelLabel = 'Excellent';
+    }
+
+    return Column(
+      children: [
+        // Level Active Badge Display
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF0FDF4),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: const Color(0xFF10B981), width: 1.5),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x1510B981),
+                blurRadius: 10,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Text(
+            levelLabel,
+            style: const TextStyle(
+              fontFamily: 'Outfit',
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+              color: Color(0xFF065F46),
+              letterSpacing: 0.3,
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 24),
+
+        // Slider Bar Control
+        SliderTheme(
+          data: SliderThemeData(
+            activeTrackColor: const Color(0xFF10B981),
+            inactiveTrackColor: const Color(0xFFE2E8F0),
+            thumbColor: const Color(0xFF10B981),
+            overlayColor: const Color(0x2910B981),
+            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12),
+            trackHeight: 8,
+          ),
+          child: Slider(
+            value: _speechLevelSliderValue,
+            min: 0.0,
+            max: 1.0,
+            onChanged: (val) {
+              HapticFeedback.selectionClick();
+              setState(() {
+                _speechLevelSliderValue = val;
+              });
+            },
+          ),
+        ),
+
+        const SizedBox(height: 12),
+
+        // Range Label Arrows
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: const [
+            Text(
+              'Getting started',
+              style: TextStyle(
+                fontFamily: 'Outfit',
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF64748B),
+              ),
+            ),
+            Icon(Icons.swap_horiz_rounded, size: 18, color: Color(0xFF94A3B8)),
+            Text(
+              'Great progress',
+              style: TextStyle(
+                fontFamily: 'Outfit',
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF64748B),
+              ),
+            ),
+            Icon(Icons.swap_horiz_rounded, size: 18, color: Color(0xFF94A3B8)),
+            Text(
+              'Excellent',
+              style: TextStyle(
+                fontFamily: 'Outfit',
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF64748B),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+      ],
+    );
+  }
+
+  // 16 Questions Definitions List
+  static List<Map<String, dynamic>> _getQuestions(String childName) {
+    final String displayName = childName.isNotEmpty ? childName : 'Your child';
+
+    return [
+      // 1. Existing First Question
+      {
+        'tag': 'PRELIMINARY QUESTION',
+        'category': 'Speech Level',
+        'title': 'What is your child\'s speech level?',
+        'subtitle': 'This helps us adapt lessons to their communication abilities.',
+        'type': 'single_radio',
+        'options': [
+          'Nonverbal',
+          'Nonverbal but can tell yes / no',
+          'Cannot speak but knows words',
+          'Does speak but not everyone understands',
+        ],
+      },
+
+      // 2. Evaluation
+      {
+        'tag': 'EVALUATION',
+        'category': 'Therapist Evaluation',
+        'title': 'Has your child ever been evaluated by a therapist?',
+        'subtitle': 'Select one answer.',
+        'type': 'single_radio',
+        'options': ['Yes', 'No'],
+      },
+
+      // 3. Developmental Issues
+      {
+        'tag': 'DEVELOPMENTAL ISSUES',
+        'category': 'Developmental Issues',
+        'title': 'Developmental Issues',
+        'subtitle': 'Please select the diagnoses your child has received.',
+        'type': 'multi_checkbox',
+        'options': [
+          'Speech Delay',
+          'Autism Spectrum Disorder',
+          'Developmental Delay',
+          'ADHD',
+          'Apraxia',
+          'Premature Birth',
+        ],
+      },
+
+      // 4. Understanding & Following Instructions - Q1
+      {
+        'tag': 'UNDERSTANDING & FOLLOWING INSTRUCTIONS',
+        'category': 'Understanding & Following Instructions',
+        'title': 'Does your child understand words for order, like first, next, and last?',
+        'subtitle': 'Select one answer.',
+        'type': 'single_radio',
+        'options': ['Yes', 'No'],
+      },
+
+      // 5. Understanding & Following Instructions - Q2
+      {
+        'tag': 'UNDERSTANDING & FOLLOWING INSTRUCTIONS',
+        'category': 'Understanding & Following Instructions',
+        'title': 'Does your child understand words for time, like yesterday, today, and tomorrow?',
+        'subtitle': 'Select one answer.',
+        'type': 'single_radio',
+        'options': ['Yes', 'No'],
+      },
+
+      // 6. Understanding & Following Instructions - Q3
+      {
+        'tag': 'UNDERSTANDING & FOLLOWING INSTRUCTIONS',
+        'category': 'Understanding & Following Instructions',
+        'title': 'Does your child follow instructions, like "Put your pajamas on, brush your teeth, and then pick out a book."?',
+        'subtitle': 'Select one answer.',
+        'type': 'single_radio',
+        'options': ['Yes', 'No'],
+      },
+
+      // 7. Understanding & Following Instructions - Q4
+      {
+        'tag': 'UNDERSTANDING & FOLLOWING INSTRUCTIONS',
+        'category': 'Understanding & Following Instructions',
+        'title': 'Does your child listen to and understand most of what he/she hears at home?',
+        'subtitle': 'Select one answer.',
+        'type': 'single_radio',
+        'options': ['Yes', 'No'],
+      },
+
+      // 8. Understanding & Following Instructions - Q5
+      {
+        'tag': 'UNDERSTANDING & FOLLOWING INSTRUCTIONS',
+        'category': 'Understanding & Following Instructions',
+        'title': 'Does your child respond when you call him/her from another room?',
+        'subtitle': 'Select one answer.',
+        'type': 'single_radio',
+        'options': ['Yes', 'No'],
+      },
+
+      // 9. Speaking & Communication - Q1
+      {
+        'tag': 'SPEAKING & COMMUNICATION',
+        'category': 'Speaking & Communication',
+        'title': 'Can your child say his/her first and last name?',
+        'subtitle': 'Select one answer.',
+        'type': 'single_radio',
+        'options': ['Yes', 'No'],
+      },
+
+      // 10. Speaking & Communication - Q2
+      {
+        'tag': 'SPEAKING & COMMUNICATION',
+        'category': 'Speaking & Communication',
+        'title': 'Which of the following sounds does your child need to improve?',
+        'subtitle': 'Select all that apply.',
+        'type': 'multi_checkbox',
+        'options': [
+          'b — ball, baby, cub',
+          'd — dog, idea, mud',
+          'h — hi, ahead, haha',
+          'm — moon, lemon, gum',
+          'n — no, canoe, nine',
+        ],
+      },
+
+      // 11. Social & Imaginative Skills - Q1
+      {
+        'tag': 'SOCIAL & IMAGINATIVE SKILLS',
+        'category': 'Social & Imaginative Skills',
+        'title': 'Does your child like to sing, dance, or act?',
+        'subtitle': 'Select one answer.',
+        'type': 'single_radio',
+        'options': ['Yes', 'No'],
+      },
+
+      // 12. Social & Imaginative Skills - Q2
+      {
+        'tag': 'SOCIAL & IMAGINATIVE SKILLS',
+        'category': 'Social & Imaginative Skills',
+        'title': 'Can your child tell apart what\'s real and what\'s make-believe?',
+        'subtitle': 'Select one answer.',
+        'type': 'single_radio',
+        'options': ['Yes', 'No'],
+      },
+
+      // 13. Social & Imaginative Skills - Q3
+      {
+        'tag': 'SOCIAL & IMAGINATIVE SKILLS',
+        'category': 'Social & Imaginative Skills',
+        'title': 'Does your child prefer to play with other children than by himself?',
+        'subtitle': 'Select one answer.',
+        'type': 'single_radio',
+        'options': ['Yes', 'No'],
+      },
+
+      // 14. Communication Challenges - Q1
+      {
+        'tag': 'COMMUNICATION CHALLENGES',
+        'category': 'Communication Challenges',
+        'title': 'How does your child react when they are not understood?',
+        'subtitle': 'Select one option.',
+        'type': 'single_radio',
+        'options': [
+          'Gets very upset - tantrums or crying',
+          'Gets frustrated - but tries again',
+          'Stays calm - uses gestures or moves on',
+          'Doesn\'t seem to notice or care yet',
+        ],
+      },
+
+      // 15. Communication Challenges - Q2
+      {
+        'tag': 'COMMUNICATION CHALLENGES',
+        'category': 'Communication Challenges',
+        'title': 'What is your biggest challenge when trying to teach your child to speak?',
+        'subtitle': 'Select one option.',
+        'type': 'single_radio',
+        'options': [
+          'I don\'t know where to start',
+          'I can\'t find the time for practice',
+          'I am not sure if I am doing it right',
+          'I struggle with their attention',
+        ],
+      },
+
+      // 16. Speech Level — Final Step
+      {
+        'tag': 'SPEECH LEVEL — FINAL STEP',
+        'category': 'Speech Level Assessment',
+        'title': '$displayName\'s speech level',
+        'subtitle': 'Manually set your child\'s current speech progress level.',
+        'type': 'slider_level',
+        'options': [],
+      },
+    ];
   }
 }
 
