@@ -14,6 +14,7 @@ import '../../core/services/event_service.dart';
 import '../../core/models/event_model.dart';
 import '../../core/widgets/panda_character.dart';
 import '../services/clinical_report_service.dart';
+import '../services/child_difficulty_service.dart';
 
 /// Full-screen Celebration screen showing crystal prism lesson badge with specular light glare,
 /// lesson progress (e.g. Lesson 1 of 5), remaining count, and reward stats.
@@ -138,13 +139,55 @@ class _LevelClearScreenState extends State<LevelClearScreen>
       },
     );
 
+    final currentSessionId = ChildState.instance.currentSessionId ?? 'SES_${DateTime.now().millisecondsSinceEpoch}';
     await ChildState.instance.endCurrentSession();
 
-    // 5. Trigger generation of Post-Play Clinical & Parental Report
+    // 5. Trigger generation of Post-Play Clinical & Parental Report and Adaptive Difficulty Calculation via Groq LLM
     try {
-      await ClinicalReportService.generateReport(widget.childId);
+      final report = await ClinicalReportService.generateReport(widget.childId);
+
+      // Format the 7 clinical dimensions
+      final currentAbility = '${report.sessionSummary.overallEngagement} (Accuracy: ${(widget.totalCorrect / (widget.totalQuestions > 0 ? widget.totalQuestions : 1) * 100).toStringAsFixed(0)}%)';
+      final prevPerformance = '$_stars Stars (${widget.totalCorrect}/${widget.totalQuestions} correct)';
+      final preferredInteraction = report.sensoryAndAttention.sensoryPreferences.isNotEmpty
+          ? report.sensoryAndAttention.sensoryPreferences.join(', ')
+          : 'Visual storytelling with interactive touch cues';
+      final speechAbility = report.speechAndCommunication.pronunciationAccuracy >= 0
+          ? '${report.speechAndCommunication.pronunciationAccuracy}% pronunciation (${report.speechAndCommunication.totalVocalizations} vocalizations)'
+          : 'No verbal questions in this level';
+      final seqStr = report.cognitiveAndMotorSkills.sequencing >= 0
+          ? '${report.cognitiveAndMotorSkills.sequencing}%'
+          : 'Not tested in this level';
+      final motorStr = report.cognitiveAndMotorSkills.fineMotorControl >= 0
+          ? '${report.cognitiveAndMotorSkills.fineMotorControl}%'
+          : 'Touch interactions completed';
+      final motorPerformance = 'Sequencing: $seqStr, Fine Motor: $motorStr';
+
+      final visualFocusStr = report.sensoryAndAttention.visualEngagementScore >= 0
+          ? '${report.sensoryAndAttention.visualEngagementScore}%'
+          : 'Camera tracking not active';
+      final gazeLockStr = report.sensoryAndAttention.screenGazeAlignment >= 0
+          ? '${report.sensoryAndAttention.screenGazeAlignment}%'
+          : 'Screen active';
+      final attentionPattern = 'Visual Focus: $visualFocusStr, Gaze Lock: $gazeLockStr, Distractions: ${report.sensoryAndAttention.distractionEvents}';
+      final learningHistory = 'Level ${widget.level.id} completed in ${report.sessionSummary.durationMinutes}m, ${report.behavioralObservations.hintsRequested} hints, ${report.behavioralObservations.frustrationIndicators} frustration indicators';
+
+      // Send to Groq LLM and persist evaluation in SQLite
+      await ChildDifficultyService.instance.evaluateAndSaveAdaptiveSessionDifficulty(
+        childId: widget.childId,
+        sessionId: currentSessionId,
+        chapterId: widget.level.chapterId,
+        levelId: widget.level.id,
+        currentAbility: currentAbility,
+        previousPerformance: prevPerformance,
+        preferredInteraction: preferredInteraction,
+        speechAbility: speechAbility,
+        motorPerformance: motorPerformance,
+        attentionPattern: attentionPattern,
+        learningHistory: learningHistory,
+      );
     } catch (e) {
-      debugPrint('LevelClearScreen: Error generating clinical report: $e');
+      debugPrint('LevelClearScreen: Error evaluating post-level adaptive difficulty: $e');
     }
   }
 

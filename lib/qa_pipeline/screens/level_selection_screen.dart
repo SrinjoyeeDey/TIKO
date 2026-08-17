@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../widgets/wooden_back_button.dart';
 import '../../widgets/game_textured_text.dart';
+import '../../widgets/child_profile_badge.dart';
 import '../database/progress_repository.dart';
 import '../models/learning_content.dart';
 import '../models/level_progress.dart';
@@ -305,6 +306,10 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
                       children: [
                         WoodenBackButton(
                           onTap: () => Navigator.of(context).pop(),
+                        ),
+                        const SizedBox(width: 10),
+                        ChildProfileBadge(
+                          childId: widget.childId,
                         ),
                         Expanded(
                           child: Center(

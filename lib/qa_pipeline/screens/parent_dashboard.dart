@@ -12,6 +12,8 @@ import '../services/adaptive_learning_service.dart';
 import '../services/analytics_service.dart';
 import '../models/clinical_report_model.dart';
 import '../services/clinical_report_service.dart';
+import '../models/session_evaluation_model.dart';
+import '../database/session_evaluation_repository.dart';
 
 import '../../core/state/child_state.dart';
 import '../../screens/parent_auth_screen.dart';
@@ -36,6 +38,7 @@ class _ParentDashboardState extends State<ParentDashboard> {
   List<AdaptiveInsight> _insights = [];
   List<LearningChapter> _chapters = [];
   ClinicalReport? _clinicalReport;
+  SessionClinicalEvaluation? _latestEvaluation;
   bool _isLoading = true;
 
   @override
@@ -68,6 +71,7 @@ class _ParentDashboardState extends State<ParentDashboard> {
     final chapters = await ContentDiscoveryService.discoverContent();
     final insights = await AdaptiveLearningService.analyzeAll(widget.childId);
     final clinical = await ClinicalReportService.generateReport(widget.childId);
+    final evaluation = await SessionEvaluationRepository.getLatestEvaluation(widget.childId);
 
     if (mounted) {
       setState(() {
@@ -77,6 +81,7 @@ class _ParentDashboardState extends State<ParentDashboard> {
         _insights = insights;
         _chapters = chapters;
         _clinicalReport = clinical;
+        _latestEvaluation = evaluation;
         _isLoading = false;
       });
     }
@@ -122,6 +127,8 @@ class _ParentDashboardState extends State<ParentDashboard> {
                 padding: const EdgeInsets.all(20),
                 children: [
                   _buildProfileCard(),
+                  const SizedBox(height: 16),
+                  _buildAdaptiveDifficultyCard(),
                   const SizedBox(height: 16),
                   _buildProgressOverview(),
                   const SizedBox(height: 16),
@@ -758,6 +765,155 @@ class _ParentDashboardState extends State<ParentDashboard> {
               backgroundColor: isPending ? Colors.grey.withValues(alpha: 0.15) : color.withValues(alpha: 0.15),
               valueColor: AlwaysStoppedAnimation<Color>(isPending ? Colors.grey : color),
               minHeight: 6,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAdaptiveDifficultyCard() {
+    if (_latestEvaluation == null) return const SizedBox();
+
+    final eval = _latestEvaluation!;
+    final diffPct = eval.difficultyPercentage;
+    final diffLevel = eval.difficultyLevel;
+
+    return _buildCard(
+      title: "Dr. Nimo's Adaptive Difficulty Calibration (Groq LLM)",
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header Badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF2E7D32), Color(0xFF1B5E20)],
+              ),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Next Session Difficulty',
+                  style: GoogleFonts.outfit(
+                    fontSize: 13,
+                    color: Colors.white70,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white24,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    '⚡ $diffPct% • $diffLevel',
+                    style: GoogleFonts.outfit(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFFFFE082),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 14),
+
+          // 7 Dimensions
+          Text(
+            'Evaluated Clinical Dimensions:',
+            style: GoogleFonts.outfit(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF1B5E20),
+            ),
+          ),
+          const SizedBox(height: 8),
+          _buildEvaluationDimensionRow('🎯 Current Ability', eval.currentAbility),
+          _buildEvaluationDimensionRow('🏆 Performance', eval.previousPerformance),
+          _buildEvaluationDimensionRow('👁️ Interaction Style', eval.preferredInteraction),
+          _buildEvaluationDimensionRow('🎙️ Speech & Articulation', eval.speechAbility),
+          _buildEvaluationDimensionRow('🖐️ Motor & Sequencing', eval.motorPerformance),
+          _buildEvaluationDimensionRow('🧠 Attention & Focus', eval.attentionPattern),
+          _buildEvaluationDimensionRow('📜 Learning History', eval.learningHistory),
+
+          if (eval.difficultyReasoning.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFF9C4),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: const Color(0xFFFBC02D)),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.psychology, color: Color(0xFFF57F17), size: 18),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      eval.difficultyReasoning,
+                      style: GoogleFonts.outfit(
+                        fontSize: 12,
+                        color: const Color(0xFF5D4037),
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+
+          if (eval.recommendations.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Text(
+              'Recommendations for Next Session:',
+              style: GoogleFonts.outfit(
+                fontSize: 12.5,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF2E7D32),
+              ),
+            ),
+            const SizedBox(height: 6),
+            ...eval.recommendations.map((r) => _buildBulletItem(r, color: const Color(0xFF1B5E20))),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEvaluationDimensionRow(String label, String value) {
+    if (value.isEmpty) return const SizedBox();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 140,
+            child: Text(
+              label,
+              style: GoogleFonts.outfit(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF33691E),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: GoogleFonts.outfit(
+                fontSize: 12,
+                color: const Color(0xFF1B5E20),
+              ),
             ),
           ),
         ],
