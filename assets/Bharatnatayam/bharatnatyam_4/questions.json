@@ -1,0 +1,449 @@
+﻿{
+  "title": "Closing Salutation and Completing the Bharatanatyam Journey",
+  "section": {
+    "start": "11:00",
+    "end": "14:00",
+    "description": "Comprehensive pedagogical question set with multi-tier difficulty calibrated for all learner profiles (Gentle Starter, Balanced Explorer, Curious Adventurer, Challenger, Champion)."
+  },
+  "target_age": 12,
+  "question_pattern": {
+    "main_questions": "Multi-tier MCQs, progressive descriptive questions, and voice pronunciation speech questions.",
+    "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
+    "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
+    "sequence_test": "Chronological milestone ordering and sequence analysis.",
+    "image_matching": "Interactive visual matching connecting closing rituals, terms, and descriptions."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "question": "What is the closing salutation in Bharatanatyam also called?",
+      "options": {
+        "A": "Thattadavu",
+        "B": "Tap and salute",
+        "C": "Nandri",
+        "D": "Aramandi"
+      },
+      "answer": "B",
+      "answer_text": "The salutation in Bharatanatyam is also called a tap and salute.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "question": "What does the dancer do after striking the right foot once in the closing salutation?",
+      "options": {
+        "A": "Jumps into the air",
+        "B": "Takes the hands down and sits in full mandi",
+        "C": "Spins around three times",
+        "D": "Bows only to the audience"
+      },
+      "answer": "B",
+      "answer_text": "After striking the right foot, the dancer takes the hands from the chest, brings them down, and sits in full mandi.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "question": "What does the dancer do when sitting in full mandi during the closing salutation?",
+      "options": {
+        "A": "Claps both hands together loudly",
+        "B": "Touches the floor and then touches the eyes, paying respects to Mother Earth",
+        "C": "Sings the national anthem",
+        "D": "Raises both legs in the air"
+      },
+      "answer": "B",
+      "answer_text": "In full mandi, the dancer touches the floor and then touches the eyes, paying respects to Mother Earth.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "question": "What word does the teacher say at the very end of the Bharatanatyam lesson meaning 'thank you' in Tamil?",
+      "options": {
+        "A": "Namaste",
+        "B": "Dhanyavaad",
+        "C": "Nandri",
+        "D": "Vanakkam"
+      },
+      "answer": "C",
+      "answer_text": "'Nandri' is the Tamil word for thank you, said at the end of the lesson.",
+      "difficulty": "medium",
+      "difficulty_percentage": 40,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "question": "The closing salutation in Bharatanatyam is an ancient practice followed in which art forms?",
+      "options": {
+        "A": "Only in Bharatanatyam",
+        "B": "Only in Bharatanatyam and Kathakali",
+        "C": "Pretty much all Indian art forms",
+        "D": "Only in Tamil Nadu festivals"
+      },
+      "answer": "C",
+      "answer_text": "The salutation is an ancient practice followed in pretty much all Indian art forms.",
+      "difficulty": "medium",
+      "difficulty_percentage": 45,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "question": "What salute does the dancer make during the closing salutation to honour god?",
+      "options": {
+        "A": "Bowing down completely with forehead touching the floor",
+        "B": "Placing the hands on top of the head and in front of the forehead",
+        "C": "Waving both hands in the air",
+        "D": "Striking the feet three times rapidly"
+      },
+      "answer": "B",
+      "answer_text": "The dancer salutes god by placing the hands on top of the head and in front of the forehead.",
+      "difficulty": "medium",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "question": "How does the dancer salute the guru during the closing salutation?",
+      "options": {
+        "A": "By placing hands in front of the chest",
+        "B": "By raising one hand toward the guru",
+        "C": "By touching the guru's feet",
+        "D": "By kneeling on one knee"
+      },
+      "answer": "A",
+      "answer_text": "After saluting god (hands on head), the dancer brings the hands in front of the chest to salute the guru.",
+      "difficulty": "hard",
+      "difficulty_percentage": 65,
+      "difficulty_level": "Challenger"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "question": "What does touching the floor and then the eyes symbolize in the Bharatanatyam closing salutation?",
+      "options": {
+        "A": "Checking if the floor is clean before sitting",
+        "B": "A ritual for removing tiredness from the eyes",
+        "C": "Paying deep spiritual respects to Mother Earth",
+        "D": "A stretching exercise for the fingers"
+      },
+      "answer": "C",
+      "answer_text": "Touching the floor and then the eyes is a gesture of paying deep spiritual respects to Mother Earth.",
+      "difficulty": "hard",
+      "difficulty_percentage": 70,
+      "difficulty_level": "Challenger"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "question": "What advice does the teacher give at the end of the session for continued learning?",
+      "options": {
+        "A": "Watch only professional performances and never practice at home",
+        "B": "Practice the adavus and postures at different speeds and always stretch before and after every lesson",
+        "C": "Rest for a week before the next lesson",
+        "D": "Focus only on the tala, not the postures"
+      },
+      "answer": "B",
+      "answer_text": "The teacher advises students to practice adavus and postures at different speeds, and to always stretch before and after every lesson.",
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "question": "Why does a Bharatanatyam dancer touch the floor with the hands and then the eyes at the end of every lesson?",
+      "options": {
+        "A": "It is a warm-down exercise to cool the muscles",
+        "B": "It is a deeply rooted spiritual tradition acknowledging Mother Earth as sacred and expressing gratitude for the space granted for dance",
+        "C": "It is a modern stage performance technique",
+        "D": "It is done only when the performance was exceptional"
+      },
+      "answer": "B",
+      "answer_text": "This is a deeply rooted spiritual tradition in Indian art forms, acknowledging Mother Earth as sacred and expressing humility and gratitude.",
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion"
+    },
+    {
+      "id": 11,
+      "type": "descriptive",
+      "question": "Describe the steps of the closing salutation in Bharatanatyam.",
+      "reference_answer": "The dancer gets into Samapadam posture and holds the hands in front of the chest. The dancer strikes the right foot once, then brings the hands down and sits in full mandi. The dancer touches the floor and then touches the eyes to pay respects to Mother Earth. Then the dancer salutes god by placing hands on top of the head and in front of the forehead, salutes the guru by placing hands in front of the chest, and salutes the audience.",
+      "key_concepts": ["Samapadam", "hands in front of chest", "strike right foot", "full mandi", "touch floor", "touch eyes", "Mother Earth", "salute god", "guru", "audience"],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "easy",
+      "difficulty_percentage": 35,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 12,
+      "type": "descriptive",
+      "question": "Who are the three entities honored during the Bharatanatyam salutation and what does honoring each one mean?",
+      "reference_answer": "In the Bharatanatyam salutation, the dancer honors three entities: God, the Guru or teacher, and the Audience. Honoring god represents spiritual reverence and gratitude to the divine. Honoring the guru acknowledges the teacher's role in guiding and transmitting knowledge. Honoring the audience recognizes that art is shared and performed for others, and it is a gesture of respect and welcome.",
+      "key_concepts": ["God", "Guru", "Audience", "spiritual reverence", "teacher", "knowledge", "art is shared"],
+      "cosine_similarity_threshold": 0.65,
+      "difficulty": "medium",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 13,
+      "type": "descriptive",
+      "question": "Explain the significance of the gesture of touching the floor and then the eyes in the Bharatanatyam salutation.",
+      "reference_answer": "In the Bharatanatyam salutation, the dancer sits in full mandi, touches the floor with the hands, and then touches the eyes. This gesture is an act of paying respects to Mother Earth. The Earth is considered sacred in Indian culture as it provides the space for dance. By touching the floor and then the eyes, the dancer acknowledges this sacredness and expresses gratitude, incorporating the Earth's blessing into the dancer's own vision and perception.",
+      "key_concepts": ["full mandi", "touch floor", "touch eyes", "Mother Earth", "sacred", "gratitude", "blessing"],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 72,
+      "difficulty_level": "Challenger"
+    },
+    {
+      "id": 14,
+      "type": "descriptive",
+      "question": "Critically reflect on why the Bharatanatyam salutation — both opening and closing — makes the art form more than just a physical performance.",
+      "reference_answer": "The salutation transforms Bharatanatyam from mere physical exercise into a sacred, spiritually grounded practice. By honoring god, the dancer acknowledges a higher power guiding creative expression. By honoring the guru, the dancer recognizes that knowledge is a gift passed through generations, not individually invented. By honoring the audience, the dancer acknowledges that art is a shared human experience. Touching the Earth and eyes grounds the practice in nature and humility. Together, these acts elevate Bharatanatyam into a discipline that integrates body, mind, spirit, and community — a complete art form, not merely a dance.",
+      "key_concepts": ["sacred", "god", "guru", "audience", "knowledge across generations", "Earth", "humility", "body mind spirit", "community", "complete art form"],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 92,
+      "difficulty_level": "Champion"
+    },
+    {
+      "id": 15,
+      "type": "speech",
+      "question": "Say the Tamil word meaning thank you used at the end of the lesson:",
+      "target_phrase": "Nandri",
+      "reference_answer": "Nandri",
+      "key_concepts": ["Nandri"],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 16,
+      "type": "speech",
+      "question": "Say the posture the dancer enters during the closing salutation after striking the foot:",
+      "target_phrase": "Full Mandi",
+      "reference_answer": "Full Mandi",
+      "key_concepts": ["Full", "Mandi"],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 17,
+      "type": "speech",
+      "question": "Pronounce the alternative name for the Bharatanatyam salutation:",
+      "target_phrase": "Tap and Salute",
+      "reference_answer": "Tap and Salute",
+      "key_concepts": ["Tap", "Salute"],
+      "min_score_threshold": 70,
+      "difficulty": "medium",
+      "difficulty_percentage": 40,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 18,
+      "type": "speech",
+      "question": "Pronounce the three entities honored during the salutation:",
+      "target_phrase": "God Guru Audience",
+      "reference_answer": "God Guru Audience",
+      "key_concepts": ["God", "Guru", "Audience"],
+      "min_score_threshold": 70,
+      "difficulty": "medium",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 19,
+      "type": "speech",
+      "question": "Pronounce the phrase describing the Earth-touching gesture in the salutation:",
+      "target_phrase": "Paying Respects to Mother Earth",
+      "reference_answer": "Paying Respects to Mother Earth",
+      "key_concepts": ["Paying", "Respects", "Mother", "Earth"],
+      "min_score_threshold": 70,
+      "difficulty": "hard",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer"
+    },
+    {
+      "id": 20,
+      "type": "speech",
+      "question": "Pronounce the practice advice given at the end of the lesson:",
+      "target_phrase": "Practice Adavus at Different Speeds",
+      "reference_answer": "Practice Adavus at Different Speeds",
+      "key_concepts": ["Practice", "Adavus", "Different", "Speeds"],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 70,
+      "difficulty_level": "Challenger"
+    },
+    {
+      "id": 21,
+      "type": "speech",
+      "question": "Pronounce this phrase about the deeper meaning of Bharatanatyam:",
+      "target_phrase": "Sacred Ancient Classical Art Form",
+      "reference_answer": "Sacred Ancient Classical Art Form",
+      "key_concepts": ["Sacred", "Ancient", "Classical", "Art", "Form"],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion"
+    }
+  ],
+  "sequence_test": {
+    "description": "These questions test whether the learner understands the correct sequence of actions in the Bharatanatyam closing salutation.",
+    "questions": [
+      {
+        "id": 22,
+        "type": "sequence_mcq",
+        "question": "What is the first action in the Bharatanatyam closing salutation?",
+        "options": {
+          "A": "Sit in full mandi immediately",
+          "B": "Stand in Samapadam with hands held in front of chest",
+          "C": "Touch the floor",
+          "D": "Say Nandri"
+        },
+        "answer": "B",
+        "answer_text": "The salutation begins with the dancer standing in Samapadam and holding hands in front of the chest.",
+        "difficulty": "easy",
+        "difficulty_percentage": 20,
+        "difficulty_level": "Gentle Starter"
+      },
+      {
+        "id": 23,
+        "type": "sequence_mcq",
+        "question": "What happens after the dancer strikes the right foot once in the closing salutation?",
+        "options": {
+          "A": "Immediately salutes the audience",
+          "B": "Takes the hands down and sits in full mandi",
+          "C": "Spins in a circle",
+          "D": "Returns to Aramandi posture"
+        },
+        "answer": "B",
+        "answer_text": "After the foot strike, the dancer brings hands down and sits in full mandi.",
+        "difficulty": "medium",
+        "difficulty_percentage": 40,
+        "difficulty_level": "Balanced Explorer"
+      },
+      {
+        "id": 24,
+        "type": "sequence_mcq",
+        "question": "What is the correct order of salutations in the Bharatanatyam closing ritual?",
+        "options": {
+          "A": "Audience -> Guru -> God",
+          "B": "Guru -> Audience -> God",
+          "C": "God -> Guru -> Audience",
+          "D": "Mother Earth -> Audience -> God -> Guru"
+        },
+        "answer": "C",
+        "answer_text": "The salutation order is God (hands on head and forehead) -> Guru (hands to chest) -> Audience.",
+        "difficulty": "medium",
+        "difficulty_percentage": 60,
+        "difficulty_level": "Curious Adventurer"
+      },
+      {
+        "id": 25,
+        "type": "sequence_mcq",
+        "question": "Which correctly shows the complete sequence of the Bharatanatyam closing salutation?",
+        "options": {
+          "A": "Full mandi -> Touch floor -> Samapadam -> Strike foot -> Salute God -> Guru -> Audience",
+          "B": "Samapadam with hands at chest -> Strike right foot -> Hands down -> Full mandi -> Touch floor -> Touch eyes -> Salute God -> Salute Guru -> Salute Audience",
+          "C": "Aramandi -> Strike both feet -> Touch eyes -> Say Nandri",
+          "D": "Salute Audience -> Salute Guru -> Salute God -> Stand in Samapadam"
+        },
+        "answer": "B",
+        "answer_text": "The complete sequence: Samapadam (hands at chest) -> Strike right foot -> Hands down -> Full mandi -> Touch floor and eyes (Mother Earth) -> Salute God -> Salute Guru -> Salute Audience.",
+        "difficulty": "hard",
+        "difficulty_percentage": 80,
+        "difficulty_level": "Challenger"
+      },
+      {
+        "id": 26,
+        "type": "sequence_mcq",
+        "question": "How does the closing salutation mirror the values introduced in the opening salutation, completing the lesson's circle?",
+        "options": {
+          "A": "They are completely different rituals with no shared meaning",
+          "B": "Both salutations honor god, guru, and audience — the opening seeks blessings for learning; the closing expresses gratitude for knowledge received",
+          "C": "The closing salutation is optional and only done when the dancer feels like it",
+          "D": "The closing salutation is purely a physical exercise with no spiritual meaning"
+        },
+        "answer": "B",
+        "answer_text": "Both salutations honor the same three entities. The opening seeks blessings; the closing expresses gratitude — creating a complete spiritual and artistic circle around the lesson.",
+        "difficulty": "hard",
+        "difficulty_percentage": 92,
+        "difficulty_level": "Champion"
+      }
+    ]
+  },
+  "image_matching": [
+    {
+      "id": 27,
+      "type": "image_matching",
+      "question": "Match each closing salutation gesture with its correct description:",
+      "images": [
+        { "id": "img_1", "file": "images/full_mandi.jpg", "label": "Full Mandi" },
+        { "id": "img_2", "file": "images/touch_floor.jpg", "label": "Touch Floor and Eyes" },
+        { "id": "img_3", "file": "images/salute_god.jpg", "label": "Salute to God" }
+      ],
+      "descriptions": [
+        { "id": "desc_1", "text": "The full squat posture entered after striking the right foot in the closing salutation." },
+        { "id": "desc_2", "text": "The gesture of touching the Earth and eyes as a sign of respect to Mother Earth." },
+        { "id": "desc_3", "text": "Placing hands on top of the head and in front of the forehead to honor the divine." }
+      ],
+      "correct_matches": { "img_1": "desc_1", "img_2": "desc_2", "img_3": "desc_3" },
+      "points": 3,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 28,
+      "type": "image_matching",
+      "question": "Match each Bharatanatyam closing concept with its deeper cultural significance:",
+      "images": [
+        { "id": "img_1", "file": "images/nandri.jpg", "label": "Nandri" },
+        { "id": "img_2", "file": "images/salute_audience.jpg", "label": "Salute to Audience" },
+        { "id": "img_3", "file": "images/stretch.jpg", "label": "Stretch After Lesson" }
+      ],
+      "descriptions": [
+        { "id": "desc_1", "text": "The Tamil word for thank you — the respectful farewell at the end of the lesson." },
+        { "id": "desc_2", "text": "The final salute acknowledging that art is a shared experience between performer and audience." },
+        { "id": "desc_3", "text": "The physical care practice of stretching before and after every lesson to protect the dancer's body." }
+      ],
+      "correct_matches": { "img_1": "desc_1", "img_2": "desc_2", "img_3": "desc_3" },
+      "points": 3,
+      "difficulty": "medium",
+      "difficulty_percentage": 65,
+      "difficulty_level": "Curious Adventurer"
+    }
+  ],
+  "scoring": {
+    "mcq": { "points_per_correct_answer": 1 },
+    "descriptive": {
+      "method": "cosine_similarity",
+      "description": "Calculate embedding cosine similarity against reference concepts.",
+      "suggested_interpretation": {
+        "0.80-1.00": "Outstanding Mastery",
+        "0.65-0.79": "Good Conceptual Understanding",
+        "0.50-0.64": "Developing Understanding",
+        "0.00-0.49": "Needs Reinforcement"
+      }
+    },
+    "speech": { "points_per_correct_answer": 1, "min_pass_score": 60 },
+    "sequence_test": { "points_per_correct_answer": 1 },
+    "image_matching": { "points_per_correct_match": 1, "total_points": 3 }
+  }
+}

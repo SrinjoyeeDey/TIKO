@@ -1,0 +1,480 @@
+﻿{
+  "title": "Salutation, Postures and Adavus in Bharatanatyam",
+  "section": {
+    "start": "02:00",
+    "end": "05:00",
+    "description": "Comprehensive pedagogical question set with multi-tier difficulty calibrated for all learner profiles (Gentle Starter, Balanced Explorer, Curious Adventurer, Challenger, Champion)."
+  },
+  "target_age": 12,
+  "question_pattern": {
+    "main_questions": "Multi-tier MCQs, progressive descriptive questions, and voice pronunciation speech questions.",
+    "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
+    "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
+    "sequence_test": "Chronological milestone ordering and sequence analysis.",
+    "image_matching": "Interactive visual matching connecting postures, terms, and descriptions."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "question": "What is a salutation in Bharatanatyam?",
+      "options": {
+        "A": "A warm-up exercise for the legs",
+        "B": "A way of offering prayer, greetings, and seeking blessings",
+        "C": "A type of fast dance step",
+        "D": "The final bow after the performance"
+      },
+      "answer": "B",
+      "answer_text": "A salutation is a way of offering prayer, greetings, and seeking blessings of the god, the guru, and the audience.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "question": "What is a posture in Bharatanatyam?",
+      "options": {
+        "A": "A fast rhythmic foot strike",
+        "B": "A frozen position of the body that gives balance and alignment",
+        "C": "A hand gesture representing emotions",
+        "D": "A type of salutation done at the end"
+      },
+      "answer": "B",
+      "answer_text": "A posture is a frozen position of the body that gives balance and alignment.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "question": "What are adavus in Bharatanatyam?",
+      "options": {
+        "A": "Musical instruments used in Bharatanatyam performances",
+        "B": "Basic dance steps created when postures come to life with movement",
+        "C": "Costumes worn by Bharatanatyam dancers",
+        "D": "Songs sung during Bharatanatyam"
+      },
+      "answer": "B",
+      "answer_text": "Adavus are basic dance steps created when postures come to life with movement.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "question": "What is the first and most fundamental posture in Bharatanatyam?",
+      "options": {
+        "A": "Aramandi",
+        "B": "Thattadavu",
+        "C": "Samapadam",
+        "D": "Mandi"
+      },
+      "answer": "C",
+      "answer_text": "Samapadam is the first posture in Bharatanatyam where the dancer's feet are placed close together with the body straight.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "question": "When is the salutation performed in Bharatanatyam?",
+      "options": {
+        "A": "Only at the very end of a performance",
+        "B": "Before and after every lesson or dance",
+        "C": "Only during temple ceremonies",
+        "D": "Once a year during festivals"
+      },
+      "answer": "B",
+      "answer_text": "The salutation is performed before and after every lesson or dance in Bharatanatyam.",
+      "difficulty": "medium",
+      "difficulty_percentage": 40,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "question": "In Samapadam posture, how are the dancer's feet positioned?",
+      "options": {
+        "A": "Feet far apart with toes turned inward",
+        "B": "One foot in front and one foot at the back",
+        "C": "Feet placed close together with the body straight",
+        "D": "Heels together and toes pointed outward fully"
+      },
+      "answer": "C",
+      "answer_text": "In Samapadam, the dancer's feet are placed close to each other and the body is nice and straight, neither too relaxed nor too firm.",
+      "difficulty": "medium",
+      "difficulty_percentage": 45,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "question": "Whose blessings are sought during the salutation in Bharatanatyam?",
+      "options": {
+        "A": "Only the audience",
+        "B": "God, the guru or teacher, and the audience",
+        "C": "Only the teacher",
+        "D": "Only the musicians"
+      },
+      "answer": "B",
+      "answer_text": "The salutation seeks the blessings of god, the guru or the teacher, and the audience.",
+      "difficulty": "medium",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "question": "What role do postures play in Bharatanatyam?",
+      "options": {
+        "A": "They are decorative poses only for photographs",
+        "B": "They are the foundations of Bharatanatyam that can come to life with movement to create adavus",
+        "C": "They are purely used for meditation",
+        "D": "They represent the names of different gods"
+      },
+      "answer": "B",
+      "answer_text": "Postures are the foundations of Bharatanatyam and can come to life with movement to create basic steps called adavus.",
+      "difficulty": "medium",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "question": "What quality does Samapadam posture give the dancer?",
+      "options": {
+        "A": "Speed and agility",
+        "B": "Balance and alignment with the body straight",
+        "C": "Flexibility and stretching",
+        "D": "Strength and jumping power"
+      },
+      "answer": "B",
+      "answer_text": "Samapadam gives the dancer balance and alignment with the body held nice and straight.",
+      "difficulty": "hard",
+      "difficulty_percentage": 65,
+      "difficulty_level": "Challenger"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "question": "Why is the salutation an essential part of Indian art forms like Bharatanatyam?",
+      "options": {
+        "A": "It is a legal requirement by the Indian government",
+        "B": "It is an ancient practice of humility, respect, and seeking spiritual blessings that honors tradition",
+        "C": "It helps the dancer warm up their muscles before dancing",
+        "D": "It is done to entertain the audience at the beginning"
+      },
+      "answer": "B",
+      "answer_text": "The salutation is an ancient practice of humility and respect, honoring god, teacher, and audience, practiced across all Indian art forms.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion"
+    },
+    {
+      "id": 11,
+      "type": "descriptive",
+      "question": "What is a salutation in Bharatanatyam and why is it performed?",
+      "reference_answer": "A salutation in Bharatanatyam is a way of offering prayer, greetings, and seeking blessings of the god, the guru or teacher, and the audience. It is performed before and after every lesson or dance.",
+      "key_concepts": [
+        "prayer",
+        "greetings",
+        "blessings",
+        "god",
+        "guru",
+        "audience",
+        "before and after"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 12,
+      "type": "descriptive",
+      "question": "Describe what a posture is in Bharatanatyam and explain the first posture Samapadam.",
+      "reference_answer": "A posture is a frozen position of the body that gives balance and alignment. The first posture is Samapadam, where the dancer places the feet close to each other with the body nice and straight, neither too relaxed nor too firm, with hands on the waist.",
+      "key_concepts": [
+        "frozen position",
+        "balance",
+        "alignment",
+        "Samapadam",
+        "feet close together",
+        "body straight"
+      ],
+      "cosine_similarity_threshold": 0.65,
+      "difficulty": "medium",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 13,
+      "type": "descriptive",
+      "question": "Explain the relationship between postures and adavus in Bharatanatyam.",
+      "reference_answer": "Postures are frozen positions of the body that provide balance and alignment and are the foundations of Bharatanatyam. Adavus are basic dance steps that are created when these postures come to life with movement. So postures are the building blocks from which adavus are formed.",
+      "key_concepts": [
+        "frozen positions",
+        "foundations",
+        "adavus",
+        "movement",
+        "building blocks",
+        "balance"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 70,
+      "difficulty_level": "Challenger"
+    },
+    {
+      "id": 14,
+      "type": "descriptive",
+      "question": "Critically analyze why beginning and ending every Bharatanatyam lesson with a salutation is culturally and spiritually significant.",
+      "reference_answer": "The salutation is an ancient practice followed across all Indian art forms, representing humility and reverence toward the divine, the teacher, and the audience. By performing it before and after every lesson, the dancer acknowledges that learning is a sacred act, the teacher is a guide worthy of respect, and the audience is to be honored. This creates a sacred atmosphere that elevates dance from mere performance to a spiritual and cultural experience.",
+      "key_concepts": [
+        "ancient practice",
+        "humility",
+        "reverence",
+        "divine",
+        "teacher",
+        "audience",
+        "sacred",
+        "cultural experience"
+      ],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion"
+    },
+    {
+      "id": 15,
+      "type": "speech",
+      "question": "Say the name of the very first posture in Bharatanatyam:",
+      "target_phrase": "Samapadam",
+      "reference_answer": "Samapadam",
+      "key_concepts": ["Samapadam"],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 16,
+      "type": "speech",
+      "question": "Say the word that means basic dance step in Bharatanatyam:",
+      "target_phrase": "Adavu",
+      "reference_answer": "Adavu",
+      "key_concepts": ["Adavu"],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 17,
+      "type": "speech",
+      "question": "Pronounce the word for the opening and closing ritual in Bharatanatyam:",
+      "target_phrase": "Salutation",
+      "reference_answer": "Salutation",
+      "key_concepts": ["Salutation"],
+      "min_score_threshold": 70,
+      "difficulty": "medium",
+      "difficulty_percentage": 45,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 18,
+      "type": "speech",
+      "question": "Pronounce the Bharatanatyam term for the teacher or master:",
+      "target_phrase": "Guru",
+      "reference_answer": "Guru",
+      "key_concepts": ["Guru"],
+      "min_score_threshold": 70,
+      "difficulty": "medium",
+      "difficulty_percentage": 40,
+      "difficulty_level": "Balanced Explorer"
+    },
+    {
+      "id": 19,
+      "type": "speech",
+      "question": "Pronounce this phrase describing what postures give a dancer:",
+      "target_phrase": "Balance and Alignment",
+      "reference_answer": "Balance and Alignment",
+      "key_concepts": ["Balance", "Alignment"],
+      "min_score_threshold": 70,
+      "difficulty": "hard",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer"
+    },
+    {
+      "id": 20,
+      "type": "speech",
+      "question": "Pronounce what the salutation honors in Bharatanatyam:",
+      "target_phrase": "God Guru and Audience",
+      "reference_answer": "God Guru and Audience",
+      "key_concepts": ["God", "Guru", "Audience"],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 70,
+      "difficulty_level": "Challenger"
+    },
+    {
+      "id": 21,
+      "type": "speech",
+      "question": "Pronounce this phrase describing the essence of Bharatanatyam postures:",
+      "target_phrase": "Foundation of Classical Dance",
+      "reference_answer": "Foundation of Classical Dance",
+      "key_concepts": ["Foundation", "Classical", "Dance"],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion"
+    }
+  ],
+  "sequence_test": {
+    "description": "These questions test whether the learner understands the correct order and relationships between salutation, postures, and adavus.",
+    "questions": [
+      {
+        "id": 22,
+        "type": "sequence_mcq",
+        "question": "What happens at the very beginning of every Bharatanatyam lesson?",
+        "options": {
+          "A": "The dancer immediately starts striking feet",
+          "B": "The salutation is performed to offer prayer and seek blessings",
+          "C": "The dancer learns adavus directly",
+          "D": "The music starts without any ritual"
+        },
+        "answer": "B",
+        "answer_text": "Every lesson begins with the salutation, a way of offering prayer and seeking blessings.",
+        "difficulty": "easy",
+        "difficulty_percentage": 25,
+        "difficulty_level": "Gentle Starter"
+      },
+      {
+        "id": 23,
+        "type": "sequence_mcq",
+        "question": "What must a dancer learn before creating adavus?",
+        "options": {
+          "A": "Music theory and singing",
+          "B": "The postures that serve as the foundation",
+          "C": "How to read ancient Tamil scripts",
+          "D": "Advanced choreography"
+        },
+        "answer": "B",
+        "answer_text": "A dancer must learn postures first, as postures are the foundation from which adavus are created.",
+        "difficulty": "medium",
+        "difficulty_percentage": 45,
+        "difficulty_level": "Balanced Explorer"
+      },
+      {
+        "id": 24,
+        "type": "sequence_mcq",
+        "question": "What is the correct learning sequence in a Bharatanatyam lesson?",
+        "options": {
+          "A": "Adavus -> Postures -> Salutation",
+          "B": "Salutation -> Postures -> Adavus",
+          "C": "Postures -> Salutation -> Adavus",
+          "D": "Music -> Adavus -> Postures -> Salutation"
+        },
+        "answer": "B",
+        "answer_text": "The correct sequence is: Salutation first, then learning postures, then creating adavus from those postures.",
+        "difficulty": "medium",
+        "difficulty_percentage": 60,
+        "difficulty_level": "Curious Adventurer"
+      },
+      {
+        "id": 25,
+        "type": "sequence_mcq",
+        "question": "Which correctly shows the relationship from posture to adavu?",
+        "options": {
+          "A": "Posture (frozen body position) -> Movement added -> Adavu (dance step) created",
+          "B": "Adavu created first -> posture learned later -> salutation at the end",
+          "C": "Music starts -> adavu created -> posture assumed",
+          "D": "Salutation skipped -> adavu practiced -> posture learned"
+        },
+        "answer": "A",
+        "answer_text": "Postures are frozen body positions that, when brought to life with movement, create adavus — the basic dance steps.",
+        "difficulty": "hard",
+        "difficulty_percentage": 75,
+        "difficulty_level": "Challenger"
+      },
+      {
+        "id": 26,
+        "type": "sequence_mcq",
+        "question": "How does the full structure of a Bharatanatyam lesson reflect the values of the art form?",
+        "options": {
+          "A": "The lesson structure is arbitrary with no cultural meaning",
+          "B": "It starts with salutation (respect and humility), builds postures (discipline), develops adavus (creative expression), and ends with salutation (gratitude)",
+          "C": "Dancers just improvise without any fixed order",
+          "D": "Only the final adavus matter; the rest is optional"
+        },
+        "answer": "B",
+        "answer_text": "The lesson reflects respect (salutation), discipline (postures), creative expression (adavus), and gratitude (closing salutation), embodying the holistic values of Bharatanatyam.",
+        "difficulty": "hard",
+        "difficulty_percentage": 88,
+        "difficulty_level": "Champion"
+      }
+    ]
+  },
+  "image_matching": [
+    {
+      "id": 27,
+      "type": "image_matching",
+      "question": "Match each Bharatanatyam concept with its correct description:",
+      "images": [
+        { "id": "img_1", "file": "images/salutation.jpg", "label": "Salutation" },
+        { "id": "img_2", "file": "images/samapadam.jpg", "label": "Samapadam" },
+        { "id": "img_3", "file": "images/adavu.jpg", "label": "Adavu" }
+      ],
+      "descriptions": [
+        { "id": "desc_1", "text": "An offering of prayer and greetings to god, teacher, and audience before and after dance." },
+        { "id": "desc_2", "text": "The first posture where feet are together and the body stands tall and straight." },
+        { "id": "desc_3", "text": "A basic dance step that comes alive when postures are combined with movement." }
+      ],
+      "correct_matches": { "img_1": "desc_1", "img_2": "desc_2", "img_3": "desc_3" },
+      "points": 3,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 28,
+      "type": "image_matching",
+      "question": "Match each Bharatanatyam element with its role in the dance form:",
+      "images": [
+        { "id": "img_1", "file": "images/posture.jpg", "label": "Posture" },
+        { "id": "img_2", "file": "images/guru.jpg", "label": "Guru" },
+        { "id": "img_3", "file": "images/samapadam.jpg", "label": "Samapadam" }
+      ],
+      "descriptions": [
+        { "id": "desc_1", "text": "A frozen body position that gives the dancer balance and alignment; foundation of adavus." },
+        { "id": "desc_2", "text": "The teacher whose blessings are sought through the salutation before and after every lesson." },
+        { "id": "desc_3", "text": "The first posture learned — feet close, body straight — from which every dancer begins their journey." }
+      ],
+      "correct_matches": { "img_1": "desc_1", "img_2": "desc_2", "img_3": "desc_3" },
+      "points": 3,
+      "difficulty": "medium",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer"
+    }
+  ],
+  "scoring": {
+    "mcq": { "points_per_correct_answer": 1 },
+    "descriptive": {
+      "method": "cosine_similarity",
+      "description": "Calculate embedding cosine similarity against reference concepts.",
+      "suggested_interpretation": {
+        "0.80-1.00": "Outstanding Mastery",
+        "0.65-0.79": "Good Conceptual Understanding",
+        "0.50-0.64": "Developing Understanding",
+        "0.00-0.49": "Needs Reinforcement"
+      }
+    },
+    "speech": { "points_per_correct_answer": 1, "min_pass_score": 60 },
+    "sequence_test": { "points_per_correct_answer": 1 },
+    "image_matching": { "points_per_correct_match": 1, "total_points": 3 }
+  }
+}
