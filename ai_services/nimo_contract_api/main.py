@@ -31,17 +31,17 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 try:
-    from .routes import engagement, speech, difficulty
+    from .routes import engagement, speech, difficulty, voice
 except (ImportError, ValueError):
     try:
-        from nimo_contract_api.routes import engagement, speech, difficulty
+        from nimo_contract_api.routes import engagement, speech, difficulty, voice
     except (ImportError, ValueError):
-        from routes import engagement, speech, difficulty
+        from routes import engagement, speech, difficulty, voice
 
 app = FastAPI(
     title="NIMO Python Model API",
-    description="Standardized observation outputs for Speech, Engagement, and Groq LLM Difficulty Assessment.",
-    version="1.1.0"
+    description="Standardized observation outputs for Speech, Engagement, Groq LLM Difficulty Assessment, and ElevenLabs Voice Interactions.",
+    version="1.2.0"
 )
 
 app.add_middleware(
@@ -55,13 +55,14 @@ app.include_router(speech.router,     prefix="/analyze",   tags=["Speech"])
 app.include_router(engagement.router, prefix="/analyze",   tags=["Engagement"])
 app.include_router(difficulty.router, prefix="/calculate", tags=["Difficulty"])
 app.include_router(difficulty.router, prefix="/assess",    tags=["Difficulty"])
+app.include_router(voice.router,      prefix="/voice",     tags=["Voice & ElevenLabs"])
 
 @app.get("/health")
 def health():
     return {
         "status": "ok",
         "service": "NIMO Python Model Contract API",
-        "models": ["speech", "vision", "groq_difficulty"]
+        "models": ["speech", "vision", "groq_difficulty", "elevenlabs_voice"]
     }
 
 if __name__ == "__main__":

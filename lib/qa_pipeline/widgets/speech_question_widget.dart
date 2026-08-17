@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../core/services/ai_integration_service.dart';
+import '../../core/services/ai_voice_service.dart';
 import '../../core/services/media_capture_service.dart';
 import '../../core/state/child_state.dart';
 import '../models/speech_question.dart';
@@ -259,6 +260,12 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
       _passed = false;
       _statusText = 'Tap the microphone button & read the sentence out loud!';
     });
+    // Trigger dynamic state-aware AI retry prompt
+    AiVoiceService.instance.playRetryPrompt(
+      targetPhrase: widget.question.targetPhrase,
+      questionText: widget.question.questionText,
+      retryCount: 2,
+    );
   }
 
   @override
@@ -320,7 +327,7 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
                 ),
                 const SizedBox(height: 16),
 
-                // Target Phrase Highlight Box
+                // Target Phrase Highlight Box with ElevenLabs Pronunciation Button
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -356,6 +363,54 @@ class _SpeechQuestionWidgetState extends State<SpeechQuestionWidget>
                           letterSpacing: 0.5,
                           height: 1.3,
                         ),
+                      ),
+                      const SizedBox(height: 14),
+
+                      // ElevenLabs Voice Pronunciation Button
+                      ListenableBuilder(
+                        listenable: AiVoiceService.instance,
+                        builder: (context, _) {
+                          final isSpeaking = AiVoiceService.instance.isSpeaking;
+                          return SizedBox(
+                            height: 38,
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                if (isSpeaking) {
+                                  AiVoiceService.instance.stop();
+                                } else {
+                                  AiVoiceService.instance.pronounceWord(
+                                    targetPhrase: widget.question.targetPhrase,
+                                    context: widget.question.questionText,
+                                  );
+                                }
+                              },
+                              icon: Icon(
+                                isSpeaking ? Icons.volume_up_rounded : Icons.campaign_rounded,
+                                color: const Color(0xFF2E1C12),
+                                size: 16,
+                              ),
+                              label: Text(
+                                isSpeaking ? 'PRONOUNCING...' : 'LISTEN PRONUNCIATION (AI)',
+                                style: const TextStyle(
+                                  fontFamily: 'Outfit',
+                                  fontSize: 11.5,
+                                  fontWeight: FontWeight.w900,
+                                  color: Color(0xFF2E1C12),
+                                  letterSpacing: 0.8,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: isSpeaking ? const Color(0xFFFFD700) : const Color(0xFFD4AF37),
+                                elevation: 4,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  side: const BorderSide(color: Color(0xFFFFF8E1), width: 1.2),
+                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 14),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

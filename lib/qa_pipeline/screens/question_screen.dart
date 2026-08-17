@@ -31,6 +31,7 @@ import '../../core/models/activity_model.dart';
 import '../../core/widgets/activity_renderer.dart';
 import '../../core/widgets/panda_character.dart';
 import '../../core/services/event_service.dart';
+import '../../core/services/ai_voice_service.dart';
 import '../../core/state/child_state.dart';
 
 /// Manages the full question flow for a level:
@@ -78,6 +79,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   @override
   void dispose() {
+    AiVoiceService.instance.stop();
     _pandaController.dispose();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -91,7 +93,58 @@ class _QuestionScreenState extends State<QuestionScreen> {
       _pandaController.playCorrect(speech: 'Great job! ⭐');
     } else {
       _pandaController.playWrongSad(speech: 'Oops! Try again! 🤗');
+      _speakRetryCurrentQuestion();
     }
+  }
+
+  void _speakCurrentQuestion() {
+    if (_allQuestions.isEmpty || _currentIndex >= _allQuestions.length) return;
+    final question = _allQuestions[_currentIndex];
+
+    if (question is McqQuestion) {
+      AiVoiceService.instance.readQuestion(
+        questionText: question.questionText,
+        questionNumber: _currentIndex + 1,
+        questionType: 'mcq',
+        options: question.options,
+      );
+    } else if (question is DescriptiveQuestion) {
+      AiVoiceService.instance.readQuestion(
+        questionText: question.questionText,
+        questionNumber: _currentIndex + 1,
+        questionType: 'descriptive',
+      );
+    } else if (question is SpeechQuestion) {
+      AiVoiceService.instance.pronounceWord(
+        targetPhrase: question.targetPhrase,
+        context: question.questionText,
+      );
+    } else if (question is SequenceQuestion) {
+      AiVoiceService.instance.readQuestion(
+        questionText: question.questionText,
+        questionNumber: _currentIndex + 1,
+        questionType: 'sequence',
+      );
+    } else if (question is ImageMatchingQuestion) {
+      AiVoiceService.instance.readQuestion(
+        questionText: question.questionText,
+        questionNumber: _currentIndex + 1,
+        questionType: 'imageMatching',
+      );
+    }
+  }
+
+  void _speakRetryCurrentQuestion() {
+    if (_allQuestions.isEmpty || _currentIndex >= _allQuestions.length) return;
+    final question = _allQuestions[_currentIndex];
+    final targetPhrase = question is SpeechQuestion ? question.targetPhrase : '';
+    final questionText = question is Question ? question.questionText : '';
+
+    AiVoiceService.instance.playRetryPrompt(
+      targetPhrase: targetPhrase,
+      questionText: questionText,
+      retryCount: 2,
+    );
   }
 
   Future<void> _loadQuestions() async {
@@ -132,6 +185,11 @@ class _QuestionScreenState extends State<QuestionScreen> {
           imageMatchingQuestions: [],
         );
         _questionStartedAt = DateTime.now();
+      });
+
+      // Trigger initial dynamic question voice reading
+      Future.delayed(const Duration(milliseconds: 350), () {
+        if (mounted) _speakCurrentQuestion();
       });
     } catch (e) {
       setState(() {
@@ -212,6 +270,10 @@ class _QuestionScreenState extends State<QuestionScreen> {
       setState(() {
         _currentIndex++;
         _questionStartedAt = DateTime.now();
+      });
+      // Speak next question dynamically
+      Future.delayed(const Duration(milliseconds: 300), () {
+        if (mounted) _speakCurrentQuestion();
       });
     } else {
       _navigateToLevelClear();
@@ -319,7 +381,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                             ChildProfileBadge(
                               childId: widget.childId,
                             ),
-                            Expanded(
+                             Expanded(
                               child: Center(
                                 child: GameTexturedText(
                                   text: widget.level.chapterName.toUpperCase(),
@@ -327,7 +389,63 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                 ),
                               ),
                             ),
-                             InkWell(
+                            // Interactive AI Voice Question Reader Button
+                            ListenableBuilder(
+                              listenable: AiVoiceService.instance,
+                              builder: (context, _) {
+                                final isSpeaking = AiVoiceService.instance.isSpeaking;
+                                final isMuted = AiVoiceService.instance.isMuted;
+                                return InkWell(
+                                  onTap: () {
+                                    if (isSpeaking) {
+                                      AiVoiceService.instance.stop();
+                                    } else {
+                                      _speakCurrentQuestion();
+                                    }
+                                  },
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Container(
+                                    margin: const EdgeInsets.only(right: 8),
+                                    padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+                                    decoration: BoxDecoration(
+                                      color: isSpeaking ? const Color(0xFFEF6C6C) : const Color(0x33FFFFFF),
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: isSpeaking ? const Color(0xFFFFD700) : const Color(0x66FFFFFF),
+                                        width: 1.2,
+                                      ),
+                                      boxShadow: isSpeaking
+                                          ? const [BoxShadow(color: Color(0x66EF6C6C), blurRadius: 8)]
+                                          : null,
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          isSpeaking
+                                              ? Icons.volume_up_rounded
+                                              : (isMuted ? Icons.volume_off_rounded : Icons.record_voice_over_rounded),
+                                          color: Colors.white,
+                                          size: 15,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          isSpeaking ? 'READING' : 'READ AI',
+                                          style: const TextStyle(
+                                            fontFamily: 'Outfit',
+                                            color: Colors.white,
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w800,
+                                            letterSpacing: 0.5,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            InkWell(
                               onTap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
