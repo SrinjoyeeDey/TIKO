@@ -80,6 +80,10 @@ class DifficultyRequest(BaseModel):
     language: Optional[str] = "en"
     learningPace: Optional[str] = "normal"  # "gentle", "normal", "fast"
     interests: Optional[str] = "stories, puzzles, discovery"
+    onboardingAnswers: Optional[Dict[str, Any]] = None
+    diagnoses: Optional[List[str]] = None
+    speechLevelSlider: Optional[float] = None
+    sensoryPreferences: Optional[Dict[str, Any]] = None
 
 
 class DifficultyOutput(BaseModel):

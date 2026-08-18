@@ -3,6 +3,7 @@ import '../widgets/wooden_back_button.dart';
 import 'game_map_1913_platform.dart';
 import '../core/state/child_state.dart';
 import '../core/models/child_profile.dart';
+import 'sego_concept_screen.dart';
 
 /// Screen that loads and presents the interactive 1913 Game Map web application
 /// overlayed with live Child Profile HUD (Level, XP, Streak, Name).
@@ -14,34 +15,47 @@ class GameMap1913Screen extends StatelessWidget {
     this.chapterId,
   });
 
+  void _handleBack(BuildContext context) {
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const SegoConceptScreen()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF0F0D0B), // Vintage dark parchment background
-      body: Stack(
-        children: [
-          // 1. Embedded 1913 Game Map Webview / Iframe
-          Positioned.fill(
-            child: getGameMap1913View(chapterId: chapterId),
-          ),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          _handleBack(context);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFF0F0D0B), // Vintage dark parchment background
+        body: Stack(
+          children: [
+            // 1. Embedded 1913 Game Map Webview / Iframe
+            Positioned.fill(
+              child: getGameMap1913View(chapterId: chapterId),
+            ),
 
-          // 2. Vintage Top Control Bar with Back Button & Child Profile HUD
-          Positioned(
-            top: 16,
-            left: 16,
-            right: 16,
-            child: SafeArea(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  WoodenBackButton(
-                    size: 48,
-                    onTap: () {
-                      if (Navigator.of(context).canPop()) {
-                        Navigator.of(context).pop();
-                      }
-                    },
-                  ),
+            // 2. Vintage Top Control Bar with Back Button & Child Profile HUD
+            Positioned(
+              top: 16,
+              left: 16,
+              right: 16,
+              child: SafeArea(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    WoodenBackButton(
+                      size: 48,
+                      onTap: () => _handleBack(context),
+                    ),
 
                   // Real Child Profile HUD Display (Step 6)
                   ValueListenableBuilder<ChildProfile?>(
@@ -139,6 +153,28 @@ class GameMap1913Screen extends StatelessWidget {
                                 ),
                               ],
                             ),
+                            // Difficulty Pill
+                            if (profile?.difficultyLevel != null && profile!.difficultyLevel!.isNotEmpty) ...[
+                              const SizedBox(width: 10),
+                              Container(width: 1, height: 14, color: const Color(0xFF8D7A6F)),
+                              const SizedBox(width: 10),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Text('🛡️', style: TextStyle(fontSize: 12)),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    '${profile.difficultyLevel} (${profile.difficultyPercentage}%)',
+                                    style: const TextStyle(
+                                      fontFamily: 'Outfit',
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w800,
+                                      color: Color(0xFFFFD54F),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ],
                         ),
                       );
@@ -150,6 +186,6 @@ class GameMap1913Screen extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }

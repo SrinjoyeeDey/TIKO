@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../database/database_helper.dart';
 import '../database/child_repository.dart';
 import '../database/session_evaluation_repository.dart';
+import '../database/onboarding_assessment_repository.dart';
 import '../models/session_evaluation_model.dart';
 import '../models/child_profile.dart';
 import '../../core/models/child_profile.dart' as core;
@@ -118,6 +119,86 @@ class ChildDifficultyService {
       'difficultyLevel': diffLevel,
       'reasoning': diffReason,
       'modelUsed': res['modelUsed'] ?? 'groq-llm',
+    };
+  }
+
+  /// Assesses child sign-up onboarding questionnaire (15 questions),
+  /// calls Groq LLM to compute personalized difficulty percentage,
+  /// stores the full assessment in SQLite `child_onboarding_assessments`,
+  /// updates SQLite `child_profiles`, and updates in-memory ChildState.
+  Future<Map<String, dynamic>> assessOnboardingAndSave({
+    required String childId,
+    String? parentId,
+    required String name,
+    required int age,
+    required String standard,
+    required Map<String, dynamic> answers,
+    required List<String> diagnoses,
+    required double speechLevelSlider,
+    String language = 'en',
+    String learningPace = 'normal',
+  }) async {
+    // 1. Call AI Service (Groq LLM endpoint)
+    final res = await AiIntegrationService.instance.calculateDifficulty(
+      childId: childId,
+      name: name,
+      age: age,
+      standard: standard,
+      language: language,
+      learningPace: learningPace,
+      onboardingAnswers: answers,
+      diagnoses: diagnoses,
+      speechLevelSlider: speechLevelSlider,
+    );
+
+    final diffPct = (res['difficultyPercentage'] as num?)?.toInt() ?? 50;
+    final diffLevel = (res['difficultyLevel'] as String?) ?? 'Balanced Explorer';
+    final diffReason = (res['reasoning'] as String?) ?? 'Calibrated via Groq LLM assessment.';
+
+    // 2. Persist Onboarding Assessment to SQLite
+    final assessmentId = 'assess_${DateTime.now().millisecondsSinceEpoch}';
+    final assessment = ChildOnboardingAssessment(
+      id: assessmentId,
+      childId: childId,
+      parentId: parentId,
+      answers: answers,
+      developmentalDiagnoses: diagnoses,
+      speechLevelSelfRating: speechLevelSlider,
+      computedDifficultyPercentage: diffPct,
+      computedDifficultyLevel: diffLevel,
+      computedReasoning: diffReason,
+      createdAt: DateTime.now(),
+    );
+    await OnboardingAssessmentRepository.saveAssessment(assessment);
+
+    // 3. Update Child Profile in SQLite
+    await ChildRepository.updateChildDifficulty(
+      childId: childId,
+      difficultyPercentage: diffPct,
+      difficultyLevel: diffLevel,
+      difficultyReasoning: diffReason,
+    );
+
+    // 4. Synchronize in-memory ChildState
+    try {
+      final current = ChildState.instance.currentProfile;
+      if (current.id == childId) {
+        ChildState.instance.setProfile(
+          current.copyWith(
+            difficultyPercentage: diffPct,
+            difficultyLevel: diffLevel,
+            difficultyReasoning: diffReason,
+          ),
+        );
+      }
+    } catch (_) {}
+
+    return {
+      'difficultyPercentage': diffPct,
+      'difficultyLevel': diffLevel,
+      'reasoning': diffReason,
+      'modelUsed': res['modelUsed'] ?? 'groq-llm',
+      'assessmentId': assessmentId,
     };
   }
 

@@ -33,6 +33,7 @@ import '../../core/widgets/panda_character.dart';
 import '../../core/services/event_service.dart';
 import '../../core/services/ai_voice_service.dart';
 import '../../core/state/child_state.dart';
+import '../../screens/sego_concept_screen.dart';
 
 /// Manages the full question flow for a level:
 ///   MCQ → Descriptive → Sequence (drag-and-drop) → Level Clear.
@@ -300,7 +301,13 @@ class _QuestionScreenState extends State<QuestionScreen> {
         _questionStartedAt = DateTime.now();
       });
     } else {
-      Navigator.of(context).pop();
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const SegoConceptScreen()),
+        );
+      }
     }
   }
 
@@ -308,9 +315,16 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFC5AE79), // Vintage Paper Canvas
-      body: CameraEngagementOverlay(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          _onBackPressed();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFC5AE79), // Vintage Paper Canvas
+        body: CameraEngagementOverlay(
         activityId: 'netaji_${widget.level.id}',
         child: Stack(
         children: [
@@ -521,7 +535,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
         ],
       ),
       ),
-    );
+    ));
   }
 
   Widget _buildBody() {
@@ -542,7 +556,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: _onBackPressed,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFD4AF37),
                   foregroundColor: const Color(0xFF2E1C12),
@@ -588,6 +602,12 @@ class _QuestionScreenState extends State<QuestionScreen> {
             ),
             child: Row(
               children: [
+                WoodenBackButton(
+                  size: 32,
+                  onTap: _onBackPressed,
+                ),
+                const SizedBox(width: 10),
+
                 // Phase Badge
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),

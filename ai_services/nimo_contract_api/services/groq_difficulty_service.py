@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import Tuple
 from dotenv import load_dotenv
 
+from groq import Groq
 from langchain_groq import ChatGroq
 from langchain_core.messages import SystemMessage, HumanMessage
 
@@ -50,32 +51,43 @@ else:
     load_dotenv()
 
 
-PEDIATRIC_DIFFICULTY_SYSTEM_PROMPT = """You are Dr. Nimo, an expert Pediatric Cognitive Psychologist and Educational Curriculum AI Specialist for early childhood education (ages 3 to 12).
+PEDIATRIC_DIFFICULTY_SYSTEM_PROMPT = """You are Dr. Nimo, an expert Pediatric Cognitive Psychologist, Speech-Language Pathologist, and Adaptive Curriculum AI Specialist for early childhood education (ages 3 to 12).
 
-Your task is to analyze a child's profile (Age, Grade/Standard, Native Language, and Learning Pace) and compute a single tailored Quest Difficulty Percentage (integer between 10 and 95).
+Your task is to analyze a child's complete profile—combining their Age, Grade/Standard, and particularly their 15-Question Onboarding Pediatric Assessment—to calculate an individualized Quest Difficulty Percentage (integer between 10 and 95) and difficulty level.
 
-### Pedagogical Benchmark Rules:
-1. **Age <= 4 or Preschool / Nursery / LKG**:
-   - Return Difficulty Percentage = 20 to 30.
-2. **Age 5**:
-   - 5-year-old in Nursery / LKG: Return Difficulty Percentage = 30.
-   - 5-year-old in UKG: Return Difficulty Percentage = 40.
-   - 5-year-old in Grade 1: Return Difficulty Percentage = 50.
-3. **Age 6**:
-   - 6-year-old in Grade 1: Return Difficulty Percentage = 50 to 55.
-   - 6-year-old in Grade 2: Return Difficulty Percentage = 60.
-4. **Age 7**:
-   - 7-year-old in Grade 2: Return Difficulty Percentage = 60 to 65.
-5. **Age 8 to 9**:
-   - Grade 3 or 4: Return Difficulty Percentage = 70 to 80.
-6. **Age 10 to 12**:
-   - Grade 5+: Return Difficulty Percentage = 85 to 95.
+### Clinical Assessment Calibration Dimensions:
+1. **Age & Standard Baseline**:
+   - Age 3-4 (Nursery/Preschool): Base 25%
+   - Age 5 (UKG/Grade 1): Base 35% - 50%
+   - Age 6 (Grade 1/2): Base 50% - 60%
+   - Age 7 (Grade 2): Base 60% - 65%
+   - Age 8-9 (Grade 3/4): Base 70% - 80%
+   - Age 10-12 (Grade 5+): Base 85% - 95%
 
-### Pace Modifiers:
-- Learning Pace = 'gentle': decrease by 5 to 8.
-- Learning Pace = 'fast': increase by 5 to 8.
+2. **15-Question Onboarding Evaluation Modifiers**:
+   - **Speech & Expressive Language**: If child speaks in single words/gestures or has Apraxia/Speech Delay: adjust difficulty downwards (-10% to -20%) to provide supportive phonetic scaffolding. If child speaks in full fluent sentences: adjust upwards (+5% to +10%).
+   - **Receptive Comprehension & Concept Understanding**: If child needs one-step instructions or struggles with sequence ("first/next/last") or time words: adjust difficulty downwards (-5% to -12%) for structured bite-sized tasks. If child easily follows multi-step instructions: adjust upwards (+5%).
+   - **Attention Span & Engagement**: If attention is 3-5 min bursts or easily distracted: calibrate for bite-sized micro-sessions with engaging feedback (-5%). If 10+ min sustained focus: maintain standard or higher pacing (+5%).
+   - **Emotional Regulation & Frustration**: If child gets easily upset/needs breaks: lower difficulty (-5% to -10%) to build confidence and avoid cognitive overload.
+   - **Parent Self-Rated Speech Baseline Slider (0.0 to 1.0)**:
+     * 0.00 - 0.33 ("Getting started"): Cap maximum difficulty to 35% (Gentle Starter).
+     * 0.34 - 0.66 ("Great progress"): Target 40% - 65% (Balanced Explorer to Curious Adventurer).
+     * 0.67 - 1.00 ("Excellent"): Target 65% - 90% (Challenger to Champion).
+   - **Developmental Diagnoses (ASD, ADHD, Apraxia, Speech Delay)**: Apply compassionate neurodiverse scaffolding, emphasizing clear visual cues and relaxed pacing.
 
-You must provide a structured output with the exact integer `difficultyPercentage`, `difficultyLevel` label, and brief `reasoning`."""
+### Difficulty Levels:
+- **Gentle Starter** (10 - 35%): Maximum supportive scaffolding, single-step prompts, audio repetition.
+- **Balanced Explorer** (36 - 50%): Balanced multisensory pacing, standard vocabulary, visual hints.
+- **Curious Adventurer** (51 - 65%): Multi-step instructions, standard questions, moderate complexity.
+- **Challenger** (66 - 80%): Advanced phonic recognition, sequential logic, minimal hints.
+- **Champion** (81 - 95%): Deep comprehension, complex multi-part questions, rapid recall.
+
+You must return strictly valid JSON formatted as a JSON object:
+{
+  "difficultyPercentage": <integer between 10 and 95>,
+  "difficultyLevel": "<Gentle Starter | Balanced Explorer | Curious Adventurer | Challenger | Champion>",
+  "reasoning": "<concise 1-2 sentence clinical summary referencing key factors from their 15 onboarding questions>"
+}"""
 
 
 ADAPTIVE_SESSION_SYSTEM_PROMPT = """You are Dr. Nimo, a Senior Pediatric Cognitive Psychologist and Adaptive Curriculum AI Specialist.
@@ -108,7 +120,8 @@ Return a structured JSON with:
 
 def _calculate_fallback_difficulty(req: DifficultyRequest) -> DifficultyOutput:
     """
-    Pedagogical heuristic fallback calculator when Groq API key is not configured or network fails.
+    Pedagogical heuristic fallback calculator synthesizing the 15 onboarding questions,
+    diagnoses, and speech level slider when Groq API is offline.
     """
     age = req.age
     standard = (req.standard or "").strip().lower()
@@ -116,46 +129,79 @@ def _calculate_fallback_difficulty(req: DifficultyRequest) -> DifficultyOutput:
 
     if age <= 4:
         base_pct = 25
-        level = "Gentle Starter"
-        reason = f"Ideal gentle starter quest calibrated for {age}-year-olds in early foundation stages."
     elif age == 5:
         if "lkg" in standard or "nursery" in standard or "preschool" in standard:
             base_pct = 30
-            level = "Gentle Starter"
-            reason = "Calibrated 30% difficulty for a 5-year-old in introductory standard."
         elif "ukg" in standard or "kindergarten" in standard:
             base_pct = 40
-            level = "Balanced Explorer"
-            reason = "Balanced 40% difficulty for a 5-year-old in UKG."
         elif "grade 1" in standard or "class 1" in standard or "1" in standard:
             base_pct = 50
-            level = "Curious Adventurer"
-            reason = "Tailored 50% difficulty for an active 5-year-old in Grade 1."
         else:
             base_pct = 35
-            level = "Balanced Explorer"
-            reason = "Personalized 35% quest difficulty designed for age 5 learners."
     elif age == 6:
         base_pct = 60 if ("grade 2" in standard or "class 2" in standard) else 50
-        level = "Curious Adventurer"
-        reason = f"Optimal {base_pct}% baseline difficulty for a 6-year-old."
     elif age == 7:
         base_pct = 65
-        level = "Curious Adventurer"
-        reason = "Engaging 65% difficulty supporting Grade 2 curriculum milestones."
     elif age in (8, 9):
         base_pct = 75
-        level = "Challenger"
-        reason = "Dynamic 75% challenge fostering deep comprehension and rapid memory recall."
     else:  # age >= 10
         base_pct = 85
-        level = "Champion"
-        reason = "Comprehensive 85% difficulty designed for independent learning."
+
+    # Modifiers from 15-Question Onboarding Assessment Answers
+    answers = req.onboardingAnswers or {}
+    diagnoses = req.diagnoses or []
+
+    # 1. Diagnoses modifier
+    has_delay = any(d in ["Speech & Language Delay", "Childhood Apraxia of Speech", "Developmental Delay"] for d in diagnoses)
+    if has_delay:
+        base_pct -= 10
+
+    # 2. Receptive comprehension modifier
+    for q_text, ans in answers.items():
+        ans_str = str(ans).lower()
+        if "instruction" in q_text.lower():
+            if "one step" in ans_str:
+                base_pct -= 8
+            elif "easily" in ans_str:
+                base_pct += 5
+        elif "express" in q_text.lower() or "speaking" in q_text.lower() or "sentences" in q_text.lower():
+            if "gestures" in ans_str or "single words" in ans_str:
+                base_pct -= 10
+            elif "full sentences" in ans_str:
+                base_pct += 5
+        elif "frustrat" in q_text.lower() or "react" in q_text.lower():
+            if "upset" in ans_str or "break" in ans_str:
+                base_pct -= 6
+
+    # 3. Speech Level Slider modifier
+    if req.speechLevelSlider is not None:
+        if req.speechLevelSlider <= 0.33:
+            base_pct = min(base_pct, 35)
+        elif req.speechLevelSlider >= 0.70:
+            base_pct = max(base_pct, 65)
 
     if pace == "gentle":
-        base_pct = max(15, base_pct - 8)
+        base_pct -= 5
     elif pace == "fast":
-        base_pct = min(95, base_pct + 8)
+        base_pct += 5
+
+    base_pct = max(15, min(95, base_pct))
+
+    if base_pct <= 35:
+        level = "Gentle Starter"
+        reason = f"Calibrated {base_pct}% gentle starter quest with supportive pacing based on 15-question developmental assessment."
+    elif base_pct <= 50:
+        level = "Balanced Explorer"
+        reason = f"Calibrated {base_pct}% balanced explorer difficulty tailored from 15-question cognitive baseline."
+    elif base_pct <= 65:
+        level = "Curious Adventurer"
+        reason = f"Calibrated {base_pct}% curious adventurer challenge fostering multi-step comprehension and articulation."
+    elif base_pct <= 80:
+        level = "Challenger"
+        reason = f"Calibrated {base_pct}% challenger level supporting rapid recall and sequential reasoning."
+    else:
+        level = "Champion"
+        reason = f"Calibrated {base_pct}% champion level designed for comprehensive independent mastery."
 
     return DifficultyOutput(
         difficultyPercentage=base_pct,
@@ -164,9 +210,59 @@ def _calculate_fallback_difficulty(req: DifficultyRequest) -> DifficultyOutput:
     )
 
 
+import re
+
+GROQ_MODEL_CANDIDATES = [
+    "openai/gpt-oss-20b",
+    "openai/gpt-oss-120b",
+    "qwen/qwen3.6-27b",
+    "allam-2-7b",
+]
+
+
+def _extract_json(text: str) -> dict:
+    """Safely extracts and parses JSON dictionary from LLM output with regex fallbacks."""
+    if not text:
+        return {}
+
+    # 1. Clean markdown code fences if present
+    cleaned = re.sub(r"^```(?:json)?", "", text.strip(), flags=re.MULTILINE)
+    cleaned = re.sub(r"```$", "", cleaned.strip(), flags=re.MULTILINE).strip()
+
+    try:
+        return json.loads(cleaned)
+    except Exception:
+        pass
+
+    # 2. Try regex extraction of first complete { ... }
+    match = re.search(r"\{[\s\S]*\}", cleaned)
+    if match:
+        try:
+            return json.loads(match.group(0))
+        except Exception:
+            pass
+
+    # 3. Robust partial regex extraction for individual fields
+    data = {}
+    pct_match = re.search(r'"difficultyPercentage"\s*:\s*(\d+)', text)
+    if pct_match:
+        data["difficultyPercentage"] = int(pct_match.group(1))
+
+    level_match = re.search(r'"difficultyLevel"\s*:\s*"([^"]+)"', text)
+    if level_match:
+        data["difficultyLevel"] = level_match.group(1)
+
+    reasoning_match = re.search(r'"reasoning"\s*:\s*"([^"]+)"', text)
+    if reasoning_match:
+        data["reasoning"] = reasoning_match.group(1)
+
+    return data
+
+
 def assess_child_difficulty(req: DifficultyRequest) -> Tuple[DifficultyOutput, str]:
     """
     Main entry point for assessing initial child difficulty on sign-up using LangChain and ChatGroq.
+    Deeply synthesizes 15 onboarding questions, parent speech slider, and developmental profile.
     Returns (DifficultyOutput, modelUsedName).
     """
     api_key = os.environ.get("GROQ_API_KEY", "").strip()
@@ -174,50 +270,65 @@ def assess_child_difficulty(req: DifficultyRequest) -> Tuple[DifficultyOutput, s
     if not api_key:
         return _calculate_fallback_difficulty(req), "heuristic-fallback"
 
-    user_prompt = f"""Assess difficulty for learner:
+    # Format onboarding assessment details
+    onboarding_summary = ""
+    if req.diagnoses:
+        onboarding_summary += f"\n- Diagnoses / Developmental Flags: {', '.join(req.diagnoses)}"
+    if req.speechLevelSlider is not None:
+        slider_rating = "Getting Started" if req.speechLevelSlider <= 0.33 else ("Great Progress" if req.speechLevelSlider <= 0.66 else "Excellent")
+        onboarding_summary += f"\n- Parent Self-Rated Speech Level: {slider_rating} ({req.speechLevelSlider:.2f})"
+    if req.onboardingAnswers:
+        onboarding_summary += "\n- 15-Question Onboarding Pediatric Assessment Responses:"
+        for q, a in req.onboardingAnswers.items():
+            onboarding_summary += f"\n  * {q}: {a}"
+
+    user_prompt = f"""Assess initial personalized quest difficulty for learner based on child profile and sign-up onboarding assessment:
 - Child Name: {req.name}
 - Age: {req.age}
 - Standard / Class: {req.standard}
 - Preferred Language: {req.language or 'en'}
 - Learning Pace: {req.learningPace or 'normal'}
-- Specific Interests: {req.interests or 'adventures, stories'}
+- Specific Interests: {req.interests or 'adventures, stories'}{onboarding_summary}
 
-Return the structured difficultyPercentage."""
+Synthesize the 15 onboarding answers, diagnoses, and baseline slider to compute the tailored difficulty percentage (10 to 95), difficultyLevel label, and clinical reasoning."""
 
-    try:
-        llm = ChatGroq(
-            temperature=0.1,
-            model_name="llama-3.1-8b-instant",
-            groq_api_key=api_key,
-            max_tokens=250,
-        )
+    client = Groq(api_key=api_key)
 
-        structured_llm = llm.with_structured_output(DifficultyOutput)
-
-        messages = [
-            SystemMessage(content=PEDIATRIC_DIFFICULTY_SYSTEM_PROMPT),
-            HumanMessage(content=user_prompt),
-        ]
-
-        raw_result = structured_llm.invoke(messages)
-
-        if isinstance(raw_result, DifficultyOutput):
-            result = raw_result
-        elif isinstance(raw_result, dict):
-            result = DifficultyOutput(**raw_result)
-        else:
-            result = DifficultyOutput(
-                difficultyPercentage=int(getattr(raw_result, "difficultyPercentage", 50)),
-                difficultyLevel=str(getattr(raw_result, "difficultyLevel", "Balanced Explorer")),
-                reasoning=str(getattr(raw_result, "reasoning", "")),
+    for model_name in GROQ_MODEL_CANDIDATES:
+        try:
+            chat_completion = client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": PEDIATRIC_DIFFICULTY_SYSTEM_PROMPT},
+                    {"role": "user", "content": user_prompt},
+                ],
+                temperature=0.1,
+                max_tokens=800,
             )
 
-        return result, "groq/llama-3.1-8b-instant (LangChain Structured Output)"
-    except Exception as e:
-        logger.warning(f"LangChain Groq invocation error: {e}")
-        fallback = _calculate_fallback_difficulty(req)
-        fallback.reasoning = f"Calibrated quest difficulty for age {req.age} ({req.standard})."
-        return fallback, "heuristic-fallback"
+            raw_text = chat_completion.choices[0].message.content or ""
+            data = _extract_json(raw_text)
+
+            if not data or "difficultyPercentage" not in data:
+                continue
+
+            diff_pct = int(data.get("difficultyPercentage", 50))
+            diff_pct = max(10, min(95, diff_pct))
+            diff_level = str(data.get("difficultyLevel", "Balanced Explorer"))
+            reasoning = str(data.get("reasoning", "Calibrated by Groq Pediatric AI Engine based on 15 onboarding questions."))
+
+            logger.info(f"Groq difficulty assessment succeeded with {model_name}: {diff_pct}% ({diff_level})")
+            return DifficultyOutput(
+                difficultyPercentage=diff_pct,
+                difficultyLevel=diff_level,
+                reasoning=reasoning,
+            ), f"groq/{model_name}"
+        except Exception as e:
+            logger.warning(f"Groq invocation error with model {model_name}: {e}")
+            continue
+
+    fallback = _calculate_fallback_difficulty(req)
+    return fallback, "heuristic-fallback"
 
 
 def assess_adaptive_session_difficulty(
@@ -246,41 +357,51 @@ def assess_adaptive_session_difficulty(
 - Attention Pattern: {req.attentionPattern}
 - Learning History: {req.learningHistory}
 
-Compute updated difficultyPercentage (10-95), difficultyLevel, clinical reasoning, and next session recommendations."""
+Return ONLY a JSON object with exact keys:
+- difficultyPercentage: integer (10 to 95)
+- difficultyLevel: string ("Gentle Starter", "Balanced Explorer", "Curious Adventurer", "Challenger", "Champion")
+- reasoning: string
+- recommendationsForNextSession: list of 2-3 strings"""
 
-    try:
-        llm = ChatGroq(
-            temperature=0.15,
-            model_name="llama-3.1-8b-instant",
-            groq_api_key=api_key,
-            max_tokens=400,
-        )
+    client = Groq(api_key=api_key)
 
-        structured_llm = llm.with_structured_output(AdaptiveDifficultyOutput)
-
-        messages = [
-            SystemMessage(content=ADAPTIVE_SESSION_SYSTEM_PROMPT),
-            HumanMessage(content=user_prompt),
-        ]
-
-        raw_result = structured_llm.invoke(messages)
-
-        if isinstance(raw_result, AdaptiveDifficultyOutput):
-            result = raw_result
-        elif isinstance(raw_result, dict):
-            result = AdaptiveDifficultyOutput(**raw_result)
-        else:
-            result = AdaptiveDifficultyOutput(
-                difficultyPercentage=int(getattr(raw_result, "difficultyPercentage", curr_diff)),
-                difficultyLevel=str(getattr(raw_result, "difficultyLevel", "Balanced Explorer")),
-                reasoning=str(getattr(raw_result, "reasoning", "Calibrated by Dr. Nimo")),
-                recommendationsForNextSession=list(getattr(raw_result, "recommendationsForNextSession", [])),
+    for model_name in GROQ_MODEL_CANDIDATES:
+        try:
+            chat_completion = client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": ADAPTIVE_SESSION_SYSTEM_PROMPT},
+                    {"role": "user", "content": user_prompt},
+                ],
+                temperature=0.15,
+                max_tokens=800,
             )
 
-        return result, "groq/llama-3.1-8b-instant (LangChain Structured Output)"
-    except Exception as e:
-        logger.warning(f"LangChain Groq adaptive invocation error: {e}")
-        return _calculate_adaptive_fallback(req, curr_diff), "heuristic-fallback"
+            raw_text = chat_completion.choices[0].message.content or ""
+            data = _extract_json(raw_text)
+
+            if not data or "difficultyPercentage" not in data:
+                continue
+
+            diff_pct = int(data.get("difficultyPercentage", curr_diff))
+            diff_pct = max(10, min(95, diff_pct))
+            diff_level = str(data.get("difficultyLevel", "Balanced Explorer"))
+            reasoning = str(data.get("reasoning", "Calibrated by Dr. Nimo AI"))
+            recs = data.get("recommendationsForNextSession", [])
+            if not isinstance(recs, list):
+                recs = [str(recs)]
+
+            return AdaptiveDifficultyOutput(
+                difficultyPercentage=diff_pct,
+                difficultyLevel=diff_level,
+                reasoning=reasoning,
+                recommendationsForNextSession=[str(r) for r in recs],
+            ), f"groq/{model_name}"
+        except Exception as e:
+            logger.warning(f"Groq adaptive invocation error with {model_name}: {e}")
+            continue
+
+    return _calculate_adaptive_fallback(req, curr_diff), "heuristic-fallback"
 
 
 def _calculate_adaptive_fallback(

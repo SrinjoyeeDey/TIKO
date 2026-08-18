@@ -3,9 +3,11 @@ import 'package:media_kit/media_kit.dart';
 import 'screens/sego_concept_screen.dart';
 import 'services/app_asset_preloader.dart';
 import 'core/state/child_state.dart';
+import 'qa_pipeline/database/database_helper.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  DatabaseHelper.initDatabaseFactory();
   MediaKit.ensureInitialized();
   runApp(const NimoApp());
 }
@@ -63,6 +65,7 @@ class _BootStrapWrapperState extends State<BootStrapWrapper> {
         color: const Color(0xFFC5AE79), // Lightweight branded sepia canvas
       );
     }
-    return const SegoConceptScreen();
+    final hasActiveUser = ChildState.instance.currentParent != null;
+    return SegoConceptScreen(initialPage: hasActiveUser ? 3 : 0);
   }
 }

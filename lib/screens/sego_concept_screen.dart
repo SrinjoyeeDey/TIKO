@@ -4,7 +4,6 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'auth_mode_selection_screen.dart';
 import 'parent_auth_screen.dart';
 import 'game_map_1913_screen.dart';
 import 'leaderboard_screen.dart';
@@ -21,6 +20,9 @@ import 'package:media_kit_video/media_kit_video.dart';
 import '../widgets/smoke_bomb_transition.dart';
 import '../qa_pipeline/models/learning_content.dart';
 import '../qa_pipeline/services/content_discovery_service.dart';
+import '../qa_pipeline/services/child_difficulty_service.dart';
+import '../widgets/child_profile_badge.dart';
+import '../core/models/child_profile.dart' as core;
 import '../core/state/child_state.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -178,7 +180,19 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
   String? _selectedRole;
   int _selectedSpeechLevelIndex = 1;
   int _assessmentStep = 0;
-  final String _childName = 'Alex';
+  String get _childName {
+    final name = ChildState.instance.currentProfile.name;
+    if (name.isNotEmpty && name != 'Child' && name != 'Explorer') {
+      return name;
+    }
+    final parentName = ChildState.instance.currentParent?.name;
+    if (parentName != null && parentName.isNotEmpty) {
+      return parentName;
+    }
+    return 'Learner';
+  }
+  bool _isAssessingWithGroq = false;
+  String _assessmentStatusMessage = 'Analyzing learning profile with Groq AI...';
 
   late AnimationController _ballController;
   bool _isBouncingBallActive = false;
@@ -280,6 +294,33 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
   }
 
   Future<void> _loadDynamicChapters() async {
+    try {
+      final activeParent = await ParentRepository.getActiveParent();
+      if (activeParent != null) {
+        ChildState.instance.setActiveParent(activeParent);
+        final children = await ParentRepository.getChildrenForParent(activeParent.id);
+        if (children.isNotEmpty) {
+          final activeChild = children.first;
+          ChildState.instance.setProfile(
+            core.ChildProfile(
+              id: activeChild.id,
+              parentId: activeChild.parentId,
+              name: activeChild.name,
+              age: activeChild.age,
+              className: activeChild.className,
+              difficultyPercentage: activeChild.difficultyPercentage,
+              difficultyLevel: activeChild.difficultyLevel,
+              difficultyReasoning: activeChild.difficultyReasoning,
+              xp: 350,
+              level: 4,
+              streak: 5,
+            ),
+            remember: true,
+          );
+        }
+      }
+    } catch (_) {}
+
     final childId = ChildState.instance.currentProfile.id;
     final chapters = await ContentDiscoveryService.discoverContent();
     final covers = <String, String?>{};
@@ -294,6 +335,9 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
         _stageCoverImages = covers;
         _unlockedStageIndex = highestUnlocked;
         _unlockedLevelIndex = highestUnlocked;
+        if (ChildState.instance.currentProfile.age != null) {
+          _currentAge = ChildState.instance.currentProfile.age!.toDouble();
+        }
       });
     }
   }
@@ -2012,6 +2056,42 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // Top Bar with Back Arrow to return to Mood/Entry screen (Page 0)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      _goToTakeoverScreen();
+                    },
+                    child: Container(
+                      width: 42,
+                      height: 42,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.25),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 1.5,
+                        ),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x10000000),
+                            blurRadius: 10,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        color: Colors.white,
+                        size: 18,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 12),
 
               // Main Content
@@ -2019,7 +2099,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                 child: Align(
                   alignment: Alignment.topCenter,
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 36.0),
+                    padding: const EdgeInsets.only(top: 12.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -2069,9 +2149,9 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     );
   }
 
-  // SCREEN 2: SPEECH LEVEL SELECTION SCREEN (PRELIMINARY Question & Assessment Flow)
+  // SCREEN 2: SPEECH LEVEL SELECTION SCREEN (PRELIMINARY Question & Assessment Flow - 15 Questions)
   Widget _buildSpeechLevelScreen(BuildContext context, _AgeTheme theme) {
-    const int totalQuestions = 29;
+    const int totalQuestions = 15;
 
     return Container(
       decoration: const BoxDecoration(
@@ -2090,36 +2170,188 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            child: _SpeechLevelSelectorWidget(
-              theme: theme,
-              step: _assessmentStep,
-              childName: _childName,
-              onNextStep: () async {
-                if (_assessmentStep < totalQuestions - 1) {
-                  setState(() => _assessmentStep++);
-                } else {
-                  final parent = await ParentRepository.getActiveParent();
-                  final parentId = parent?.id ?? 'default_parent';
-                  await ParentRepository.setOnboardingCompleted(parentId);
-                  if (mounted) {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (_) => ParentDashboard(
-                          childId: ChildState.instance.currentProfile.id,
+            child: _isAssessingWithGroq
+                ? Container(
+                    width: 440,
+                    padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 36),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(32),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x254F46E5),
+                          blurRadius: 36,
+                          offset: Offset(0, 14),
+                          spreadRadius: 2,
                         ),
-                      ),
-                    );
-                  }
-                }
-              },
-              onPrevStep: () {
-                if (_assessmentStep > 0) {
-                  setState(() => _assessmentStep--);
-                } else {
-                  _goToAgeSelection();
-                }
-              },
-            ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 68,
+                          height: 68,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF4F46E5), Color(0xFF818CF8)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF4F46E5).withValues(alpha: 0.35),
+                                blurRadius: 16,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
+                          ),
+                          child: const Center(
+                            child: SizedBox(
+                              width: 32,
+                              height: 32,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 3.5,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        const Text(
+                          'Dr. Nimo Pediatric AI',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'Outfit',
+                            fontSize: 20,
+                            fontWeight: FontWeight.w900,
+                            color: Color(0xFF0F172A),
+                            letterSpacing: 0.2,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          _assessmentStatusMessage,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontFamily: 'Outfit',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF4F46E5),
+                            height: 1.3,
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        const Text(
+                          'Evaluating 15 developmental milestones, receptive comprehension, and articulation preferences to calibrate personalized quest difficulty...',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'Outfit',
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF64748B),
+                            height: 1.35,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : _SpeechLevelSelectorWidget(
+                    theme: theme,
+                    step: _assessmentStep,
+                    childName: _childName,
+                    onNextStep: () {
+                      if (_assessmentStep < totalQuestions - 1) {
+                        setState(() => _assessmentStep++);
+                      }
+                    },
+                    onPrevStep: () {
+                      if (_assessmentStep > 0) {
+                        setState(() => _assessmentStep--);
+                      } else {
+                        _goToAgeSelection();
+                      }
+                    },
+                    onFinishAssessment: (Map<String, dynamic> answers, List<String> diagnoses, double sliderValue) async {
+                      setState(() {
+                        _isAssessingWithGroq = true;
+                        _assessmentStatusMessage = 'Connecting to Groq Pediatric AI Engine...';
+                      });
+
+                      try {
+                        final parent = await ParentRepository.getActiveParent();
+                        final parentId = parent?.id ?? 'default_parent';
+                        final childId = ChildState.instance.currentProfile.id;
+                        final childName = _childName.isNotEmpty ? _childName : 'Explorer';
+                        final int age = _currentAge.round().clamp(3, 14);
+                        final standard = age <= 4 ? 'Nursery' : (age == 5 ? 'UKG' : 'Grade ${age - 5}');
+
+                        setState(() {
+                          _assessmentStatusMessage = 'Calculating personalized difficulty level with Groq LLM...';
+                        });
+
+                        final evalResult = await ChildDifficultyService.instance.assessOnboardingAndSave(
+                          childId: childId,
+                          parentId: parentId,
+                          name: childName,
+                          age: age,
+                          standard: standard,
+                          answers: answers,
+                          diagnoses: diagnoses,
+                          speechLevelSlider: sliderValue,
+                        );
+
+                        final diffPct = (evalResult['difficultyPercentage'] as num?)?.toInt() ?? 50;
+                        final diffLevel = (evalResult['difficultyLevel'] as String?) ?? 'Balanced Explorer';
+                        final diffReason = (evalResult['reasoning'] as String?) ?? 'Pedagogically calibrated by Dr. Nimo.';
+
+                        ChildState.instance.setProfile(
+                          ChildState.instance.currentProfile.copyWith(
+                            name: childName,
+                            age: age,
+                            className: standard,
+                            difficultyPercentage: diffPct,
+                            difficultyLevel: diffLevel,
+                            difficultyReasoning: diffReason,
+                          ),
+                          remember: true,
+                        );
+
+                        debugPrint('🎉 Onboarding Assessment Stored in SQLite with Groq difficulty: $evalResult');
+
+                        await ParentRepository.setOnboardingCompleted(parentId);
+
+                        if (mounted) {
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (_) => const SegoConceptScreen(initialPage: 3),
+                            ),
+                            (route) => false,
+                          );
+                        }
+                      } catch (e) {
+                        debugPrint('Assessment Groq calculation exception: $e');
+                        final parent = await ParentRepository.getActiveParent();
+                        final parentId = parent?.id ?? 'default_parent';
+                        await ParentRepository.setOnboardingCompleted(parentId);
+                        if (mounted) {
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (_) => const SegoConceptScreen(initialPage: 3),
+                            ),
+                            (route) => false,
+                          );
+                        }
+                      } finally {
+                        if (mounted) {
+                          setState(() {
+                            _isAssessingWithGroq = false;
+                          });
+                        }
+                      }
+                    },
+                  ),
           ),
         ),
       ),
@@ -2221,55 +2453,168 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                         ),
                       ),
 
-                      // Sign Up Action Pill
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const ParentAuthScreen(
-                                initialMode: ParentAuthMode.signup,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(24),
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 1.5,
-                            ),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0x1A000000),
-                                blurRadius: 12,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: const Row(
+                      // Top Action: Login / Sign Up or Child Profile Badge
+                      ValueListenableBuilder<core.ChildProfile?>(
+                        valueListenable: ChildState.instance.activeProfileNotifier,
+                        builder: (context, profile, _) {
+                          final hasAccount = ChildState.instance.currentParent != null ||
+                              (profile != null && profile.name != 'Child' && profile.name != 'Explorer');
+
+                          if (hasAccount) {
+                            return Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const ChildProfileBadge(compact: true),
+                                const SizedBox(width: 8),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (_) => const ParentAuthScreen(
+                                          initialMode: ParentAuthMode.loginPin,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withValues(alpha: 0.25),
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(color: Colors.white.withValues(alpha: 0.6), width: 1.2),
+                                    ),
+                                    child: const Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.sync_alt_rounded, size: 14, color: Colors.white),
+                                        SizedBox(width: 4),
+                                        Text(
+                                          'Switch',
+                                          style: TextStyle(
+                                            fontFamily: 'Outfit',
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+
+                          return Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(
-                                Icons.person_add_alt_1_rounded,
-                                size: 16,
-                                color: Color(0xFF10B981),
+                              // LOG IN Button
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => const ParentAuthScreen(
+                                        initialMode: ParentAuthMode.loginPin,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: const Color(0xFFFC6B6B).withValues(alpha: 0.4),
+                                      width: 1.2,
+                                    ),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Color(0x15000000),
+                                        blurRadius: 8,
+                                        offset: Offset(0, 3),
+                                      ),
+                                    ],
+                                  ),
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.login_rounded,
+                                        size: 15,
+                                        color: Color(0xFFFC6B6B),
+                                      ),
+                                      SizedBox(width: 4),
+                                      Text(
+                                        'LOG IN',
+                                        style: TextStyle(
+                                          fontFamily: 'Outfit',
+                                          fontSize: 11.5,
+                                          fontWeight: FontWeight.w800,
+                                          color: Color(0xFF1E293B),
+                                          letterSpacing: 0.6,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              SizedBox(width: 6),
-                              Text(
-                                'SIGN UP',
-                                style: TextStyle(
-                                  fontFamily: 'Outfit',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w800,
-                                  color: Color(0xFF1E293B),
-                                  letterSpacing: 0.8,
+                              const SizedBox(width: 8),
+
+                              // SIGN UP Button
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => const ParentAuthScreen(
+                                        initialMode: ParentAuthMode.signup,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      colors: [Color(0xFFFC6B6B), Color(0xFFFF8E8E)],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Color(0x33FC6B6B),
+                                        blurRadius: 8,
+                                        offset: Offset(0, 3),
+                                      ),
+                                    ],
+                                  ),
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.person_add_alt_1_rounded,
+                                        size: 15,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(width: 4),
+                                      Text(
+                                        'SIGN UP',
+                                        style: TextStyle(
+                                          fontFamily: 'Outfit',
+                                          fontSize: 11.5,
+                                          fontWeight: FontWeight.w800,
+                                          color: Colors.white,
+                                          letterSpacing: 0.6,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
-                          ),
-                        ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -9242,7 +9587,7 @@ class CategoryGridPainter extends CustomPainter {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SPEECH LEVEL & ASSESSMENT QUESTIONNAIRE SELECTOR WIDGET (16 QUESTIONS)
+// SPEECH LEVEL & ASSESSMENT QUESTIONNAIRE SELECTOR WIDGET (15 QUESTIONS)
 // ─────────────────────────────────────────────────────────────────────────────
 class _SpeechLevelSelectorWidget extends StatefulWidget {
   final _AgeTheme theme;
@@ -9250,6 +9595,7 @@ class _SpeechLevelSelectorWidget extends StatefulWidget {
   final String childName;
   final VoidCallback onNextStep;
   final VoidCallback onPrevStep;
+  final void Function(Map<String, dynamic> answers, List<String> diagnoses, double sliderValue)? onFinishAssessment;
 
   const _SpeechLevelSelectorWidget({
     super.key,
@@ -9258,6 +9604,7 @@ class _SpeechLevelSelectorWidget extends StatefulWidget {
     required this.childName,
     required this.onNextStep,
     required this.onPrevStep,
+    this.onFinishAssessment,
   });
 
   @override
@@ -9457,7 +9804,29 @@ class _SpeechLevelSelectorWidgetState extends State<_SpeechLevelSelectorWidget> 
                   child: GestureDetector(
                     onTap: () {
                       HapticFeedback.mediumImpact();
-                      widget.onNextStep();
+                      if (safeStep == questions.length - 1) {
+                        final answersMap = <String, dynamic>{};
+                        for (int i = 0; i < questions.length; i++) {
+                          final qItem = questions[i];
+                          final qTitle = qItem['title'] as String;
+                          final qType = qItem['type'] as String;
+                          if (qType == 'single_radio') {
+                            answersMap[qTitle] = _singleAnswers[i] ?? 'Not specified';
+                          } else if (qType == 'multi_checkbox') {
+                            answersMap[qTitle] = _multiAnswers[i]?.toList() ?? [];
+                          } else if (qType == 'slider_level') {
+                            answersMap[qTitle] = _speechLevelSliderValue;
+                          }
+                        }
+                        final diagnoses = _multiAnswers[1]?.toList() ?? <String>[];
+                        if (widget.onFinishAssessment != null) {
+                          widget.onFinishAssessment!(answersMap, diagnoses, _speechLevelSliderValue);
+                        } else {
+                          widget.onNextStep();
+                        }
+                      } else {
+                        widget.onNextStep();
+                      }
                     },
                     child: Container(
                       height: 48,
@@ -9924,353 +10293,196 @@ class _SpeechLevelSelectorWidgetState extends State<_SpeechLevelSelectorWidget> 
     );
   }
 
-  // 16 Questions Definitions List
+  // 15 Curated Clinical & Pediatric Assessment Questions
   static List<Map<String, dynamic>> _getQuestions(String childName) {
     final String displayName = childName.isNotEmpty ? childName : 'Your child';
 
     return [
-      // 1. Evaluation
+      // 1. Clinical Evaluation
       {
         'tag': 'EVALUATION',
         'category': 'Therapist Evaluation',
-        'title': 'Has your child ever been evaluated by a therapist?',
+        'title': 'Has $displayName ever been evaluated by a speech or developmental therapist?',
         'subtitle': 'Select one answer.',
         'type': 'single_radio',
-        'options': ['Yes', 'No'],
+        'options': ['Yes', 'No', 'Currently scheduled'],
       },
 
-      // 3. Developmental Issues
+      // 2. Developmental Profile & Diagnoses
       {
-        'tag': 'DEVELOPMENTAL ISSUES',
-        'category': 'Developmental Issues',
-        'title': 'Developmental Issues',
-        'subtitle': 'Please select the diagnoses your child has received.',
-        'type': 'multi_checkbox',
-        'options': [
-          'Speech Delay',
-          'Autism Spectrum Disorder',
-          'Developmental Delay',
-          'ADHD',
-          'Apraxia',
-          'Premature Birth',
-        ],
-      },
-
-      // 4. Understanding & Following Instructions - Q1
-      {
-        'tag': 'UNDERSTANDING & FOLLOWING INSTRUCTIONS',
-        'category': 'Understanding & Following Instructions',
-        'title': 'Does your child understand words for order, like first, next, and last?',
-        'subtitle': 'Select one answer.',
-        'type': 'single_radio',
-        'options': ['Yes', 'No'],
-      },
-
-      // 5. Understanding & Following Instructions - Q2
-      {
-        'tag': 'UNDERSTANDING & FOLLOWING INSTRUCTIONS',
-        'category': 'Understanding & Following Instructions',
-        'title': 'Does your child understand words for time, like yesterday, today, and tomorrow?',
-        'subtitle': 'Select one answer.',
-        'type': 'single_radio',
-        'options': ['Yes', 'No'],
-      },
-
-      // 6. Understanding & Following Instructions - Q3
-      {
-        'tag': 'UNDERSTANDING & FOLLOWING INSTRUCTIONS',
-        'category': 'Understanding & Following Instructions',
-        'title': 'Does your child follow instructions, like "Put your pajamas on, brush your teeth, and then pick out a book."?',
-        'subtitle': 'Select one answer.',
-        'type': 'single_radio',
-        'options': ['Yes', 'No'],
-      },
-
-      // 7. Understanding & Following Instructions - Q4
-      {
-        'tag': 'UNDERSTANDING & FOLLOWING INSTRUCTIONS',
-        'category': 'Understanding & Following Instructions',
-        'title': 'Does your child listen to and understand most of what he/she hears at home?',
-        'subtitle': 'Select one answer.',
-        'type': 'single_radio',
-        'options': ['Yes', 'No'],
-      },
-
-      // 8. Understanding & Following Instructions - Q5
-      {
-        'tag': 'UNDERSTANDING & FOLLOWING INSTRUCTIONS',
-        'category': 'Understanding & Following Instructions',
-        'title': 'Does your child respond when you call him/her from another room?',
-        'subtitle': 'Select one answer.',
-        'type': 'single_radio',
-        'options': ['Yes', 'No'],
-      },
-
-      // 9. Speaking & Communication - Q1
-      {
-        'tag': 'SPEAKING & COMMUNICATION',
-        'category': 'Speaking & Communication',
-        'title': 'Can your child say his/her first and last name?',
-        'subtitle': 'Select one answer.',
-        'type': 'single_radio',
-        'options': ['Yes', 'No'],
-      },
-
-      // 10. Speaking & Communication - Q2
-      {
-        'tag': 'SPEAKING & COMMUNICATION',
-        'category': 'Speaking & Communication',
-        'title': 'Which of the following sounds does your child need to improve?',
+        'tag': 'DEVELOPMENTAL PROFILE',
+        'category': 'Developmental Profile',
+        'title': 'Select any developmental areas or diagnoses for $displayName:',
         'subtitle': 'Select all that apply.',
         'type': 'multi_checkbox',
         'options': [
-          'b — ball, baby, cub',
-          'd — dog, idea, mud',
-          'h — hi, ahead, haha',
-          'm — moon, lemon, gum',
-          'n — no, canoe, nine',
+          'Speech & Language Delay',
+          'Autism Spectrum (ASD)',
+          'Attention Deficit (ADHD)',
+          'Developmental Delay',
+          'Childhood Apraxia of Speech',
+          'None / Typical Milestones',
         ],
       },
 
-      // 11. Social & Imaginative Skills - Q1
+      // 3. Receptive Comprehension - Multi-step instructions
       {
-        'tag': 'SOCIAL & IMAGINATIVE SKILLS',
-        'category': 'Social & Imaginative Skills',
-        'title': 'Does your child like to sing, dance, or act?',
+        'tag': 'UNDERSTANDING INSTRUCTIONS',
+        'category': 'Understanding Instructions',
+        'title': 'Does $displayName follow multi-step instructions (e.g. "Put your shoes away, wash hands, and sit down")?',
         'subtitle': 'Select one answer.',
         'type': 'single_radio',
-        'options': ['Yes', 'No'],
+        'options': ['Yes, easily', 'Sometimes / with reminders', 'Needs one step at a time'],
       },
 
-      // 12. Social & Imaginative Skills - Q2
+      // 4. Sequential Concept Understanding (Order & Structure)
       {
-        'tag': 'SOCIAL & IMAGINATIVE SKILLS',
-        'category': 'Social & Imaginative Skills',
-        'title': 'Can your child tell apart what\'s real and what\'s make-believe?',
+        'tag': 'CONCEPT UNDERSTANDING',
+        'category': 'Concept Understanding',
+        'title': 'Does $displayName understand order concepts like "first", "next", and "last"?',
         'subtitle': 'Select one answer.',
         'type': 'single_radio',
-        'options': ['Yes', 'No'],
+        'options': ['Yes, consistently', 'Developing understanding', 'Not yet'],
       },
 
-      // 13. Social & Imaginative Skills - Q3
+      // 5. Temporal Concept Understanding (Time)
       {
-        'tag': 'SOCIAL & IMAGINATIVE SKILLS',
-        'category': 'Social & Imaginative Skills',
-        'title': 'Does your child prefer to play with other children than by himself?',
+        'tag': 'TIME CONCEPTS',
+        'category': 'Time Concepts',
+        'title': 'Does $displayName understand time words like "yesterday", "today", and "tomorrow"?',
         'subtitle': 'Select one answer.',
         'type': 'single_radio',
-        'options': ['Yes', 'No'],
+        'options': ['Yes, clearly', 'Sometimes mixes them up', 'Not yet introduced'],
       },
 
-      // 14. Communication Challenges - Q1
+      // 6. Expressive Communication & Name
       {
-        'tag': 'COMMUNICATION CHALLENGES',
-        'category': 'Communication Challenges',
-        'title': 'How does your child react when they are not understood?',
-        'subtitle': 'Select one option.',
-        'type': 'single_radio',
-        'options': [
-          'Gets very upset - tantrums or crying',
-          'Gets frustrated - but tries again',
-          'Stays calm - uses gestures or moves on',
-          'Doesn\'t seem to notice or care yet',
-        ],
-      },
-
-      // 15. Communication Challenges - Q2
-      {
-        'tag': 'COMMUNICATION CHALLENGES',
-        'category': 'Communication Challenges',
-        'title': 'What is your biggest challenge when trying to teach your child to speak?',
-        'subtitle': 'Select one option.',
-        'type': 'single_radio',
-        'options': [
-          'I don\'t know where to start',
-          'I can\'t find the time for practice',
-          'I am not sure if I am doing it right',
-          'I struggle with their attention',
-        ],
-      },
-
-      // 16. Accessibility & Sensory: How instructions understood best
-      {
-        'tag': 'ACCESSIBILITY & SENSORY',
-        'category': 'Accessibility & Sensory Preferences',
-        'title': 'How does your child understand instructions best?',
-        'subtitle': 'Select one option.',
-        'type': 'single_radio',
-        'options': [
-          'Spoken instructions',
-          'Written instructions',
-          'Spoken and written instructions',
-        ],
-      },
-
-      // 17. Accessibility & Sensory: Repeat button
-      {
-        'tag': 'ACCESSIBILITY & SENSORY',
-        'category': 'Accessibility & Sensory Preferences',
-        'title': 'Would your child benefit from a button to repeat instructions?',
+        'tag': 'SPEAKING & EXPRESSION',
+        'category': 'Speaking & Expression',
+        'title': 'Can $displayName clearly say their full name and express complete thoughts?',
         'subtitle': 'Select one answer.',
         'type': 'single_radio',
-        'options': ['Yes', 'No'],
+        'options': ['Yes, speaks in full sentences', 'Uses short 2-3 word phrases', 'Single words or gestures'],
       },
 
-      // 18. Accessibility & Sensory: Easiest instruction type
+      // 7. Articulation & Phonics Sounds
       {
-        'tag': 'ACCESSIBILITY & SENSORY',
-        'category': 'Accessibility & Sensory Preferences',
-        'title': 'Which type of instruction is easiest for your child to follow?',
-        'subtitle': 'Select one option.',
-        'type': 'single_radio',
+        'tag': 'ARTICULATION & PHONICS',
+        'category': 'Articulation & Phonics',
+        'title': 'Which sound groups would $displayName benefit from practicing most?',
+        'subtitle': 'Select all target sounds.',
+        'type': 'multi_checkbox',
         'options': [
-          'Pictures and icons',
-          'Short and simple language',
-          'Spoken explanations',
-          'A combination of these',
+          'Early Consonants (b, d, m, n, p)',
+          'Sibilants & Fricatives (s, z, sh, ch)',
+          'Liquids & Glides (l, r, w, y)',
+          'Consonant Blends (st, tr, bl, gr)',
+          'None / Clear Pronunciation',
         ],
       },
 
-      // 19. Accessibility & Sensory: Text size
+      // 8. Social Interaction & Play Preferences
       {
-        'tag': 'ACCESSIBILITY & SENSORY',
-        'category': 'Accessibility & Sensory Preferences',
-        'title': 'What text size is most comfortable for your child?',
-        'subtitle': 'Select one option.',
-        'type': 'single_radio',
-        'options': ['Normal', 'Big', 'Very big'],
-      },
-
-      // 20. Accessibility & Sensory: Animation speed
-      {
-        'tag': 'ACCESSIBILITY & SENSORY',
-        'category': 'Accessibility & Sensory Preferences',
-        'title': 'What animation speed is most comfortable for your child?',
-        'subtitle': 'Select one option.',
-        'type': 'single_radio',
-        'options': [
-          'Normal',
-          'Slow',
-          'Very little movement',
-        ],
-      },
-
-      // 21. Accessibility & Sensory: Reduced motion
-      {
-        'tag': 'ACCESSIBILITY & SENSORY',
-        'category': 'Accessibility & Sensory Preferences',
-        'title': 'Would your child benefit from reduced motion on the screen?',
+        'tag': 'SOCIAL & INTERACTION',
+        'category': 'Social & Interaction',
+        'title': 'How does $displayName prefer to engage in interactive activities and games?',
         'subtitle': 'Select one answer.',
         'type': 'single_radio',
-        'options': ['Yes', 'No'],
-      },
-
-      // 22. Accessibility & Sensory: Sound level
-      {
-        'tag': 'ACCESSIBILITY & SENSORY',
-        'category': 'Accessibility & Sensory Preferences',
-        'title': 'What level of sound or music is most comfortable for your child?',
-        'subtitle': 'Select one option.',
-        'type': 'single_radio',
         'options': [
-          'Music and sounds',
-          'Sounds only',
-          'No sounds',
+          'Enjoys interactive and cooperative activities',
+          'Enjoys both independent and shared activities',
+          'Prefers quiet independent discovery',
         ],
       },
 
-      // 23. Accessibility & Sensory: Subtitles / Text alternatives
+      // 9. Emotional Regulation & Frustration Response
       {
-        'tag': 'ACCESSIBILITY & SENSORY',
-        'category': 'Accessibility & Sensory Preferences',
-        'title': 'When TIKO provides spoken instructions, would your child benefit from subtitles or text alternatives?',
-        'subtitle': 'Select one option.',
-        'type': 'single_radio',
-        'options': [
-          'Yes, always',
-          'Only sometimes',
-          'No, I can listen',
-        ],
-      },
-
-      // 24. Accessibility & Sensory: Visual environment
-      {
-        'tag': 'ACCESSIBILITY & SENSORY',
-        'category': 'Accessibility & Sensory Preferences',
-        'title': 'Which type of visual environment is most comfortable for your child?',
-        'subtitle': 'Select one option.',
-        'type': 'single_radio',
-        'options': [
-          'Normal',
-          'Less busy',
-          'Very simple',
-        ],
-      },
-
-      // 25. Accessibility & Sensory: Pause or break option
-      {
-        'tag': 'ACCESSIBILITY & SENSORY',
-        'category': 'Accessibility & Sensory Preferences',
-        'title': 'Would your child benefit from having a pause or break option during activities?',
+        'tag': 'EMOTIONAL REGULATION',
+        'category': 'Emotional Regulation',
+        'title': 'How does $displayName react when they find an activity challenging or are misunderstood?',
         'subtitle': 'Select one answer.',
         'type': 'single_radio',
-        'options': ['Yes', 'No'],
-      },
-
-      // 26. Accessibility & Sensory: Response time
-      {
-        'tag': 'ACCESSIBILITY & SENSORY',
-        'category': 'Accessibility & Sensory Preferences',
-        'title': 'How much response time does your child typically need?',
-        'subtitle': 'Select one option.',
-        'type': 'single_radio',
         'options': [
-          'Normal time',
-          'More time',
-          'Take my time',
+          'Stays calm — uses gestures or tries again',
+          'Gets mildly frustrated but continues with encouragement',
+          'Gets upset or needs a break / supportive scaffolding',
+          'Doesn\'t notice or readily moves on',
         ],
       },
 
-      // 27. Accessibility & Sensory: Predictable screen layout
+      // 10. Focus & Attention Span
       {
-        'tag': 'ACCESSIBILITY & SENSORY',
-        'category': 'Accessibility & Sensory Preferences',
-        'title': 'Would your child benefit from consistent navigation and predictable screen layouts?',
+        'tag': 'ATTENTION & ENGAGEMENT',
+        'category': 'Attention & Engagement',
+        'title': 'What is the primary focus consideration during interactive learning?',
         'subtitle': 'Select one answer.',
         'type': 'single_radio',
-        'options': ['Yes', 'No'],
-      },
-
-      // 28. Accessibility & Sensory: Important information communication
-      {
-        'tag': 'ACCESSIBILITY & SENSORY',
-        'category': 'Accessibility & Sensory Preferences',
-        'title': 'How should important information be communicated to your child?',
-        'subtitle': 'Select one option.',
-        'type': 'single_radio',
         'options': [
-          'Pictures and words',
-          'Pictures, words, and sounds',
-          'Sounds and words',
+          'Maintains good sustained attention (10+ min)',
+          'Benefits from short bite-sized bursts (3-5 min)',
+          'Needs high visual and audio interactive feedback',
+          'Easily distracted by dense screen elements',
         ],
       },
 
-      // 29. Accessibility & Sensory: Adjust preferences later
+      // 11. Preferred Sensory Learning Modality
       {
-        'tag': 'ACCESSIBILITY & SENSORY',
-        'category': 'Accessibility & Sensory Preferences',
-        'title': 'Would you like to be able to adjust these preferences later?',
-        'subtitle': 'Select one answer.',
+        'tag': 'SENSORY MODALITY',
+        'category': 'Sensory Modality',
+        'title': 'How does $displayName understand and retain new concepts best?',
+        'subtitle': 'Select one option.',
         'type': 'single_radio',
-        'options': ['Yes, anytime', 'No'],
+        'options': [
+          'Combined Visual Stories & Spoken Audio',
+          'Visual Pictures, Colors & Animations',
+          'Spoken Voice Instructions & Sound Cues',
+        ],
       },
 
-      // 30. Speech Level — Final Step
+      // 12. Voice Guidance & Repeat Prompt
+      {
+        'tag': 'VOICE GUIDANCE',
+        'category': 'Voice Guidance',
+        'title': 'Would $displayName benefit from an always-accessible voice repeat button?',
+        'subtitle': 'Select one answer.',
+        'type': 'single_radio',
+        'options': ['Yes, highly helpful', 'Occasionally', 'No, understands on first listen'],
+      },
+
+      // 13. Processing Speed & Response Time
+      {
+        'tag': 'PROCESSING PACE',
+        'category': 'Processing Pace',
+        'title': 'How much response time does $displayName typically need during challenges?',
+        'subtitle': 'Select one option.',
+        'type': 'single_radio',
+        'options': [
+          'Standard pacing',
+          'Extended relaxed time (no rush timers)',
+          'Completely self-paced with pause option',
+        ],
+      },
+
+      // 14. Visual Environment & Motion Comfort
+      {
+        'tag': 'VISUAL COMFORT',
+        'category': 'Visual Comfort',
+        'title': 'Which visual screen layout is most comfortable for $displayName?',
+        'subtitle': 'Select one option.',
+        'type': 'single_radio',
+        'options': [
+          'Vibrant standard animations & celebrations',
+          'Gentle calm visual pace with reduced motion',
+          'Simplified high-contrast uncluttered layout',
+        ],
+      },
+
+      // 15. Speech & Skill Level — Final Self-Rating Slider
       {
         'tag': 'SPEECH LEVEL — FINAL STEP',
         'category': 'Speech Level Assessment',
-        'title': '$displayName\'s speech level',
-        'subtitle': 'Manually set your child\'s current speech progress level.',
+        'title': '$displayName\'s overall speech & cognitive baseline',
+        'subtitle': 'Set your estimated starting baseline. Groq AI will calculate tailored difficulty.',
         'type': 'slider_level',
         'options': [],
       },

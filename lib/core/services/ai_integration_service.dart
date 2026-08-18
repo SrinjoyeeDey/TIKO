@@ -52,21 +52,29 @@ class AiIntegrationService {
     required String standard,
     String language = 'en',
     String learningPace = 'normal',
+    Map<String, dynamic>? onboardingAnswers,
+    List<String>? diagnoses,
+    double? speechLevelSlider,
   }) async {
     final url = Uri.parse('$aiServiceBaseUrl/calculate/difficulty');
     try {
+      final payload = {
+        'childId': childId,
+        'name': name,
+        'age': age,
+        'standard': standard,
+        'language': language,
+        'learningPace': learningPace,
+      };
+      if (onboardingAnswers != null) payload['onboardingAnswers'] = onboardingAnswers;
+      if (diagnoses != null) payload['diagnoses'] = diagnoses;
+      if (speechLevelSlider != null) payload['speechLevelSlider'] = speechLevelSlider;
+
       final response = await http
           .post(
             url,
             headers: {'Content-Type': 'application/json'},
-            body: json.encode({
-              'childId': childId,
-              'name': name,
-              'age': age,
-              'standard': standard,
-              'language': language,
-              'learningPace': learningPace,
-            }),
+            body: json.encode(payload),
           )
           .timeout(const Duration(seconds: 12));
 
@@ -91,11 +99,15 @@ class AiIntegrationService {
 
     // Default fallback only if network fails completely
     int fallbackPct = (age <= 4) ? 25 : (age == 5 ? (standard.toLowerCase().contains('grade 1') ? 50 : 30) : 50);
+    if (speechLevelSlider != null) {
+      if (speechLevelSlider <= 0.33) fallbackPct = (fallbackPct - 10).clamp(15, 95);
+      if (speechLevelSlider >= 0.67) fallbackPct = (fallbackPct + 10).clamp(15, 95);
+    }
     return {
       'success': true,
       'difficultyPercentage': fallbackPct,
-      'difficultyLevel': 'Balanced Explorer',
-      'reasoning': 'Calibrated quest difficulty for age $age ($standard).',
+      'difficultyLevel': fallbackPct <= 35 ? 'Gentle Starter' : (fallbackPct <= 55 ? 'Balanced Explorer' : 'Curious Adventurer'),
+      'reasoning': 'Calibrated initial quest difficulty for age $age ($standard) based on onboarding evaluation.',
       'modelUsed': 'offline-fallback',
     };
   }

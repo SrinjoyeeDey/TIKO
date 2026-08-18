@@ -10,6 +10,7 @@ import '../core/state/child_state.dart';
 import '../qa_pipeline/models/child_profile.dart' as qa;
 import '../qa_pipeline/screens/parent_dashboard.dart';
 import '../qa_pipeline/services/content_discovery_service.dart';
+import '../qa_pipeline/database/onboarding_assessment_repository.dart';
 import 'sego_concept_screen.dart';
 
 enum ParentAuthMode {
@@ -81,6 +82,30 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
   void initState() {
     super.initState();
     _currentMode = widget.initialMode;
+    _prefillRememberedEmail();
+  }
+
+  Future<void> _prefillRememberedEmail() async {
+    try {
+      final active = ChildState.instance.currentParent ?? await ParentRepository.getActiveParent();
+      final hasAccount = await ParentRepository.hasParentAccount();
+      if (mounted) {
+        if (active != null && active.email.isNotEmpty) {
+          setState(() {
+            if (_emailController.text.isEmpty) {
+              _emailController.text = active.email;
+            }
+            if (_currentMode == ParentAuthMode.signup) {
+              _currentMode = ParentAuthMode.loginPin;
+            }
+          });
+        } else if (hasAccount && _currentMode == ParentAuthMode.signup) {
+          setState(() {
+            _currentMode = ParentAuthMode.loginPin;
+          });
+        }
+      }
+    } catch (_) {}
   }
 
   @override
@@ -110,6 +135,38 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
     setState(() => _isLoading = true);
 
     try {
+      final existingParent = await ParentRepository.getParentByEmail(email);
+      if (existingParent != null) {
+        _createdParent = existingParent;
+        ChildState.instance.setActiveParent(existingParent);
+        final children = await ParentRepository.getChildrenForParent(existingParent.id);
+        if (children.isNotEmpty) {
+          final c = children.first;
+          ChildState.instance.setProfile(
+            core.ChildProfile(
+              id: c.id,
+              parentId: c.parentId,
+              name: c.name,
+              age: c.age,
+              className: c.className,
+              difficultyPercentage: c.difficultyPercentage,
+              difficultyLevel: c.difficultyLevel,
+              difficultyReasoning: c.difficultyReasoning,
+            ),
+            remember: true,
+          );
+        }
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+            _errorMessage = 'Account already exists for $email. Enter your PIN to sign in.';
+            _currentMode = ParentAuthMode.loginPin;
+            _pinDigits.clear();
+          });
+        }
+        return;
+      }
+
       final parent = await ParentRepository.createParent(
         name: name,
         email: email,
@@ -135,7 +192,7 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
     }
   }
 
-  // Handle Child Profile Creation with Groq AI Difficulty Assessment & Personalizing Screen
+  // Handle Child Profile Creation
   Future<void> _handleCreateChild() async {
     setState(() => _errorMessage = null);
 
@@ -145,58 +202,17 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
       return;
     }
 
-    setState(() {
-      _currentMode = ParentAuthMode.personalizingExperience;
-      _personalizingProgress = 0.15;
-      _personalizingStatusText = 'Connecting to NIMO AI Pediatric Engine...';
-    });
+    setState(() => _isLoading = true);
 
     try {
       final parentId = _createdParent?.id ?? (await ParentRepository.getActiveParent())?.id ?? 'parent_default';
-      final tempChildId = ParentRepository.generateChildId();
 
-      await Future.delayed(const Duration(milliseconds: 400));
-      if (mounted) {
-        setState(() {
-          _personalizingProgress = 0.45;
-          _personalizingStatusText = 'Analyzing learning milestones for Age $_childAge in $_selectedStandard...';
-        });
-      }
-
-      // Call Groq LLM AI Microservice (Port 8001 /calculate/difficulty)
-      final aiRes = await AiIntegrationService.instance.calculateDifficulty(
-        childId: tempChildId,
-        name: childName,
-        age: _childAge,
-        standard: _selectedStandard,
-        language: _selectedLanguage,
-        learningPace: _learningPace,
-      );
-
-      final diffPct = (aiRes['difficultyPercentage'] as num?)?.toInt() ?? 50;
-      final diffLevel = (aiRes['difficultyLevel'] as String?) ?? 'Balanced Explorer';
-      final diffReason = (aiRes['reasoning'] as String?) ??
-          'Personalized $diffPct% quest difficulty configured for age $_childAge ($_selectedStandard).';
-
-      if (mounted) {
-        setState(() {
-          _personalizedDifficulty = diffPct;
-          _personalizedLevel = diffLevel;
-          _personalizedReasoning = diffReason;
-          _personalizingProgress = 0.85;
-          _personalizingStatusText = 'Saving personalized profile to SQLite database...';
-        });
-      }
-
-      // Store child in SQLite under that child with difficulty level
+      // Store child in SQLite
       final child = await ParentRepository.createChildProfile(
         parentId: parentId,
         name: childName,
         age: _childAge,
         className: _selectedStandard,
-        difficultyPercentage: diffPct,
-        difficultyLevel: diffLevel,
-        difficultyReasoning: diffReason,
       );
 
       _createdChild = child;
@@ -207,21 +223,9 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
           name: child.name,
           age: child.age,
           className: child.className,
-          difficultyPercentage: diffPct,
-          difficultyLevel: diffLevel,
-          difficultyReasoning: diffReason,
         ),
         remember: true,
       );
-
-      if (mounted) {
-        setState(() {
-          _personalizingProgress = 1.0;
-          _personalizingStatusText = 'Difficulty Calibrated: $diffPct% ($diffLevel) ✓';
-        });
-      }
-
-      await Future.delayed(const Duration(milliseconds: 1100));
 
       if (mounted) {
         setState(() {
@@ -234,8 +238,7 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
       if (mounted) {
         setState(() {
           _isLoading = false;
-          _currentMode = ParentAuthMode.createChild;
-          _errorMessage = 'Failed to personalize experience: $e';
+          _errorMessage = 'Failed to create learner profile: $e';
         });
       }
     }
@@ -438,7 +441,7 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
 
                   const SizedBox(height: 20),
 
-                  // "Continue to Learning →" Button
+                  // "Continue to Assessment →" Button
                   SizedBox(
                     width: double.infinity,
                     height: 48,
@@ -446,20 +449,8 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
                       onPressed: () async {
                         AiVoiceService.instance.stop();
                         Navigator.of(dialogCtx).pop();
-                        final activeParent = await ParentRepository.getActiveParent();
-                        final parentId = activeParent?.id ?? 'default_parent';
-                        final isCompleted = await ParentRepository.isOnboardingCompleted(parentId);
 
-                        if (!isCompleted) {
-                          if (context.mounted) {
-                            Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                builder: (_) => const SegoConceptScreen(initialPage: 1),
-                              ),
-                              (route) => false,
-                            );
-                          }
-                        } else if (widget.onAuthSuccess != null) {
+                        if (widget.onAuthSuccess != null) {
                           widget.onAuthSuccess!();
                         } else {
                           if (context.mounted) {
@@ -482,12 +473,13 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Continue to Learning',
+                            'Start 15-Question Evaluation',
                             style: TextStyle(
                               fontFamily: 'Outfit',
                               fontSize: 15,
                               fontWeight: FontWeight.w800,
                               color: Colors.white,
+                              letterSpacing: 0.3,
                             ),
                           ),
                           SizedBox(width: 8),
@@ -525,9 +517,20 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
         setState(() => _isLoading = true);
         String? parentId = _createdParent?.id ?? (await ParentRepository.getActiveParent())?.id;
         if (parentId == null) {
+          final rawName = _nameController.text.trim();
+          final rawEmail = _emailController.text.trim().replaceAll(' ', '');
+          String derivedName = rawName;
+          if (derivedName.isEmpty || derivedName == 'Parent User') {
+            if (rawEmail.contains('@')) {
+              final prefix = rawEmail.split('@').first.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
+              derivedName = prefix.isNotEmpty ? (prefix[0].toUpperCase() + prefix.substring(1)) : 'Explorer';
+            } else {
+              derivedName = 'Explorer';
+            }
+          }
           final parent = await ParentRepository.createParent(
-            name: _nameController.text.trim().isNotEmpty ? _nameController.text.trim() : 'Parent User',
-            email: _emailController.text.trim().isNotEmpty ? _emailController.text.trim() : 'parent@nimo.app',
+            name: derivedName,
+            email: rawEmail.isNotEmpty ? rawEmail : 'parent@nimo.app',
             password: 'pin_secured_account',
           );
           parentId = parent.id;
@@ -542,73 +545,97 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
         }
       }
     } else if (_currentMode == ParentAuthMode.loginPin) {
-      // Verify Parent PIN
-      final hasAccount = await ParentRepository.hasParentAccount();
-      bool isValid = false;
+      final inputEmail = _emailController.text.trim().toLowerCase().replaceAll(' ', '');
+      ParentAccount? targetParent;
 
-      if (hasAccount) {
-        final activeParent = await ParentRepository.getActiveParent();
-        if (activeParent != null) {
-          if (activeParent.pinHash == null || activeParent.pinHash!.isEmpty) {
-            await ParentRepository.setParentPin(activeParent.id, pin);
-            isValid = true;
-          } else {
-            isValid = await ParentRepository.verifyPin(activeParent.id, pin);
-          }
+      // 1. If email is provided, verify against that specific parent account
+      if (inputEmail.isNotEmpty) {
+        targetParent = await ParentRepository.getParentByEmail(inputEmail);
+        if (targetParent == null) {
+          setState(() {
+            _errorMessage = "No account found for $inputEmail.\nPlease tap 'Sign Up' below to create an account.";
+            _pinDigits.clear();
+          });
+          return;
         }
+
+        final isValid = await ParentRepository.verifyPin(targetParent.id, pin);
         if (!isValid) {
+          setState(() {
+            _errorMessage = "Incorrect PIN for $inputEmail. Please try again.";
+            _pinDigits.clear();
+          });
+          return;
+        }
+      } else {
+        // 2. If email wasn't provided, check active parent
+        final activeParent = await ParentRepository.getActiveParent();
+        if (activeParent != null && await ParentRepository.verifyPin(activeParent.id, pin)) {
+          targetParent = activeParent;
+        } else {
           final matchedParent = await ParentRepository.verifyAnyParentPin(pin);
-          isValid = matchedParent != null;
           if (matchedParent != null) {
-            ChildState.instance.setActiveParent(matchedParent);
-          } else if (activeParent != null) {
-            await ParentRepository.setParentPin(activeParent.id, pin);
-            isValid = true;
+            targetParent = matchedParent;
+          } else {
+            setState(() {
+              _errorMessage = "Account doesn't exist or PIN incorrect.";
+              _pinDigits.clear();
+            });
+            return;
           }
         }
       }
 
-      if (!isValid && !hasAccount) {
-        final parent = await ParentRepository.createParent(
-          name: 'Parent User',
-          email: 'parent@nimo.app',
-          password: 'pin_secured_account',
-        );
-        await ParentRepository.setParentPin(parent.id, pin);
-        ChildState.instance.setActiveParent(parent);
-        isValid = true;
-      }
-
-      if (isValid) {
+      if (targetParent != null) {
         ChildState.instance.setRole('PARENT');
+        ChildState.instance.setActiveParent(targetParent);
+        await ParentRepository.rememberParent(targetParent.id);
+
+        final children = await ParentRepository.getChildrenForParent(targetParent.id);
+        if (children.isNotEmpty) {
+          final activeChild = children.first;
+          final realName = activeChild.name.isNotEmpty ? activeChild.name : targetParent.name;
+          final assessment = await OnboardingAssessmentRepository.getLatestAssessment(activeChild.id);
+          final finalPct = assessment?.computedDifficultyPercentage ?? activeChild.difficultyPercentage;
+          final finalLevel = assessment?.computedDifficultyLevel ?? activeChild.difficultyLevel ?? 'Balanced Explorer';
+          final finalReason = assessment?.computedReasoning ?? activeChild.difficultyReasoning ?? 'Pedagogically calibrated by Dr. Nimo.';
+
+          ChildState.instance.setProfile(
+            core.ChildProfile(
+              id: activeChild.id,
+              parentId: activeChild.parentId,
+              name: realName,
+              age: activeChild.age,
+              className: activeChild.className,
+              difficultyPercentage: finalPct,
+              difficultyLevel: finalLevel,
+              difficultyReasoning: finalReason,
+              xp: 350,
+              level: 4,
+              streak: 5,
+            ),
+            remember: true,
+          );
+          debugPrint('✅ [LoginPin] Authenticated parent "${targetParent.email}" -> child "${activeChild.name}" ($finalPct% - $finalLevel)');
+        }
+
         if (mounted) {
           if (widget.onAuthSuccess != null) {
             widget.onAuthSuccess!();
           } else {
-            final activeParent = ChildState.instance.currentParent ?? await ParentRepository.getActiveParent();
-            final isCompleted = activeParent != null && await ParentRepository.isOnboardingCompleted(activeParent.id);
-
-            if (isCompleted) {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (_) => ParentDashboard(
-                    childId: _createdChild?.id ?? ChildState.instance.currentProfile.id,
-                  ),
-                ),
-              );
-            } else {
-              Navigator.of(context).pushReplacement(
-                PageRouteBuilder(
-                  transitionDuration: Duration.zero,
-                  pageBuilder: (_, __, ___) => const SegoConceptScreen(initialPage: 2),
-                ),
-              );
-            }
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (_) => const SegoConceptScreen(initialPage: 3),
+              ),
+              (route) => false,
+            );
           }
         }
       } else {
         setState(() {
-          _errorMessage = "Account doesn't exist or PIN incorrect.";
+          _errorMessage = inputEmail.isNotEmpty
+              ? "Invalid PIN for $inputEmail. Please check PIN or Sign Up."
+              : "Account doesn't exist or PIN incorrect.";
           _pinDigits.clear();
         });
       }
@@ -641,7 +668,7 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
 
       if (!isValid && !hasAccount) {
         final parent = await ParentRepository.createParent(
-          name: 'Parent User',
+          name: 'Explorer',
           email: 'parent@nimo.app',
           password: 'pin_secured_account',
         );
@@ -702,8 +729,30 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
     );
   }
 
+  void _handleBackNavigation() {
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const SegoConceptScreen()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _handleBackNavigation();
+        }
+      },
+      child: _buildAuthContent(context),
+    );
+  }
+
+  Widget _buildAuthContent(BuildContext context) {
     final isPinMode = _currentMode == ParentAuthMode.loginPin ||
         _currentMode == ParentAuthMode.childLogin ||
         _currentMode == ParentAuthMode.createPin ||
@@ -723,49 +772,49 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: _handleBackNavigation,
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _currentMode = ParentAuthMode.signup;
-                          _errorMessage = null;
-                        });
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFC6B6B),
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0x33FC6B6B),
-                              blurRadius: 8,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: const Row(
-                          children: [
-                            Icon(Icons.person_add_alt_1_rounded, color: Colors.white, size: 16),
-                            SizedBox(width: 6),
-                            Text(
-                              'SIGN UP',
-                              style: TextStyle(
-                                fontFamily: 'Outfit',
-                                fontSize: 12,
-                                fontWeight: FontWeight.w800,
-                                color: Colors.white,
-                                letterSpacing: 0.8,
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _currentMode = ParentAuthMode.signup;
+                            _errorMessage = null;
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFC6B6B),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color(0x33FC6B6B),
+                                blurRadius: 8,
+                                offset: Offset(0, 3),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
+                          child: const Row(
+                            children: [
+                              Icon(Icons.person_add_alt_1_rounded, color: Colors.white, size: 16),
+                              SizedBox(width: 6),
+                              Text(
+                                'SIGN UP',
+                                style: TextStyle(
+                                  fontFamily: 'Outfit',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.white,
+                                  letterSpacing: 0.8,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
 
               Expanded(
                 child: Center(
@@ -805,6 +854,48 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
                         _buildDarkPinHeaderTitle(),
 
                         const SizedBox(height: 16),
+
+                        // If in loginPin mode: Gmail / Email Address input field
+                        if (_currentMode == ParentAuthMode.loginPin) ...[
+                          Container(
+                            constraints: const BoxConstraints(maxWidth: 320),
+                            margin: const EdgeInsets.only(bottom: 16),
+                            child: TextField(
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              style: const TextStyle(
+                                fontFamily: 'Outfit',
+                                fontSize: 13.5,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(Icons.mail_outline_rounded, color: Color(0xFFFC6B6B), size: 18),
+                                hintText: 'Enter Gmail (e.g. parent@gmail.com)',
+                                hintStyle: const TextStyle(
+                                  fontFamily: 'Outfit',
+                                  fontSize: 12.5,
+                                  color: Color(0xFF71717A),
+                                ),
+                                filled: true,
+                                fillColor: const Color(0xFF27272A),
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  borderSide: const BorderSide(color: Color(0xFF3F3F46)),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  borderSide: const BorderSide(color: Color(0xFF3F3F46)),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  borderSide: const BorderSide(color: Color(0xFFFC6B6B), width: 1.5),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
 
                         // Error Banner if present
                         if (_errorMessage != null) _buildErrorBanner(),
@@ -921,7 +1012,7 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
             child: SafeArea(
               child: IconButton(
                 icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 22),
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: _handleBackNavigation,
               ),
             ),
           ),
@@ -1504,56 +1595,6 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
             ),
           ),
         ),
-        const SizedBox(height: 14),
-
-        // AI Personalization Info Badge Card
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: const Color(0xFFFFF5F5),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFFFC6B6B).withValues(alpha: 0.35), width: 1.2),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: const BoxDecoration(
-                  color: Color(0xFFFC6B6B),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.auto_awesome, color: Colors.white, size: 16),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Groq LLM Dynamic Calibration',
-                      style: TextStyle(
-                        fontFamily: 'Outfit',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
-                        color: Color(0xFFFC6B6B),
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      'AI calculates personalized difficulty percentage for Age $_childAge in $_selectedStandard',
-                      style: const TextStyle(
-                        fontFamily: 'Outfit',
-                        fontSize: 11,
-                        color: Color(0xFF555555),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
         const SizedBox(height: 16),
 
         // Preferred Language Dropdown
@@ -1602,22 +1643,28 @@ class _ParentAuthScreenState extends State<ParentAuthScreen> {
               shadowColor: const Color(0x66FC6B6B),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
             ),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Personalize & Continue',
-                  style: TextStyle(
-                    fontFamily: 'Outfit',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white,
+            child: _isLoading
+                ? const SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                  )
+                : const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Continue to PIN Setup',
+                        style: TextStyle(
+                          fontFamily: 'Outfit',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 20),
+                    ],
                   ),
-                ),
-                SizedBox(width: 8),
-                Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 20),
-              ],
-            ),
           ),
         ),
       ],

@@ -11,7 +11,9 @@ import '../qa_pipeline/screens/video_player_screen.dart';
 import '../qa_pipeline/screens/level_clear_screen.dart';
 import '../qa_pipeline/models/learning_content.dart';
 import '../core/state/child_state.dart';
+import '../widgets/child_profile_badge.dart';
 import 'interactive_story_screen.dart';
+import 'sego_concept_screen.dart';
 
 /// 80s Showa Retro Worn Explorer Postcard Carousel Screen
 /// Features:
@@ -415,78 +417,102 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
 
     final activeStory = _collection.stories[_selectedStoryIndex.clamp(0, _collection.stories.length - 1)];
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFC5AE79),
-      body: Stack(
-        children: [
-          // 1. GENERATED WEST BENGAL HISTORY MAP BACKGROUND (Isolated in RepaintBoundary, Cache-Optimized)
-          Positioned.fill(
-            child: RepaintBoundary(
-              child: Image.asset(
-                'assets/images/story_selection_wb_bg.png',
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: double.infinity,
-                errorBuilder: (ctx, err, stack) => Image.asset(
-                  'assets/images/nimo_japanese_bg_clean.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
+    void handleBack() {
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const SegoConceptScreen()),
+        );
+      }
+    }
 
-          // 2. Soft 80s Showa Darkened Sepia Vignette Overlay
-          Positioned.fill(
-            child: IgnorePointer(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: RadialGradient(
-                    center: Alignment.center,
-                    radius: 0.95,
-                    colors: [
-                      Colors.transparent,
-                      const Color(0xFF2E1C12).withValues(alpha: 0.25),
-                      const Color(0xFF1E100A).withValues(alpha: 0.55),
-                    ],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          handleBack();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFC5AE79),
+        body: Stack(
+          children: [
+            // 1. GENERATED WEST BENGAL HISTORY MAP BACKGROUND (Isolated in RepaintBoundary, Cache-Optimized)
+            Positioned.fill(
+              child: RepaintBoundary(
+                child: Image.asset(
+                  'assets/images/story_selection_wb_bg.png',
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
+                  errorBuilder: (ctx, err, stack) => Image.asset(
+                    'assets/images/nimo_japanese_bg_clean.png',
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
             ),
-          ),
 
-          // Top-Left Back to Map Button
-          Positioned(
-            top: 14,
-            left: 16,
-            child: InkWell(
-              onTap: () => Navigator.of(context).pop(),
-              borderRadius: BorderRadius.circular(16),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFAF4EE),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFF8B6914), width: 1.2),
-                  boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2))],
-                ),
-                child: Row(
-                  children: const [
-                    Icon(Icons.arrow_back_ios_new_rounded, size: 13, color: Color(0xFF3E2A1E)),
-                    SizedBox(width: 6),
-                    Text(
-                      'Map',
-                      style: TextStyle(
-                        fontFamily: 'Outfit',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
-                        color: Color(0xFF3E2A1E),
-                      ),
+            // 2. Soft 80s Showa Darkened Sepia Vignette Overlay
+            Positioned.fill(
+              child: IgnorePointer(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: RadialGradient(
+                      center: Alignment.center,
+                      radius: 0.95,
+                      colors: [
+                        Colors.transparent,
+                        const Color(0xFF2E1C12).withValues(alpha: 0.25),
+                        const Color(0xFF1E100A).withValues(alpha: 0.55),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
+
+            // Top-Left Back to Map Button & Child Profile Badge
+            Positioned(
+              top: 14,
+              left: 16,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  InkWell(
+                    onTap: handleBack,
+                    borderRadius: BorderRadius.circular(16),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFAF4EE),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFF8B6914), width: 1.2),
+                        boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2))],
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.arrow_back_ios_new_rounded, size: 13, color: Color(0xFF3E2A1E)),
+                          SizedBox(width: 6),
+                          Text(
+                            'Map',
+                            style: TextStyle(
+                              fontFamily: 'Outfit',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFF3E2A1E),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  const ChildProfileBadge(compact: true),
+                ],
+              ),
+            ),
 
           // Top-Right Dev Rewards Button
           Positioned(
@@ -669,7 +695,7 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
           ),
         ],
       ),
-    );
+    ));
   }
 
   // 80s Showa Folded Paper Ribbon Header Banner ("WHERE ARE U GOING?")

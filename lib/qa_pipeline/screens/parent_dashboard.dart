@@ -20,6 +20,7 @@ import '../database/session_evaluation_repository.dart';
 
 import '../../core/state/child_state.dart';
 import '../../screens/parent_auth_screen.dart';
+import '../../screens/sego_concept_screen.dart';
 
 /// Ultra-Premium Executive Parent Dashboard for NIMO / TIKO.
 ///
@@ -322,6 +323,10 @@ class _ParentDashboardState extends State<ParentDashboard> {
                     onTap: () {
                       if (Navigator.of(context).canPop()) {
                         Navigator.of(context).pop();
+                      } else {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (_) => const SegoConceptScreen()),
+                        );
                       }
                     },
                     child: Container(

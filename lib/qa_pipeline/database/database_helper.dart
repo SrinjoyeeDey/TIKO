@@ -13,7 +13,7 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._();
 
   static const String _dbName = 'qs_ans_learning_v2.db';
-  static const int _dbVersion = 6;
+  static const int _dbVersion = 7;
 
   Database? _database;
 
@@ -28,12 +28,24 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     try {
-      // Use FFI for Windows/Linux/macOS desktop support.
       if (kIsWeb) {
-        databaseFactory = databaseFactoryFfiWeb;
-      } else if (defaultTargetPlatform == TargetPlatform.windows || 
-           defaultTargetPlatform == TargetPlatform.linux || 
-           defaultTargetPlatform == TargetPlatform.macOS) {
+        initPlatformDatabaseFactory();
+        final db = await databaseFactory.openDatabase(
+          _dbName,
+          options: OpenDatabaseOptions(
+            version: _dbVersion,
+            onCreate: _onCreate,
+            onUpgrade: _onUpgrade,
+          ),
+        );
+        await _ensureTablesExist(db);
+        debugPrint('✅ [DatabaseHelper] Persistent Web SQLite (IndexedDB) loaded: $_dbName');
+        return db;
+      }
+
+      if (defaultTargetPlatform == TargetPlatform.windows || 
+          defaultTargetPlatform == TargetPlatform.linux || 
+          defaultTargetPlatform == TargetPlatform.macOS) {
         ffi.sqfliteFfiInit();
         databaseFactory = ffi.databaseFactoryFfi;
       }
@@ -48,12 +60,12 @@ class DatabaseHelper {
         onUpgrade: _onUpgrade,
       );
 
-      // Ensure evaluations table exists even if database was created earlier
+      // Ensure evaluations and onboarding tables exist even if database was created earlier
       await _ensureTablesExist(db);
-
+      debugPrint('✅ [DatabaseHelper] Persistent Native SQLite loaded: $path');
       return db;
-    } catch (e) {
-      debugPrint('DatabaseHelper: Primary database initialization failed ($e). Falling back to in-memory database.');
+    } catch (e, st) {
+      debugPrint('DatabaseHelper: Primary database initialization failed ($e).\n$st\nFalling back to in-memory database.');
       final db = await openDatabase(
         inMemoryDatabasePath,
         version: _dbVersion,
@@ -84,6 +96,22 @@ class DatabaseHelper {
         difficulty_level TEXT,
         difficulty_reasoning TEXT,
         recommendations TEXT,
+        created_at TEXT NOT NULL,
+        FOREIGN KEY (child_id) REFERENCES child_profiles(id)
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS child_onboarding_assessments (
+        id TEXT PRIMARY KEY,
+        child_id TEXT NOT NULL,
+        parent_id TEXT,
+        answers_json TEXT NOT NULL,
+        developmental_diagnoses TEXT,
+        speech_level_self_rating REAL,
+        computed_difficulty_percentage INTEGER,
+        computed_difficulty_level TEXT,
+        computed_reasoning TEXT,
         created_at TEXT NOT NULL,
         FOREIGN KEY (child_id) REFERENCES child_profiles(id)
       )
@@ -158,6 +186,9 @@ class DatabaseHelper {
       } catch (_) {}
     }
     if (oldVersion < 6) {
+      await _ensureTablesExist(db);
+    }
+    if (oldVersion < 7) {
       await _ensureTablesExist(db);
     }
   }

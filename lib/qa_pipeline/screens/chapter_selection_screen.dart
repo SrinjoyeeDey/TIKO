@@ -6,6 +6,7 @@ import '../../widgets/child_profile_badge.dart';
 import '../models/learning_content.dart';
 import '../services/content_discovery_service.dart';
 import 'video_player_screen.dart';
+import '../../screens/sego_concept_screen.dart';
 
 class ChapterSelectionScreen extends StatefulWidget {
   final String childId;
@@ -36,54 +37,72 @@ class _ChapterSelectionScreenState extends State<ChapterSelectionScreen> {
     }
   }
 
+  void _handleBack() {
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const SegoConceptScreen()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFC5AE79), // Vintage Parchment
-      body: Stack(
-        children: [
-          // Background Map / Texture
-          Positioned.fill(
-            child: Opacity(
-              opacity: 0.15,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          _handleBack();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFC5AE79), // Vintage Parchment
+        body: Stack(
+          children: [
+            // Background Image
+            Positioned.fill(
               child: Image.asset(
-                'assets/maps/historical_world_map_parchment.png',
+                'assets/images/story_selection_wb_bg.png',
                 fit: BoxFit.cover,
-                errorBuilder: (ctx, err, stack) => const SizedBox(),
+                errorBuilder: (ctx, err, stack) => Image.asset(
+                  'assets/maps/historical_world_map_parchment.png',
+                  fit: BoxFit.cover,
+                  errorBuilder: (ctx, err, stack) => const SizedBox(),
+                ),
               ),
             ),
-          ),
-          
-          SafeArea(
-            child: Column(
-              children: [
-                // Custom Top Bar
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  child: Row(
-                    children: [
-                      WoodenBackButton(
-                        onTap: () => Navigator.of(context).pop(),
-                      ),
-                      const SizedBox(width: 10),
-                      ChildProfileBadge(
-                        childId: widget.childId,
-                      ),
-                      const Expanded(
-                        child: Center(
-                          child: GameTexturedText(
-                            text: 'TOPICS',
-                            fontSize: 28,
+            
+            SafeArea(
+              child: Column(
+                children: [
+                  // Custom Top Bar
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    child: Row(
+                      children: [
+                        WoodenBackButton(
+                          onTap: _handleBack,
+                        ),
+                        const SizedBox(width: 10),
+                        ChildProfileBadge(
+                          childId: widget.childId,
+                        ),
+                        const Expanded(
+                          child: Center(
+                            child: GameTexturedText(
+                              text: 'TOPICS',
+                              fontSize: 28,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                
-                // Content List
-                Expanded(
-                  child: _isLoading
+                  
+                  // Content List
+                  Expanded(
+                    child: _isLoading
                       ? const Center(
                           child: CircularProgressIndicator(color: Color(0xFF8B6914)),
                         )

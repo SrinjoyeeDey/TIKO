@@ -13,6 +13,7 @@ import '../../features/activities/remember_nimo/screens/remember_nimo_screen.dar
 import '../../features/activities/echo_nimo/screens/echo_nimo_screen.dart';
 import '../../features/activities/find_nimo/screens/find_nimo_screen.dart';
 import '../../features/activities/category_sort/screens/category_sort_screen.dart';
+import '../../screens/sego_concept_screen.dart';
 
 class LevelSelectionScreen extends StatefulWidget {
   final String childId;
@@ -188,14 +189,31 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
     });
   }
 
+  void _handleBack() {
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const SegoConceptScreen()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFC5AE79), // Vintage paper color
-      body: _isLoading 
-        ? const Center(child: CircularProgressIndicator(color: Color(0xFF8B6914)))
-        : LayoutBuilder(
-          builder: (context, constraints) {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          _handleBack();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFC5AE79), // Vintage paper color
+        body: _isLoading 
+          ? const Center(child: CircularProgressIndicator(color: Color(0xFF8B6914)))
+          : LayoutBuilder(
+            builder: (context, constraints) {
             final count = widget.chapter.levels.length;
             final verticalSpacing = 140.0;
             final mapHeight = (count * verticalSpacing) + 200.0;
@@ -305,7 +323,7 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
                     child: Row(
                       children: [
                         WoodenBackButton(
-                          onTap: () => Navigator.of(context).pop(),
+                          onTap: _handleBack,
                         ),
                         const SizedBox(width: 10),
                         ChildProfileBadge(

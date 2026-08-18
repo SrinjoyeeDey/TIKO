@@ -14,6 +14,7 @@ import '../api/adaptive_api.dart';
 import '../api/recommendation_api.dart';
 import '../services/event_service.dart';
 import '../services/sync_service.dart';
+import '../services/parent_repository.dart';
 import '../../qa_pipeline/database/child_repository.dart';
 
 /// Central reactive state store for active Parent Account, Child Profile, Session, Role, & Telemetry.
@@ -26,15 +27,7 @@ class ChildState {
   final ValueNotifier<ParentAccount?> activeParentNotifier = ValueNotifier<ParentAccount?>(null);
 
   /// Reactive active ChildProfile
-  final ValueNotifier<ChildProfile?> activeProfileNotifier = ValueNotifier<ChildProfile?>(
-    const ChildProfile(
-      id: 'child_default',
-      name: 'Aarav',
-      xp: 350,
-      level: 4,
-      streak: 5,
-    ),
-  );
+  final ValueNotifier<ChildProfile?> activeProfileNotifier = ValueNotifier<ChildProfile?>(null);
 
   /// Reactive active Session
   final ValueNotifier<SessionModel?> activeSessionNotifier = ValueNotifier<SessionModel?>(null);
@@ -61,21 +54,54 @@ class ChildState {
   String get currentRole => activeRoleNotifier.value;
 
   /// Get current active profile synchronously
-  ChildProfile get currentProfile =>
-      activeProfileNotifier.value ??
-      const ChildProfile(
-        id: 'child_default',
-        name: 'Aarav',
-        xp: 350,
-        level: 4,
-        streak: 5,
-      );
+  ChildProfile get currentProfile {
+    if (activeProfileNotifier.value != null) {
+      return activeProfileNotifier.value!;
+    }
+    final parent = currentParent;
+    final parentName = (parent != null && parent.name.isNotEmpty) ? parent.name : 'Learner';
+    return ChildProfile(
+      id: parent != null ? 'child_${parent.id}' : 'child_default',
+      parentId: parent?.id,
+      name: parentName,
+      age: 6,
+      className: 'Grade 1',
+      difficultyPercentage: 50,
+      difficultyLevel: 'Balanced Explorer',
+      difficultyReasoning: 'Pedagogically calibrated by Dr. Nimo.',
+      xp: 350,
+      level: 4,
+      streak: 5,
+    );
+  }
 
   /// Get current session ID
   String? get currentSessionId => activeSessionNotifier.value?.sessionId;
 
-  /// Load child profile from backend by Child ID and store in app state
+  /// Load child profile from local SQLite database or backend API and store in app state
   Future<ChildProfile> loadProfile(String childId) async {
+    try {
+      final dbChild = await ChildRepository.getChildById(childId);
+      if (dbChild != null) {
+        final profile = ChildProfile(
+          id: dbChild.id,
+          parentId: dbChild.parentId,
+          name: dbChild.name,
+          age: dbChild.age,
+          className: dbChild.className,
+          difficultyPercentage: dbChild.difficultyPercentage,
+          difficultyLevel: dbChild.difficultyLevel,
+          difficultyReasoning: dbChild.difficultyReasoning,
+          xp: 350,
+          level: 4,
+          streak: 5,
+        );
+        activeProfileNotifier.value = profile;
+        await loadProgress(childId);
+        return profile;
+      }
+    } catch (_) {}
+
     final profile = await ChildApi.getChildProfile(childId);
     activeProfileNotifier.value = profile;
     await loadProgress(childId);
@@ -128,12 +154,39 @@ class ChildState {
     }
   }
 
-  /// Restore remembered profile from SQLite on app startup
+  /// Restore remembered profile and parent from SQLite on app startup or page refresh
   Future<void> initRememberedProfile() async {
     try {
+      final activeParent = await ParentRepository.getActiveParent();
+      if (activeParent != null) {
+        setActiveParent(activeParent);
+        final children = await ParentRepository.getChildrenForParent(activeParent.id);
+        if (children.isNotEmpty) {
+          final c = children.first;
+          final realName = c.name.isNotEmpty ? c.name : activeParent.name;
+          final restored = ChildProfile(
+            id: c.id,
+            parentId: c.parentId,
+            name: realName,
+            age: c.age,
+            className: c.className,
+            difficultyPercentage: c.difficultyPercentage,
+            difficultyLevel: c.difficultyLevel,
+            difficultyReasoning: c.difficultyReasoning,
+            xp: 350,
+            level: 4,
+            streak: 5,
+          );
+          activeProfileNotifier.value = restored;
+          debugPrint('✅ [ChildState] Restored parent "${activeParent.email}" & learner "${restored.name}" (Difficulty: ${restored.difficultyPercentage}% - ${restored.difficultyLevel}) from SQLite');
+          loadProgress(c.id);
+          return;
+        }
+      }
+
       final remembered = await ChildRepository.getActiveChild();
       if (remembered != null) {
-        activeProfileNotifier.value = ChildProfile(
+        final restored = ChildProfile(
           id: remembered.id,
           parentId: remembered.parentId,
           name: remembered.name,
@@ -146,6 +199,8 @@ class ChildState {
           level: 4,
           streak: 5,
         );
+        activeProfileNotifier.value = restored;
+        debugPrint('✅ [ChildState] Restored remembered learner "${restored.name}" from SQLite');
         loadProgress(remembered.id);
       }
     } catch (e) {
