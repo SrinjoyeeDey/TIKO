@@ -3797,17 +3797,21 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                                       ),
                                     ),
                                   ),
-                                  Text(
-                                    (isCompleted || isActive)
-                                        ? title.toUpperCase()
-                                        : '???',
-                                    textAlign: TextAlign.center,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.outfit(
-                                      fontSize: 7.0,
-                                      fontWeight: FontWeight.w800,
-                                      color: titleTextColor,
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        (isCompleted || isActive)
+                                            ? title.toUpperCase()
+                                            : '???',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.outfit(
+                                          fontSize: 7.5,
+                                          fontWeight: FontWeight.w800,
+                                          color: titleTextColor,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -4287,16 +4291,20 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                   color: Colors.black.withValues(alpha: 0.65),
                   borderRadius: BorderRadius.circular(4),
                 ),
-                child: Text(
-                  'BHARATNATYAM',
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.outfit(
-                    fontSize: 7.5,
-                    fontWeight: FontWeight.w900,
-                    color: const Color(0xFFFFD166),
-                    letterSpacing: 0.3,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      'BHARATNATYAM',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.outfit(
+                        fontSize: 7.0,
+                        fontWeight: FontWeight.w900,
+                        color: const Color(0xFFFFD166),
+                        letterSpacing: 0.3,
+                      ),
+                    ),
                   ),
                 ),
               ),
