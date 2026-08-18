@@ -11,6 +11,21 @@
     "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
     "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
     "sequence_test": "Chronological milestone ordering and sequence analysis.",
+{
+  "title": "Introduction to Bharatanatyam and its Syllables",
+  "section": {
+    "start": "00:00",
+    "end": "02:00",
+    "description": "Comprehensive 45-question pedagogical assessment for ages 3 to 15 spanning Easy, Moderate, and Hard difficulty levels."
+  },
+  "target_age": 12,
+  "age_range": "3-15 years",
+  "question_pattern": {
+    "main_questions": "45 progressive questions consisting of multi-tier MCQs, conceptual descriptive questions, and voice pronunciation speech questions.",
+    "difficulty_distribution": "15 Easy (Ages 3-7), 15 Moderate (Ages 8-11), 15 Hard (Ages 12-15)",
+    "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
+    "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
+    "sequence_test": "Conceptual milestone ordering and artistic sequence analysis.",
     "image_matching": "Interactive visual matching connecting dance elements, terms, and descriptions."
   },
   "questions": [
@@ -29,6 +44,19 @@
       "difficulty": "easy",
       "difficulty_percentage": 20,
       "difficulty_level": "Gentle Starter"
+      "question": "What is Bharatanatyam?",
+      "options": {
+        "A": "A traditional Indian classical dance",
+        "B": "A board game",
+        "C": "A musical instrument",
+        "D": "A sports game"
+      },
+      "answer": "A",
+      "answer_text": "Bharatanatyam is one of the most famous and ancient Indian classical dance forms.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 2,
@@ -45,6 +73,19 @@
       "difficulty": "easy",
       "difficulty_percentage": 25,
       "difficulty_level": "Gentle Starter"
+      "question": "From which Indian state did Bharatanatyam originate?",
+      "options": {
+        "A": "Tamil Nadu",
+        "B": "Punjab",
+        "C": "Gujarat",
+        "D": "Goa"
+      },
+      "answer": "A",
+      "answer_text": "Bharatanatyam originated from the state of Tamil Nadu in southern India.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 3,
@@ -61,6 +102,19 @@
       "difficulty": "easy",
       "difficulty_percentage": 25,
       "difficulty_level": "Gentle Starter"
+      "question": "How many syllables are there in the word 'Bharatanatyam'?",
+      "options": {
+        "A": "Four (Bha - Ra - Ta - Natyam)",
+        "B": "Two",
+        "C": "Six",
+        "D": "Ten"
+      },
+      "answer": "A",
+      "answer_text": "The word Bharatanatyam has four syllables: Bha, Ra, Ta, and Natyam.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 4,
@@ -77,6 +131,19 @@
       "difficulty": "easy",
       "difficulty_percentage": 25,
       "difficulty_level": "Gentle Starter"
+      "question": "What does the first syllable 'Bha' or 'Bhava' mean?",
+      "options": {
+        "A": "Expression (Emotions)",
+        "B": "Music",
+        "C": "Beats",
+        "D": "Costume"
+      },
+      "answer": "A",
+      "answer_text": "'Bha' stands for 'Bhava', which means facial expression and emotions.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 5,
@@ -93,6 +160,19 @@
       "difficulty": "easy",
       "difficulty_percentage": 30,
       "difficulty_level": "Gentle Starter"
+      "question": "What does the second syllable 'Ra' or 'Raga' mean?",
+      "options": {
+        "A": "Music (Melody)",
+        "B": "Dance",
+        "C": "Beats",
+        "D": "Story"
+      },
+      "answer": "A",
+      "answer_text": "'Ra' stands for 'Raga' or 'Ragam', which means music and melody.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 6,
@@ -109,6 +189,19 @@
       "difficulty": "medium",
       "difficulty_percentage": 40,
       "difficulty_level": "Balanced Explorer"
+      "question": "What does the third syllable 'Ta' or 'Thala' mean?",
+      "options": {
+        "A": "Beats (Rhythm)",
+        "B": "Singing",
+        "C": "Painting",
+        "D": "Costume"
+      },
+      "answer": "A",
+      "answer_text": "'Ta' stands for 'Thala' or 'Thalam', which means beats and rhythm.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 7,
@@ -125,6 +218,19 @@
       "difficulty": "medium",
       "difficulty_percentage": 45,
       "difficulty_level": "Balanced Explorer"
+      "question": "What does 'Natya' or 'Natyam' mean?",
+      "options": {
+        "A": "Dance",
+        "B": "Food",
+        "C": "Sleep",
+        "D": "Game"
+      },
+      "answer": "A",
+      "answer_text": "'Natya' or 'Natyam' means dance and dramatic performance.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 8,
@@ -141,6 +247,19 @@
       "difficulty": "medium",
       "difficulty_percentage": 50,
       "difficulty_level": "Curious Adventurer"
+      "question": "What is the name of the dance teacher presenting the lesson?",
+      "options": {
+        "A": "Deepa Mani",
+        "B": "Prabhavati Devi",
+        "C": "Rani Lakshmibai",
+        "D": "Sarojini Naidu"
+      },
+      "answer": "A",
+      "answer_text": "The dance teacher is Deepa Mani, a professional classical dancer.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 9,
@@ -157,6 +276,19 @@
       "difficulty": "hard",
       "difficulty_percentage": 65,
       "difficulty_level": "Challenger"
+      "question": "In which ancient Indian language are terms like Bharatanatyam, Bhava, and Natyam rooted?",
+      "options": {
+        "A": "Tamil and Sanskrit",
+        "B": "French",
+        "C": "English",
+        "D": "Spanish"
+      },
+      "answer": "A",
+      "answer_text": "Bharatanatyam is rooted in Tamil, one of the oldest languages in India.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 10,
@@ -173,6 +305,19 @@
       "difficulty": "hard",
       "difficulty_percentage": 85,
       "difficulty_level": "Champion"
+      "question": "When expression, music, beats, and dance come together in Bharatanatyam, what do they create?",
+      "options": {
+        "A": "Complete harmony and beauty",
+        "B": "Noise and confusion",
+        "C": "A science experiment",
+        "D": "A sports match"
+      },
+      "answer": "A",
+      "answer_text": "They come together to create complete harmony and artistic beauty.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 11,
@@ -189,6 +334,21 @@
       "difficulty": "easy",
       "difficulty_percentage": 30,
       "difficulty_level": "Gentle Starter"
+      "question": "What does the word Bharatanatyam mean and what are its four parts?",
+      "reference_answer": "Bharatanatyam is an Indian classical dance with four parts: Bha for Bhava (expression), Ra for Raga (music), Ta for Thala (beats), and Natyam (dance).",
+      "key_concepts": [
+        "Bharatanatyam",
+        "classical dance",
+        "Bhava expression",
+        "Raga music",
+        "Thala beats",
+        "Natyam dance"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 12,
@@ -383,6 +543,616 @@
         "answer": "C",
         "answer_text": "The correct order is Bha (expression) -> Ra (music) -> Ta (beats) -> Natyam (dance).",
         "difficulty": "medium",
+      "question": "Where did Bharatanatyam originate in India?",
+      "reference_answer": "Bharatanatyam originated from the state of Tamil Nadu in southern India.",
+      "key_concepts": [
+        "originated",
+        "Tamil Nadu",
+        "India",
+        "classical dance"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 13,
+      "type": "speech",
+      "question": "Say the name of this classical dance form into the microphone:",
+      "target_phrase": "Bharatanatyam",
+      "reference_answer": "Bharatanatyam",
+      "key_concepts": [
+        "Bharatanatyam"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 14,
+      "type": "speech",
+      "question": "Say the word for emotional expression in dance:",
+      "target_phrase": "Bhava Expression",
+      "reference_answer": "Bhava Expression",
+      "key_concepts": [
+        "Bhava",
+        "Expression"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 15,
+      "type": "speech",
+      "question": "Say the Indian state where Bharatanatyam was born:",
+      "target_phrase": "Tamil Nadu",
+      "reference_answer": "Tamil Nadu",
+      "key_concepts": [
+        "Tamil",
+        "Nadu"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "question": "What everyday example did Deepa Mani use to explain 'Bhava' (expression)?",
+      "options": {
+        "A": "Having an ice cream snatched away from you and your facial reaction",
+        "B": "Winning a running race",
+        "C": "Riding a bicycle in the park",
+        "D": "Catching a falling ball"
+      },
+      "answer": "A",
+      "answer_text": "She explained expression by asking you to imagine your emotional reaction if someone snatched your ice cream.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 45,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "question": "What role does 'Ragam' (music/melody) play in a Bharatanatyam performance?",
+      "options": {
+        "A": "It sets the melodic framework and emotional mood for the dancer's storytelling",
+        "B": "It is only played before the dancers enter the stage",
+        "C": "It is used to tell dancers when the performance is finished",
+        "D": "It has no connection to the movements"
+      },
+      "answer": "A",
+      "answer_text": "Ragam provides the melodic foundation and emotional mood that guides the dance choreography.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "question": "What is 'Thalam' in classical Indian music and dance?",
+      "options": {
+        "A": "The rhythmic time cycle and beats that structure the footwork and tempo",
+        "B": "The color of the dancer's costume",
+        "C": "The stage lighting system",
+        "D": "The makeup applied to the eyes"
+      },
+      "answer": "A",
+      "answer_text": "Thalam refers to the structured rhythmic cycles and beats measured during dance.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "question": "Why is Tamil significant in the context of Bharatanatyam's heritage?",
+      "options": {
+        "A": "It is one of the oldest classical languages in the Indian subcontinent, in which many foundational terms and lyrics are composed",
+        "B": "It is a newly created modern dialect",
+        "C": "It is only spoken in European universities",
+        "D": "It is a language used exclusively for mathematics"
+      },
+      "answer": "A",
+      "answer_text": "Tamil is one of the world's oldest classical languages and preserves the rich heritage of Bharatanatyam.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "question": "How does a dancer communicate emotions (Bhava) to the audience without speaking words?",
+      "options": {
+        "A": "Through facial expressions, eye movements, head gestures, and body language",
+        "B": "By holding up written cue cards",
+        "C": "By using a loudspeaker",
+        "D": "By pointing to a projector screen"
+      },
+      "answer": "A",
+      "answer_text": "Bharatanatyam dancers convey complex emotions through expressive eyes (Drishti), face, and body posture.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "question": "What is meant by the phrase 'creating complete harmony' in Bharatanatyam?",
+      "options": {
+        "A": "The perfect synchronization and balance of expression, melody, rhythm, and body movement",
+        "B": "Playing every instrument at the loudest possible volume",
+        "C": "Having as many dancers as possible on stage",
+        "D": "Dancing without any music or beat"
+      },
+      "answer": "A",
+      "answer_text": "Complete harmony occurs when expression, melody, rhythm, and physical dance unite seamlessly.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "question": "What organization presented the educational series featuring Teaching Artists in the video?",
+      "options": {
+        "A": "The Kennedy Center Education",
+        "B": "The British Museum",
+        "C": "UNESCO Sports Academy",
+        "D": "National Geographic Kids"
+      },
+      "answer": "A",
+      "answer_text": "The video is part of The Kennedy Center Education's Teaching Artists Present collection.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 45,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "question": "Which two classical Indian art components work together to maintain the speed (laya) of the dance?",
+      "options": {
+        "A": "Thalam (beats) and footwork (pada bhedas)",
+        "B": "Costume design and stage curtains",
+        "C": "Stage lighting and background paintings",
+        "D": "Audience clapping and photography"
+      },
+      "answer": "A",
+      "answer_text": "The rhythmic beats (Thalam) and the dancer's precise footwork control the timing and speed.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 24,
+      "type": "descriptive",
+      "question": "Explain how the four syllables of Bharatanatyam represent the core elements of the art form.",
+      "reference_answer": "The four syllables are: Bha for Bhava (emotional expression), Ra for Raga (melodic music), Ta for Thala (rhythmic beats), and Natyam (dance). Together they unite expression, melody, rhythm, and movement into complete harmony.",
+      "key_concepts": [
+        "Bha Bhava expression",
+        "Ra Raga music",
+        "Ta Thala beats",
+        "Natyam dance",
+        "complete harmony",
+        "movement"
+      ],
+      "cosine_similarity_threshold": 0.60,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 25,
+      "type": "descriptive",
+      "question": "Describe the example Deepa Mani gives to demonstrate Bhava and explain why expression is essential in dance.",
+      "reference_answer": "Deepa Mani uses the example of having your ice cream snatched away to illustrate how our faces naturally react with shock or sadness. In Bharatanatyam, Bhava is essential because it allows the dancer to communicate feelings and stories to the audience.",
+      "key_concepts": [
+        "ice cream snatched",
+        "facial reaction",
+        "Bhava",
+        "communicate feelings",
+        "storytelling",
+        "audience"
+      ],
+      "cosine_similarity_threshold": 0.60,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 26,
+      "type": "descriptive",
+      "question": "What is the historical and cultural significance of Tamil Nadu in preserving classical dance?",
+      "reference_answer": "Tamil Nadu is the birthplace of Bharatanatyam, where ancient temple traditions and the Tamil classical language preserved its intricate music, rhythm, and expressive heritage over thousands of years.",
+      "key_concepts": [
+        "Tamil Nadu",
+        "birthplace",
+        "temple traditions",
+        "Tamil classical language",
+        "heritage",
+        "thousands of years"
+      ],
+      "cosine_similarity_threshold": 0.60,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 27,
+      "type": "speech",
+      "question": "Pronounce the term for melody and musical mode in Indian classical dance:",
+      "target_phrase": "Raga and Ragam",
+      "reference_answer": "Raga and Ragam",
+      "key_concepts": [
+        "Raga",
+        "Ragam"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 28,
+      "type": "speech",
+      "question": "Pronounce the term for rhythmic beats in Bharatanatyam:",
+      "target_phrase": "Thala and Thalam",
+      "reference_answer": "Thala and Thalam",
+      "key_concepts": [
+        "Thala",
+        "Thalam"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 29,
+      "type": "speech",
+      "question": "Pronounce the term describing the synthesis of all four elements:",
+      "target_phrase": "Complete Artistic Harmony",
+      "reference_answer": "Complete Artistic Harmony",
+      "key_concepts": [
+        "Complete",
+        "Artistic",
+        "Harmony"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 30,
+      "type": "speech",
+      "question": "Pronounce the four syllables of Bharatanatyam together in sequence:",
+      "target_phrase": "Bha Ra Ta Natyam",
+      "reference_answer": "Bha Ra Ta Natyam",
+      "key_concepts": [
+        "Bha",
+        "Ra",
+        "Ta",
+        "Natyam"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "question": "In classical Indian aesthetic theory (Natya Shastra), what is the relationship between Bhava (emotion) and Rasa (aesthetic sentiment)?",
+      "options": {
+        "A": "Bhava is the emotion portrayed by the artist, which evokes Rasa (aesthetic joy and empathy) in the audience",
+        "B": "Rasa is solely about the costume, while Bhava is only about stage lighting",
+        "C": "Bhava and Rasa are opposite concepts that cancel each other out",
+        "D": "Rasa is practiced only in instrumental music without dance"
+      },
+      "answer": "A",
+      "answer_text": "According to the Natya Shastra, the portrayal of Bhava by the dancer awakens the corresponding Rasa in the spectator.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "question": "How does the structure of Bharatanatyam balance 'Nritta' (pure abstract dance) with 'Nritya' (expressive storytelling)?",
+      "options": {
+        "A": "Nritta highlights rhythmic footwork and geometric posture, while Nritya incorporates Bhava and Abhinaya to narrate emotional themes",
+        "B": "Nritta uses only speech, while Nritya uses only musical instruments",
+        "C": "Both terms mean sitting still without moving",
+        "D": "Nritta is performed only at the end of a concert without beats"
+      },
+      "answer": "A",
+      "answer_text": "Bharatanatyam seamlessly weaves Nritta (pure geometric technique and rhythm) with Nritya (expressive miming and storytelling).",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "question": "What is the philosophical and artistic role of 'Thalam' (tala cycles) in Indian classical performing arts?",
+      "options": {
+        "A": "It provides a cyclical, mathematical temporal architecture that anchors complex polyrhythms and improvisational footwork",
+        "B": "It serves as background noise to hide errors",
+        "C": "It is used only to count the number of dancers on stage",
+        "D": "It replaces the melody completely"
+      },
+      "answer": "A",
+      "answer_text": "Thalam provides the rigorous temporal and mathematical framework upon which intricate rhythmic footwork (tattu-mettu) is executed.",
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "question": "How did Bharatanatyam transition from its historic temple origins (Sadir) into a globally acclaimed classical performing art?",
+      "options": {
+        "A": "Through 20th-century revivalist movements that codified its pedagogical repertoire while preserving its sacred aesthetic integrity",
+        "B": "By abandoning all classical music and using electronic synthesizers",
+        "C": "By replacing Indian classical themes entirely with European opera",
+        "D": "By discontinuing all hand gestures and facial expressions"
+      },
+      "answer": "A",
+      "answer_text": "Pioneering revivalists reconstructed and systematized the art form, elevating it to universal prominence as a premier classical discipline.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "question": "Why is the coordination of eyes (Drishti), hands (Hasta), and heart (Bhava) emphasized in classical dance verses?",
+      "options": {
+        "A": "'Where the hands go, the eyes follow; where the eyes go, the mind follows; where the mind goes, expression arises, and where expression is, Rasa is born'",
+        "B": "To ensure the dancer looks only at the judges during a contest",
+        "C": "To keep the dancer from getting dizzy during fast turns",
+        "D": "Because looking away from the audience is forbidden by stage rules"
+      },
+      "answer": "A",
+      "answer_text": "The Abhinaya Darpana famously declares: 'Yato hastastato drishti, yato drishtistato manah, yato manastato bhavo, yato bhavastato rasah'.",
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "question": "In what way does the confluence of Bha, Ra, Ta, and Natyam demonstrate the holistic nature of Indian classical arts?",
+      "options": {
+        "A": "It integrates psychology (emotion), acoustics (music), mathematics (rhythm), and kinesthetics (dance) into a unified aesthetic experience",
+        "B": "It shows that dance can only exist without music and emotion",
+        "C": "It proves that rhythm is the only required element in art",
+        "D": "It isolates body movement completely from musical composition"
+      },
+      "answer": "A",
+      "answer_text": "Bharatanatyam represents a comprehensive synthesis of psychology, melody, mathematics, and bodily expression.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "question": "Which foundational Sanskrit treatise is traditionally regarded as the primary ancient root of Indian classical dance, drama, and dramaturgy?",
+      "options": {
+        "A": "Natya Shastra by Bharata Muni",
+        "B": "Arthashastra by Chanakya",
+        "C": "Charaka Samhita",
+        "D": "Surya Siddhanta"
+      },
+      "answer": "A",
+      "answer_text": "The Natya Shastra, attributed to Bharata Muni, is the seminal ancient encyclopedia on dramaturgy and classical dance.",
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 38,
+      "type": "descriptive",
+      "question": "Critically analyze how Bharatanatyam integrates Bhava, Raga, and Thala to create an elevated aesthetic experience (Rasa) for the audience.",
+      "reference_answer": "Bharatanatyam fuses emotional expression (Bhava), melodic structure (Raga), and rhythmic cycles (Thala) into an integrated whole. The music sets the mood, the rhythm provides precision and kinetic energy, and the dancer's facial and bodily expression translates subtle human emotions into universal aesthetic sentiment (Rasa).",
+      "key_concepts": [
+        "Bhava emotional expression",
+        "Raga melodic structure",
+        "Thala rhythmic cycles",
+        "integrated whole",
+        "kinetic energy",
+        "aesthetic sentiment",
+        "Rasa",
+        "universal experience"
+      ],
+      "cosine_similarity_threshold": 0.70,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 39,
+      "type": "descriptive",
+      "question": "Examine the significance of Tamil classical heritage in the evolution and survival of Bharatanatyam.",
+      "reference_answer": "Tamil Nadu provided a rich cultural and spiritual sanctuary where Bharatanatyam flourished in temples and courts. Ancient Tamil literature, poetry, and Carnatic musical compositions provided the linguistic and artistic foundation that preserved this tradition across centuries.",
+      "key_concepts": [
+        "Tamil classical heritage",
+        "Tamil Nadu",
+        "temples and courts",
+        "Tamil literature",
+        "Carnatic musical compositions",
+        "preserved tradition"
+      ],
+      "cosine_similarity_threshold": 0.70,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 40,
+      "type": "descriptive",
+      "question": "Discuss the famous verse 'Yato Hastastato Drishti' and explain its significance in Indian classical dance pedagogy.",
+      "reference_answer": "The verse from the Abhinaya Darpana explains that wherever the hands move, the eyes must follow; where the eyes go, the mind concentrates; where the mind focuses, emotion (Bhava) arises; and where Bhava is established, true aesthetic delight (Rasa) is experienced by the spectator.",
+      "key_concepts": [
+        "Abhinaya Darpana",
+        "hands move eyes follow",
+        "mind concentrates",
+        "emotion Bhava arises",
+        "aesthetic delight Rasa",
+        "pedagogy"
+      ],
+      "cosine_similarity_threshold": 0.70,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 41,
+      "type": "descriptive",
+      "question": "Evaluate how classical performing arts like Bharatanatyam foster emotional intelligence, physical discipline, and cultural appreciation in contemporary youth.",
+      "reference_answer": "Practicing Bharatanatyam cultivates acute bodily coordination, stamina, and posture, while the study of Bhava enhances emotional sensitivity, empathy, and non-verbal communication. It also connects young learners deeply to timeless cultural narratives and mathematical rhythm.",
+      "key_concepts": [
+        "bodily coordination",
+        "emotional sensitivity",
+        "empathy",
+        "non-verbal communication",
+        "cultural narratives",
+        "mathematical rhythm",
+        "discipline"
+      ],
+      "cosine_similarity_threshold": 0.70,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 42,
+      "type": "speech",
+      "question": "Pronounce the ancient Sanskrit treatise on classical performing arts:",
+      "target_phrase": "Natya Shastra of Bharata Muni",
+      "reference_answer": "Natya Shastra of Bharata Muni",
+      "key_concepts": [
+        "Natya",
+        "Shastra",
+        "Bharata",
+        "Muni"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 43,
+      "type": "speech",
+      "question": "Pronounce the foundational Sanskrit aesthetic principle:",
+      "target_phrase": "Bhava Evokes Aesthetic Rasa",
+      "reference_answer": "Bhava Evokes Aesthetic Rasa",
+      "key_concepts": [
+        "Bhava",
+        "Evokes",
+        "Aesthetic",
+        "Rasa"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 44,
+      "type": "speech",
+      "question": "Pronounce the classical Indian system of rhythmic cycles:",
+      "target_phrase": "Carnatic Rhythmic Tala Cycle",
+      "reference_answer": "Carnatic Rhythmic Tala Cycle",
+      "key_concepts": [
+        "Carnatic",
+        "Rhythmic",
+        "Tala",
+        "Cycle"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 45,
+      "type": "speech",
+      "question": "Pronounce this definition of the classical art form:",
+      "target_phrase": "Timeless Classical Heritage of Indian Dance",
+      "reference_answer": "Timeless Classical Heritage of Indian Dance",
+      "key_concepts": [
+        "Timeless",
+        "Classical",
+        "Heritage",
+        "Indian",
+        "Dance"
+      ],
+      "min_score_threshold": 85,
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    }
+  ],
+  "sequence_test": {
+    "title": "Conceptual Sequencing of Bharatanatyam Elements",
+    "description": "These questions test whether the learner understands how the structural syllables and performance layers of Bharatanatyam interconnect.",
+    "questions": [
+      {
+        "id": 46,
+        "type": "sequence_mcq",
+        "question": "Which sequence correctly arranges the four syllables of Bharatanatyam and their meanings?",
+        "options": {
+          "A": "Bha (Expression) -> Ra (Music) -> Ta (Beats) -> Natyam (Dance)",
+          "B": "Natyam (Dance) -> Bha (Expression) -> Ta (Beats) -> Ra (Music)",
+          "C": "Ta (Beats) -> Ra (Music) -> Natyam (Dance) -> Bha (Expression)",
+          "D": "Ra (Music) -> Natyam (Dance) -> Bha (Expression) -> Ta (Beats)"
+        },
+        "answer": "A",
+        "answer_text": "The syllables in Bharatanatyam directly follow the sequence: Bha (Bhava/Expression), Ra (Raga/Music), Ta (Thala/Beats), and Natyam (Dance).",
+        "difficulty": "moderate",
         "difficulty_percentage": 60,
         "difficulty_level": "Curious Adventurer"
       },
@@ -417,6 +1187,20 @@
         "difficulty": "hard",
         "difficulty_percentage": 88,
         "difficulty_level": "Champion"
+        "id": 47,
+        "type": "sequence_mcq",
+        "question": "How do the layers of artistic creation unfold in a complete Bharatanatyam performance?",
+        "options": {
+          "A": "Rhythmic foundation (Thala) -> Melodic progression (Raga) -> Emotional expression (Bhava) -> Complete Dance Synthesis (Natyam)",
+          "B": "Dance Synthesis -> Thala -> Raga -> Bhava",
+          "C": "Bhava -> Natyam -> Thala -> Raga",
+          "D": "Raga -> Natyam -> Bhava -> Thala"
+        },
+        "answer": "A",
+        "answer_text": "The performance builds from foundational rhythm into melody, blossoms into emotional narrative, and unifies in total dance harmony.",
+        "difficulty": "hard",
+        "difficulty_percentage": 75,
+        "difficulty_level": "Challenger"
       }
     ]
   },
@@ -436,6 +1220,45 @@
         { "id": "desc_3", "text": "The rhythmic beats that give the dance its time structure and energy." }
       ],
       "correct_matches": { "img_1": "desc_1", "img_2": "desc_2", "img_3": "desc_3" },
+      "id": 48,
+      "type": "image_matching",
+      "question": "Match each fundamental element of Bharatanatyam with its correct meaning:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/bhava.jpg",
+          "label": "Bhava"
+        },
+        {
+          "id": "img_2",
+          "file": "images/ragam.jpg",
+          "label": "Ragam"
+        },
+        {
+          "id": "img_3",
+          "file": "images/thalam.jpg",
+          "label": "Thalam"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "The emotional expression shown through the face, eyes, and body of the dancer."
+        },
+        {
+          "id": "desc_2",
+          "text": "The melodic music that forms the melodic foundation of the classical dance."
+        },
+        {
+          "id": "desc_3",
+          "text": "The rhythmic beats and time cycles that give the dance its precision and energy."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
       "points": 3,
       "difficulty": "easy",
       "difficulty_percentage": 30,
@@ -458,12 +1281,56 @@
       "correct_matches": { "img_1": "desc_1", "img_2": "desc_2", "img_3": "desc_3" },
       "points": 3,
       "difficulty": "medium",
+      "id": 49,
+      "type": "image_matching",
+      "question": "Match each Bharatanatyam concept to its deeper artistic significance:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/bharatanatyam_dancer.jpg",
+          "label": "Classical Dancer"
+        },
+        {
+          "id": "img_2",
+          "file": "images/tamil_nadu.jpg",
+          "label": "Tamil Nadu"
+        },
+        {
+          "id": "img_3",
+          "file": "images/natyam.jpg",
+          "label": "Natyam"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "Represents the living tradition of unifying expression, music, beats, and dance into one harmonious art."
+        },
+        {
+          "id": "desc_2",
+          "text": "The southern Indian state that gave birth to one of the world's oldest classical dance traditions."
+        },
+        {
+          "id": "desc_3",
+          "text": "The Sanskrit word for dance and drama that forms the final completing syllable of Bharatanatyam."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "moderate",
       "difficulty_percentage": 60,
       "difficulty_level": "Curious Adventurer"
     }
   ],
   "scoring": {
     "mcq": { "points_per_correct_answer": 1 },
+    "mcq": {
+      "points_per_correct_answer": 1
+    },
     "descriptive": {
       "method": "cosine_similarity",
       "description": "Calculate embedding cosine similarity against reference concepts.",
@@ -477,5 +1344,16 @@
     "speech": { "points_per_correct_answer": 1, "min_pass_score": 60 },
     "sequence_test": { "points_per_correct_answer": 1 },
     "image_matching": { "points_per_correct_match": 1, "total_points": 3 }
+    "speech": {
+      "points_per_correct_answer": 1,
+      "min_pass_score": 60
+    },
+    "sequence_test": {
+      "points_per_correct_answer": 1
+    },
+    "image_matching": {
+      "points_per_correct_match": 1,
+      "total_points": 3
+    }
   }
 }

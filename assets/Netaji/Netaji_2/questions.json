@@ -1,0 +1,966 @@
+{
+  "title": "Netaji's Presidency, the Stance for Swaraj, and Defiance Against Wartime Declaration",
+  "section": {
+    "start": "01:05",
+    "end": "01:33",
+    "description": "Comprehensive 45-question pedagogical assessment for ages 3 to 15 spanning Easy, Moderate, and Hard difficulty levels."
+  },
+  "target_age": 12,
+  "age_range": "3-15 years",
+  "question_pattern": {
+    "main_questions": "45 progressive questions consisting of multi-tier MCQs, conceptual descriptive questions, and voice pronunciation speech questions.",
+    "difficulty_distribution": "15 Easy (Ages 3-7), 15 Moderate (Ages 8-11), 15 Hard (Ages 12-15)",
+    "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
+    "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
+    "sequence_test": "Chronological milestone ordering and timeline analysis.",
+    "image_matching": "Interactive visual matching connecting historical figures, artifacts, and descriptions."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "question": "What does the term 'swaraj' mean in the story of Netaji?",
+      "options": {
+        "A": "Self-governance and self-rule",
+        "B": "Foreign colonial rule",
+        "C": "A celebration festival",
+        "D": "A sports trophy"
+      },
+      "answer": "A",
+      "answer_text": "Swaraj means self-governance or self-rule for India.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "question": "With which respected Indian national leader did Subhas have an ideological confrontation over the path to swaraj?",
+      "options": {
+        "A": "Mahatma Gandhi",
+        "B": "Queen Victoria",
+        "C": "Lord Mountbatten",
+        "D": "General Dyer"
+      },
+      "answer": "A",
+      "answer_text": "Subhas Chandra Bose had an ideological confrontation with Mahatma Gandhi.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "question": "Which famous Indian freedom leader experienced a political rift with Subhas Chandra Bose?",
+      "options": {
+        "A": "Jawaharlal Nehru",
+        "B": "Alexander the Great",
+        "C": "Christopher Columbus",
+        "D": "King George"
+      },
+      "answer": "A",
+      "answer_text": "The ideological differences created a rift between Subhas Chandra Bose and Jawaharlal Nehru.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "question": "What major global conflict broke out during this historical period?",
+      "options": {
+        "A": "World War II",
+        "B": "The American Civil War",
+        "C": "The Cold War",
+        "D": "The French Revolution"
+      },
+      "answer": "A",
+      "answer_text": "World War II broke out during this period of history.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "question": "Who was the British Viceroy who declared war on behalf of India?",
+      "options": {
+        "A": "Lord Linlithgow",
+        "B": "Lord Macaulay",
+        "C": "Lord Byron",
+        "D": "Lord Cornwallis"
+      },
+      "answer": "A",
+      "answer_text": "Viceroy Lord Linlithgow declared war without consulting Indian representatives.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "question": "What campaign did Subhas Chandra Bose advocate to protest against the British war declaration?",
+      "options": {
+        "A": "Mass Civil Disobedience",
+        "B": "Paying higher British taxes",
+        "C": "Joining the British navy",
+        "D": "Stopping all protests"
+      },
+      "answer": "A",
+      "answer_text": "Bose advocated a campaign of mass Civil Disobedience to protest the Viceroy's war declaration.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "question": "What high presidential office did Subhas Chandra Bose hold when standing for swaraj?",
+      "options": {
+        "A": "Congress President",
+        "B": "Governor General",
+        "C": "School Principal",
+        "D": "Club Secretary"
+      },
+      "answer": "A",
+      "answer_text": "Subhas Chandra Bose served as Congress President.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "question": "Did Netaji want India to govern its own people through self-governance?",
+      "options": {
+        "A": "Yes, he firmly stood for swaraj (self-governance)",
+        "B": "No, he wanted India to stay ruled by Britain forever",
+        "C": "He did not care about freedom",
+        "D": "He wanted another foreign country to rule India"
+      },
+      "answer": "A",
+      "answer_text": "Netaji firmly stood for swaraj, meaning complete self-governance for India.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "question": "Did Viceroy Lord Linlithgow ask the Indian people before declaring war in World War II?",
+      "options": {
+        "A": "No, he made the decision unilaterally without Indian consent",
+        "B": "Yes, he took a national vote",
+        "C": "Yes, he consulted all Indian students",
+        "D": "He held an election"
+      },
+      "answer": "A",
+      "answer_text": "Viceroy Lord Linlithgow unilaterally declared war without consulting Indian leaders or people.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "question": "How did Netaji want citizens to respond to the British Viceroy's war decision?",
+      "options": {
+        "A": "By launching a mass protest and civil disobedience movement",
+        "B": "By remaining silent at home",
+        "C": "By celebrating the British decision",
+        "D": "By accepting British orders without question"
+      },
+      "answer": "A",
+      "answer_text": "Netaji called on Indians to stand up against British injustice through mass civil disobedience.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 11,
+      "type": "descriptive",
+      "question": "What does 'swaraj' mean and what did Subhas Chandra Bose stand for?",
+      "reference_answer": "Swaraj means self-governance, and Subhas Chandra Bose firmly stood for India achieving complete self-rule.",
+      "key_concepts": [
+        "swaraj",
+        "self-governance",
+        "Subhas Chandra Bose",
+        "complete self-rule"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 12,
+      "type": "descriptive",
+      "question": "Why did Netaji advocate mass civil disobedience when World War II broke out?",
+      "reference_answer": "Netaji advocated mass civil disobedience to protest against British Viceroy Lord Linlithgow's unilateral decision to declare war on India's behalf.",
+      "key_concepts": [
+        "mass civil disobedience",
+        "World War II",
+        "Viceroy Lord Linlithgow",
+        "declare war",
+        "protest"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 13,
+      "type": "speech",
+      "question": "Say the patriotic word that means self-governance:",
+      "target_phrase": "Swaraj Self Governance",
+      "reference_answer": "Swaraj Self Governance",
+      "key_concepts": [
+        "Swaraj",
+        "Self",
+        "Governance"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 14,
+      "type": "speech",
+      "question": "Say the mass protest campaign advocated by Netaji:",
+      "target_phrase": "Mass Civil Disobedience",
+      "reference_answer": "Mass Civil Disobedience",
+      "key_concepts": [
+        "Mass",
+        "Civil",
+        "Disobedience"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 15,
+      "type": "speech",
+      "question": "Say the name of the British Viceroy who declared war:",
+      "target_phrase": "Viceroy Lord Linlithgow",
+      "reference_answer": "Viceroy Lord Linlithgow",
+      "key_concepts": [
+        "Viceroy",
+        "Lord",
+        "Linlithgow"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "question": "Why did Netaji's uncompromising stance for swaraj lead to a confrontation with Mahatma Gandhi?",
+      "options": {
+        "A": "Because Bose favored immediate ultimatums and aggressive mass action, while Gandhi favored gradualist non-violent negotiation",
+        "B": "Because they were arguing about a personal property dispute",
+        "C": "Because Gandhi wanted to leave India and live in London",
+        "D": "Because Bose refused to wear traditional Indian clothes"
+      },
+      "answer": "A",
+      "answer_text": "Bose's radical and immediate approach to self-governance clashed with Gandhi's gradualist and negotiated strategy.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "question": "How did the ideological dispute within Congress affect the relationship between Subhas Chandra Bose and Jawaharlal Nehru?",
+      "options": {
+        "A": "It created a political and tactical rift between Bose and Nehru regarding Congress policies",
+        "B": "They stopped speaking English and only wrote in Latin",
+        "C": "They joined opposite sports teams",
+        "D": "Nehru became a British army officer"
+      },
+      "answer": "A",
+      "answer_text": "The strategic disagreements over Congress direction created a significant political rift between Bose and Nehru.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "question": "Why was Viceroy Lord Linlithgow's declaration of war deeply resented by Indian leaders and citizens in 1939?",
+      "options": {
+        "A": "Because Britain committed India's soldiers and resources to World War II without consulting Indian leaders or legislatures",
+        "B": "Because he increased the price of tea in London",
+        "C": "Because the war prevented sports tournaments from happening",
+        "D": "Because he canceled all Indian train services"
+      },
+      "answer": "A",
+      "answer_text": "Lord Linlithgow dragged India into World War II without the consent of Indian representatives, disregarding India's right to self-determination.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "question": "What is the primary method and purpose of a 'mass Civil Disobedience' campaign?",
+      "options": {
+        "A": "Citizens collectively refusing to comply with unjust colonial laws and government decrees to demand freedom",
+        "B": "Refusing to attend physical exercise classes in schools",
+        "C": "Boycotting private sports clubs",
+        "D": "Leaving the country to live abroad permanently"
+      },
+      "answer": "A",
+      "answer_text": "Mass civil disobedience is a powerful collective movement where the populace refuses to obey unjust colonial laws to compel the government to grant rights.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "question": "How did Netaji view the outbreak of World War II in relation to India's national freedom struggle?",
+      "options": {
+        "A": "As a crucial historic opportunity to mobilize the masses and press Britain for immediate complete swaraj",
+        "B": "As a reason for India to stop seeking independence completely",
+        "C": "As an event that should delay India's freedom by fifty years",
+        "D": "As an opportunity to support British colonial expansion"
+      },
+      "answer": "A",
+      "answer_text": "Netaji saw Britain's wartime involvement as an opportunity for India to launch decisive mass action to attain freedom.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "question": "What official authority was held by Lord Linlithgow in colonial India during the start of World War II?",
+      "options": {
+        "A": "Viceroy and Governor-General of India representing the British Crown",
+        "B": "Elected President of the Indian Congress",
+        "C": "Mayor of Calcutta Municipal Corporation",
+        "D": "Chief Justice of the Supreme Court of India"
+      },
+      "answer": "A",
+      "answer_text": "Lord Linlithgow was the British Viceroy and Governor-General who ruled India on behalf of the British Crown.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "question": "What fundamental principle distinguished Netaji's concept of 'swaraj' from partial self-governance proposals?",
+      "options": {
+        "A": "Netaji demanded complete, uncompromised sovereignty and immediate self-rule without colonial British control",
+        "B": "Netaji only wanted a few advisory posts for Indians in the British Viceroy's council",
+        "C": "Netaji wanted India to remain under British colonial governors",
+        "D": "Netaji opposed any Indian democratic voting rights"
+      },
+      "answer": "A",
+      "answer_text": "Netaji stood for complete and immediate swaraj, rejecting compromises that left sovereign control in British hands.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "question": "How did internal ideological differences manifest within the Indian National Congress regarding wartime action?",
+      "options": {
+        "A": "Between those demanding immediate nationwide agitation (Bose) and those favoring conditional talks or moral neutrality (Gandhi)",
+        "B": "All leaders decided to dissolve the Congress and join the British military",
+        "C": "There were no differences, everyone agreed on everything",
+        "D": "They decided to support Lord Linlithgow's war decree unconditionally"
+      },
+      "answer": "A",
+      "answer_text": "The Congress experienced profound strategic debates between Bose's call for immediate mass confrontation and Gandhi's preference for cautious negotiations.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 24,
+      "type": "descriptive",
+      "question": "Explain why a confrontation arose between Subhas Chandra Bose and Mahatma Gandhi during Bose's presidency.",
+      "reference_answer": "A confrontation arose because Netaji stood for uncompromising swaraj and aggressive mass action against British rule, whereas Mahatma Gandhi advocated a more cautious, negotiated, and gradualist approach.",
+      "key_concepts": [
+        "confrontation",
+        "Subhas Chandra Bose",
+        "Mahatma Gandhi",
+        "uncompromising swaraj",
+        "mass action",
+        "gradualist approach"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 25,
+      "type": "descriptive",
+      "question": "Describe the rift that developed between Subhas Chandra Bose and Jawaharlal Nehru during the late 1930s.",
+      "reference_answer": "Although both leaders held progressive views, a political rift developed between Bose and Nehru due to differing loyalties, tactical priorities, and strategies for confronting British authority during wartime.",
+      "key_concepts": [
+        "rift",
+        "Bose and Nehru",
+        "progressive views",
+        "differing loyalties",
+        "tactical priorities",
+        "British authority during wartime"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 26,
+      "type": "descriptive",
+      "question": "Explain why Viceroy Lord Linlithgow's war declaration sparked widespread outrage across India.",
+      "reference_answer": "Viceroy Lord Linlithgow declared India a belligerent in World War II without consulting the Indian people or their elected leaders, deeply insulting Indian national self-respect and democratic rights.",
+      "key_concepts": [
+        "Viceroy Lord Linlithgow",
+        "World War II",
+        "without consulting",
+        "Indian people",
+        "elected leaders",
+        "national self-respect",
+        "democratic rights"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 27,
+      "type": "speech",
+      "question": "Pronounce the term describing the ideological dispute with Gandhi:",
+      "target_phrase": "Confrontation with Gandhi",
+      "reference_answer": "Confrontation with Gandhi",
+      "key_concepts": [
+        "Confrontation",
+        "Gandhi"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 28,
+      "type": "speech",
+      "question": "Pronounce the phrase describing the divide between Bose and Nehru:",
+      "target_phrase": "Political Rift with Nehru",
+      "reference_answer": "Political Rift with Nehru",
+      "key_concepts": [
+        "Political",
+        "Rift",
+        "Nehru"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 29,
+      "type": "speech",
+      "question": "Pronounce the historical event of 1939 in Europe:",
+      "target_phrase": "Outbreak of World War Two",
+      "reference_answer": "Outbreak of World War Two",
+      "key_concepts": [
+        "Outbreak",
+        "World",
+        "War",
+        "Two"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 30,
+      "type": "speech",
+      "question": "Pronounce the protest movement advocated by Netaji against British war decree:",
+      "target_phrase": "Campaign of Mass Civil Disobedience",
+      "reference_answer": "Campaign of Mass Civil Disobedience",
+      "key_concepts": [
+        "Campaign",
+        "Mass",
+        "Civil",
+        "Disobedience"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "question": "How did Netaji's strategic perspective on World War II fundamentally diverge from the moderate Dominion Status framework in colonial India?",
+      "options": {
+        "A": "Netaji rejected British constitutional paternalism, demanding immediate, total sovereignty and unreserved self-determination for India",
+        "B": "Netaji favored permanent British control of Indian foreign policy",
+        "C": "Netaji wanted India to remain indefinitely under the British Crown",
+        "D": "Netaji advocated gradual devolution of power over several decades"
+      },
+      "answer": "A",
+      "answer_text": "Netaji demanded total and immediate swaraj, viewing British wartime vulnerability as the opportune moment to seize full national independence.",
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "question": "Analyze the constitutional contradiction exposed when Viceroy Lord Linlithgow committed India to World War II in 1939.",
+      "options": {
+        "A": "It proved that provincial self-governance was superficial, as supreme sovereign power remained entirely concentrated in an unelected colonial Viceroy",
+        "B": "It proved that Indian provincial ministries held absolute authority over British military decisions",
+        "C": "It granted sovereign independence to the Indian National Congress",
+        "D": "It dissolved the British Empire's control across South Asia"
+      },
+      "answer": "A",
+      "answer_text": "Linlithgow's unilateral decree exposed the fundamental autocracy of British colonial rule, overriding all democratic pretenses.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "question": "What strategic dilemma did Jawaharlal Nehru face during the deepening political rift between Gandhi and Subhas Chandra Bose?",
+      "options": {
+        "A": "Nehru shared Bose's progressive anti-imperialist vision but remained personally and strategically committed to Gandhi's supreme leadership and Congress unity",
+        "B": "Nehru wanted to support British colonial rule in India unconditionally",
+        "C": "Nehru opposed all forms of Indian self-governance and industrial planning",
+        "D": "Nehru decided to abandon national politics and move to Europe"
+      },
+      "answer": "A",
+      "answer_text": "Nehru was torn between his socialist sympathies with Bose and his ultimate loyalty to Mahatma Gandhi's leadership.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "question": "Why did Netaji advocate launching immediate mass Civil Disobedience upon the outbreak of World War II rather than waiting for British wartime concessions?",
+      "options": {
+        "A": "He adhered to the realpolitik principle that imperial distress was India's historic opportunity to compel Britain to surrender power",
+        "B": "He believed Britain would voluntarily gift independence to India after winning the war",
+        "C": "He wanted to help European colonial empires expand their territories",
+        "D": "He believed war was a reason to suspend all anti-colonial activism"
+      },
+      "answer": "A",
+      "answer_text": "Bose recognized that Britain's wartime vulnerability provided India with maximum leverage to force an immediate transfer of sovereign power.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "question": "What was the broader ideological impact of the Gandhi-Bose confrontation on the future trajectory of the Indian independence movement?",
+      "options": {
+        "A": "It crystallized two distinct approaches to anti-colonial struggle: non-violent moral negotiation (Gandhi) versus militant revolutionary mobilization (Bose)",
+        "B": "It led to the complete dissolution of the Indian freedom movement",
+        "C": "It caused all Indian political parties to merge into the British colonial government",
+        "D": "It forced all Indian nationalists to abandon the demand for swaraj"
+      },
+      "answer": "A",
+      "answer_text": "The confrontation solidified two distinct philosophical paths toward independence within India's anti-colonial movement.",
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "question": "In what way did Viceroy Lord Linlithgow's authoritarian decree catalyze the subsequent mass movements of the 1940s in India?",
+      "options": {
+        "A": "It completely destroyed Indian trust in colonial promises, setting the stage for massive civil defiance, ministry resignations, and revolutionary mobilization",
+        "B": "It caused Indian citizens to embrace British rule with widespread loyalty",
+        "C": "It permanently ended political protests throughout the subcontinent",
+        "D": "It established a permanent military dictatorship accepted by all Indian leaders"
+      },
+      "answer": "A",
+      "answer_text": "Linlithgow's actions alienated the entire Indian political spectrum, accelerating the push toward decisive nationwide confrontation.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "question": "How did Bose's advocacy for mass Civil Disobedience in 1939 anticipate his subsequent revolutionary wartime strategies?",
+      "options": {
+        "A": "When internal Congress opposition and British arrests blocked mass civil agitation at home, he turned to audacious international alliances and military liberation through the Azad Hind Fauj",
+        "B": "He accepted a permanent administrative post in the British Viceroy's cabinet",
+        "C": "He abandoned the cause of Indian independence entirely",
+        "D": "He decided that India should never develop its own armed forces"
+      },
+      "answer": "A",
+      "answer_text": "Blocked from pursuing mass civil disobedience within India, Netaji transitioned into international diplomacy and armed struggle to liberate India.",
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 38,
+      "type": "descriptive",
+      "question": "Critically evaluate the ideological and strategic conflict between Subhas Chandra Bose and Mahatma Gandhi regarding the path to Swaraj.",
+      "reference_answer": "The conflict centered on contrasting philosophies: Bose advocated militant mass mobilization and uncompromising ultimatums to seize swaraj, whereas Gandhi prioritized ethical non-violence, negotiation, and avoiding coercive action during Britain's wartime crisis.",
+      "key_concepts": [
+        "ideological conflict",
+        "Subhas Chandra Bose",
+        "Mahatma Gandhi",
+        "path to Swaraj",
+        "militant mass mobilization",
+        "ethical non-violence",
+        "wartime crisis",
+        "uncompromising ultimatums"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 39,
+      "type": "descriptive",
+      "question": "Analyze the historical significance of Viceroy Lord Linlithgow's unilateral decision to drag India into World War II.",
+      "reference_answer": "Linlithgow's unilateral decision exposed the autocratic core of British colonial rule, bypassing elected Indian ministries and proving that British imperial interests always overrode Indian democratic rights and national sovereignty.",
+      "key_concepts": [
+        "Viceroy Lord Linlithgow",
+        "unilateral decision",
+        "World War II",
+        "autocratic core",
+        "British colonial rule",
+        "bypassing elected ministries",
+        "national sovereignty"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 40,
+      "type": "descriptive",
+      "question": "Examine why Subhas Chandra Bose viewed Britain's entry into World War II as a strategic turning point for Indian liberation.",
+      "reference_answer": "Bose viewed World War II through the lens of international geopolitics, believing that Britain's military and economic vulnerability presented India with an irreplaceable historic opportunity to demand and win complete independence through mass civil disobedience.",
+      "key_concepts": [
+        "World War II",
+        "strategic turning point",
+        "international geopolitics",
+        "Britain's vulnerability",
+        "historic opportunity",
+        "complete independence",
+        "mass civil disobedience"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 41,
+      "type": "descriptive",
+      "question": "Synthesize how the rift between Netaji, Gandhi, and Nehru reflected the diverse spectrum of political thought in the Indian freedom struggle.",
+      "reference_answer": "The rift reflected profound diversity within the national movement, bridging radical revolutionary socialism (Bose), moral non-violent satyagraha (Gandhi), and democratic internationalist socialism (Nehru), all united in seeking freedom despite tactical differences.",
+      "key_concepts": [
+        "political rift",
+        "diversity of thought",
+        "radical revolutionary socialism",
+        "moral non-violent satyagraha",
+        "democratic internationalism",
+        "tactical differences",
+        "united for freedom"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 42,
+      "type": "speech",
+      "question": "Pronounce the phrase describing British colonial authoritarianism:",
+      "target_phrase": "Imperial Authoritarianism and Defiance",
+      "reference_answer": "Imperial Authoritarianism and Defiance",
+      "key_concepts": [
+        "Imperial",
+        "Authoritarianism",
+        "Defiance"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 43,
+      "type": "speech",
+      "question": "Pronounce the term describing India's historic opportunity for freedom:",
+      "target_phrase": "Historic Opportunity for Complete Swaraj",
+      "reference_answer": "Historic Opportunity for Complete Swaraj",
+      "key_concepts": [
+        "Historic",
+        "Opportunity",
+        "Complete",
+        "Swaraj"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 44,
+      "type": "speech",
+      "question": "Pronounce the contrasting strategies of the independence movement:",
+      "target_phrase": "Satyagraha and Revolutionary Mass Action",
+      "reference_answer": "Satyagraha and Revolutionary Mass Action",
+      "key_concepts": [
+        "Satyagraha",
+        "Revolutionary",
+        "Mass",
+        "Action"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 45,
+      "type": "speech",
+      "question": "Pronounce Netaji's unyielding goal for the Indian nation:",
+      "target_phrase": "Uncompromising Fight for National Sovereignty",
+      "reference_answer": "Uncompromising Fight for National Sovereignty",
+      "key_concepts": [
+        "Uncompromising",
+        "Fight",
+        "National",
+        "Sovereignty"
+      ],
+      "min_score_threshold": 85,
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    }
+  ],
+  "sequence_test": {
+    "title": "Chronological Sequence of Netaji's Presidency, Ideological Rift, and Wartime Defiance",
+    "description": "These questions test whether the learner understands the chronological sequence of Netaji's stance for swaraj, the confrontation with Gandhi and Nehru, and the protest against the Viceroy's war declaration.",
+    "questions": [
+      {
+        "id": 46,
+        "type": "sequence_mcq",
+        "question": "What is the correct chronological sequence of political events during Netaji's presidency?",
+        "options": {
+          "A": "Accepting Congress presidency -> Standing firmly for Swaraj -> Ideological confrontation with Gandhi and rift with Nehru -> Outbreak of World War II and advocating Mass Civil Disobedience against Lord Linlithgow",
+          "B": "Mass Civil Disobedience -> World War II -> Accepting presidency -> Confrontation with Gandhi",
+          "C": "Lord Linlithgow war declaration -> Accepting presidency -> Rift with Nehru -> Swaraj",
+          "D": "Rift with Nehru -> Mass Civil Disobedience -> Accepting presidency -> World War II"
+        },
+        "answer": "A",
+        "answer_text": "The sequence begins with Netaji accepting the Congress presidency and standing for swaraj, leading to ideological confrontation with Gandhi and rift with Nehru, culminating in his call for mass civil disobedience when World War II broke out.",
+        "difficulty": "moderate",
+        "difficulty_percentage": 60,
+        "difficulty_level": "Curious Adventurer"
+      },
+      {
+        "id": 47,
+        "type": "sequence_mcq",
+        "question": "Arrange the sequence of geopolitical tensions in colonial India in 1939 in their correct order:",
+        "options": {
+          "A": "Netaji standing firmly for self-governance (Swaraj) -> Internal debates and rift within the national leadership -> Unilateral declaration of war by Viceroy Lord Linlithgow -> Nationwide advocacy for Mass Civil Disobedience",
+          "B": "Mass Civil Disobedience -> Unilateral war declaration -> Internal debates -> Standing for Swaraj",
+          "C": "Unilateral war declaration -> Standing for Swaraj -> Mass Civil Disobedience -> Internal debates",
+          "D": "Internal debates -> Mass Civil Disobedience -> Standing for Swaraj -> War declaration"
+        },
+        "answer": "A",
+        "answer_text": "Netaji championed swaraj, navigated internal debates with Gandhi and Nehru, and responded to Lord Linlithgow's unilateral war declaration by calling for mass civil disobedience.",
+        "difficulty": "hard",
+        "difficulty_percentage": 75,
+        "difficulty_level": "Challenger"
+      }
+    ]
+  },
+  "image_matching": [
+    {
+      "id": 48,
+      "type": "image_matching",
+      "question": "Match each key historical figure with their role and perspective during this period:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/netaji.jpg",
+          "label": "Subhas Chandra Bose"
+        },
+        {
+          "id": "img_2",
+          "file": "images/gandhiji_portrait.jpg",
+          "label": "Mahatma Gandhi"
+        },
+        {
+          "id": "img_3",
+          "file": "images/linlithgow.jpg",
+          "label": "Viceroy Lord Linlithgow"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "Congress President who stood for immediate swaraj and advocated mass civil disobedience against British wartime decrees."
+        },
+        {
+          "id": "desc_2",
+          "text": "Father of the Nation who held an ideological confrontation with Bose over the pace, methods, and philosophy of freedom."
+        },
+        {
+          "id": "desc_3",
+          "text": "British Viceroy who unilaterally declared India at war in World War II without consulting Indian leaders or people."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 49,
+      "type": "image_matching",
+      "question": "Match each historical concept with its significance in Netaji's presidency:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/swaraj.jpg",
+          "label": "Swaraj (Self-Governance)"
+        },
+        {
+          "id": "img_2",
+          "file": "images/civil_disobedience.jpg",
+          "label": "Mass Civil Disobedience"
+        },
+        {
+          "id": "img_3",
+          "file": "images/ww2_declaration.jpg",
+          "label": "Wartime Declaration"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "The core political demand of complete self-rule and national sovereignty championed fearlessly by Netaji."
+        },
+        {
+          "id": "desc_2",
+          "text": "The nationwide campaign proposed by Netaji to paralyze British war administration and seize independence."
+        },
+        {
+          "id": "desc_3",
+          "text": "The authoritarian decree by Viceroy Linlithgow that dragged India into World War II without democratic consent."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer"
+    }
+  ],
+  "scoring": {
+    "mcq": {
+      "points_per_correct_answer": 1
+    },
+    "descriptive": {
+      "method": "cosine_similarity",
+      "description": "Calculate embedding cosine similarity against reference concepts.",
+      "suggested_interpretation": {
+        "0.80-1.00": "Outstanding Mastery",
+        "0.65-0.79": "Good Conceptual Understanding",
+        "0.50-0.64": "Developing Understanding",
+        "0.00-0.49": "Needs Reinforcement"
+      }
+    },
+    "speech": {
+      "points_per_correct_answer": 1,
+      "min_pass_score": 60
+    },
+    "sequence_test": {
+      "points_per_correct_answer": 1
+    },
+    "image_matching": {
+      "points_per_correct_match": 1,
+      "total_points": 3
+    }
+  }
+}

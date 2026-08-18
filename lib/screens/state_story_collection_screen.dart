@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../data/west_bengal_stories_database.dart';
+import '../data/india_states_data.dart';
 import '../models/interactive_story_models.dart';
 import '../qa_pipeline/services/content_discovery_service.dart';
 import '../qa_pipeline/database/progress_repository.dart';
@@ -10,6 +11,7 @@ import '../qa_pipeline/screens/video_player_screen.dart';
 import '../qa_pipeline/screens/level_clear_screen.dart';
 import '../qa_pipeline/models/learning_content.dart';
 import '../core/state/child_state.dart';
+import 'interactive_story_screen.dart';
 
 /// 80s Showa Retro Worn Explorer Postcard Carousel Screen
 /// Features:
@@ -77,79 +79,196 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
   Future<void> _loadQAChaptersAsStories() async {
     final childId = ChildState.instance.currentProfile.id;
     final chapters = await ContentDiscoveryService.discoverContent();
-    if (chapters.isEmpty) {
-      if (mounted) setState(() => _isLoadingDynamic = false);
+
+    // 1. Resolve whether this specific state has a designated video learning chapter
+    LearningChapter? resolvedChapter;
+    if (widget.chapterId != null && widget.chapterId!.isNotEmpty) {
+      resolvedChapter = chapters.where((c) => c.id.toLowerCase() == widget.chapterId!.toLowerCase()).firstOrNull;
+    }
+
+    if (resolvedChapter == null && chapters.isNotEmpty) {
+      final sId = widget.stateId.toLowerCase();
+      // Match strictly:
+      // - Tamil Nadu -> Bharatnatayam
+      // - West Bengal -> Netaji
+      // - Direct chapter name/ID match
+      resolvedChapter = chapters.where(
+        (c) {
+          final cId = c.id.toLowerCase();
+          final cName = c.name.toLowerCase();
+          if (cId == sId || cName == sId) return true;
+          if (sId.contains('tamil') || sId == 'tn') {
+            return cId.contains('bharat') || cId.contains('tamil') || cName.contains('bharat');
+          }
+          if (sId.contains('bengal') || sId.contains('calcutta') || sId.contains('kolkata') || sId == 'wb') {
+            return cId.contains('netaji') || cId.contains('bengal');
+          }
+          return false; // Bharatnatyam is ONLY for Tamil Nadu!
+        },
+      ).firstOrNull;
+    }
+
+    // 2. If this state HAS an active video chapter (e.g. Tamil Nadu -> Bharatnatyam, West Bengal -> Netaji):
+    if (resolvedChapter != null) {
+      final chapter = resolvedChapter;
+      _levels = chapter.levels;
+
+      // Load progress from SQLite
+      final allProgress = await ProgressRepository.getAllProgress(childId);
+      final completedMap = <String, bool>{};
+      for (final p in allProgress) {
+        if (p.chapterId == chapter.id && p.completed) {
+          completedMap[p.levelId] = true;
+        }
+      }
+
+      // Sequential unlock calculation
+      int highestUnlocked = 0;
+      for (int i = 0; i < _levels.length; i++) {
+        final lvl = _levels[i];
+        if (completedMap[lvl.id] == true) {
+          highestUnlocked = i + 1;
+        } else {
+          break;
+        }
+      }
+      if (highestUnlocked >= _levels.length) {
+        highestUnlocked = _levels.length - 1;
+      }
+
+      final List<StoryData> mappedStories = [];
+      for (int i = 0; i < _levels.length; i++) {
+        final lvl = _levels[i];
+        final levelImg = await ContentDiscoveryService.findLevelImage(chapter.id, lvl.id)
+            ?? await ContentDiscoveryService.findCoverImage(chapter.id)
+            ?? 'assets/images/nimo_splash.png';
+
+        mappedStories.add(
+          StoryData(
+            id: lvl.id,
+            stateId: widget.stateId,
+            title: chapter.name,
+            subtitle: 'Episode ${i + 1}',
+            taglineOrQuote: 'Episode ${i + 1} of ${chapter.name} adventure',
+            imagePath: levelImg,
+            scenes: [],
+          ),
+        );
+      }
+
+      if (mounted) {
+        setState(() {
+          _completedLevels = completedMap;
+          _highestUnlockedIndex = highestUnlocked;
+          _collection = StateStoriesCollection(
+            stateId: widget.stateId,
+            stateName: chapter.name,
+            tagline: 'Explore ${chapter.name} Episodes',
+            atmosphericImage: 'assets/images/nimo_splash.png',
+            stories: mappedStories,
+          );
+          _isLoadingDynamic = false;
+          _selectedStoryIndex = _selectedStoryIndex.clamp(0, mappedStories.isNotEmpty ? mappedStories.length - 1 : 0);
+          _pageController = PageController(
+            viewportFraction: 0.46,
+            initialPage: _selectedStoryIndex,
+          );
+        });
+      }
       return;
     }
 
-    // Target chapter selected from Main Episodes screen
-    final targetChapterId = widget.chapterId ?? chapters.first.id;
-    final chapter = chapters.where((c) => c.id.toLowerCase() == targetChapterId.toLowerCase()).firstOrNull ?? chapters.first;
-
-    _levels = chapter.levels;
-
-    // Load progress from SQLite
-    final allProgress = await ProgressRepository.getAllProgress(childId);
-    final completedMap = <String, bool>{};
-    for (final p in allProgress) {
-      if (p.chapterId == chapter.id && p.completed) {
-        completedMap[p.levelId] = true;
-      }
-    }
-
-    // Sequential unlock calculation
-    int highestUnlocked = 0;
-    for (int i = 0; i < _levels.length; i++) {
-      final lvl = _levels[i];
-      if (completedMap[lvl.id] == true) {
-        highestUnlocked = i + 1;
-      } else {
-        break;
-      }
-    }
-    if (highestUnlocked >= _levels.length) {
-      highestUnlocked = _levels.length - 1;
-    }
-
-    final List<StoryData> mappedStories = [];
-    for (int i = 0; i < _levels.length; i++) {
-      final lvl = _levels[i];
-      final levelImg = await ContentDiscoveryService.findLevelImage(chapter.id, lvl.id)
-          ?? await ContentDiscoveryService.findCoverImage(chapter.id)
-          ?? 'assets/images/nimo_splash.png';
-
-      mappedStories.add(
-        StoryData(
-          id: lvl.id,
-          stateId: 'episode_dynamic',
-          title: chapter.name,
-          subtitle: 'Episode ${i + 1}',
-          taglineOrQuote: 'Episode ${i + 1} of ${chapter.name} adventure',
-          imagePath: levelImg,
-          scenes: [],
-        ),
-      );
-    }
+    // 3. For OTHER states (Maharashtra, Rajasthan, Punjab, Karnataka, Kerala, Gujarat, etc.):
+    // Load and display authentic Heritage & Culture stories for THAT specific state!
+    _levels = [];
+    final heritageCollection = _getOrCreateHeritageCollection(widget.stateId);
 
     if (mounted) {
       setState(() {
-        _completedLevels = completedMap;
-        _highestUnlockedIndex = highestUnlocked;
-        _collection = StateStoriesCollection(
-          stateId: widget.stateId,
-          stateName: chapter.name,
-          tagline: 'Explore ${chapter.name} Episodes',
-          atmosphericImage: 'assets/images/nimo_splash.png',
-          stories: mappedStories,
-        );
+        _completedLevels = {};
+        _highestUnlockedIndex = heritageCollection.stories.length; // All heritage cards unlocked
+        _collection = heritageCollection;
         _isLoadingDynamic = false;
-        _selectedStoryIndex = _selectedStoryIndex.clamp(0, mappedStories.isNotEmpty ? mappedStories.length - 1 : 0);
+        _selectedStoryIndex = _selectedStoryIndex.clamp(0, heritageCollection.stories.isNotEmpty ? heritageCollection.stories.length - 1 : 0);
         _pageController = PageController(
           viewportFraction: 0.46,
           initialPage: _selectedStoryIndex,
         );
       });
     }
+  }
+
+  StateStoriesCollection _getOrCreateHeritageCollection(String stateId) {
+    final sId = stateId.toLowerCase();
+    final existing = IndianStoriesDatabase.getCollectionForState(sId);
+    if (existing != null && existing.stateId.toLowerCase() == sId && existing.stories.isNotEmpty) {
+      return existing;
+    }
+
+    final stateData = IndiaStatesDatabase.states[sId];
+    final stateName = stateData?.name ?? _formatTitle(stateId);
+    final capital = stateData?.capital ?? 'Historical Capital';
+    final famous = stateData?.famousFor ?? 'UNESCO Monuments and Ancient Heritage';
+    final fact = stateData?.fact ?? 'Rich heritage with ancient traditions and architecture.';
+    final food = stateData?.food ?? 'Traditional culinary specialties';
+    final lang = stateData?.language ?? 'Regional languages';
+
+    return StateStoriesCollection(
+      stateId: sId,
+      stateName: stateName,
+      tagline: 'Discover the Heritage, Monuments & Culture of $stateName',
+      atmosphericImage: 'assets/images/nimo_japanese_bg_clean.png',
+      stories: [
+        StoryData(
+          id: '${sId}_monuments',
+          stateId: sId,
+          title: '$stateName Heritage',
+          subtitle: 'Monuments & History',
+          taglineOrQuote: '“$famous”',
+          imagePath: 'assets/images/story_selection_wb_bg.png',
+          scenes: [
+            StoryScene(
+              id: 's1',
+              narrativeText:
+                  'Welcome to $stateName! Capital: $capital. Renowned across India for its landmark heritage: $famous.',
+              imagePath: 'assets/images/story_selection_wb_bg.png',
+              historicalFact: fact,
+              choices: const [
+                SceneChoice(label: 'Explore Culture & Traditions', nextSceneId: 's2'),
+              ],
+            ),
+            StoryScene(
+              id: 's2',
+              narrativeText:
+                  '$stateName has vibrant cultural traditions. Official Language: $lang. Famous Gastronomy: $food.',
+              imagePath: 'assets/images/story_selection_wb_bg.png',
+              historicalFact: 'Preserving over centuries of architectural and folk heritage.',
+            ),
+          ],
+        ),
+        StoryData(
+          id: '${sId}_culture',
+          stateId: sId,
+          title: 'Living Traditions',
+          subtitle: 'Arts, Language & Gastronomy',
+          taglineOrQuote: '“Languages: $lang | Cuisine: $food”',
+          imagePath: 'assets/images/nimo_japanese_bg_clean.png',
+          scenes: [
+            StoryScene(
+              id: 's1',
+              narrativeText:
+                  'Discover the vibrant daily life, folk arts, and culinary delicacies of $stateName ($food).',
+              imagePath: 'assets/images/nimo_japanese_bg_clean.png',
+              historicalFact: fact,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  String _formatTitle(String raw) {
+    return raw.split('_').map((w) => w.isNotEmpty ? '${w[0].toUpperCase()}${w.substring(1)}' : '').join(' ');
   }
 
   @override
@@ -231,36 +350,51 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
     if (!mounted) return;
 
     final level = index < _levels.length ? _levels[index] : null;
-    if (level == null) {
-      setState(() {
-        _animatingIndex = null;
-        _isTransitioningToStory = false;
-      });
-      return;
-    }
 
-    final childId = ChildState.instance.currentProfile.id;
-
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => VideoPlayerScreen(
-          childId: childId,
-          level: level,
+    if (level != null && level.isPlayable) {
+      // Play Video Quest Screen (e.g. Tamil Nadu Bharatanatyam or Netaji)
+      final childId = ChildState.instance.currentProfile.id;
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => VideoPlayerScreen(
+            childId: childId,
+            level: level,
+          ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+          transitionDuration: const Duration(milliseconds: 450),
         ),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(opacity: animation, child: child);
-        },
-        transitionDuration: const Duration(milliseconds: 450),
-      ),
-    ).then((_) {
-      if (mounted) {
-        setState(() {
-          _animatingIndex = null;
-          _isTransitioningToStory = false;
-        });
-        _loadQAChaptersAsStories();
-      }
-    });
+      ).then((_) {
+        if (mounted) {
+          setState(() {
+            _animatingIndex = null;
+            _isTransitioningToStory = false;
+          });
+          _loadQAChaptersAsStories();
+        }
+      });
+    } else {
+      // Open Interactive Heritage Story Screen
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => InteractiveStoryScreen(
+            story: selectedStory,
+          ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+          transitionDuration: const Duration(milliseconds: 450),
+        ),
+      ).then((_) {
+        if (mounted) {
+          setState(() {
+            _animatingIndex = null;
+            _isTransitioningToStory = false;
+          });
+        }
+      });
+    }
   }
 
   @override

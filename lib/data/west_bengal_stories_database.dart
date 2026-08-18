@@ -152,10 +152,51 @@ class IndianStoriesDatabase {
         ),
       ],
     ),
+    'tamil_nadu': StateStoriesCollection(
+      stateId: 'tamil_nadu',
+      stateName: 'Tamil Nadu',
+      tagline: 'The timeless cradle of classical dance, music, and Dravidian art.',
+      atmosphericImage: 'assets/Bharatnatayam/COVER_IMG/Bharatnatyam.png',
+      stories: [
+        StoryData(
+          id: 'bharatanatyam_heritage',
+          stateId: 'tamil_nadu',
+          title: 'The Cosmic Dance of Expression',
+          subtitle: 'Bharatanatyam Heritage',
+          taglineOrQuote: '“Where emotion, melody, and rhythm unite in timeless devotion.”',
+          imagePath: 'assets/Bharatnatayam/COVER_IMG/Bharatnatyam.png',
+          scenes: const [
+            StoryScene(
+              id: 's1',
+              narrativeText:
+                  'Originating in the grand temple sanctums of Tamil Nadu, Bharatanatyam is India\'s oldest classical dance tradition, deeply rooted in the Natya Shastra.',
+              imagePath: 'assets/Bharatnatayam/COVER_IMG/Bharatnatyam.png',
+              historicalFact:
+                  'Bharatanatyam combines Bha (Bhava/Emotion), Ra (Raga/Melody), and Ta (Tala/Rhythm).',
+              choices: [
+                SceneChoice(label: 'Explore Temple Sculptures', nextSceneId: 's2'),
+              ],
+            ),
+            StoryScene(
+              id: 's2',
+              narrativeText:
+                  'The sacred mudras (hand gestures) and rhythmic footwork echo the celestial carvings of Thanjavur and Chidambaram temples.',
+              imagePath: 'assets/Bharatnatayam/COVER_IMG/Bharatnatyam.png',
+              historicalFact:
+                  'The Brihadisvara Temple at Thanjavur depicts all 108 Karanas (fundamental dance postures) carved in stone.',
+            ),
+          ],
+        ),
+      ],
+    ),
   };
 
   static StateStoriesCollection? getCollectionForState(String stateId) {
-    return _collections[stateId.toLowerCase()] ?? _collections['west_bengal'];
+    final sId = stateId.toLowerCase();
+    if (sId.contains('tamil') || sId == 'tn' || sId.contains('bharat')) {
+      return _collections['tamil_nadu'];
+    }
+    return _collections[sId] ?? _collections['west_bengal'];
   }
 
   static void markStoryCompleted(String storyId) {

@@ -31,6 +31,7 @@ abstract class Question {
     final lower = diff.toLowerCase();
     if (lower.contains('easy') || lower.contains('gentle') || lower.contains('starter')) return 30;
     if (lower.contains('medium') || lower.contains('balanced')) return 50;
+    if (lower.contains('medium') || lower.contains('moderate') || lower.contains('balanced')) return 50;
     if (lower.contains('curious') || lower.contains('adventurer')) return 55;
     if (lower.contains('hard') || lower.contains('challeng')) return 75;
     if (lower.contains('champion') || lower.contains('expert')) return 85;
@@ -44,6 +45,7 @@ abstract class Question {
     if (lower.contains('easy') || lower.contains('gentle') || lower.contains('starter')) return 'Gentle Starter';
     if (lower.contains('medium') || lower.contains('balanced')) return 'Balanced Explorer';
     if (lower.contains('curious') || lower.contains('adventurer')) return 'Curious Adventurer';
+    if (lower.contains('moderate') || lower.contains('curious') || lower.contains('adventurer')) return 'Curious Adventurer';
     if (lower.contains('hard') || lower.contains('challeng')) return 'Challenger';
     if (lower.contains('champion')) return 'Champion';
     return diff;

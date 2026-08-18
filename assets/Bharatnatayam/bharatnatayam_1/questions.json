@@ -8,6 +8,18 @@
   "target_age": 12,
   "question_pattern": {
     "main_questions": "Multi-tier MCQs, progressive descriptive questions, and voice pronunciation speech questions.",
+{
+  "title": "Salutation, Postures, and Adavus in Bharatanatyam",
+  "section": {
+    "start": "02:00",
+    "end": "05:00",
+    "description": "Comprehensive 45-question pedagogical assessment for ages 3 to 15 spanning Easy, Moderate, and Hard difficulty levels."
+  },
+  "target_age": 12,
+  "age_range": "3-15 years",
+  "question_pattern": {
+    "main_questions": "45 progressive questions consisting of multi-tier MCQs, conceptual descriptive questions, and voice pronunciation speech questions.",
+    "difficulty_distribution": "15 Easy (Ages 3-7), 15 Moderate (Ages 8-11), 15 Hard (Ages 12-15)",
     "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
     "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
     "sequence_test": "Chronological milestone ordering and sequence analysis.",
@@ -29,6 +41,17 @@
       "difficulty": "easy",
       "difficulty_percentage": 20,
       "difficulty_level": "Gentle Starter"
+        "A": "A way of offering prayer, greetings, and seeking blessings",
+        "B": "A warm-up exercise for running",
+        "C": "A fast spinning dance step",
+        "D": "A game played with friends"
+      },
+      "answer": "A",
+      "answer_text": "A salutation is a way of offering prayer, greetings, and seeking blessings of the god, the guru, and the audience.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 2,
@@ -45,6 +68,17 @@
       "difficulty": "easy",
       "difficulty_percentage": 25,
       "difficulty_level": "Gentle Starter"
+        "A": "A frozen position of the body that gives balance and alignment",
+        "B": "A loud musical drum beat",
+        "C": "A colorful costume",
+        "D": "A special storybook"
+      },
+      "answer": "A",
+      "answer_text": "A posture is a frozen position of the body that provides balance and alignment.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 3,
@@ -61,6 +95,17 @@
       "difficulty": "easy",
       "difficulty_percentage": 25,
       "difficulty_level": "Gentle Starter"
+        "A": "Basic dance steps created when postures come to life with movement",
+        "B": "Musical instruments played with sticks",
+        "C": "Flowers worn in the hair",
+        "D": "Stage lighting colors"
+      },
+      "answer": "A",
+      "answer_text": "Adavus are the fundamental dance steps created when postures are combined with movement.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 4,
@@ -77,6 +122,19 @@
       "difficulty": "easy",
       "difficulty_percentage": 30,
       "difficulty_level": "Gentle Starter"
+      "question": "What is the first and most fundamental posture introduced in Bharatanatyam?",
+      "options": {
+        "A": "Samapadam",
+        "B": "Aramandi",
+        "C": "Thattadavu",
+        "D": "Mandi"
+      },
+      "answer": "A",
+      "answer_text": "Samapadam is the first posture where the dancer stands straight with feet close together.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 5,
@@ -93,6 +151,19 @@
       "difficulty": "medium",
       "difficulty_percentage": 40,
       "difficulty_level": "Balanced Explorer"
+      "question": "When do dancers perform the salutation in a Bharatanatyam lesson?",
+      "options": {
+        "A": "At the beginning and the end of every lesson",
+        "B": "Only in the middle of the lesson",
+        "C": "Only once a year",
+        "D": "Never during practice"
+      },
+      "answer": "A",
+      "answer_text": "Dancers always begin and end every lesson with the salutation to honor tradition and seek blessings.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 6,
@@ -109,6 +180,19 @@
       "difficulty": "medium",
       "difficulty_percentage": 45,
       "difficulty_level": "Balanced Explorer"
+      "question": "Where does the dancer place their hands in the Samapadam posture?",
+      "options": {
+        "A": "On the waist",
+        "B": "Above the head",
+        "C": "In their pockets",
+        "D": "Behind the back"
+      },
+      "answer": "A",
+      "answer_text": "In Samapadam, the dancer stands upright and places their hands on the waist.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 7,
@@ -125,6 +209,19 @@
       "difficulty": "medium",
       "difficulty_percentage": 50,
       "difficulty_level": "Curious Adventurer"
+      "question": "Whose blessings are sought during the Bharatanatyam salutation?",
+      "options": {
+        "A": "God, the guru (teacher), and the audience",
+        "B": "Only the audience",
+        "C": "Only classmates",
+        "D": "Nobody"
+      },
+      "answer": "A",
+      "answer_text": "The salutation seeks the divine blessings of God, the guru (teacher), and the audience.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 8,
@@ -141,6 +238,19 @@
       "difficulty": "medium",
       "difficulty_percentage": 55,
       "difficulty_level": "Curious Adventurer"
+      "question": "How are the feet positioned in the Samapadam posture?",
+      "options": {
+        "A": "Placed close together with the body standing straight",
+        "B": "Spread far apart in a wide jump",
+        "C": "Lifted up high in the air",
+        "D": "Crossed one over the other"
+      },
+      "answer": "A",
+      "answer_text": "In Samapadam, the dancer's feet are positioned straight and close together.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 9,
@@ -157,6 +267,19 @@
       "difficulty": "hard",
       "difficulty_percentage": 65,
       "difficulty_level": "Challenger"
+      "question": "What two essential benefits does a good posture provide for a dancer?",
+      "options": {
+        "A": "Balance and alignment",
+        "B": "Speed and loud noise",
+        "C": "Singing ability and musical pitch",
+        "D": "Costume design"
+      },
+      "answer": "A",
+      "answer_text": "A posture gives the dancer balance and physical alignment.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 10,
@@ -173,6 +296,19 @@
       "difficulty": "hard",
       "difficulty_percentage": 85,
       "difficulty_level": "Champion"
+      "question": "What happens when postures are brought to life with rhythmic movement?",
+      "options": {
+        "A": "They become basic dance steps called adavus",
+        "B": "They become painted pictures",
+        "C": "They turn into musical flutes",
+        "D": "They become stage curtains"
+      },
+      "answer": "A",
+      "answer_text": "When frozen postures come to life with movement, they become adavus (dance steps).",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 11,
@@ -192,6 +328,21 @@
       "difficulty": "easy",
       "difficulty_percentage": 30,
       "difficulty_level": "Gentle Starter"
+      "reference_answer": "A salutation is a way of offering prayer, greetings, and seeking the blessings of God, the guru (teacher), and the audience before and after every dance lesson.",
+      "key_concepts": [
+        "salutation",
+        "prayer and greetings",
+        "seeking blessings",
+        "God",
+        "guru",
+        "audience",
+        "before and after every lesson"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 12,
@@ -382,6 +533,624 @@
         "answer": "B",
         "answer_text": "The correct sequence is: Salutation first, then learning postures, then creating adavus from those postures.",
         "difficulty": "medium",
+      "question": "Describe the Samapadam posture in Bharatanatyam.",
+      "reference_answer": "Samapadam is the first basic posture where the dancer stands straight with feet placed close together and hands resting on the waist.",
+      "key_concepts": [
+        "Samapadam",
+        "first basic posture",
+        "stands straight",
+        "feet close together",
+        "hands on waist"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 13,
+      "type": "speech",
+      "question": "Say the name of the very first Bharatanatyam posture:",
+      "target_phrase": "Samapadam Posture",
+      "reference_answer": "Samapadam Posture",
+      "key_concepts": [
+        "Samapadam",
+        "Posture"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 14,
+      "type": "speech",
+      "question": "Say the term for basic dance steps in Bharatanatyam:",
+      "target_phrase": "Adavus Dance Steps",
+      "reference_answer": "Adavus Dance Steps",
+      "key_concepts": [
+        "Adavus",
+        "Dance",
+        "Steps"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 15,
+      "type": "speech",
+      "question": "Say what posture provides to the dancer:",
+      "target_phrase": "Balance and Alignment",
+      "reference_answer": "Balance and Alignment",
+      "key_concepts": [
+        "Balance",
+        "Alignment"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "question": "Why does a Bharatanatyam dancer begin and end every single session with a salutation?",
+      "options": {
+        "A": "To honor the sacred history and culture of the art form and show gratitude to teacher, god, and viewers",
+        "B": "Because it is required by modern legal regulations",
+        "C": "To check if the dance stage floor is slippery",
+        "D": "To count the number of audience members in the room"
+      },
+      "answer": "A",
+      "answer_text": "The salutation honors the rich cultural heritage and invokes divine, pedagogical, and community blessings.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "question": "What is the structural relationship between 'postures' and 'adavus' in classical dance training?",
+      "options": {
+        "A": "Postures are static body positions that serve as the foundational building blocks for moving adavus",
+        "B": "Postures are songs while adavus are costumes",
+        "C": "Postures are only for beginners while adavus are only for teachers",
+        "D": "There is no relationship between postures and adavus"
+      },
+      "answer": "A",
+      "answer_text": "Postures form the static physical framework, and adavus are dynamic steps built by moving through these postures.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "question": "What does the Sanskrit/Tamil term 'Guru' specifically signify in the context of Bharatanatyam salutation?",
+      "options": {
+        "A": "The teacher, master, or mentor who imparts classical dance knowledge",
+        "B": "The stage lighting director",
+        "C": "The costume tailor",
+        "D": "The musical instrument maker"
+      },
+      "answer": "A",
+      "answer_text": "The Guru is the revered teacher whose guidance and wisdom transmit the art form to the student.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "question": "How does mastering physical alignment in Samapadam benefit a dancer's long-term practice?",
+      "options": {
+        "A": "It builds core stability, correct spinal posture, and centered equilibrium for complex movements",
+        "B": "It allows the dancer to jump without touching the ground",
+        "C": "It eliminates the need for any other postures",
+        "D": "It replaces vocal practice entirely"
+      },
+      "answer": "A",
+      "answer_text": "Samapadam establishes the dancer's physical baseline of balance, vertical alignment, and somatic poise.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "question": "Why can the human body greatly vary in different classical dance postures?",
+      "options": {
+        "A": "Because different postures utilize distinct geometric angles, limb extensions, and levels of elevation",
+        "B": "Because dancers change their height constantly",
+        "C": "Because costumes alter physical body shapes",
+        "D": "Because the stage moves under the dancer"
+      },
+      "answer": "A",
+      "answer_text": "Each posture commands a unique structural geometry, varying from upright stances to half and full squats.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "question": "Which of the following best describes the physical execution of Samapadam?",
+      "options": {
+        "A": "Standing upright with spine erect, feet together in parallel contact, and hands resting firmly on hips",
+        "B": "Bending sideways with one foot lifted up to the knee",
+        "C": "Sitting cross-legged on the floor with eyes closed",
+        "D": "Leaning forward on one hand with legs extended backwards"
+      },
+      "answer": "A",
+      "answer_text": "Samapadam requires an upright spine, feet close together, and hands positioned steadily on the waist.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "question": "Why is the audience included in the recipient list of the Bharatanatyam salutation?",
+      "options": {
+        "A": "To acknowledge their presence, seek their goodwill, and honor the shared sacred space of artistic communication",
+        "B": "To invite the audience to leave the theater early",
+        "C": "To test the audience's knowledge of Sanskrit",
+        "D": "To ask the audience for ticket payments"
+      },
+      "answer": "A",
+      "answer_text": "The audience (Rasikas) is an integral partner in classical performance whose respectful presence is acknowledged.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "question": "What is the primary role of 'frozen positions' (postures) in developing a dancer's muscle memory?",
+      "options": {
+        "A": "They train the neuromuscular system to sustain precise geometric form and balance before adding speed",
+        "B": "They freeze the dancer's body so they cannot move",
+        "C": "They replace the necessity of stretching",
+        "D": "They allow dancers to sleep during practice"
+      },
+      "answer": "A",
+      "answer_text": "Static posture practice conditions muscles to hold accurate geometric angles effortlessly during rapid choreography.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 24,
+      "type": "descriptive",
+      "question": "Explain the concept and significance of 'posture' in classical Bharatanatyam.",
+      "reference_answer": "In Bharatanatyam, a posture is a frozen position of the body that establishes physical balance, stability, and geometric alignment, serving as the foundation for all dance movements.",
+      "key_concepts": [
+        "posture",
+        "frozen position of the body",
+        "balance",
+        "stability",
+        "geometric alignment",
+        "foundation for dance movements"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 25,
+      "type": "descriptive",
+      "question": "What are 'adavus' and how do they evolve from static postures?",
+      "reference_answer": "Adavus are the fundamental rhythmic dance steps in Bharatanatyam. They are created when frozen static postures are brought to life through intentional body movement, footwork, and rhythm.",
+      "key_concepts": [
+        "adavus",
+        "fundamental rhythmic dance steps",
+        "static postures",
+        "brought to life",
+        "movement",
+        "footwork",
+        "rhythm"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 26,
+      "type": "descriptive",
+      "question": "Describe the three-part blessing sought during the opening and closing salutation.",
+      "reference_answer": "During the salutation, the dancer offers prayers and seeks blessings from God (divine grace), the Guru (teacher's wisdom), and the audience (community goodwill and witness).",
+      "key_concepts": [
+        "salutation",
+        "prayers and blessings",
+        "God",
+        "divine grace",
+        "Guru",
+        "teacher's wisdom",
+        "audience",
+        "community goodwill"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 27,
+      "type": "speech",
+      "question": "Pronounce the ritual performed before and after every lesson:",
+      "target_phrase": "Classical Dance Salutation",
+      "reference_answer": "Classical Dance Salutation",
+      "key_concepts": [
+        "Classical",
+        "Dance",
+        "Salutation"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 28,
+      "type": "speech",
+      "question": "Pronounce the term for the respected master or teacher:",
+      "target_phrase": "Guru and Teacher",
+      "reference_answer": "Guru and Teacher",
+      "key_concepts": [
+        "Guru",
+        "Teacher"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 29,
+      "type": "speech",
+      "question": "Pronounce the phrase describing what adavus represent:",
+      "target_phrase": "Basic Dance Steps in Motion",
+      "reference_answer": "Basic Dance Steps in Motion",
+      "key_concepts": [
+        "Basic",
+        "Dance",
+        "Steps",
+        "Motion"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 30,
+      "type": "speech",
+      "question": "Pronounce the three entities honored in salutation:",
+      "target_phrase": "God Guru and Audience",
+      "reference_answer": "God Guru and Audience",
+      "key_concepts": [
+        "God",
+        "Guru",
+        "Audience"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "question": "How does the pedagogical philosophy of Bharatanatyam frame the practice of the opening and closing salutation?",
+      "options": {
+        "A": "As a transformative sacred ritual that transitions the practitioner between mundane space and consecrated artistic focus while maintaining humility",
+        "B": "As a mechanical stage requirement strictly intended to fill time",
+        "C": "As an optional decorative exercise without spiritual or cultural meaning",
+        "D": "As an athletic warm-up designed solely to increase heart rate"
+      },
+      "answer": "A",
+      "answer_text": "The salutation acts as a spiritual threshold, establishing reverence, humility, and mindfulness before and after artistic exertion.",
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "question": "Analyze the biomechanical importance of the Samapadam posture as the foundation for the entire Bharatanatyam vocabulary.",
+      "options": {
+        "A": "It grounds the body's center of gravity, neutralizes pelvic tilt, and aligns the spine so that subsequent dynamic deviations maintain structural integrity",
+        "B": "It exhausts the dancer's lower legs so they can sit down quickly",
+        "C": "It is designed to restrict breathing during dance routines",
+        "D": "It forces the dancer to look exclusively toward the ceiling"
+      },
+      "answer": "A",
+      "answer_text": "Samapadam creates an anatomical baseline of verticality and symmetrical balance upon which complex dynamic postures depend.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "question": "In classical Natyashastra theory, why is the synthesis of static posture (Sthana) and dynamic step (Adavu) considered fundamental to Natya?",
+      "options": {
+        "A": "Because visual beauty and emotional resonance emerge from the contrast and transition between geometric stillness and rhythmic kinetic energy",
+        "B": "Because dance must avoid any static moments under all circumstances",
+        "C": "Because music cannot accompany moving dancers without static pauses",
+        "D": "Because adavus are only performed when sitting down"
+      },
+      "answer": "A",
+      "answer_text": "Classical Indian aesthetics celebrate the dynamic interplay between pristine architectural stillness and expressive kinetic movement.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "question": "How does the triad of 'God, Guru, and Audience' in the salutation reflect the traditional Indian epistemological framework of art?",
+      "options": {
+        "A": "It integrates the metaphysical origin of art (God), the lineage transmission of knowledge (Guru), and the receptive communal experience (Audience/Rasika)",
+        "B": "It establishes a hierarchy where dancers compete against their teachers",
+        "C": "It removes the need for individual practice and personal dedication",
+        "D": "It restricts dance performances exclusively to temple courtyards"
+      },
+      "answer": "A",
+      "answer_text": "The triad unites spiritual inspiration, living guru-shishya lineage transmission, and communal artistic reception into a unified sacred continuum.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "question": "Why must a Bharatanatyam practitioner cultivate acute spatial awareness during the execution of basic postures?",
+      "options": {
+        "A": "To maintain symmetrical geometric alignment across all bodily planes and ensure clean visual lines during performance",
+        "B": "To avoid bumping into musical instruments placed on the stage",
+        "C": "To ensure they stay within one square foot of space throughout the dance",
+        "D": "To memorize the names of audience members seated in the hall"
+      },
+      "answer": "A",
+      "answer_text": "Geometric precision and clean bodily symmetry across the horizontal, vertical, and sagittal planes are hallmarks of classical Bharatanatyam.",
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "question": "What psychological state does the disciplined practice of beginning with a salutation instill in the learner?",
+      "options": {
+        "A": "Reverence, mental focus, ego surrender, and somatic readiness for rigorous artistic training",
+        "B": "Competitiveness and desire to outperform others at any cost",
+        "C": "Impatience and eagerness to skip foundational technique",
+        "D": "Complacency and lack of physical discipline"
+      },
+      "answer": "A",
+      "answer_text": "The ritual fosters humility, mental clarity, and deep concentration, anchoring the dancer in dedicated artistic practice.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "question": "How does the progression from Samapadam posture to complex Adavus mirror the broader learning curve in classical Indian arts?",
+      "options": {
+        "A": "By mastering simple, unadorned fundamental alignment before layering intricate rhythmic, kinetic, and expressive dimensions",
+        "B": "By abandoning basic postures as soon as fast footwork is learned",
+        "C": "By focusing entirely on facial expressions while ignoring footwork",
+        "D": "By improvising movements without any structural rules"
+      },
+      "answer": "A",
+      "answer_text": "Classical pedagogy demands total mastery of foundational stillness and alignment before advancing to intricate dynamic sequences.",
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 38,
+      "type": "descriptive",
+      "question": "Critically analyze why beginning and ending every Bharatanatyam lesson with a salutation is an essential cultural and pedagogical practice.",
+      "reference_answer": "The salutation is essential because it honors the sacred lineage and heritage of Indian classical dance. Pedagogically and culturally, it instills humility, mental focus, and gratitude by seeking blessings from God, the Guru, and the audience, creating a disciplined and sacred learning environment.",
+      "key_concepts": [
+        "salutation",
+        "sacred lineage and heritage",
+        "Indian classical dance",
+        "humility",
+        "mental focus",
+        "gratitude",
+        "God, Guru, and audience",
+        "disciplined learning environment"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 39,
+      "type": "descriptive",
+      "question": "Examine the dynamic relationship between static postures and kinetic adavus in Bharatanatyam.",
+      "reference_answer": "Postures provide the structural, frozen geometric framework that ensures balance and bodily alignment. When these static postures are animated with rhythmic movement, footwork, and time cycles, they transform into adavus—the fundamental moving dance steps of Bharatanatyam.",
+      "key_concepts": [
+        "static postures",
+        "structural geometric framework",
+        "balance and alignment",
+        "animated with rhythmic movement",
+        "footwork and time cycles",
+        "adavus",
+        "fundamental moving dance steps"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 40,
+      "type": "descriptive",
+      "question": "Evaluate how Samapadam establishes bodily equilibrium and readiness for classical dance.",
+      "reference_answer": "Samapadam establishes equilibrium by aligning the feet, spine, and hands in neutral vertical symmetry. This centered posture trains core stability, somatic awareness, and posture discipline, serving as the launch point for all subsequent movements.",
+      "key_concepts": [
+        "Samapadam",
+        "bodily equilibrium",
+        "neutral vertical symmetry",
+        "core stability",
+        "somatic awareness",
+        "posture discipline",
+        "launch point for movements"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 41,
+      "type": "descriptive",
+      "question": "Synthesize the pedagogical significance of balance, alignment, and reverence in the training of a classical dancer.",
+      "reference_answer": "Balance and physical alignment provide the anatomical foundation for stamina and clean geometric execution, while reverence cultivated through the salutation nurtures artistic humility, respect for tradition, and harmonious connection between the dancer and the community.",
+      "key_concepts": [
+        "balance and alignment",
+        "anatomical foundation",
+        "geometric execution",
+        "reverence",
+        "salutation",
+        "artistic humility",
+        "respect for tradition",
+        "harmonious connection"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 42,
+      "type": "speech",
+      "question": "Pronounce the phrase describing the transformation of posture into dance:",
+      "target_phrase": "Postures Coming to Life with Movement",
+      "reference_answer": "Postures Coming to Life with Movement",
+      "key_concepts": [
+        "Postures",
+        "Life",
+        "Movement"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 43,
+      "type": "speech",
+      "question": "Pronounce the phrase describing the foundational physical discipline:",
+      "target_phrase": "Geometric Posture Balance and Alignment",
+      "reference_answer": "Geometric Posture Balance and Alignment",
+      "key_concepts": [
+        "Geometric",
+        "Posture",
+        "Balance",
+        "Alignment"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 44,
+      "type": "speech",
+      "question": "Pronounce the phrase honoring cultural lineage:",
+      "target_phrase": "Sacred Lineage Guru and Tradition",
+      "reference_answer": "Sacred Lineage Guru and Tradition",
+      "key_concepts": [
+        "Sacred",
+        "Lineage",
+        "Guru",
+        "Tradition"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 45,
+      "type": "speech",
+      "question": "Pronounce the phrase defining classical dance steps:",
+      "target_phrase": "Fundamental Building Blocks of Adavus",
+      "reference_answer": "Fundamental Building Blocks of Adavus",
+      "key_concepts": [
+        "Fundamental",
+        "Building",
+        "Blocks",
+        "Adavus"
+      ],
+      "min_score_threshold": 85,
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    }
+  ],
+  "sequence_test": {
+    "title": "Pedagogical Sequence of Salutation and Fundamental Postures",
+    "description": "These questions test whether the learner understands the correct sequence of the opening salutation, postural setup, and movement initiation in Bharatanatyam.",
+    "questions": [
+      {
+        "id": 46,
+        "type": "sequence_mcq",
+        "question": "What is the correct pedagogical order when beginning a Bharatanatyam practice session?",
+        "options": {
+          "A": "Opening Salutation offering prayers to God, Guru, and Audience -> Entering Samapadam posture with hands on waist -> Establishing balance and alignment -> Initiating adavus with movement",
+          "B": "Initiating adavus -> Opening Salutation -> Samapadam posture -> Establishing balance",
+          "C": "Samapadam posture -> Initiating adavus -> Opening Salutation -> Ending lesson",
+          "D": "Establishing alignment -> Initiating adavus -> Opening Salutation -> Samapadam"
+        },
+        "answer": "A",
+        "answer_text": "A classical session always commences with the opening salutation, followed by assuming Samapadam posture, refining alignment, and commencing dynamic adavus.",
+        "difficulty": "moderate",
         "difficulty_percentage": 60,
         "difficulty_level": "Curious Adventurer"
       },
@@ -416,6 +1185,20 @@
         "difficulty": "hard",
         "difficulty_percentage": 88,
         "difficulty_level": "Champion"
+        "id": 47,
+        "type": "sequence_mcq",
+        "question": "Arrange the developmental progression from basic posture to expressive choreography:",
+        "options": {
+          "A": "Mastering frozen static posture (Samapadam) -> Finding physical balance and vertical alignment -> Bringing posture to life through movement -> Executing complete rhythmic adavu combinations",
+          "B": "Executing adavu combinations -> Mastering static posture -> Finding balance -> Bringing posture to life",
+          "C": "Bringing posture to life -> Executing adavu combinations -> Mastering static posture -> Finding balance",
+          "D": "Finding balance -> Executing adavu combinations -> Bringing posture to life -> Static posture"
+        },
+        "answer": "A",
+        "answer_text": "The learner progresses from static posture and physical alignment to infusing movement and finally executing full adavus.",
+        "difficulty": "hard",
+        "difficulty_percentage": 75,
+        "difficulty_level": "Challenger"
       }
     ]
   },
@@ -435,6 +1218,45 @@
         { "id": "desc_3", "text": "A basic dance step that comes alive when postures are combined with movement." }
       ],
       "correct_matches": { "img_1": "desc_1", "img_2": "desc_2", "img_3": "desc_3" },
+      "id": 48,
+      "type": "image_matching",
+      "question": "Match each Bharatanatyam concept with its correct description:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/salutation.jpg",
+          "label": "Salutation"
+        },
+        {
+          "id": "img_2",
+          "file": "images/samapadam.jpg",
+          "label": "Samapadam"
+        },
+        {
+          "id": "img_3",
+          "file": "images/adavu.jpg",
+          "label": "Adavu"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "An offering of prayer and greetings to god, teacher, and audience that opens and closes every session."
+        },
+        {
+          "id": "desc_2",
+          "text": "The fundamental starting posture where the dancer stands upright with feet close together and hands on waist."
+        },
+        {
+          "id": "desc_3",
+          "text": "Basic rhythmic dance steps created when frozen bodily postures come to life with movement."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
       "points": 3,
       "difficulty": "easy",
       "difficulty_percentage": 30,
@@ -457,12 +1279,56 @@
       "correct_matches": { "img_1": "desc_1", "img_2": "desc_2", "img_3": "desc_3" },
       "points": 3,
       "difficulty": "medium",
+      "id": 49,
+      "type": "image_matching",
+      "question": "Match each foundational element of Bharatanatyam training with its key significance:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/posture_balance.jpg",
+          "label": "Balance & Alignment"
+        },
+        {
+          "id": "img_2",
+          "file": "images/guru_respect.jpg",
+          "label": "Guru & Teacher"
+        },
+        {
+          "id": "img_3",
+          "file": "images/audience_rasika.jpg",
+          "label": "Audience / Rasika"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "The structural stability and symmetrical poise provided to the dancer by maintaining proper bodily postures."
+        },
+        {
+          "id": "desc_2",
+          "text": "The revered guide and master who preserves and transmits the sacred traditions of classical dance."
+        },
+        {
+          "id": "desc_3",
+          "text": "The appreciative community of viewers whose blessings and engagement complete the artistic experience."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "moderate",
       "difficulty_percentage": 60,
       "difficulty_level": "Curious Adventurer"
     }
   ],
   "scoring": {
     "mcq": { "points_per_correct_answer": 1 },
+    "mcq": {
+      "points_per_correct_answer": 1
+    },
     "descriptive": {
       "method": "cosine_similarity",
       "description": "Calculate embedding cosine similarity against reference concepts.",
@@ -476,5 +1342,18 @@
     "speech": { "points_per_correct_answer": 1, "min_pass_score": 60 },
     "sequence_test": { "points_per_correct_answer": 1 },
     "image_matching": { "points_per_correct_match": 1, "total_points": 3 }
+  }
+}
+    "speech": {
+      "points_per_correct_answer": 1,
+      "min_pass_score": 60
+    },
+    "sequence_test": {
+      "points_per_correct_answer": 1
+    },
+    "image_matching": {
+      "points_per_correct_match": 1,
+      "total_points": 3
+    }
   }
 }

@@ -12,6 +12,22 @@
     "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
     "sequence_test": "Chronological milestone ordering and sequence analysis.",
     "image_matching": "Interactive visual matching connecting postures, adavus, and descriptions."
+{
+  "title": "Aramandi Posture and the Thattadavu Series",
+  "section": {
+    "start": "00:00",
+    "end": "01:30",
+    "description": "Comprehensive 45-question pedagogical assessment for ages 3 to 15 spanning Easy, Moderate, and Hard difficulty levels."
+  },
+  "target_age": 12,
+  "age_range": "3-15 years",
+  "question_pattern": {
+    "main_questions": "45 progressive questions consisting of multi-tier MCQs, conceptual descriptive questions, and voice pronunciation speech questions.",
+    "difficulty_distribution": "15 Easy (Ages 3-7), 15 Moderate (Ages 8-11), 15 Hard (Ages 12-15)",
+    "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
+    "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
+    "sequence_test": "Chronological milestone ordering and sequence analysis.",
+    "image_matching": "Interactive visual matching connecting postures, terms, and descriptions."
   },
   "questions": [
     {
@@ -29,6 +45,19 @@
       "difficulty": "easy",
       "difficulty_percentage": 20,
       "difficulty_level": "Gentle Starter"
+      "question": "What is the second basic posture in Bharatanatyam called?",
+      "options": {
+        "A": "Aramandi",
+        "B": "Samapadam",
+        "C": "Thattadavu",
+        "D": "Natyam"
+      },
+      "answer": "A",
+      "answer_text": "The second posture in Bharatanatyam is called Aramandi (half-sitting posture).",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 2,
@@ -45,6 +74,19 @@
       "difficulty": "easy",
       "difficulty_percentage": 30,
       "difficulty_level": "Gentle Starter"
+      "question": "In the Aramandi posture, how are the dancer's heels positioned?",
+      "options": {
+        "A": "Close to each other with a little bit of space",
+        "B": "Far apart at opposite ends of the room",
+        "C": "Stacked on top of each other",
+        "D": "Lifted high off the floor"
+      },
+      "answer": "A",
+      "answer_text": "In Aramandi, the heels are kept close together with just a small space between them.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 3,
@@ -61,6 +103,19 @@
       "difficulty": "easy",
       "difficulty_percentage": 30,
       "difficulty_level": "Gentle Starter"
+      "question": "What shape do the dancer's legs make in the Aramandi posture?",
+      "options": {
+        "A": "A diamond shape",
+        "B": "A circle shape",
+        "C": "A straight triangle",
+        "D": "A square shape"
+      },
+      "answer": "A",
+      "answer_text": "When squatting halfway down in Aramandi, the legs form a distinct diamond shape.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 4,
@@ -77,6 +132,19 @@
       "difficulty": "medium",
       "difficulty_percentage": 40,
       "difficulty_level": "Balanced Explorer"
+      "question": "What does the Tamil word 'Thatta' mean?",
+      "options": {
+        "A": "To strike",
+        "B": "To jump",
+        "C": "To sleep",
+        "D": "To sing"
+      },
+      "answer": "A",
+      "answer_text": "In Tamil, 'Thatta' means to strike.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 5,
@@ -93,6 +161,19 @@
       "difficulty": "medium",
       "difficulty_percentage": 45,
       "difficulty_level": "Balanced Explorer"
+      "question": "What does 'adavu' mean in Bharatanatyam?",
+      "options": {
+        "A": "Step",
+        "B": "Dress",
+        "C": "Song",
+        "D": "Stage"
+      },
+      "answer": "A",
+      "answer_text": "'Adavu' means dance step.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 6,
@@ -109,6 +190,19 @@
       "difficulty": "medium",
       "difficulty_percentage": 50,
       "difficulty_level": "Curious Adventurer"
+      "question": "What is the English name for the Thattadavu series?",
+      "options": {
+        "A": "Striking steps",
+        "B": "Flying steps",
+        "C": "Running steps",
+        "D": "Spinning steps"
+      },
+      "answer": "A",
+      "answer_text": "Because 'Thatta' means strike and 'adavu' means step, Thattadavu is otherwise called 'striking steps'.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 7,
@@ -125,6 +219,19 @@
       "difficulty": "medium",
       "difficulty_percentage": 55,
       "difficulty_level": "Curious Adventurer"
+      "question": "Where does the dancer place their hands during Aramandi posture?",
+      "options": {
+        "A": "On the waist",
+        "B": "Above the head",
+        "C": "On the floor",
+        "D": "In front of the eyes"
+      },
+      "answer": "A",
+      "answer_text": "The dancer places their hands firmly on the waist.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 8,
@@ -141,6 +248,19 @@
       "difficulty": "hard",
       "difficulty_percentage": 65,
       "difficulty_level": "Challenger"
+      "question": "Which foot does the dancer start striking with in the first Thattadavu step?",
+      "options": {
+        "A": "Right leg",
+        "B": "Left leg",
+        "C": "Both legs together",
+        "D": "Neither leg"
+      },
+      "answer": "A",
+      "answer_text": "The dancer strikes each foot once, starting off with the right leg.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 9,
@@ -157,6 +277,19 @@
       "difficulty": "hard",
       "difficulty_percentage": 75,
       "difficulty_level": "Challenger"
+      "question": "In Aramandi, how far down does the dancer squat?",
+      "options": {
+        "A": "Halfway down",
+        "B": "All the way down to the floor",
+        "C": "Not at all, standing completely straight",
+        "D": "Lying on the floor"
+      },
+      "answer": "A",
+      "answer_text": "In Aramandi, the dancer squats halfway down to align the knees with the toes.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 10,
@@ -173,6 +306,19 @@
       "difficulty": "hard",
       "difficulty_percentage": 88,
       "difficulty_level": "Champion"
+      "question": "Which two basic postures are used as the building blocks for learning Thattadavu?",
+      "options": {
+        "A": "Samapadam and Aramandi",
+        "B": "Running and jumping",
+        "C": "Singing and clapping",
+        "D": "Sitting and sleeping"
+      },
+      "answer": "A",
+      "answer_text": "Samapadam (standing straight) and Aramandi (half-sitting) are the two building block postures.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 11,
@@ -184,6 +330,22 @@
       "difficulty": "easy",
       "difficulty_percentage": 35,
       "difficulty_level": "Gentle Starter"
+      "reference_answer": "In Aramandi, the dancer places the heels close together with a little space, turns the toes out in opposite directions in a straight line, squats halfway down to align knees with toes, forms a diamond shape with the legs, and rests hands on the waist.",
+      "key_concepts": [
+        "Aramandi",
+        "heels close together",
+        "toes turned out opposite directions",
+        "straight line",
+        "squats halfway down",
+        "knees aligned with toes",
+        "diamond shape",
+        "hands on waist"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 12,
@@ -351,6 +513,629 @@
         "answer": "B",
         "answer_text": "After the two postures, the dancer practices Thattadavu — the striking steps series using both as building blocks.",
         "difficulty": "medium",
+      "question": "What is the Thattadavu adavu series and what does it mean?",
+      "reference_answer": "Thattadavu is an adavu series meaning 'striking steps' (Thatta means to strike, adavu means step). The dancer starts in Samapadam, sits in Aramandi, and strikes each foot starting with the right leg.",
+      "key_concepts": [
+        "Thattadavu",
+        "striking steps",
+        "Thatta means strike",
+        "adavu means step",
+        "Samapadam",
+        "Aramandi",
+        "strikes each foot",
+        "right leg"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 13,
+      "type": "speech",
+      "question": "Pronounce the name of the second posture in Bharatanatyam:",
+      "target_phrase": "Aramandi Posture",
+      "reference_answer": "Aramandi Posture",
+      "key_concepts": [
+        "Aramandi",
+        "Posture"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 14,
+      "type": "speech",
+      "question": "Pronounce the name of the striking steps adavu series:",
+      "target_phrase": "Thattadavu Series",
+      "reference_answer": "Thattadavu Series",
+      "key_concepts": [
+        "Thattadavu",
+        "Series"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 15,
+      "type": "speech",
+      "question": "Pronounce the shape formed by the legs in Aramandi:",
+      "target_phrase": "Diamond Shape with Legs",
+      "reference_answer": "Diamond Shape with Legs",
+      "key_concepts": [
+        "Diamond",
+        "Shape",
+        "Legs"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "question": "In Aramandi posture, what is the required alignment between the toes of both feet?",
+      "options": {
+        "A": "They must turn outward in opposite directions and lie in the exact same straight line from one end to the other",
+        "B": "They must point directly forward touching each other",
+        "C": "One foot must point forward while the other points backward",
+        "D": "The toes should be tucked underneath the soles"
+      },
+      "answer": "A",
+      "answer_text": "The toes must be turned outward in opposite directions and aligned along the same horizontal line.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "question": "Why is maintaining the diamond shape with the legs throughout the step so crucial in Aramandi?",
+      "options": {
+        "A": "It ensures proper hip turnout, stable center of gravity, and clean aesthetic lines for the dance step",
+        "B": "It helps the dancer bounce higher into the air",
+        "C": "It makes the costume change colors",
+        "D": "It prevents the dancer from hearing the music"
+      },
+      "answer": "A",
+      "answer_text": "Maintaining the diamond shape preserves structural stability, knee alignment, and classical aesthetics.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "question": "How does the teacher in the video compare an adavu series to familiar Western dance patterns?",
+      "options": {
+        "A": "Like the Hokey Pokey or the Waltz, which are structured series of movements",
+        "B": "Like running a 100-meter sprint race",
+        "C": "Like playing a board game with dice",
+        "D": "Like painting a landscape picture"
+      },
+      "answer": "A",
+      "answer_text": "The teacher compares an adavu series to the Hokey Pokey or Waltz as structured sequences of movements.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "question": "What is the physical transition made by the dancer before executing the first foot strike of Thattadavu?",
+      "options": {
+        "A": "Starting in Samapadam (feet close together, standing straight), then sitting halfway down into Aramandi",
+        "B": "Jumping up in the air and landing on both knees",
+        "C": "Sitting flat on the floor and clapping hands",
+        "D": "Spinning three times while looking at the ceiling"
+      },
+      "answer": "A",
+      "answer_text": "The dancer begins in Samapadam, smoothly descends into Aramandi, and then strikes the right foot.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "question": "What must happen to the knees when squatting down into Aramandi?",
+      "options": {
+        "A": "They must bend outward in direct alignment over the turned-out toes",
+        "B": "They must buckle inward and touch each other",
+        "C": "They must remain locked completely straight",
+        "D": "One knee bends forward while the other bends backward"
+      },
+      "answer": "A",
+      "answer_text": "The knees must bend laterally in direct alignment over the turned-out toes to prevent joint strain.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "question": "Why is Samapadam called the position 'every dancer takes to begin every dance step'?",
+      "options": {
+        "A": "Because it establishes the initial physical composure, vertical alignment, and hands-on-waist readiness",
+        "B": "Because it is the only posture permitted in Bharatanatyam",
+        "C": "Because dancers are not allowed to bend their knees in classical dance",
+        "D": "Because it is performed while sitting on a chair"
+      },
+      "answer": "A",
+      "answer_text": "Samapadam serves as the universal preparatory stance before any movement or lower-body squat is initiated.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "question": "What is the literal anatomical difference between Samapadam and Aramandi?",
+      "options": {
+        "A": "Samapadam is an erect standing stance with parallel feet; Aramandi is a half-squat with 180-degree turned-out feet and bent knees",
+        "B": "Samapadam uses only one leg while Aramandi uses neither",
+        "C": "Samapadam is done lying down while Aramandi is done jumping",
+        "D": "There is no physical difference between them"
+      },
+      "answer": "A",
+      "answer_text": "Samapadam is an upright standing posture with parallel feet; Aramandi is a demi-plié half squat with external hip rotation.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "question": "Why are Samapadam and Aramandi described as 'building blocks' of Bharatanatyam?",
+      "options": {
+        "A": "Because every complex adavu, foot strike, and rhythmic pattern is constructed by combining and transitioning between these postures",
+        "B": "Because dancers use wooden blocks to practice them",
+        "C": "Because they are used to build stage sets",
+        "D": "Because they are only taught to construction workers"
+      },
+      "answer": "A",
+      "answer_text": "They provide the foundational postural alphabet from which all classical footwork and choreography are constructed.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 24,
+      "type": "descriptive",
+      "question": "Explain the key physical alignment guidelines for executing an accurate Aramandi posture.",
+      "reference_answer": "In Aramandi, the dancer keeps heels close with a slight gap, turns toes outward in opposite directions along a single straight line, squats halfway down ensuring knees align with the toes, creates a diamond shape with the legs, and rests hands on the waist.",
+      "key_concepts": [
+        "Aramandi",
+        "heels close with slight gap",
+        "toes outward opposite directions",
+        "single straight line",
+        "squats halfway down",
+        "knees align with toes",
+        "diamond shape",
+        "hands on waist"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 25,
+      "type": "descriptive",
+      "question": "How do Samapadam and Aramandi function together as the starting sequence for Thattadavu?",
+      "reference_answer": "The dancer first stands erect in Samapadam with hands on the waist to find balance, then lowers the body halfway down into Aramandi to establish the diamond leg shape before striking the right foot on the ground.",
+      "key_concepts": [
+        "Samapadam",
+        "hands on waist",
+        "find balance",
+        "lowers body halfway down",
+        "Aramandi",
+        "diamond leg shape",
+        "striking right foot"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 26,
+      "type": "descriptive",
+      "question": "Explain the meaning and components of the term 'Thattadavu'.",
+      "reference_answer": "'Thatta' is a Tamil word meaning to strike, and 'adavu' means dance step. Together, Thattadavu refers to the series of rhythmic striking steps where the dancer strikes the soles of the feet against the floor.",
+      "key_concepts": [
+        "Thatta",
+        "Tamil word",
+        "to strike",
+        "adavu means dance step",
+        "Thattadavu",
+        "rhythmic striking steps",
+        "strikes soles against floor"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 27,
+      "type": "speech",
+      "question": "Pronounce the Tamil root word meaning to strike:",
+      "target_phrase": "Thatta Means to Strike",
+      "reference_answer": "Thatta Means to Strike",
+      "key_concepts": [
+        "Thatta",
+        "Strike"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 28,
+      "type": "speech",
+      "question": "Pronounce both building block postures:",
+      "target_phrase": "Samapadam and Aramandi Postures",
+      "reference_answer": "Samapadam and Aramandi Postures",
+      "key_concepts": [
+        "Samapadam",
+        "Aramandi",
+        "Postures"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 29,
+      "type": "speech",
+      "question": "Pronounce the toe alignment rule in Aramandi:",
+      "target_phrase": "Toes in the Same Line",
+      "reference_answer": "Toes in the Same Line",
+      "key_concepts": [
+        "Toes",
+        "Same",
+        "Line"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 30,
+      "type": "speech",
+      "question": "Pronounce the starting foot in Thattadavu:",
+      "target_phrase": "Striking with the Right Leg",
+      "reference_answer": "Striking with the Right Leg",
+      "key_concepts": [
+        "Striking",
+        "Right",
+        "Leg"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "question": "From a biomechanical perspective, why is knee-toe alignment critical during the Aramandi demi-squat?",
+      "options": {
+        "A": "It prevents excessive torsional torque on the patellar tendon and meniscus while evenly distributing gravitational load across the quadriceps and glutes",
+        "B": "It ensures the dancer can jump without bending the ankles",
+        "C": "It reduces the dancer's shoe size",
+        "D": "It forces the dancer's feet to lift off the ground automatically"
+      },
+      "answer": "A",
+      "answer_text": "Proper tracking of knees directly over the turned-out toes protects knee ligaments and optimizes lower-body power generation.",
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "question": "How does the external rotation of the hip joints (turnout) in Aramandi influence the dancer's center of mass?",
+      "options": {
+        "A": "It lowers the center of gravity, broadens the base of support, and provides omnidirectional dynamic stability for rapid footwork",
+        "B": "It shifts the center of gravity into the dancer's head, causing loss of balance",
+        "C": "It prevents the dancer from moving in any direction",
+        "D": "It elevates the body higher than Samapadam posture"
+      },
+      "answer": "A",
+      "answer_text": "Aramandi lowers the pelvis and creates a grounded, highly stable triangular/diamond base for dynamic rhythmic strikes.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "question": "Analyze why Thattadavu is universally taught as the very first adavu series in Bharatanatyam curriculum.",
+      "options": {
+        "A": "It isolates and drills fundamental rhythmic foot strikes (Talam) while conditioning the dancer to sustain the demanding Aramandi posture",
+        "B": "It requires the dancer to use complex hand mudras immediately",
+        "C": "It is the only adavu series that does not require any physical stamina",
+        "D": "It allows the dancer to perform without listening to the rhythm"
+      },
+      "answer": "A",
+      "answer_text": "Thattadavu builds pure rhythmic foot-strike precision, leg strength, and somatic stamina in Aramandi before upper-body mudras are layered.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "question": "What common postural fault occurs if the diamond shape in Aramandi is collapsed during striking footwork?",
+      "options": {
+        "A": "The knees cave inward (valgus collapse), the pelvis tilts anteriorly, and the foot strikes lose acoustic resonance and crispness",
+        "B": "The dancer's arms automatically extend upward",
+        "C": "The music tempo slows down automatically",
+        "D": "The floor becomes slippery"
+      },
+      "answer": "A",
+      "answer_text": "Collapsing the diamond shape degrades structural alignment, compromises knee safety, and diminishes the power of the foot strike.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "question": "In classical Indian sculpture and iconography, how is the Aramandi posture represented across ancient temple carvings?",
+      "options": {
+        "A": "As the sacred, geometrically balanced stance of Nataraja and celestial apsaras embodying cosmic balance and dynamic stillness",
+        "B": "As an ordinary seated resting position",
+        "C": "As an irregular, asymmetrical stance without geometric rules",
+        "D": "As a posture used only for sleeping"
+      },
+      "answer": "A",
+      "answer_text": "Aramandi is immortalized in temple sculptures (Karanas) as the quintessential aesthetic posture of divine and classical Indian dance.",
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "question": "How does the hands-on-waist placement in basic Thattadavu support pedagogical development?",
+      "options": {
+        "A": "It isolates lower-body mechanics, fixes the pelvic girdle, and prevents compensatory upper-body flailing while learning footwork",
+        "B": "It hides the dancer's fingers so the teacher cannot see them",
+        "C": "It is designed to keep the dancer's hands warm during winter",
+        "D": "It replaces the need for eye focus"
+      },
+      "answer": "A",
+      "answer_text": "Anchoring hands on the waist stabilizes the torso, allowing the student to concentrate entirely on footwork precision and posture.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "question": "Synthesize the anatomical coordination required when transitioning from Samapadam into Aramandi to strike the right foot.",
+      "options": {
+        "A": "Smooth pelvic descent with bilateral external hip rotation, maintaining an erect torso, followed by weight transfer and a resonant flat-foot strike",
+        "B": "Leaning forward on the toes and jumping into the air with both feet",
+        "C": "Collapsing to the floor and standing back up rapidly",
+        "D": "Turning around in a circle while keeping the knees straight"
+      },
+      "answer": "A",
+      "answer_text": "The movement demands controlled eccentric lower-body descent, lateral hip rotation, spinal verticality, and clean rhythmic foot articulation.",
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 38,
+      "type": "descriptive",
+      "question": "Critically analyze the physiological and geometric significance of the diamond shape in Aramandi posture.",
+      "reference_answer": "The diamond shape created by the thighs, shins, and turned-out feet represents the core geometry of Bharatanatyam. Physiologically, it lowers the center of gravity for dynamic balance, distributes body weight evenly, and conditions the abductor and quadricep muscles for demanding adavus.",
+      "key_concepts": [
+        "diamond shape",
+        "core geometry",
+        "turned-out feet",
+        "lowers center of gravity",
+        "dynamic balance",
+        "distributes body weight",
+        "quadriceps and abductors",
+        "demanding adavus"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 39,
+      "type": "descriptive",
+      "question": "Explain why Thattadavu is considered the foundational cornerstone of Bharatanatyam adavu training.",
+      "reference_answer": "Thattadavu is the foundational cornerstone because it introduces fundamental rhythmic foot strikes (Thatta) while training the body to sustain the rigorous Aramandi posture. It builds foot resonance, timing precision, and lower-body endurance before upper-body mudras are added.",
+      "key_concepts": [
+        "foundational cornerstone",
+        "rhythmic foot strikes",
+        "Thatta",
+        "rigorous Aramandi posture",
+        "foot resonance",
+        "timing precision",
+        "lower-body endurance",
+        "upper-body mudras"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 40,
+      "type": "descriptive",
+      "question": "Evaluate the biomechanical function of knee-toe alignment and straight-line foot placement in Aramandi.",
+      "reference_answer": "Keeping the toes turned out along a single straight line and tracking knees directly over toes ensures anatomical alignment. This protects the knee joints from torque, maximizes lateral stability, and maintains the pristine geometric lines essential to classical Indian dance.",
+      "key_concepts": [
+        "toes turned out",
+        "single straight line",
+        "knees over toes",
+        "anatomical alignment",
+        "protects knee joints from torque",
+        "lateral stability",
+        "geometric lines"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 41,
+      "type": "descriptive",
+      "question": "Synthesize the pedagogical progression from Samapadam posture to dynamic Thattadavu footwork.",
+      "reference_answer": "The progression moves from vertical stillness (Samapadam) to geometric half-squat grounding (Aramandi), and then to kinetic rhythmic articulation (Thattadavu foot strikes starting with the right leg), exemplifying the systematic structural methodology of classical dance.",
+      "key_concepts": [
+        "vertical stillness",
+        "Samapadam",
+        "half-squat grounding",
+        "Aramandi",
+        "kinetic rhythmic articulation",
+        "Thattadavu foot strikes",
+        "right leg",
+        "systematic methodology"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 42,
+      "type": "speech",
+      "question": "Pronounce the geometric hallmark of Aramandi posture:",
+      "target_phrase": "Diamond Shape Leg Geometry",
+      "reference_answer": "Diamond Shape Leg Geometry",
+      "key_concepts": [
+        "Diamond",
+        "Shape",
+        "Leg",
+        "Geometry"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 43,
+      "type": "speech",
+      "question": "Pronounce the biomechanical alignment requirement:",
+      "target_phrase": "Knees in Alignment with Toes",
+      "reference_answer": "Knees in Alignment with Toes",
+      "key_concepts": [
+        "Knees",
+        "Alignment",
+        "Toes"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 44,
+      "type": "speech",
+      "question": "Pronounce the foundational adavu concept:",
+      "target_phrase": "Foundational Striking Steps Series",
+      "reference_answer": "Foundational Striking Steps Series",
+      "key_concepts": [
+        "Foundational",
+        "Striking",
+        "Steps",
+        "Series"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 45,
+      "type": "speech",
+      "question": "Pronounce the complete sequence of Thattadavu initiation:",
+      "target_phrase": "Samapadam to Aramandi Right Foot Strike",
+      "reference_answer": "Samapadam to Aramandi Right Foot Strike",
+      "key_concepts": [
+        "Samapadam",
+        "Aramandi",
+        "Right",
+        "Foot",
+        "Strike"
+      ],
+      "min_score_threshold": 85,
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    }
+  ],
+  "sequence_test": {
+    "title": "Pedagogical Sequence of Aramandi Execution and Thattadavu Step",
+    "description": "These questions test whether the learner understands the exact bodily sequence required to transition from Samapadam into Aramandi and execute the first Thattadavu step.",
+    "questions": [
+      {
+        "id": 46,
+        "type": "sequence_mcq",
+        "question": "What is the correct physical sequence to set up the Aramandi posture?",
+        "options": {
+          "A": "Place heels close with slight space -> Turn toes outward in opposite directions along same line -> Squat halfway down aligning knees over toes -> Form and maintain diamond shape with hands on waist",
+          "B": "Squat halfway down -> Turn toes outward -> Place heels together -> Hands above head",
+          "C": "Hands on waist -> Jump in air -> Turn toes inward -> Stand straight",
+          "D": "Place heels far apart -> Turn toes forward -> Squat to the floor -> Hands behind back"
+        },
+        "answer": "A",
+        "answer_text": "Setting up Aramandi starts with heel placement, toe turnout in a straight line, squatting halfway down with knee-toe alignment, and holding the diamond shape.",
+        "difficulty": "moderate",
         "difficulty_percentage": 60,
         "difficulty_level": "Curious Adventurer"
       },
@@ -385,6 +1170,20 @@
         "difficulty": "hard",
         "difficulty_percentage": 90,
         "difficulty_level": "Champion"
+        "id": 47,
+        "type": "sequence_mcq",
+        "question": "Arrange the execution milestones of the first Thattadavu dance step:",
+        "options": {
+          "A": "Establish upright Samapadam posture -> Descend into Aramandi half-squat -> Strike right foot firmly on the floor -> Strike left foot firmly on the floor",
+          "B": "Strike left foot -> Strike right foot -> Samapadam -> Aramandi",
+          "C": "Aramandi -> Strike left foot -> Samapadam -> Strike right foot",
+          "D": "Strike right foot -> Samapadam -> Aramandi -> Strike left foot"
+        },
+        "answer": "A",
+        "answer_text": "The dancer starts in Samapadam, sits down in Aramandi, strikes the right foot once, and then strikes the left foot once.",
+        "difficulty": "hard",
+        "difficulty_percentage": 75,
+        "difficulty_level": "Challenger"
       }
     ]
   },
@@ -404,6 +1203,45 @@
         { "id": "desc_3", "text": "The striking steps adavu series built from Samapadam and Aramandi." }
       ],
       "correct_matches": { "img_1": "desc_1", "img_2": "desc_2", "img_3": "desc_3" },
+      "id": 48,
+      "type": "image_matching",
+      "question": "Match each Bharatanatyam posture and element with its correct description:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/aramandi.jpg",
+          "label": "Aramandi"
+        },
+        {
+          "id": "img_2",
+          "file": "images/thattadavu.jpg",
+          "label": "Thattadavu"
+        },
+        {
+          "id": "img_3",
+          "file": "images/diamond_shape.jpg",
+          "label": "Diamond Shape"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "The half-sitting posture with heels close, toes turned out in opposite directions, and knees bent."
+        },
+        {
+          "id": "desc_2",
+          "text": "The fundamental striking steps adavu series performed in Aramandi starting with the right foot."
+        },
+        {
+          "id": "desc_3",
+          "text": "The geometric structure formed by the dancer's bent legs that must be maintained throughout Aramandi."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
       "points": 3,
       "difficulty": "easy",
       "difficulty_percentage": 30,
@@ -427,11 +1265,56 @@
       "points": 3,
       "difficulty": "medium",
       "difficulty_percentage": 65,
+      "id": 49,
+      "type": "image_matching",
+      "question": "Match each technical term and postural feature with its pedagogical significance:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/thatta_meaning.jpg",
+          "label": "Thatta (To Strike)"
+        },
+        {
+          "id": "img_2",
+          "file": "images/knee_alignment.jpg",
+          "label": "Knee Alignment"
+        },
+        {
+          "id": "img_3",
+          "file": "images/samapadam_building.jpg",
+          "label": "Building Blocks"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "Tamil linguistic root meaning to strike firmly against the floor with the sole of the foot."
+        },
+        {
+          "id": "desc_2",
+          "text": "The crucial anatomical rule where knees track directly over turned-out toes during the half-squat."
+        },
+        {
+          "id": "desc_3",
+          "text": "The fundamental foundational postures (Samapadam and Aramandi) upon which all adavus are built."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
       "difficulty_level": "Curious Adventurer"
     }
   ],
   "scoring": {
     "mcq": { "points_per_correct_answer": 1 },
+    "mcq": {
+      "points_per_correct_answer": 1
+    },
     "descriptive": {
       "method": "cosine_similarity",
       "description": "Calculate embedding cosine similarity against reference concepts.",
@@ -445,5 +1328,18 @@
     "speech": { "points_per_correct_answer": 1, "min_pass_score": 60 },
     "sequence_test": { "points_per_correct_answer": 1 },
     "image_matching": { "points_per_correct_match": 1, "total_points": 3 }
+  }
+}
+    "speech": {
+      "points_per_correct_answer": 1,
+      "min_pass_score": 60
+    },
+    "sequence_test": {
+      "points_per_correct_answer": 1
+    },
+    "image_matching": {
+      "points_per_correct_match": 1,
+      "total_points": 3
+    }
   }
 }

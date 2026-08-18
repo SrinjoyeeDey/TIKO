@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_web_libraries_in_flutter
 import 'dart:async';
+import 'dart:convert';
 import 'dart:html' as html;
 import 'dart:ui_web' as ui_web;
 import 'package:flutter/material.dart';
@@ -28,12 +29,33 @@ class _WebGameMapViewState extends State<WebGameMapView> {
     _sub = html.window.onMessage.listen((event) {
       final data = event.data?.toString();
       debugPrint("WEB WINDOW MESSAGE RECEIVED: $data");
-      if (data == 'open_calcutta' || data == '"open_calcutta"' || (data != null && data.contains('open_calcutta'))) {
+      if (data == null || data.isEmpty) return;
+
+      String targetStateId = 'west_bengal';
+      bool shouldOpen = false;
+
+      try {
+        final decoded = jsonDecode(data);
+        if (decoded is Map && (decoded['action'] == 'open_state' || decoded.containsKey('stateId'))) {
+          targetStateId = decoded['stateId']?.toString() ?? 'west_bengal';
+          shouldOpen = true;
+        }
+      } catch (_) {
+        if (data.startsWith('open_state_')) {
+          targetStateId = data.replaceFirst('open_state_', '');
+          shouldOpen = true;
+        } else if (data == 'open_calcutta' || data == '"open_calcutta"') {
+          targetStateId = 'west_bengal';
+          shouldOpen = true;
+        }
+      }
+
+      if (shouldOpen) {
         if (!mounted) return;
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => StateStoryCollectionScreen(
-              stateId: 'west_bengal',
+              stateId: targetStateId,
               chapterId: widget.chapterId,
             ),
           ),
@@ -54,7 +76,7 @@ class _WebGameMapViewState extends State<WebGameMapView> {
     if (!_isViewRegistered) {
       ui_web.platformViewRegistry.registerViewFactory(viewTypeId, (int viewId) {
         final iframe = html.IFrameElement()
-          ..src = 'assets/assets/1913-game-map/index.html'
+          ..src = '1913-game-map/index.html'
           ..style.border = 'none'
           ..style.width = '100%'
           ..style.height = '100%';

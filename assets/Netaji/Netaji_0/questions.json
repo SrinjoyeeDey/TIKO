@@ -1,69 +1,121 @@
 {
-  "title": "The Early Life of Subhas Chandra Bose",
+  "title": "The Early Life and Defiance of Subhas Chandra Bose",
   "section": {
-    "start": "00:02",
+    "start": "00:00",
     "end": "00:32",
     "description": "Comprehensive pedagogical question set with multi-tier difficulty calibrated for all learner profiles (Gentle Starter, Balanced Explorer, Curious Adventurer, Challenger, Champion)."
+    "description": "Comprehensive 45-question pedagogical assessment for ages 3 to 15 spanning Easy, Moderate, and Hard difficulty levels."
   },
   "target_age": 12,
+  "age_range": "3-15 years",
   "question_pattern": {
     "main_questions": "Multi-tier MCQs, progressive descriptive questions, and voice pronunciation speech questions.",
     "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
     "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
     "sequence_test": "Chronological milestone ordering and sequence analysis.",
+    "main_questions": "45 progressive questions consisting of multi-tier MCQs, conceptual descriptive questions, and voice pronunciation speech questions.",
+    "difficulty_distribution": "15 Easy (Ages 3-7), 15 Moderate (Ages 8-11), 15 Hard (Ages 12-15)",
+    "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
+    "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
+    "sequence_test": "Chronological milestone ordering and timeline analysis.",
     "image_matching": "Interactive visual matching connecting historical figures, artifacts, and descriptions."
   },
   "questions": [
     {
       "id": 1,
       "type": "mcq",
-      "question": "When was Subhas Chandra Bose born?",
+      "question": "What is the name of the great Indian freedom fighter in the story?",
+      "options": {
+        "A": "Subhas Chandra Bose",
+        "B": "Janaki Bose",
+        "C": "Professor Oaten",
+        "D": "Deepa Mani"
+      },
+      "answer": "A",
+      "answer_text": "The great Indian hero is Subhas Chandra Bose, affectionately called Netaji.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "question": "On which date was Subhas Chandra Bose born?",
       "options": {
         "A": "23rd January 1897",
-        "B": "15th August 1897",
-        "C": "23rd January 1900",
-        "D": "26th January 1897"
+        "B": "15th August 1947",
+        "C": "26th January 1950",
+        "D": "2nd October 1869"
       },
       "answer": "A",
       "answer_text": "Subhas Chandra Bose was born on 23rd January 1897.",
       "difficulty": "easy",
       "difficulty_percentage": 25,
       "difficulty_level": "Gentle Starter"
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
-      "id": 2,
+      "id": 3,
       "type": "mcq",
       "question": "Who was Subhas Chandra Bose's father?",
       "options": {
-        "A": "Prabhavati Devi",
-        "B": "Janaki Bose",
-        "C": "Professor Oaten",
-        "D": "Mahatma Gandhi"
+        "A": "Janaki Bose",
+        "B": "Mahatma Gandhi",
+        "C": "Sisir Bose",
+        "D": "Rabindranath Tagore"
       },
       "answer": "B",
       "answer_text": "Subhas Chandra Bose was born to Janaki Bose, a well-reputed advocate.",
       "difficulty": "easy",
       "difficulty_percentage": 30,
       "difficulty_level": "Gentle Starter"
+      "answer": "A",
+      "answer_text": "Subhas Chandra Bose's father was Janaki Bose.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
-      "id": 3,
+      "id": 4,
       "type": "mcq",
-      "question": "Who was Subhas Chandra Bose's mother?",
+      "question": "Who was Subhas Chandra Bose's loving mother?",
       "options": {
         "A": "Prabhavati Devi",
-        "B": "Janaki Bose",
-        "C": "Sisir K. Bose",
-        "D": "Sarojini Naidu"
+        "B": "Sarojini Naidu",
+        "C": "Kasturba Gandhi",
+        "D": "Matangini Hazra"
       },
       "answer": "A",
       "answer_text": "His mother was Prabhavati Devi.",
       "difficulty": "easy",
       "difficulty_percentage": 30,
       "difficulty_level": "Gentle Starter"
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
-      "id": 4,
+      "id": 5,
+      "type": "mcq",
+      "question": "What was the profession of Janaki Bose, Netaji's father?",
+      "options": {
+        "A": "Advocate (Lawyer)",
+        "B": "Doctor",
+        "C": "Shopkeeper",
+        "D": "Farmer"
+      },
+      "answer": "A",
+      "answer_text": "Janaki Bose was a well-reputed advocate.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 6,
       "type": "mcq",
       "question": "What was the profession of Janaki Bose, Netaji's father?",
       "options": {
@@ -82,11 +134,12 @@
       "id": 5,
       "type": "mcq",
       "question": "Where did Subhas Chandra Bose's nationalist temperament first come to light?",
+      "question": "In which famous college in Kolkata did young Subhas study?",
       "options": {
-        "A": "University of Calcutta",
-        "B": "Presidency College, Kolkata",
+        "A": "Presidency College",
+        "B": "Oxford College",
         "C": "Delhi University",
-        "D": "Cambridge University"
+        "D": "Madras Christian College"
       },
       "answer": "B",
       "answer_text": "His nationalist temperament first came to light at Presidency College, Kolkata.",
@@ -111,9 +164,17 @@
       "difficulty_level": "Balanced Explorer"
     },
     {
+      "answer": "A",
+      "answer_text": "Subhas Chandra Bose studied at the famous Presidency College in Kolkata.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
       "id": 7,
       "type": "mcq",
-      "question": "Why was Subhas Chandra Bose rusticated from Presidency College?",
+      "question": "In which Indian city is Presidency College located?",
       "options": {
         "A": "For organizing an examination boycott",
         "B": "For refusing to attend morning assembly",
@@ -125,6 +186,17 @@
       "difficulty": "medium",
       "difficulty_percentage": 55,
       "difficulty_level": "Curious Adventurer"
+        "A": "Kolkata",
+        "B": "Mumbai",
+        "C": "Chennai",
+        "D": "Jaipur"
+      },
+      "answer": "A",
+      "answer_text": "Presidency College is located in Kolkata (Calcutta).",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 8,
@@ -141,6 +213,19 @@
       "difficulty": "medium",
       "difficulty_percentage": 60,
       "difficulty_level": "Curious Adventurer"
+      "question": "What title is Subhas Chandra Bose most popularly known by across India?",
+      "options": {
+        "A": "Netaji",
+        "B": "Bapu",
+        "C": "Chacha",
+        "D": "Gurudev"
+      },
+      "answer": "A",
+      "answer_text": "Subhas Chandra Bose is affectionately revered as 'Netaji', meaning Respected Leader.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 9,
@@ -157,6 +242,19 @@
       "difficulty": "hard",
       "difficulty_percentage": 70,
       "difficulty_level": "Challenger"
+      "question": "Did young Subhas love his country India?",
+      "options": {
+        "A": "Yes, he loved India deeply and defended its honor",
+        "B": "No, he did not care about India",
+        "C": "He only cared about sports",
+        "D": "He wanted to leave India forever"
+      },
+      "answer": "A",
+      "answer_text": "Yes, young Subhas possessed deep patriotism and love for India.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 10,
@@ -173,16 +271,32 @@
       "difficulty": "hard",
       "difficulty_percentage": 85,
       "difficulty_level": "Champion"
+      "question": "What famous slogan was given by Netaji to greet each other with patriotic pride?",
+      "options": {
+        "A": "Jai Hind",
+        "B": "Good Morning",
+        "C": "Hello World",
+        "D": "Bon Voyage"
+      },
+      "answer": "A",
+      "answer_text": "Netaji popularized 'Jai Hind' (Victory to India) as a national salutation.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
     },
     {
       "id": 11,
       "type": "descriptive",
       "question": "What do you understand about Subhas Chandra Bose's family from the beginning of the story?",
       "reference_answer": "Subhas Chandra Bose was born on 23rd January 1897 to Janaki Bose, a well-reputed advocate, and Prabhavati Devi.",
+      "question": "Who was Netaji Subhas Chandra Bose and when was he born?",
+      "reference_answer": "Subhas Chandra Bose was a great Indian freedom fighter born on 23rd January 1897 to Janaki Bose and Prabhavati Devi.",
       "key_concepts": [
-        "born on 23rd January 1897",
+        "Subhas Chandra Bose",
+        "freedom fighter",
+        "23rd January 1897",
         "Janaki Bose",
-        "well-reputed advocate",
         "Prabhavati Devi"
       ],
       "cosine_similarity_threshold": 0.6,
@@ -212,10 +326,223 @@
       "type": "descriptive",
       "question": "Why was Subhas Chandra Bose rusticated from Presidency College, and what does this incident reveal about him?",
       "reference_answer": "Subhas Chandra Bose was rusticated from Presidency College, Kolkata, for assaulting Professor Oaten because of his anti-India comments. This reveals his fearless devotion to Indian dignity and refusal to accept colonial insults.",
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 12,
+      "type": "descriptive",
+      "question": "What was the profession of Netaji's father, Janaki Bose?",
+      "reference_answer": "Janaki Bose was a well-reputed advocate who practiced law.",
+      "key_concepts": [
+        "Janaki Bose",
+        "well-reputed",
+        "advocate",
+        "lawyer"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 13,
+      "type": "speech",
+      "question": "Say the name of our national hero clearly into the microphone:",
+      "target_phrase": "Netaji Subhas Chandra Bose",
+      "reference_answer": "Netaji Subhas Chandra Bose",
+      "key_concepts": [
+        "Netaji",
+        "Subhas",
+        "Chandra",
+        "Bose"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 14,
+      "type": "speech",
+      "question": "Say the patriotic Indian greeting popularized by Netaji:",
+      "target_phrase": "Jai Hind",
+      "reference_answer": "Jai Hind",
+      "key_concepts": [
+        "Jai",
+        "Hind"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 15,
+      "type": "speech",
+      "question": "Say the job title of Netaji's father:",
+      "target_phrase": "Advocate",
+      "reference_answer": "Advocate",
+      "key_concepts": [
+        "Advocate"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "question": "What British professor at Presidency College made insulting remarks against Indian students and India?",
+      "options": {
+        "A": "Professor Oaten",
+        "B": "Professor Smith",
+        "C": "Professor Brown",
+        "D": "Professor Williams"
+      },
+      "answer": "A",
+      "answer_text": "Professor E.F. Oaten made derogatory and anti-India comments that insulted Indian students.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 45,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "question": "Where did Subhas Chandra Bose's fiery nationalist temperament first come to public light?",
+      "options": {
+        "A": "Presidency College, Kolkata",
+        "B": "Cambridge University, England",
+        "C": "High Court of Cuttack",
+        "D": "Municipal Corporation of Delhi"
+      },
+      "answer": "A",
+      "answer_text": "His nationalist temperament first came to light during the student protests at Presidency College, Kolkata.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "question": "Why did the students at Presidency College confront Professor Oaten?",
+      "options": {
+        "A": "Because he made rude, anti-India comments and insulted Indian national pride",
+        "B": "Because he gave very difficult homework assignments",
+        "C": "Because the college library closed too early",
+        "D": "Because they wanted longer summer vacations"
+      },
+      "answer": "A",
+      "answer_text": "Students protested because Professor Oaten made discriminatory and offensive anti-India remarks.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "question": "What does the word 'rusticated' mean in the context of Subhas's college life?",
+      "options": {
+        "A": "Expelled or suspended from the educational institution as a disciplinary punishment",
+        "B": "Promoted to the next academic grade with honors",
+        "C": "Sent on an overseas educational tour",
+        "D": "Elected as student council president"
+      },
+      "answer": "A",
+      "answer_text": "Rustication meant being expelled or suspended from college by the British authorities.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "question": "What does having a 'nationalist temperament' mean?",
+      "options": {
+        "A": "Having strong patriotism, love for one's motherland, and defending national self-respect",
+        "B": "Traveling to many foreign countries for sightseeing",
+        "C": "Collecting maps and geographical globes",
+        "D": "Speaking multiple international languages"
+      },
+      "answer": "A",
+      "answer_text": "A nationalist temperament represents intense patriotic devotion to one's nation and refusal to tolerate subjugation.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "question": "How did young Subhas respond when he heard anti-India remarks from a British teacher?",
+      "options": {
+        "A": "He stood up bravely with his fellow students and protested against the insult",
+        "B": "He remained silent and accepted the humiliation",
+        "C": "He dropped out of school secretly",
+        "D": "He agreed with the British teacher"
+      },
+      "answer": "A",
+      "answer_text": "He refused to accept disrespect toward India and boldly led the protest against the British professor.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "question": "In what year was Subhas Chandra Bose born, and in which era did this incident occur?",
+      "options": {
+        "A": "Born in 1897 during British colonial rule in India",
+        "B": "Born in 1947 after Indian independence",
+        "C": "Born in 1857 during the First War of Independence",
+        "D": "Born in 1914 during World War I"
+      },
+      "answer": "A",
+      "answer_text": "Subhas was born in 1897 and grew up when India was under British colonial domination.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "question": "What qualities of leadership did Subhas Chandra Bose demonstrate even as a young college student?",
+      "options": {
+        "A": "Moral courage, standing up for fellow students, and uncompromising dignity",
+        "B": "Indifference to student issues and seeking personal favor from authorities",
+        "C": "Fear of authority and avoidance of difficult situations",
+        "D": "Focusing solely on passing exams without caring about social reality"
+      },
+      "answer": "A",
+      "answer_text": "Young Subhas displayed fearless leadership, solidarity with fellow students, and dedication to justice.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 24,
+      "type": "descriptive",
+      "question": "Explain what happened between Subhas Chandra Bose and Professor Oaten at Presidency College.",
+      "reference_answer": "At Presidency College in Kolkata, British Professor Oaten made offensive anti-India comments. Young Subhas and student protestors confronted him, leading to Subhas being rusticated from the college.",
       "key_concepts": [
         "Presidency College",
         "Kolkata",
-        "assaulting Professor Oaten",
+        "Professor Oaten",
         "anti-India comments",
         "rusticated",
         "fearless devotion"
@@ -249,10 +576,61 @@
       "question": "Say the name of our great freedom leader into the microphone:",
       "target_phrase": "Subhas Chandra Bose",
       "reference_answer": "Subhas Chandra Bose",
+        "confronted",
+        "rusticated"
+      ],
+      "cosine_similarity_threshold": 0.60,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 25,
+      "type": "descriptive",
+      "question": "What is the meaning of 'nationalist temperament' and how did young Subhas demonstrate it?",
+      "reference_answer": "A nationalist temperament is a strong sense of patriotism and defense of one's motherland. Subhas showed this by refusing to tolerate colonial insults against India at Presidency College.",
       "key_concepts": [
-        "Subhas",
-        "Chandra",
-        "Bose"
+        "nationalist temperament",
+        "patriotism",
+        "defense of motherland",
+        "refusing insults",
+        "Presidency College"
+      ],
+      "cosine_similarity_threshold": 0.60,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 26,
+      "type": "descriptive",
+      "question": "Describe Netaji's family background and upbringing as introduced in the early life story.",
+      "reference_answer": "Subhas Chandra Bose was born on 23rd January 1897 into an educated, distinguished family. His father Janaki Bose was a well-reputed advocate, and his mother was Prabhavati Devi.",
+      "key_concepts": [
+        "born 23rd January 1897",
+        "Janaki Bose",
+        "well-reputed advocate",
+        "Prabhavati Devi",
+        "educated family"
+      ],
+      "cosine_similarity_threshold": 0.60,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 27,
+      "type": "speech",
+      "question": "Pronounce the name of the Kolkata college where the protest took place:",
+      "target_phrase": "Presidency College Kolkata",
+      "reference_answer": "Presidency College Kolkata",
+      "key_concepts": [
+        "Presidency",
+        "College",
+        "Kolkata"
       ],
       "min_score_threshold": 65,
       "difficulty": "easy",
@@ -294,9 +672,20 @@
       "question": "Pronounce the name of the prestigious college in Kolkata:",
       "target_phrase": "Presidency College",
       "reference_answer": "Presidency College",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 28,
+      "type": "speech",
+      "question": "Pronounce the term describing Subhas's deep patriotic spirit:",
+      "target_phrase": "Nationalist Temperament",
+      "reference_answer": "Nationalist Temperament",
       "key_concepts": [
-        "Presidency",
-        "College"
+        "Nationalist",
+        "Temperament"
       ],
       "min_score_threshold": 70,
       "difficulty": "medium",
@@ -397,6 +786,328 @@
         "answer": "A",
         "answer_text": "He confronted Professor Oaten after the professor made offensive anti-India comments, which led to his rustication.",
         "difficulty": "medium",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 29,
+      "type": "speech",
+      "question": "Pronounce the disciplinary term used when Subhas was expelled from college:",
+      "target_phrase": "Rusticated",
+      "reference_answer": "Rusticated",
+      "key_concepts": [
+        "Rusticated"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 30,
+      "type": "speech",
+      "question": "Pronounce the name of the British professor involved in the historical incident:",
+      "target_phrase": "Professor Oaten",
+      "reference_answer": "Professor Oaten",
+      "key_concepts": [
+        "Professor",
+        "Oaten"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "question": "Why was the confrontation at Presidency College in 1916 considered a pivotal turning point in Subhas Chandra Bose's life?",
+      "options": {
+        "A": "It transformed him from a promising academic student into a resolute, uncompromising leader of anti-colonial resistance",
+        "B": "It made him decide to abandon public life and live quietly abroad",
+        "C": "It caused him to accept British colonial dominance without question",
+        "D": "It ended his interest in Indian politics and social justice"
+      },
+      "answer": "A",
+      "answer_text": "The incident proved that Subhas would never compromise Indian national dignity for personal career advancement, marking his emergence as a revolutionary leader.",
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "question": "What systematic colonial attitude was reflected in Professor Oaten's behavior toward Indian students at Presidency College?",
+      "options": {
+        "A": "Racial superiority, imperial arrogance, and contempt for Indian cultural dignity",
+        "B": "Democratic equality and mutual cultural respect",
+        "C": "Support for Indian self-governance and student rights",
+        "D": "Complete academic neutrality and fairness"
+      },
+      "answer": "A",
+      "answer_text": "Professor Oaten's remarks reflected the widespread racial prejudice and imperial superiority that characterized colonial administration in educational institutions.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "question": "How did Subhas's decision to face rustication rather than apologize reflect his core political philosophy?",
+      "options": {
+        "A": "He believed national self-respect and the collective honor of India were paramount over individual comfort or academic degrees",
+        "B": "He did not value education and wanted an excuse to leave college",
+        "C": "He acted impulsively without understanding the consequences",
+        "D": "He wanted to gain popularity solely for personal ambition"
+      },
+      "answer": "A",
+      "answer_text": "Subhas's refusal to surrender demonstrated his profound conviction that self-respect and resistance to oppression are non-negotiable principles.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "question": "What broader socio-political impact did the Presidency College rustication have on the youth and student movements of Bengal?",
+      "options": {
+        "A": "It galvanized student political consciousness and established Subhas as a courageous youth icon against colonial tyranny",
+        "B": "It discouraged students across Bengal from participating in any national causes",
+        "C": "It caused all colleges in Bengal to shut down permanently",
+        "D": "It made the British administration increase student scholarships"
+      },
+      "answer": "A",
+      "answer_text": "The incident electrified the student community across Bengal, proving that young Indians could fearlessly challenge colonial authority.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "question": "In analyzing Subhas's character, how did his family background as the son of Janaki Bose, an advocate, interact with his rebellious national spirit?",
+      "options": {
+        "A": "Growing up in an intellectually rigorous and legally conscious home gave him a sharp sense of justice, rights, and ethical duty",
+        "B": "It forced him to follow a conventional government career regardless of ethics",
+        "C": "It isolated him from Indian societal issues",
+        "D": "It caused him to reject all forms of legal reasoning and debate"
+      },
+      "answer": "A",
+      "answer_text": "His father's legal discipline and high moral standing provided an intellectual foundation for young Subhas's intense pursuit of justice and human dignity.",
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "question": "Which of the following historical statements accurately describes the long-term culmination of Netaji Subhas Chandra Bose's nationalist struggle?",
+      "options": {
+        "A": "He later organized the Indian National Army (Azad Hind Fauj) and led an armed military liberation campaign for Indian freedom",
+        "B": "He became a colonial civil servant and served the British empire until retirement",
+        "C": "He gave up the freedom struggle and settled as an author in France",
+        "D": "He accepted a hereditary title from the British monarch"
+      },
+      "answer": "A",
+      "answer_text": "Netaji went on to lead the Azad Hind Fauj (Indian National Army), launching an unprecedented armed campaign to liberate India from British rule.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "question": "How did Netaji's early moral stand against Professor Oaten foreshadow his later famous exhortation: 'Give me blood, and I shall give you freedom'?",
+      "options": {
+        "A": "Both manifested an uncompromising readiness for supreme personal sacrifice in exchange for absolute national freedom",
+        "B": "Both were focused only on academic curriculum reform",
+        "C": "Both emphasized accepting British compromises and concessions",
+        "D": "There was no thematic connection between the two events"
+      },
+      "answer": "A",
+      "answer_text": "His early willingness to sacrifice his academic future for national dignity directly presaged his ultimate call for total national sacrifice for complete independence.",
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 38,
+      "type": "descriptive",
+      "question": "Critically analyze how the rustication of Subhas Chandra Bose from Presidency College shaped his subsequent political trajectory as a revolutionary leader.",
+      "reference_answer": "Subhas's rustication from Presidency College in 1916 proved that he prioritized national dignity and anti-colonial justice above personal prestige. Confronting Professor Oaten's racist slurs galvanized his revolutionary resolve, cementing his status as an uncompromising youth leader dedicated to total Indian independence.",
+      "key_concepts": [
+        "Presidency College",
+        "rustication",
+        "national dignity",
+        "anti-colonial justice",
+        "Professor Oaten",
+        "revolutionary resolve",
+        "uncompromising leader",
+        "total independence"
+      ],
+      "cosine_similarity_threshold": 0.70,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 39,
+      "type": "descriptive",
+      "question": "Examine the moral conflict between colonial authority and student self-respect in the Presidency College incident.",
+      "reference_answer": "The incident highlighted the clash between imperial authority, which demanded passive obedience from colonized subjects, and the burgeoning national consciousness of Indian youth who demanded equal respect and human dignity. Subhas's resistance demonstrated that moral righteousness supersedes oppressive colonial regulations.",
+      "key_concepts": [
+        "colonial authority",
+        "student self-respect",
+        "passive obedience",
+        "national consciousness",
+        "human dignity",
+        "moral righteousness",
+        "oppressive regulations"
+      ],
+      "cosine_similarity_threshold": 0.70,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 40,
+      "type": "descriptive",
+      "question": "Evaluate the role of Janaki Bose and Prabhavati Devi in fostering the values that characterized Netaji's fearless character.",
+      "reference_answer": "Janaki Bose's integrity as an eminent advocate instilled a profound respect for justice and ethics, while Prabhavati Devi's strong moral upbringing nurtured Subhas's spiritual strength and deep love for his people, preparing him for the hardships of the freedom movement.",
+      "key_concepts": [
+        "Janaki Bose",
+        "eminent advocate",
+        "justice and ethics",
+        "Prabhavati Devi",
+        "moral upbringing",
+        "spiritual strength",
+        "freedom movement"
+      ],
+      "cosine_similarity_threshold": 0.70,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 41,
+      "type": "descriptive",
+      "question": "Synthesize the overarching lesson that contemporary youth can derive from Netaji's fearless defiance of imperial oppression.",
+      "reference_answer": "Netaji's defiance teaches modern youth to maintain uncompromising moral integrity, stand up courageously against injustice and discrimination, place national and community welfare above selfish interest, and uphold human dignity under all circumstances.",
+      "key_concepts": [
+        "moral integrity",
+        "stand up against injustice",
+        "courage",
+        "discrimination",
+        "community welfare",
+        "human dignity"
+      ],
+      "cosine_similarity_threshold": 0.70,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 42,
+      "type": "speech",
+      "question": "Pronounce this historical phrase representing Netaji's steadfast leadership:",
+      "target_phrase": "Uncompromising Patriotic Leadership",
+      "reference_answer": "Uncompromising Patriotic Leadership",
+      "key_concepts": [
+        "Uncompromising",
+        "Patriotic",
+        "Leadership"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 43,
+      "type": "speech",
+      "question": "Pronounce the term describing the systemic foreign rule challenged by Netaji:",
+      "target_phrase": "Colonial Subjugation and Resistance",
+      "reference_answer": "Colonial Subjugation and Resistance",
+      "key_concepts": [
+        "Colonial",
+        "Subjugation",
+        "Resistance"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 44,
+      "type": "speech",
+      "question": "Pronounce the name of the military army established by Netaji for national liberation:",
+      "target_phrase": "Azad Hind Fauj",
+      "reference_answer": "Azad Hind Fauj",
+      "key_concepts": [
+        "Azad",
+        "Hind",
+        "Fauj"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 45,
+      "type": "speech",
+      "question": "Pronounce the supreme ideal that defined Netaji Subhas Chandra Bose's entire life:",
+      "target_phrase": "Fearless Champion of Indian Independence",
+      "reference_answer": "Fearless Champion of Indian Independence",
+      "key_concepts": [
+        "Fearless",
+        "Champion",
+        "Indian",
+        "Independence"
+      ],
+      "min_score_threshold": 85,
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    }
+  ],
+  "sequence_test": {
+    "title": "Chronological Sequence of Netaji's Early Life and Defiance",
+    "description": "These questions test whether the learner understands the chronological sequence of Netaji's early life and student rebellion.",
+    "questions": [
+      {
+        "id": 46,
+        "type": "sequence_mcq",
+        "question": "What is the correct chronological sequence of events in young Netaji's early life?",
+        "options": {
+          "A": "Birth in 1897 -> Enrolling in Presidency College Kolkata -> Protest against Professor Oaten -> Rustication from College",
+          "B": "Rustication -> Enrolling in College -> Birth in 1897 -> Protest",
+          "C": "Protest -> Birth in 1897 -> Rustication -> Presidency College",
+          "D": "Presidency College -> Rustication -> Birth in 1897 -> Protest"
+        },
+        "answer": "A",
+        "answer_text": "The timeline starts with Netaji's birth on 23rd January 1897, followed by his studies at Presidency College, the confrontation with Professor Oaten, and subsequent rustication.",
+        "difficulty": "moderate",
         "difficulty_percentage": 60,
         "difficulty_level": "Curious Adventurer"
       },
@@ -431,6 +1142,20 @@
         "difficulty": "hard",
         "difficulty_percentage": 85,
         "difficulty_level": "Champion"
+        "id": 47,
+        "type": "sequence_mcq",
+        "question": "Arrange the developmental milestones of Subhas Chandra Bose's early journey:",
+        "options": {
+          "A": "Upbringing by Janaki Bose & Prabhavati Devi -> Emergence of Nationalist Temperament -> Defense of Indian Dignity -> Emergence as Youth Freedom Icon",
+          "B": "Emergence as Youth Icon -> Birth -> Advocate Father -> College Protest",
+          "C": "College Protest -> Upbringing -> Birth -> Nationalist Temperament",
+          "D": "Nationalist Temperament -> Upbringing -> College Protest -> Birth"
+        },
+        "answer": "A",
+        "answer_text": "His values were nurtured by his parents, leading to his nationalist temperament, courageous defense of Indian pride, and emergence as an iconic leader.",
+        "difficulty": "hard",
+        "difficulty_percentage": 75,
+        "difficulty_level": "Challenger"
       }
     ]
   },
@@ -439,6 +1164,9 @@
       "id": 27,
       "type": "image_matching",
       "question": "Match each historical image with its correct description:",
+      "id": 48,
+      "type": "image_matching",
+      "question": "Match each historical personality and institution with its correct description:",
       "images": [
         {
           "id": "img_1",
@@ -482,6 +1210,7 @@
     },
     {
       "id": 28,
+      "id": 49,
       "type": "image_matching",
       "question": "Match the historical personalities and institutions to their key significance:",
       "images": [
@@ -522,6 +1251,7 @@
       },
       "points": 3,
       "difficulty": "medium",
+      "difficulty": "moderate",
       "difficulty_percentage": 60,
       "difficulty_level": "Curious Adventurer"
     }

@@ -84,6 +84,7 @@ flutter:
     - assets/
     - assets/1913-game-map/
     - assets/audio/
+    - assets/Bharatnatayam/
     - assets/exploration/
     - assets/images/
     - assets/maps/
@@ -96,6 +97,12 @@ flutter:
     - assets/animations/panda/previews/
     - assets/animations/panda/thinking/
     - assets/animations/panda/wrong_sad/
+    - assets/Bharatnatayam/bharatnatayam_0/
+    - assets/Bharatnatayam/bharatnatayam_1/
+    - assets/Bharatnatayam/bharatnatayam_2/
+    - assets/Bharatnatayam/bharatnatayam_3/
+    - assets/Bharatnatayam/bharatnatyam_4/
+    - assets/Bharatnatayam/COVER_IMG/
     - assets/Netaji/COVER_IMG/
     - assets/Netaji/Netaji_0/
     - assets/Netaji/Netaji_1/
