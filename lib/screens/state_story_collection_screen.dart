@@ -749,15 +749,19 @@ class _StateStoryCollectionScreenState extends State<StateStoryCollectionScreen>
                             alignment: Alignment.center,
                             children: [
                               Positioned.fill(
-                                child: Image.asset(
-                                  story.imagePath,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      const Center(
-                                    child: Icon(
-                                      Icons.broken_image_outlined,
-                                      color: Color(0xFF6E6053),
-                                      size: 36,
+                                child: Padding(
+                                  padding: EdgeInsets.all(story.imagePath.toLowerCase().contains('bharat') ? 6.0 : 0.0),
+                                  child: Image.asset(
+                                    story.imagePath,
+                                    fit: story.imagePath.toLowerCase().contains('bharat') ? BoxFit.contain : BoxFit.cover,
+                                    alignment: Alignment.center,
+                                    errorBuilder: (context, error, stackTrace) =>
+                                        const Center(
+                                      child: Icon(
+                                        Icons.broken_image_outlined,
+                                        color: Color(0xFF6E6053),
+                                        size: 36,
+                                      ),
                                     ),
                                   ),
                                 ),

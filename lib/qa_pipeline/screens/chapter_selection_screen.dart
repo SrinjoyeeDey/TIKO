@@ -172,7 +172,7 @@ class _ChapterSelectionScreenState extends State<ChapterSelectionScreen> {
                         image: imagePath != null
                             ? DecorationImage(
                                 image: AssetImage(imagePath),
-                                fit: BoxFit.cover,
+                                fit: imagePath.toLowerCase().contains('bharat') ? BoxFit.contain : BoxFit.cover,
                               )
                             : null,
                       ),

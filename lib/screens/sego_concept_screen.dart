@@ -3578,13 +3578,17 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: SizedBox(
+            child: Container(
               width: double.infinity,
               height: 95,
+              color: const Color(0xFF0D180B),
               child: coverImage != null
                   ? Image.asset(
                       coverImage,
-                      fit: BoxFit.cover,
+                      fit: (coverImage.toLowerCase().contains('bharat') || chapter.name.toLowerCase().contains('bharat'))
+                          ? BoxFit.contain
+                          : BoxFit.cover,
+                      alignment: Alignment.center,
                       errorBuilder: (ctx, err, stack) => Container(
                         color: const Color(0xFF0D180B),
                         child: const Icon(Icons.movie_filter_rounded,
@@ -3902,14 +3906,32 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                                     Stack(
                                       fit: StackFit.expand,
                                       children: [
-                                        Image.asset(
-                                          coverImage ?? 'assets/Bharatnatayam/COVER_IMG/Bharatnatyam.png',
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) => Image.asset(
-                                            'assets/Bharatnatayam/COVER_IMG/Bharatnatyam.png',
-                                            fit: BoxFit.cover,
-                                            errorBuilder: (context, error, stackTrace) => Container(
-                                              color: const Color(0xFFB45309).withValues(alpha: 0.35),
+                                        // Warm parchment gradient background for dancer illustration
+                                        Container(
+                                          decoration: const BoxDecoration(
+                                            gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              colors: [
+                                                Color(0xFFFFF7ED), // Warm Cream
+                                                Color(0xFFFFEDD5), // Soft Amber Parchment
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(4, 18, 4, 4),
+                                          child: Image.asset(
+                                            coverImage ?? 'assets/Bharatnatayam/COVER_IMG/Bharatnatyam.png',
+                                            fit: BoxFit.contain,
+                                            alignment: Alignment.center,
+                                            errorBuilder: (context, error, stackTrace) => Image.asset(
+                                              'assets/Bharatnatayam/COVER_IMG/Bharatnatyam.png',
+                                              fit: BoxFit.contain,
+                                              alignment: Alignment.center,
+                                              errorBuilder: (context, error, stackTrace) => Container(
+                                                color: const Color(0xFFB45309).withValues(alpha: 0.35),
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -3920,8 +3942,8 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                                               begin: Alignment.topCenter,
                                               end: Alignment.bottomCenter,
                                               colors: [
-                                                Color(0x18B45309), // Warm Sepia Gold
-                                                Color(0x354A2E1B), // Deep Vintage Leather Dark Vignette
+                                                Color(0x10B45309), // Warm Sepia Gold
+                                                Color(0x204A2E1B), // Deep Vintage Leather Dark Vignette
                                               ],
                                             ),
                                           ),
@@ -4211,6 +4233,11 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFFFFF7ED), Color(0xFFFFEDD5)],
+          ),
           border: Border.all(color: const Color(0xFFD97706), width: 1.2),
           boxShadow: const [
             BoxShadow(
@@ -4223,11 +4250,15 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Image.asset(
-              'assets/Bharatnatayam/COVER_IMG/Bharatnatyam.png',
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
-                color: const Color(0xFFB45309).withValues(alpha: 0.35),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(4, 4, 4, 14),
+              child: Image.asset(
+                'assets/Bharatnatayam/COVER_IMG/Bharatnatyam.png',
+                fit: BoxFit.contain,
+                alignment: Alignment.center,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  color: const Color(0xFFB45309).withValues(alpha: 0.35),
+                ),
               ),
             ),
             // Vintage Warm Sepia Overlay
