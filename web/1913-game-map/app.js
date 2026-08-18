@@ -278,8 +278,19 @@ document.addEventListener('DOMContentLoaded', () => {
       return pt ? pt[1] : 0;
     });
 
+  // Detect active chapter filter from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const chapterParam = (urlParams.get('chapter') || urlParams.get('chapterId') || '').toLowerCase();
+  
+  let allowedStateId = null;
+  if (chapterParam.includes('bharat') || chapterParam.includes('tamil')) {
+    allowedStateId = 'tamil_nadu';
+  } else if (chapterParam.includes('netaji') || chapterParam.includes('bengal')) {
+    allowedStateId = 'west_bengal';
+  }
+
   // Render Active Quest Pins (Tamil Nadu: Bharatanatyam, West Bengal: Netaji)
-  const questStates = [
+  let questStates = [
     {
       code: 'TN',
       name: 'Tamil Nadu',
@@ -297,6 +308,12 @@ document.addEventListener('DOMContentLoaded', () => {
       icon: '⭐'
     }
   ];
+
+  if (allowedStateId === 'tamil_nadu') {
+    questStates = questStates.filter(q => q.code === 'TN');
+  } else if (allowedStateId === 'west_bengal') {
+    questStates = questStates.filter(q => q.code === 'WB');
+  }
 
   const questPins = gMarkers.selectAll('g.quest-pin-group')
     .data(questStates)
@@ -611,8 +628,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function launchStateStories(stateName) {
-    const sName = stateName || state.selectedStateName || 'West Bengal';
+    const sName = stateName || state.selectedStateName || (allowedStateId === 'tamil_nadu' ? 'Tamil Nadu' : 'West Bengal');
     const stateId = getNormalizedStateId(sName);
+    
+    // Enforce chapter level restriction:
+    if (allowedStateId && stateId !== allowedStateId) {
+      if (allowedStateId === 'tamil_nadu') {
+        showToast('🎭 Bharatanatyam originates in Tamil Nadu! Tap Tamil Nadu to begin.');
+      } else if (allowedStateId === 'west_bengal') {
+        showToast('⭐ Netaji Subhas Chandra Bose story is in West Bengal! Tap West Bengal to begin.');
+      }
+      return;
+    }
     
     // Retrieve state metadata from GeoJSON
     const feature = geoData.features.find(f => f.properties.name.toLowerCase() === sName.toLowerCase());
@@ -1065,5 +1092,20 @@ ${p.cuisine}
     window.toastTimeout = setTimeout(() => {
       toast.style.display = 'none';
     }, 2800);
+  }
+
+  // Auto-focus and highlight specific chapter state on startup
+  if (allowedStateId === 'tamil_nadu') {
+    setTimeout(() => {
+      selectState('Tamil Nadu');
+      focusState('Tamil Nadu');
+      showToast('🎭 Bharatanatyam Quest! Tap Tamil Nadu to begin.');
+    }, 450);
+  } else if (allowedStateId === 'west_bengal') {
+    setTimeout(() => {
+      selectState('West Bengal');
+      focusState('West Bengal');
+      showToast('⭐ Netaji Quest! Tap West Bengal to begin.');
+    }, 450);
   }
 });

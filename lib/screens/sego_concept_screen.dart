@@ -3143,55 +3143,62 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
         );
     final initialColor = buttonColor ?? const Color(0xFF94D561);
 
-    // Clicking Level 2 node (levelIndex == 1) redirects to Catch NIMO Activity!
-    if (levelIndex == 1) {
+    // If this node corresponds to an active learning chapter (Level 1: Bharatnatyam, Level 2: Netaji, etc.)
+    if (levelIndex < effectiveChapters.length) {
+      Navigator.of(context)
+          .push(
+        SmokeBombPageRoute(
+          page: GameMap1913Screen(chapterId: chapter.id),
+          originOffset: origin,
+          buttonColor: initialColor,
+          vintageMapColor: const Color(0xFFF4E8C1),
+        ),
+      )
+          .then((_) {
+        _loadDynamicChapters();
+      });
+      return;
+    }
+
+    // Minigame & Special Activity Node Fallbacks for higher levels:
+    if (levelIndex == 2) {
       Navigator.of(
         context,
       ).push(MaterialPageRoute(builder: (_) => const CatchNimoScreen()));
       return;
     }
-
-    // Clicking Level 3 node (levelIndex == 2) redirects to Remember NIMO Activity!
-    if (levelIndex == 2) {
+    if (levelIndex == 3) {
       Navigator.of(
         context,
       ).push(MaterialPageRoute(builder: (_) => const RememberNimoScreen()));
       return;
     }
-
-    // Clicking Level 4 node (levelIndex == 3) redirects to Echo NIMO Activity!
-    if (levelIndex == 3) {
+    if (levelIndex == 4) {
       Navigator.of(
         context,
       ).push(MaterialPageRoute(builder: (_) => const EchoNimoScreen()));
       return;
     }
-
-    // Clicking Level 5 node (levelIndex == 4) redirects to Find NIMO Activity!
-    if (levelIndex == 4) {
+    if (levelIndex == 5) {
       Navigator.of(
         context,
       ).push(MaterialPageRoute(builder: (_) => const FindNimoScreen()));
       return;
     }
-
-    // Clicking Level 6 node (levelIndex == 5) redirects to Category Sort Activity!
-    if (levelIndex == 5) {
+    if (levelIndex == 6) {
       Navigator.of(
         context,
       ).push(MaterialPageRoute(builder: (_) => const CategorySortScreen()));
       return;
     }
-
-    // Clicking Level 7 node (levelIndex == 6) redirects to Turn NIMO Activity!
-    if (levelIndex == 6) {
+    if (levelIndex == 7) {
       Navigator.of(
         context,
       ).push(MaterialPageRoute(builder: (_) => const TurnNimoScreen()));
       return;
     }
 
-    // Clicking an unlocked stage node triggers the Smoke Bomb Time-Travel Transition to 1913 Game Map
+    // Default: Smoke Bomb Time-Travel Transition to 1913 Game Map
     Navigator.of(context)
         .push(
       SmokeBombPageRoute(
@@ -3207,8 +3214,8 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
   }
 
   static const List<String> _levelTitles = [
+    'Bharatnatyam',
     'Netaji Bose',
-    'Gandhiji',
     'Swami Dayanandji',
     'Swami Vivekananda',
     'Bhagat Singh',
@@ -3890,48 +3897,20 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                               child: Stack(
                                 fit: StackFit.expand,
                                 children: [
-                                  // 1. Full-cover Netaji / Leader Portrait Image filling the entire book cover with Vintage Sepia Warmth!
+                                  // 1. Full-cover Level Image (Level 1: Bharatnatyam, Level 2: Netaji)
                                   if (levelIndex == 0)
                                     Stack(
                                       fit: StackFit.expand,
                                       children: [
                                         Image.asset(
-                                          'assets/images/netaji_portrait.png',
+                                          coverImage ?? 'assets/Bharatnatayam/COVER_IMG/Bharatnatyam.png',
                                           fit: BoxFit.cover,
                                           errorBuilder: (context, error, stackTrace) => Image.asset(
-                                            'assets/Netaji/COVER_IMG/netaji_portrait.png',
+                                            'assets/Bharatnatayam/COVER_IMG/Bharatnatyam.png',
                                             fit: BoxFit.cover,
-                                            errorBuilder:
-                                                (
-                                                  context,
-                                                  error,
-                                                  stackTrace,
-                                                ) => Image.asset(
-                                                  'assets/Netaji/COVER_IMG/netaji-bose-portrait-in-his-birthday-celebration-6y6feyj10k9hshwc.jpg',
-                                                  fit: BoxFit.cover,
-                                                  errorBuilder:
-                                                      (
-                                                        context,
-                                                        error,
-                                                        stackTrace,
-                                                      ) => Image.asset(
-                                                        'assets/Netaji/Netaji_0/images/netaji.jpg',
-                                                        fit: BoxFit.cover,
-                                                        errorBuilder:
-                                                            (
-                                                              context,
-                                                              error,
-                                                              stackTrace,
-                                                            ) => Container(
-                                                              color:
-                                                                  const Color(
-                                                                    0xFFFF9933,
-                                                                  ).withValues(
-                                                                    alpha: 0.25,
-                                                                  ),
-                                                            ),
-                                                      ),
-                                                ),
+                                            errorBuilder: (context, error, stackTrace) => Container(
+                                              color: const Color(0xFFB45309).withValues(alpha: 0.35),
+                                            ),
                                           ),
                                         ),
                                         // Soft Vintage Antique Sepia & Leather Vignette Overlay
@@ -3941,12 +3920,8 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                                               begin: Alignment.topCenter,
                                               end: Alignment.bottomCenter,
                                               colors: [
-                                                Color(
-                                                  0x18B45309,
-                                                ), // Warm Sepia Gold
-                                                Color(
-                                                  0x354A2E1B,
-                                                ), // Deep Vintage Leather Dark Vignette
+                                                Color(0x18B45309), // Warm Sepia Gold
+                                                Color(0x354A2E1B), // Deep Vintage Leather Dark Vignette
                                               ],
                                             ),
                                           ),
@@ -3958,26 +3933,19 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                                       fit: StackFit.expand,
                                       children: [
                                         Image.asset(
-                                          'assets/images/gandhiji_portrait.jpg',
+                                          coverImage ?? 'assets/Netaji/COVER_IMG/netaji-bose-portrait-in-his-birthday-celebration-6y6feyj10k9hshwc.jpg',
                                           fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (
-                                                context,
-                                                error,
-                                                stackTrace,
-                                              ) => Image.asset(
-                                                'assets/Netaji/COVER_IMG/gandhiji_portrait.jpg',
-                                                fit: BoxFit.cover,
-                                                errorBuilder:
-                                                    (
-                                                      context,
-                                                      error,
-                                                      stackTrace,
-                                                    ) => Image.asset(
-                                                      'assets/Netaji/Netaji_0/images/gandhiji_portrait.jpg',
-                                                      fit: BoxFit.cover,
-                                                    ),
+                                          errorBuilder: (context, error, stackTrace) => Image.asset(
+                                            'assets/Netaji/COVER_IMG/netaji-bose-portrait-in-his-birthday-celebration-6y6feyj10k9hshwc.jpg',
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (context, error, stackTrace) => Image.asset(
+                                              'assets/Netaji/COVER_IMG/netaji_portrait.png',
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (context, error, stackTrace) => Container(
+                                                color: const Color(0xFFFF9933).withValues(alpha: 0.35),
                                               ),
+                                            ),
+                                          ),
                                         ),
                                         // Soft Vintage Antique Sepia & Leather Vignette Overlay
                                         Container(
@@ -4237,9 +4205,9 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
     bool isActive,
   ) {
     if (levelIndex == 0) {
-      // 🇮🇳 Full-Page Netaji Subhas Chandra Bose Story Visual!
+      // 🇮🇳 Full-Page Bharatnatyam Story Visual!
       return Container(
-        key: const ValueKey('story_visual_netaji'),
+        key: const ValueKey('story_visual_bharatnatyam'),
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
@@ -4256,19 +4224,10 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
           fit: StackFit.expand,
           children: [
             Image.asset(
-              'assets/images/netaji_portrait.png',
+              'assets/Bharatnatayam/COVER_IMG/Bharatnatyam.png',
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Image.asset(
-                'assets/Netaji/COVER_IMG/netaji_portrait.png',
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Image.asset(
-                  'assets/Netaji/COVER_IMG/netaji-bose-portrait-in-his-birthday-celebration-6y6feyj10k9hshwc.jpg',
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Image.asset(
-                    'assets/Netaji/Netaji_0/images/netaji.jpg',
-                    fit: BoxFit.cover,
-                  ),
-                ),
+              errorBuilder: (context, error, stackTrace) => Container(
+                color: const Color(0xFFB45309).withValues(alpha: 0.35),
               ),
             ),
             // Vintage Warm Sepia Overlay
@@ -4298,7 +4257,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
-                  'NETAJI BOSE',
+                  'BHARATNATYAM',
                   textAlign: TextAlign.center,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -4315,9 +4274,9 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
         ),
       );
     } else if (levelIndex == 1) {
-      // 🇮🇳 Full-Page Mahatma Gandhiji Story Visual!
+      // 🇮🇳 Full-Page Netaji Subhas Chandra Bose Story Visual!
       return Container(
-        key: const ValueKey('story_visual_gandhiji'),
+        key: const ValueKey('story_visual_netaji'),
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
@@ -4334,14 +4293,13 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
           fit: StackFit.expand,
           children: [
             Image.asset(
-              'assets/images/gandhiji_portrait.jpg',
+              'assets/Netaji/COVER_IMG/netaji-bose-portrait-in-his-birthday-celebration-6y6feyj10k9hshwc.jpg',
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) => Image.asset(
-                'assets/Netaji/COVER_IMG/gandhiji_portrait.jpg',
+                'assets/Netaji/COVER_IMG/netaji_portrait.png',
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Image.asset(
-                  'assets/Netaji/Netaji_0/images/gandhiji_portrait.jpg',
-                  fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  color: const Color(0xFFFF9933).withValues(alpha: 0.35),
                 ),
               ),
             ),
@@ -4359,7 +4317,7 @@ class _SegoConceptScreenState extends State<SegoConceptScreen>
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
-                  'GANDHIJI',
+                  'NETAJI BOSE',
                   textAlign: TextAlign.center,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

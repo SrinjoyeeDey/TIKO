@@ -89,6 +89,37 @@ class _WindowsGameMapViewState extends State<WindowsGameMapView> {
         }
 
         if (shouldOpen) {
+          final currentChapter = (widget.chapterId ?? '').toLowerCase();
+          
+          // Enforce strict chapter-state routing:
+          // - Bharatnatyam level: ONLY Tamil Nadu is clickable!
+          // - Netaji level: ONLY West Bengal is clickable!
+          if (currentChapter.contains('bharat') || currentChapter.contains('tamil')) {
+            if (!targetStateId.contains('tamil')) {
+              debugPrint("Blocked non-Tamil Nadu state ($targetStateId) for Bharatnatyam level");
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('🎭 Bharatanatyam originates in Tamil Nadu! Tap Tamil Nadu on the map to begin your quest.'),
+                  backgroundColor: Color(0xFF2E1C12),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+              return;
+            }
+          } else if (currentChapter.contains('netaji') || currentChapter.contains('bengal')) {
+            if (!targetStateId.contains('bengal')) {
+              debugPrint("Blocked non-West Bengal state ($targetStateId) for Netaji level");
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('🇮🇳 Netaji Subhas Chandra Bose story begins in West Bengal! Tap West Bengal on the map.'),
+                  backgroundColor: Color(0xFF2E1C12),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+              return;
+            }
+          }
+
           if (!mounted) return;
           debugPrint("Navigating to state story collection for $targetStateId...");
           

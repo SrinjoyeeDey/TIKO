@@ -146,8 +146,19 @@ class ContentDiscoveryService {
         }
       }
 
-      // Sort chapters naturally
-      chapters.sort((a, b) => _compareNatural(a.id, b.id));
+      // Priority sort: Bharatnatyam (1), Netaji (2), then natural sort
+      chapters.sort((a, b) {
+        final aId = a.id.toLowerCase();
+        final bId = b.id.toLowerCase();
+        int scoreA = 99;
+        int scoreB = 99;
+        if (aId.contains('bharat') || aId.contains('tamil')) scoreA = 1;
+        else if (aId.contains('netaji') || aId.contains('bengal')) scoreA = 2;
+        if (bId.contains('bharat') || bId.contains('tamil')) scoreB = 1;
+        else if (bId.contains('netaji') || bId.contains('bengal')) scoreB = 2;
+        if (scoreA != scoreB) return scoreA.compareTo(scoreB);
+        return _compareNatural(a.id, b.id);
+      });
 
       _cachedChapters = chapters;
       return chapters;
@@ -179,6 +190,13 @@ class ContentDiscoveryService {
   }
 
   static String _formatName(String raw) {
+    final lower = raw.toLowerCase();
+    if (lower.contains('bharat')) {
+      return 'Bharatnatyam';
+    }
+    if (lower.contains('netaji')) {
+      return 'Netaji';
+    }
     final parts = raw.split('_');
     if (parts.length > 1) {
       final lastPart = parts.last;
@@ -258,6 +276,21 @@ class ContentDiscoveryService {
             (lowerPath.endsWith('.jpg') || lowerPath.endsWith('.jpeg') || lowerPath.endsWith('.png') || lowerPath.endsWith('.webp'))) {
           debugPrint("ContentDiscoveryService: MATCHED ALT $path");
           return path;
+        }
+      }
+      // Direct dedicated chapter fallbacks
+      final cleanId = chapterId.toLowerCase();
+      if (cleanId.contains('bharat') || cleanId.contains('tamil')) {
+        for (final path in assetPaths) {
+          if (path.toLowerCase().contains('bharatnatyam.png')) {
+            return path;
+          }
+        }
+      } else if (cleanId.contains('netaji') || cleanId.contains('bengal')) {
+        for (final path in assetPaths) {
+          if (path.toLowerCase().contains('netaji-bose-portrait') || path.toLowerCase().contains('netaji_portrait')) {
+            return path;
+          }
         }
       }
     } catch (e) {
