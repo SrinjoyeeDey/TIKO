@@ -1,0 +1,956 @@
+{
+  "title": "End of World War II, INA Surrender, and the Immortal Legacy",
+  "section": {
+    "start": "04:32",
+    "end": "05:03",
+    "description": "Comprehensive 45-question pedagogical assessment for ages 3 to 15 spanning Easy, Moderate, and Hard difficulty levels."
+  },
+  "target_age": 12,
+  "age_range": "3-15 years",
+  "question_pattern": {
+    "main_questions": "45 progressive questions consisting of multi-tier MCQs, conceptual descriptive questions, and voice pronunciation speech questions.",
+    "difficulty_distribution": "15 Easy (Ages 3-7), 15 Moderate (Ages 8-11), 15 Hard (Ages 12-15)",
+    "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
+    "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
+    "sequence_test": "Chronological milestone ordering and timeline analysis.",
+    "image_matching": "Interactive visual matching connecting historical figures, artifacts, and descriptions."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "question": "What major global war came to an end in 1945?",
+      "options": {
+        "A": "World War II",
+        "B": "World War I",
+        "C": "The Trojan War",
+        "D": "The Cold War"
+      },
+      "answer": "A",
+      "answer_text": "World War II ended in 1945 after years of conflict.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "question": "Why did the brave soldiers of the INA have to stop fighting in 1945?",
+      "options": {
+        "A": "They ran out of food, supplies, and air support when their ally Japan surrendered",
+        "B": "They forgot how to fight",
+        "C": "They wanted to go to a circus",
+        "D": "They lost their uniforms"
+      },
+      "answer": "A",
+      "answer_text": "The INA had to surrender due to lack of supplies and overwhelming enemy numbers.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "question": "Were the INA soldiers treated as heroes by the people of India when they returned?",
+      "options": {
+        "A": "Yes! The whole country celebrated them as true national heroes",
+        "B": "No, nobody cared",
+        "C": "They were forgotten",
+        "D": "People were angry at them"
+      },
+      "answer": "A",
+      "answer_text": "The entire nation welcomed and hailed the INA soldiers as immortal heroes.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "question": "In which month of 1945 did the great mystery of Netaji's disappearance occur?",
+      "options": {
+        "A": "August",
+        "B": "January",
+        "C": "May",
+        "D": "December"
+      },
+      "answer": "A",
+      "answer_text": "Netaji's mysterious disappearance took place in August 1945.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "question": "Did Netaji ever give up his dream for India's freedom?",
+      "options": {
+        "A": "Never! He fought with supreme bravery until his very last breath",
+        "B": "Yes, he gave up early",
+        "C": "He changed his mind",
+        "D": "He decided to help the British"
+      },
+      "answer": "A",
+      "answer_text": "Netaji never gave up; his courage inspired the entire nation to win independence.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "question": "What famous trial in Delhi united all Indians in support of the INA heroes?",
+      "options": {
+        "A": "The Red Fort Trials",
+        "B": "The London Trial",
+        "C": "The Paris Hearing",
+        "D": "The Tokyo Court"
+      },
+      "answer": "A",
+      "answer_text": "The Red Fort Trials in Delhi united all Indian communities behind the INA.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "question": "Did Netaji ensure his women soldiers in the Rani of Jhansi Regiment returned home safely?",
+      "options": {
+        "A": "Yes, he personally supervised their safe return across Burma and Malaya",
+        "B": "No, he forgot about them",
+        "C": "He left them in the jungle",
+        "D": "He asked the enemy to guard them"
+      },
+      "answer": "A",
+      "answer_text": "Netaji personally accompanied and protected the women soldiers on their long trek back to safety.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "question": "What happened to the British Empire in India shortly after the INA struggle?",
+      "options": {
+        "A": "The British realized they could no longer rule India and had to leave in 1947",
+        "B": "The British ruled for another 100 years",
+        "C": "The British took over all of Asia",
+        "D": "Nothing changed"
+      },
+      "answer": "A",
+      "answer_text": "The INA struggle broke the backbone of the British Empire, forcing them to grant independence in 1947.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "question": "What immortal message did Netaji give to his soldiers before parting in 1945?",
+      "options": {
+        "A": "There is no power on earth that can keep India in bondage. India shall be free and before long!",
+        "B": "Do not study anymore",
+        "C": "Stay at home forever",
+        "D": "Forget about our motherland"
+      },
+      "answer": "A",
+      "answer_text": "Netaji promised: 'There is no power on earth that can keep India in bondage. India shall be free!'",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "question": "Do Indian people still love and remember Netaji today?",
+      "options": {
+        "A": "Yes, as one of India's greatest and most beloved patriot heroes",
+        "B": "No, nobody remembers him",
+        "C": "Only in history books",
+        "D": "He is forgotten"
+      },
+      "answer": "A",
+      "answer_text": "Netaji lives on forever in the heart of every Indian citizen.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 11,
+      "type": "descriptive",
+      "question": "Why did the Indian National Army have to surrender at the end of World War II?",
+      "reference_answer": "The INA was forced to surrender in 1945 because Japan faced military defeat, cutting off all supplies, air support, and weapons. Despite their immense courage, the INA could not continue against massive Allied armies.",
+      "key_concepts": [
+        "forced to surrender in 1945",
+        "Japan military defeat",
+        "cut off supplies and air support",
+        "immense courage",
+        "massive Allied armies"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 12,
+      "type": "descriptive",
+      "question": "What was Netaji's final inspiring message to the soldiers of the Azad Hind Fauj in August 1945?",
+      "reference_answer": "Netaji told his soldiers never to lose faith. He declared that the roads to Delhi are many, and no power on earth could keep India in bondage, promising that India would be free very soon.",
+      "key_concepts": [
+        "never lose faith",
+        "roads to Delhi are many",
+        "no power on earth keep India in bondage",
+        "India shall be free"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 13,
+      "type": "speech",
+      "question": "Say the historic military trial held in Delhi:",
+      "target_phrase": "Red Fort Trials",
+      "reference_answer": "Red Fort Trials",
+      "key_concepts": [
+        "Red",
+        "Fort",
+        "Trials"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 14,
+      "type": "speech",
+      "question": "Say the month and year of the mystery of Netaji:",
+      "target_phrase": "August Nineteen Forty Five",
+      "reference_answer": "August Nineteen Forty Five",
+      "key_concepts": [
+        "August",
+        "Nineteen",
+        "Forty",
+        "Five"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 15,
+      "type": "speech",
+      "question": "Say Netaji's immortal message of hope:",
+      "target_phrase": "India Shall Be Free",
+      "reference_answer": "India Shall Be Free",
+      "key_concepts": [
+        "India",
+        "Shall",
+        "Free"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "question": "How did Netaji ensure the safety of the Rani of Jhansi Regiment during the retreat from Rangoon in April-May 1945?",
+      "options": {
+        "A": "He walked on foot alongside the women soldiers for over 21 days across hundreds of miles through enemy-dominated Burmese jungles to Thailand",
+        "B": "He flew away alone in an airplane",
+        "C": "He ordered them to stay behind in Rangoon prisons",
+        "D": "He asked the British army for transport"
+      },
+      "answer": "A",
+      "answer_text": "Netaji refused private transport and walked on foot across Burma with the women soldiers until every single one was safe.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "question": "What three INA officers of different faiths were put on public trial together at the Red Fort in late 1945?",
+      "options": {
+        "A": "Col. Prem Sahgal (Hindu), Col. Gurbaksh Singh Dhillon (Sikh), and Maj. Gen. Shah Nawaz Khan (Muslim)",
+        "B": "Three British governors",
+        "C": "Three European diplomats",
+        "D": "Three commercial merchants"
+      },
+      "answer": "A",
+      "answer_text": "The joint trial of Sahgal, Dhillon, and Khan symbolized the unbreakable secular unity of the INA.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "question": "What national uprising across India was directly sparked by the Red Fort INA Trials in February 1946?",
+      "options": {
+        "A": "The Royal Indian Navy (RIN) Mutiny in Bombay, Karachi, and Calcutta",
+        "B": "A tea plantation strike",
+        "C": "A postal workers convention",
+        "D": "A movie actors boycott"
+      },
+      "answer": "A",
+      "answer_text": "Over 20,000 Indian sailors of the Royal Indian Navy revolted, hoisting Tricolour flags and chanting 'Jai Hind!'.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "question": "What popular national slogan echoed across the streets of every Indian city during the Red Fort Trials?",
+      "options": {
+        "A": "'Lal Qile Se Aayi Awaaz: Sahgal, Dhillon, Shahnawaz!'",
+        "B": "'Long Live the Empire'",
+        "C": "'Pay Higher Taxes'",
+        "D": "'Peace without Freedom'"
+      },
+      "answer": "A",
+      "answer_text": "The slogan 'Lal Qile Se Aayi Awaaz: Sahgal, Dhillon, Shahnawaz!' galvanized millions of demonstrators.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "question": "Who led the prestigious legal defense team for the INA heroes at the Red Fort?",
+      "options": {
+        "A": "Bhulabhai Desai, along with Jawaharlal Nehru, Tej Bahadur Sapru, and Asaf Ali",
+        "B": "British military prosecutors",
+        "C": "Japanese lawyers",
+        "D": "American judges"
+      },
+      "answer": "A",
+      "answer_text": "Bhulabhai Desai delivered a masterly legal defense proving the INA was a lawful sovereign army.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "question": "What did British Prime Minister Clement Attlee later admit was the main reason Britain had to leave India in 1947?",
+      "options": {
+        "A": "The erosion of loyalty among the Indian armed forces and police triggered by Netaji's INA and the naval mutiny",
+        "B": "A decline in the popularity of cricket",
+        "C": "Bad weather in London",
+        "D": "A change in British currency design"
+      },
+      "answer": "A",
+      "answer_text": "Attlee admitted that Netaji's INA shattered the loyalty of the British Indian military, making colonial rule impossible.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "question": "What memorial monument built by Netaji in Singapore was destroyed by the British under Lord Mountbatten in 1945?",
+      "options": {
+        "A": "The INA War Memorial on the Singapore Esplanade",
+        "B": "The Raffles Hotel",
+        "C": "The Singapore Botanical Garden",
+        "D": "The City Harbor Pier"
+      },
+      "answer": "A",
+      "answer_text": "Mountbatten ordered the demolition of the INA War Memorial in Singapore to erase Netaji's legacy.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "question": "What did Netaji's final Order of the Day on August 15, 1945, emphasize to his officers and soldiers?",
+      "options": {
+        "A": "'In this unprecedented crisis, do not be disheartened... The roads to Delhi are many and Delhi still remains our goal.'",
+        "B": "'All hope is forever lost'",
+        "C": "'Surrender your ideals to the enemy'",
+        "D": "'Disband and return to private occupations'"
+      },
+      "answer": "A",
+      "answer_text": "Netaji's final message inspired his men that temporary military setback could never extinguish India's destiny.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 24,
+      "type": "descriptive",
+      "question": "Describe how the Red Fort INA Trials in late 1945 unified the Indian nation.",
+      "reference_answer": "The British trial of three INA officers of different faiths (Shah Nawaz Khan, Prem Sahgal, and Gurbaksh Singh Dhillon) united Hindus, Muslims, Sikhs, and Christians across India in massive nationwide protests, demanding their immediate release.",
+      "key_concepts": [
+        "Red Fort Trials",
+        "Shah Nawaz, Sahgal, Dhillon",
+        "different faiths",
+        "unified Hindus, Muslims, Sikhs",
+        "nationwide protests",
+        "demanded release"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 25,
+      "type": "descriptive",
+      "question": "Explain the connection between Netaji's INA and the Royal Indian Navy (RIN) Mutiny of February 1946.",
+      "reference_answer": "Inspired by the heroism of Netaji and the INA, 20,000 Indian naval ratings revolted against British officers in February 1946. They raised Tricolours, put up portraits of Netaji, and proved that Indian armed forces would no longer obey colonial masters.",
+      "key_concepts": [
+        "Royal Indian Navy Mutiny",
+        "February 1946",
+        "20000 ratings revolted",
+        "portraits of Netaji and Tricolour",
+        "refused to obey colonial masters"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 26,
+      "type": "descriptive",
+      "question": "What did British Prime Minister Clement Attlee state regarding the decisive factor in Britain granting Indian independence?",
+      "reference_answer": "When asked why Britain left in 1947, former Prime Minister Clement Attlee admitted that the primary factor was the collapse of loyalty within the British Indian Army and Navy caused by Netaji's INA activities.",
+      "key_concepts": [
+        "Clement Attlee",
+        "primary factor in 1947 independence",
+        "collapse of loyalty",
+        "British Indian Army and Navy",
+        "Netaji's INA activities"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 27,
+      "type": "speech",
+      "question": "Pronounce the secular trio of INA commanders tried at the Red Fort:",
+      "target_phrase": "Sahgal Dhillon And Shah Nawaz",
+      "reference_answer": "Sahgal Dhillon And Shah Nawaz",
+      "key_concepts": [
+        "Sahgal",
+        "Dhillon",
+        "Shah",
+        "Nawaz"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 28,
+      "type": "speech",
+      "question": "Pronounce the historic naval uprising in Bombay:",
+      "target_phrase": "Royal Indian Navy Mutiny",
+      "reference_answer": "Royal Indian Navy Mutiny",
+      "key_concepts": [
+        "Royal",
+        "Indian",
+        "Navy",
+        "Mutiny"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 29,
+      "type": "speech",
+      "question": "Pronounce the lead defense advocate for the INA:",
+      "target_phrase": "Advocate Bhulabhai Desai",
+      "reference_answer": "Advocate Bhulabhai Desai",
+      "key_concepts": [
+        "Advocate",
+        "Bhulabhai",
+        "Desai"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 30,
+      "type": "speech",
+      "question": "Pronounce the historic British Prime Minister admission:",
+      "target_phrase": "Prime Minister Clement Attlee",
+      "reference_answer": "Prime Minister Clement Attlee",
+      "key_concepts": [
+        "Prime",
+        "Minister",
+        "Clement",
+        "Attlee"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "question": "What profound jurisprudential argument did Bhulabhai Desai establish during the Red Fort Courts-Martial in December 1945?",
+      "options": {
+        "A": "Under international law, an oppressed subject nation possesses an inalienable legal right to wage war for its freedom; therefore, members of the armed forces of a recognized provisional government (Azad Hind) cannot be charged with treason under domestic municipal penal laws",
+        "B": "That the accused officers were not present in Asia during the war",
+        "C": "That the British military code was invalid in peacetime only",
+        "D": "That the officers acted purely out of self-defense against wild animals in the jungle"
+      },
+      "answer": "A",
+      "answer_text": "Desai's closing argument was a landmark in international jurisprudence, defending the sovereign right of colonized peoples to wage armed liberation.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "question": "Why did Commander-in-Chief General Claude Auchinleck remit the prison sentences of the convicted Red Fort officers?",
+      "options": {
+        "A": "Internal intelligence reports warned of an imminent total mutiny across all Indian units of the British Indian Army and Air Force if the sentences were enforced",
+        "B": "The King of England ordered their pardon out of personal friendship",
+        "C": "The British judges admitted an administrative mistake",
+        "D": "The accused officers paid a financial fine"
+      },
+      "answer": "A",
+      "answer_text": "Auchinleck recognized that executing or imprisoning the INA officers would spark a violent military revolution destroying British power overnight.",
+      "difficulty": "hard",
+      "difficulty_percentage": 82,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "question": "What confidential dialogue occurred between Chief Justice P.B. Chakrabartty and former British Prime Minister Clement Attlee in 1956 at Raj Bhavan, Calcutta?",
+      "options": {
+        "A": "When asked how much influence the 1942 Quit India movement had on Britain's decision to quit India compared to Netaji's INA, Attlee replied with a slow smile: 'M-i-n-i-m-a-l'",
+        "B": "Attlee stated that Britain left purely out of voluntary charity",
+        "C": "Attlee denied ever hearing of Subhas Chandra Bose",
+        "D": "Attlee claimed Britain was forced out by the United Nations"
+      },
+      "answer": "A",
+      "answer_text": "Attlee explicitly acknowledged that the military threat created by Netaji was the principal reason for the British withdrawal in 1947.",
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "question": "What happened to the physical monument dedicated to the fallen INA soldiers on the Singapore Esplanade after British reoccupation?",
+      "options": {
+        "A": "Lord Louis Mountbatten ordered Royal Engineers to dynamite and demolish the monument on September 8, 1945, to suppress the memory of the INA",
+        "B": "It was preserved and turned into a museum",
+        "C": "It was shipped to London for display",
+        "D": "It was painted white by the local council"
+      },
+      "answer": "A",
+      "answer_text": "Mountbatten attempted to obliterate Netaji's memorial with dynamite, but its motto 'Ittehad, Itmad, Qurbani' lived on indelibly.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "question": "How did the 1946 Royal Indian Navy Mutiny reflect the institutional infiltration of Netaji's ideals among imperial forces?",
+      "options": {
+        "A": "Ratings renamed their ships 'Free Indian Ships', communicated using Azad Hind wireless codes, and replaced British portraits with photos of Netaji",
+        "B": "They requested higher wages only",
+        "C": "They sailed the ships to European vacation resorts",
+        "D": "They surrendered to foreign commercial ships"
+      },
+      "answer": "A",
+      "answer_text": "The naval uprising was explicitly political and anti-colonial, inspired directly by Netaji's message and the INA trials.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "question": "What strategic exit path was Netaji attempting to negotiate in mid-August 1945 prior to his sudden departure from Southeast Asia?",
+      "options": {
+        "A": "Reaching Manchuria and entering Soviet territory to seek USSR alliance against British imperialism in the emerging Cold War",
+        "B": "Retiring to a remote Pacific island",
+        "C": "Surrendering to American forces in the Philippines",
+        "D": "Returning to London to practice law"
+      },
+      "answer": "A",
+      "answer_text": "Netaji anticipated the Cold War rift between the USSR and Britain, planning to forge an alliance with Moscow for India's final liberation.",
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "question": "Why did the British colonial government classify thousands of secret intelligence files regarding Netaji as top secret for decades?",
+      "options": {
+        "A": "Because the documents contained sensitive revelations about Netaji's immense revolutionary network, wartime diplomacy, and mysterious post-1945 fate",
+        "B": "Because the files were written in code that could never be read",
+        "C": "Because they were damaged by flood waters",
+        "D": "Because they contained private family recipes"
+      },
+      "answer": "A",
+      "answer_text": "The British and subsequent intelligence agencies classified the Netaji archives due to their explosive political significance.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 38,
+      "type": "descriptive",
+      "question": "Critically evaluate the legal and international significance of Bhulabhai Desai's defense at the Red Fort INA Trials.",
+      "reference_answer": "Bhulabhai Desai argued that under international law, subject peoples have an inherent right to rebel against foreign subjugation. The Provisional Government of Azad Hind was a recognized de facto sovereign state, making the INA a legitimate army whose soldiers could not be prosecuted for treason.",
+      "key_concepts": [
+        "inherent right to rebel against subjugation",
+        "Provisional Government de facto sovereign state",
+        "legitimate army under international law",
+        "could not be prosecuted for treason",
+        "landmark in anti-colonial jurisprudence"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 39,
+      "type": "descriptive",
+      "question": "Examine how the combination of the INA trials and the 1946 Royal Indian Navy Mutiny made British rule in India untenable.",
+      "reference_answer": "British rule in India depended entirely on the armed coercion of 2.5 million Indian soldiers and policemen. When the INA trials galvanized public fury and the RIN mutinied, the British realized their military instrument of control had disintegrated, leaving immediate withdrawal as the only option.",
+      "key_concepts": [
+        "depended on armed coercion of Indian soldiers",
+        "RIN mutiny and public fury",
+        "military instrument of control disintegrated",
+        "untenable colonial rule",
+        "forced immediate British withdrawal"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 40,
+      "type": "descriptive",
+      "question": "Analyze Netaji's geopolitical vision in attempting to establish contact with the Soviet Union in August 1945.",
+      "reference_answer": "With Axis defeat imminent, Netaji foresaw the inevitable Cold War conflict between the capitalist West and the communist Soviet Union. He sought to reach Moscow to persuade Soviet leadership that a free, sovereign India was essential to anti-imperialist balance in Asia.",
+      "key_concepts": [
+        "foresaw inevitable Cold War conflict",
+        "capitalist West vs Soviet Union",
+        "reach Moscow",
+        "free sovereign India essential to anti-imperialist balance",
+        "geopolitical realism"
+      ],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 41,
+      "type": "descriptive",
+      "question": "Synthesize the historical transformation of the INA from an overseas military force into the decisive catalyst for Indian independence.",
+      "reference_answer": "Though defeated in battlefield logistics in Burma, the INA achieved its ultimate strategic objective. It shattered the colonial loyalty of the armed forces, electrified the national consciousness, and forced the British Empire to abandon India in August 1947, fulfilling Netaji's prophecy.",
+      "key_concepts": [
+        "achieved ultimate strategic objective",
+        "shattered colonial loyalty of armed forces",
+        "electrified national consciousness",
+        "forced British Empire to abandon India in 1947",
+        "fulfilled Netaji's prophecy"
+      ],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 42,
+      "type": "speech",
+      "question": "Pronounce the historic legal defense doctrine:",
+      "target_phrase": "Inalienable Right To Armed Liberation",
+      "reference_answer": "Inalienable Right To Armed Liberation",
+      "key_concepts": [
+        "Inalienable",
+        "Right",
+        "Armed",
+        "Liberation"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 43,
+      "type": "speech",
+      "question": "Pronounce the historic naval mutiny flagship in Bombay:",
+      "target_phrase": "HMIS Talwar In Bombay Harbor",
+      "reference_answer": "HMIS Talwar In Bombay Harbor",
+      "key_concepts": [
+        "Talwar",
+        "Bombay",
+        "Harbor"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 44,
+      "type": "speech",
+      "question": "Pronounce the immortal Order of the Day declaration:",
+      "target_phrase": "The Roads To Delhi Are Many",
+      "reference_answer": "The Roads To Delhi Are Many",
+      "key_concepts": [
+        "Roads",
+        "Delhi",
+        "Many"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 45,
+      "type": "speech",
+      "question": "Pronounce the decisive catalyst for Indian independence:",
+      "target_phrase": "Erosion Of Loyalty In Colonial Military",
+      "reference_answer": "Erosion Of Loyalty In Colonial Military",
+      "key_concepts": [
+        "Erosion",
+        "Loyalty",
+        "Colonial",
+        "Military"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    }
+  ],
+  "sequence_test": {
+    "title": "Chronological Sequence of the Post-War Crisis, Red Fort Trials, and Naval Mutiny",
+    "description": "Trace the timeline from the conclusion of WWII in August 1945 to the Red Fort trials and the nationwide Royal Indian Navy mutiny in 1946.",
+    "questions": [
+      {
+        "id": 46,
+        "type": "sequence_mcq",
+        "question": "What is the correct sequence of events following the end of World War II in 1945?",
+        "options": {
+          "A": "Surrender of Japanese forces (August 1945) -> Disappearance of Netaji in transit -> British staging of Red Fort INA Trials (late 1945) -> Royal Indian Navy Mutiny erupts across India (Feb 1946)",
+          "B": "Royal Indian Navy Mutiny -> Red Fort Trials -> Surrender of Japan -> Disappearance of Netaji",
+          "C": "Red Fort Trials -> Royal Indian Navy Mutiny -> Disappearance of Netaji -> Surrender of Japan",
+          "D": "Disappearance of Netaji -> Royal Indian Navy Mutiny -> Surrender of Japan -> Red Fort Trials"
+        },
+        "answer": "A",
+        "answer_text": "Japan surrendered, Netaji disappeared, the British held the Red Fort Trials, and the resulting public outrage sparked the RIN Mutiny.",
+        "difficulty": "moderate",
+        "difficulty_percentage": 60,
+        "difficulty_level": "Curious Adventurer"
+      },
+      {
+        "id": 47,
+        "type": "sequence_mcq",
+        "question": "Arrange the legal and revolutionary milestones of the INA aftermath in chronological order:",
+        "options": {
+          "A": "Demolition of Singapore INA Memorial by Mountbatten -> Public outcry over Sahgal, Dhillon, Shahnawaz trials -> Remission of sentences by Auchinleck -> British Prime Minister Attlee deciding to quit India",
+          "B": "Attlee deciding to quit India -> Demolition of Memorial -> Public outcry -> Remission of sentences",
+          "C": "Public outcry -> Demolition of Memorial -> Attlee decision -> Remission of sentences",
+          "D": "Remission of sentences -> Attlee decision -> Public outcry -> Demolition of Memorial"
+        },
+        "answer": "A",
+        "answer_text": "Mountbatten destroyed the memorial, the trials triggered mass fury, Auchinleck remitted sentences, and Attlee concluded British rule was doomed.",
+        "difficulty": "hard",
+        "difficulty_percentage": 75,
+        "difficulty_level": "Challenger"
+      }
+    ]
+  },
+  "image_matching": [
+    {
+      "id": 48,
+      "type": "image_matching",
+      "question": "Match each post-war event and site with its description:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/red_fort_trials.jpg",
+          "label": "Red Fort Trials"
+        },
+        {
+          "id": "img_2",
+          "file": "images/rin_mutiny.jpg",
+          "label": "RIN Mutiny 1946"
+        },
+        {
+          "id": "img_3",
+          "file": "images/ina_singapore_memorial.jpg",
+          "label": "Singapore INA Memorial"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "Historic courts-martial in Delhi that galvanized nationwide anti-colonial unity across all religions."
+        },
+        {
+          "id": "desc_2",
+          "text": "Mass naval revolt in Bombay and Karachi demonstrating that Indian armed forces rejected British rule."
+        },
+        {
+          "id": "desc_3",
+          "text": "Memorial dedicated to fallen INA heroes bearing the motto 'Ittehad, Itmad, Qurbani'."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 49,
+      "type": "image_matching",
+      "question": "Match each key historical personality with their post-war role:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/bhulabhai_desai.jpg",
+          "label": "Bhulabhai Desai"
+        },
+        {
+          "id": "img_2",
+          "file": "images/clement_attlee.jpg",
+          "label": "Clement Attlee"
+        },
+        {
+          "id": "img_3",
+          "file": "images/claude_auchinleck.jpg",
+          "label": "General Auchinleck"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "Senior jurist who delivered the landmark international law defense for the INA at the Red Fort."
+        },
+        {
+          "id": "desc_2",
+          "text": "British Prime Minister who conceded that the INA's impact forced the British to leave India in 1947."
+        },
+        {
+          "id": "desc_3",
+          "text": "British Commander-in-Chief who remitted the INA sentences fearing an uncontrollable army mutiny."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer"
+    }
+  ],
+  "scoring": {
+    "mcq": {
+      "points_per_correct_answer": 1
+    },
+    "descriptive": {
+      "method": "cosine_similarity",
+      "description": "Calculate embedding cosine similarity against reference concepts.",
+      "suggested_interpretation": {
+        "0.80-1.00": "Outstanding Mastery",
+        "0.65-0.79": "Good Conceptual Understanding",
+        "0.50-0.64": "Developing Understanding",
+        "0.00-0.49": "Needs Reinforcement"
+      }
+    },
+    "speech": {
+      "points_per_correct_answer": 1,
+      "min_pass_score": 60
+    },
+    "sequence_test": {
+      "points_per_correct_answer": 1
+    },
+    "image_matching": {
+      "points_per_correct_match": 1,
+      "total_points": 3
+    }
+  }
+}

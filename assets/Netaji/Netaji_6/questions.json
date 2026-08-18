@@ -1,0 +1,957 @@
+{
+  "title": "Historic Submarine Transfer and Revival of the Liberation Army",
+  "section": {
+    "start": "03:01",
+    "end": "03:30",
+    "description": "Comprehensive 45-question pedagogical assessment for ages 3 to 15 spanning Easy, Moderate, and Hard difficulty levels."
+  },
+  "target_age": 12,
+  "age_range": "3-15 years",
+  "question_pattern": {
+    "main_questions": "45 progressive questions consisting of multi-tier MCQs, conceptual descriptive questions, and voice pronunciation speech questions.",
+    "difficulty_distribution": "15 Easy (Ages 3-7), 15 Moderate (Ages 8-11), 15 Hard (Ages 12-15)",
+    "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
+    "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
+    "sequence_test": "Chronological milestone ordering and timeline analysis.",
+    "image_matching": "Interactive visual matching connecting historical figures, artifacts, and descriptions."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "question": "Which Japanese submarine met the German submarine to pick up Netaji?",
+      "options": {
+        "A": "Submarine I-29",
+        "B": "Submarine XYZ",
+        "C": "Submarine 999",
+        "D": "Submarine Gold"
+      },
+      "answer": "A",
+      "answer_text": "The Japanese submarine I-29 met the German submarine in the ocean.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "question": "Near which large island in the ocean did the two submarines meet?",
+      "options": {
+        "A": "Madagascar",
+        "B": "Hawaii",
+        "C": "Iceland",
+        "D": "Greenland"
+      },
+      "answer": "A",
+      "answer_text": "The submarines met off the coast of Madagascar in the Indian Ocean.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "question": "How did Netaji transfer between the two submarines in the rough ocean waves?",
+      "options": {
+        "A": "In a small rubber dinghy boat",
+        "B": "By walking on a bridge",
+        "C": "By flying an airplane",
+        "D": "By swimming in a life jacket"
+      },
+      "answer": "A",
+      "answer_text": "Netaji bravely crossed the open sea in a small rubber dinghy boat.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "question": "Is this submarine transfer famous in world history?",
+      "options": {
+        "A": "Yes, it was the only civilian transfer between two different submarines in World War II",
+        "B": "No, it happens every day",
+        "C": "It was just a movie scene",
+        "D": "Nobody knows about it"
+      },
+      "answer": "A",
+      "answer_text": "It is celebrated as the only civilian transfer between two allied navies in World War II.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "question": "Around which famous southern tip of Africa did Netaji's submarine sail?",
+      "options": {
+        "A": "Cape of Good Hope",
+        "B": "Cape Horn",
+        "C": "Cape Cod",
+        "D": "Cape Canaveral"
+      },
+      "answer": "A",
+      "answer_text": "The submarine sailed around the stormy Cape of Good Hope.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "question": "Which country welcomed Netaji warmly when he reached Asia?",
+      "options": {
+        "A": "Japan",
+        "B": "England",
+        "C": "Canada",
+        "D": "Australia"
+      },
+      "answer": "A",
+      "answer_text": "Imperial Japan welcomed Netaji with great honor and full support.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "question": "What great army did Netaji revive when he arrived in the Far East?",
+      "options": {
+        "A": "The Indian Liberation Army (INA)",
+        "B": "The French Legion",
+        "C": "The Roman Army",
+        "D": "The Viking Fleet"
+      },
+      "answer": "A",
+      "answer_text": "Netaji revived the Indian National Army (Liberation Army) in the Far East.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "question": "What historic city did Netaji inspire his army to march towards to free India?",
+      "options": {
+        "A": "Delhi ('Dilli Chalo!')",
+        "B": "Paris",
+        "C": "Rome",
+        "D": "London"
+      },
+      "answer": "A",
+      "answer_text": "Netaji gave the rallying war cry 'Dilli Chalo!' (March to Delhi!).",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "question": "Was Netaji calm and brave during the dangerous rubber boat transfer on high seas?",
+      "options": {
+        "A": "Yes, he was calm, fearless, and smiling",
+        "B": "No, he was crying",
+        "C": "He wanted to turn back",
+        "D": "He fell asleep"
+      },
+      "answer": "A",
+      "answer_text": "Eyewitnesses recorded that Netaji was completely calm, fearless, and smiling during the transfer.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "question": "What ocean did the two submarines meet in?",
+      "options": {
+        "A": "The Indian Ocean",
+        "B": "The Arctic Ocean",
+        "C": "The Mediterranean Sea",
+        "D": "The Black Sea"
+      },
+      "answer": "A",
+      "answer_text": "The transfer took place in the vast Indian Ocean near Madagascar.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 11,
+      "type": "descriptive",
+      "question": "Describe the historic submarine transfer that took place between Germany and Japan.",
+      "reference_answer": "In April 1943 in the Indian Ocean off Madagascar, Netaji transferred from German submarine U-180 to Japanese submarine I-29 via a rubber dinghy. It was the only civilian submarine transfer of World War II.",
+      "key_concepts": [
+        "April 1943",
+        "Indian Ocean",
+        "Madagascar",
+        "U-180 to I-29",
+        "rubber dinghy",
+        "only civilian transfer of WWII"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 12,
+      "type": "descriptive",
+      "question": "What did Netaji plan to do once he reached Japan and Southeast Asia?",
+      "reference_answer": "Netaji planned to take command of the Indian National Army, mobilize the Indian expatriate population, and launch an armed military campaign to march to Delhi and free India.",
+      "key_concepts": [
+        "Indian National Army",
+        "mobilize Indian expatriates",
+        "armed military campaign",
+        "march to Delhi",
+        "free India"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 13,
+      "type": "speech",
+      "question": "Say the name of the Japanese submarine:",
+      "target_phrase": "Japanese Submarine I Twenty Nine",
+      "reference_answer": "Japanese Submarine I Twenty Nine",
+      "key_concepts": [
+        "Japanese",
+        "Submarine",
+        "Twenty",
+        "Nine"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 14,
+      "type": "speech",
+      "question": "Say the ocean island where the transfer occurred:",
+      "target_phrase": "Coast Of Madagascar",
+      "reference_answer": "Coast Of Madagascar",
+      "key_concepts": [
+        "Coast",
+        "Madagascar"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 15,
+      "type": "speech",
+      "question": "Say the inspiring war cry given by Netaji to march to Delhi:",
+      "target_phrase": "Dilli Chalo",
+      "reference_answer": "Dilli Chalo",
+      "key_concepts": [
+        "Dilli",
+        "Chalo"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "question": "On which date did the historic rendezvous between U-180 and I-29 occur in the Indian Ocean?",
+      "options": {
+        "A": "April 26-28, 1943",
+        "B": "January 1, 1940",
+        "C": "August 15, 1945",
+        "D": "December 7, 1941"
+      },
+      "answer": "A",
+      "answer_text": "The submarines rendezvoused on April 26, 1943, and completed the transfer by April 28.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "question": "Who was the commander of the Imperial Japanese Navy submarine I-29 during the transfer?",
+      "options": {
+        "A": "Commander Masao Teraoka / Juichi Izu",
+        "B": "Admiral Yamamoto",
+        "C": "General Tojo",
+        "D": "Captain Musenberg"
+      },
+      "answer": "A",
+      "answer_text": "Captain Juichi Izu (under Squadron Commander Masao Teraoka) commanded submarine I-29.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "question": "Where did Japanese submarine I-29 disembark Netaji on May 6, 1943?",
+      "options": {
+        "A": "Sabang port on Weh Island (near Sumatra, Indonesia)",
+        "B": "Tokyo Bay",
+        "C": "Sydney Harbor",
+        "D": "Singapore Harbour"
+      },
+      "answer": "A",
+      "answer_text": "Submarine I-29 brought Netaji safely to the port of Sabang off northern Sumatra.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "question": "Who welcomed Netaji in Tokyo and facilitated his meetings with Prime Minister Hideki Tojo?",
+      "options": {
+        "A": "Veteran revolutionary leader Rash Behari Bose",
+        "B": "Mahatma Gandhi",
+        "C": "Winston Churchill",
+        "D": "Lord Mountbatten"
+      },
+      "answer": "A",
+      "answer_text": "Veteran revolutionary Rash Behari Bose warmly received Netaji in Tokyo and prepared to hand over leadership of the Indian Independence League.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "question": "What historic pledge did Japanese Prime Minister Hideki Tojo make to Netaji in the Imperial Diet (Parliament)?",
+      "options": {
+        "A": "Japan pledged unconditional, all-out military, political, and material support for India's complete independence",
+        "B": "Japan claimed India as a colony",
+        "C": "Japan offered commercial trade loans only",
+        "D": "Japan requested Indian soldiers to defend Tokyo"
+      },
+      "answer": "A",
+      "answer_text": "Prime Minister Tojo declared to the Japanese Diet that Japan recognized India's absolute right to total independence.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "question": "What was the physical condition inside the submarine during the 90-day underwater voyage?",
+      "options": {
+        "A": "Intense heat, suffocating humidity, limited oxygen, and the constant threat of Allied depth charges",
+        "B": "Spacious luxury suites with swimming pools",
+        "C": "Daily shore excursions in neutral ports",
+        "D": "Frequent telephone calls to friends"
+      },
+      "answer": "A",
+      "answer_text": "The crew and passengers endured extreme claustrophobic heat, diesel fumes, and life-threatening danger.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "question": "How did Netaji spend his time during the long months confined inside the submarine?",
+      "options": {
+        "A": "Drafting military proclamations, studying Japanese, and planning the governance structure of free India",
+        "B": "Playing cards with the sailors",
+        "C": "Sleeping all day",
+        "D": "Watching movies"
+      },
+      "answer": "A",
+      "answer_text": "Netaji worked tirelessly, drafting plans for the Azad Hind government and future administration of India.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "question": "What was the name of the Indian Independence organization established across Southeast Asia by Rash Behari Bose?",
+      "options": {
+        "A": "Indian Independence League (IIL)",
+        "B": "East India Company",
+        "C": "British Commonwealth Club",
+        "D": "Asian Trade Union"
+      },
+      "answer": "A",
+      "answer_text": "The Indian Independence League united millions of overseas Indians across Malaya, Singapore, Burma, and Thailand.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 24,
+      "type": "descriptive",
+      "question": "Explain the technical and operational challenges of the submarine transfer between U-180 and I-29.",
+      "reference_answer": "The rendezvous took place in hostile open waters off Madagascar without radar detection. In heavy 3-meter ocean swells, Netaji and Abid Hasan boarded a fragile rubber raft and rowed across the sea to Japanese submarine I-29.",
+      "key_concepts": [
+        "hostile open waters",
+        "Madagascar",
+        "no radar detection",
+        "3-meter ocean swells",
+        "rubber raft",
+        "transferred to I-29"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 25,
+      "type": "descriptive",
+      "question": "Describe Netaji's reception in Tokyo and the outcome of his negotiations with Prime Minister Hideki Tojo.",
+      "reference_answer": "In Tokyo, Netaji impressed Prime Minister Hideki Tojo with his charismatic vision, conviction, and strategic clarity. Tojo declared in the Imperial Parliament that Japan promised unconditional, full-scale military and diplomatic support for India's total freedom.",
+      "key_concepts": [
+        "Tokyo",
+        "Hideki Tojo",
+        "charismatic vision",
+        "Imperial Parliament",
+        "unconditional full-scale support",
+        "total freedom"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 26,
+      "type": "descriptive",
+      "question": "What role did veteran revolutionary Rash Behari Bose play upon Netaji's arrival in Asia?",
+      "reference_answer": "Rash Behari Bose had organized the Indian Independence League and laid the foundation for the INA. Recognizing Netaji's unmatched dynamic leadership, he voluntarily handed over supreme leadership of the entire movement to Netaji in Singapore.",
+      "key_concepts": [
+        "Rash Behari Bose",
+        "Indian Independence League",
+        "laid foundation of INA",
+        "unmatched dynamic leadership",
+        "handed over supreme leadership",
+        "Singapore"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 27,
+      "type": "speech",
+      "question": "Pronounce the port where Netaji safely landed in Asia:",
+      "target_phrase": "Port Of Sabang Sumatra",
+      "reference_answer": "Port Of Sabang Sumatra",
+      "key_concepts": [
+        "Port",
+        "Sabang",
+        "Sumatra"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 28,
+      "type": "speech",
+      "question": "Pronounce the Japanese Prime Minister who met Netaji:",
+      "target_phrase": "Prime Minister Hideki Tojo",
+      "reference_answer": "Prime Minister Hideki Tojo",
+      "key_concepts": [
+        "Prime",
+        "Minister",
+        "Hideki",
+        "Tojo"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 29,
+      "type": "speech",
+      "question": "Pronounce the veteran revolutionary founder of the League:",
+      "target_phrase": "Rash Behari Bose",
+      "reference_answer": "Rash Behari Bose",
+      "key_concepts": [
+        "Rash",
+        "Behari",
+        "Bose"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 30,
+      "type": "speech",
+      "question": "Pronounce the pan-Asian expatriate organization:",
+      "target_phrase": "Indian Independence League",
+      "reference_answer": "Indian Independence League",
+      "key_concepts": [
+        "Indian",
+        "Independence",
+        "League"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "question": "What extraordinary naval coordination protocol made the U-180 / I-29 submarine transfer possible amid dense Allied Enigma decoding?",
+      "options": {
+        "A": "Radio silence was strictly enforced; coordinates were predetermined in Berlin and Tokyo months in advance with visual identification signals only",
+        "B": "They transmitted continuous Morse code messages across the Atlantic",
+        "C": "Allied navies granted a humanitarian ceasefire corridor",
+        "D": "They communicated via commercial telephone cables"
+      },
+      "answer": "A",
+      "answer_text": "Extreme radio secrecy prevented British Ultra codebreakers from intercepting the exact meeting point 400 miles southwest of Madagascar.",
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "question": "What material and technological cargo was exchanged between U-180 and I-29 alongside Netaji's passenger transfer?",
+      "options": {
+        "A": "Germany transferred torpedo designs, radar blueprints, and 500 kg of gold bars; Japan transferred two tons of rubber and tin",
+        "B": "They exchanged civilian food supplies and medical textbooks",
+        "C": "They exchanged gold coins for luxury European watches",
+        "D": "They exchanged captured Allied prisoners"
+      },
+      "answer": "A",
+      "answer_text": "The rendezvous was part of the 'Yanagi' submarine trade mission, exchanging strategic blueprints, radar tech, gold, and rubber.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "question": "How did Netaji's arrival in Tokyo in May 1943 transform Japanese imperial strategic doctrine regarding the Indian theater?",
+      "options": {
+        "A": "It transformed Japan's passive defensive posture in Burma into an active offensive commitment ('Operation U-Go') to march into Assam and Manipur with the INA",
+        "B": "It caused Japan to sign a separate peace treaty with Britain",
+        "C": "It convinced Japan to withdraw all troops from the Indian border",
+        "D": "It led to the immediate dissolution of Japanese naval forces in the Indian Ocean"
+      },
+      "answer": "A",
+      "answer_text": "Netaji's persuasion elevated the liberation of India from a peripheral diversion to a premier strategic objective of the Japanese High Command.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "question": "What magnanimous act of selflessness did Rash Behari Bose demonstrate at the historic Singapore convention in July 1943?",
+      "options": {
+        "A": "He stepped down from the presidency of the Indian Independence League and formally invested Netaji as the Supreme Commander of the INA and President of the IIL",
+        "B": "He retired to a monastery in Kyoto",
+        "C": "He transferred all League funds to private companies",
+        "D": "He demanded a co-presidency arrangement"
+      },
+      "answer": "A",
+      "answer_text": "Rash Behari Bose declared: 'I bring to you Netaji Subhas Chandra Bose, the undisputed leader of free India!'",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "question": "What was the profound psychological effect of Netaji's submarine odyssey on the Indian diaspora across Malaya, Burma, and Singapore?",
+      "options": {
+        "A": "It ignited an overwhelming wave of revolutionary fervor, leading hundreds of thousands to donate life savings and enlist in the liberation army",
+        "B": "It caused widespread skepticism and fear",
+        "C": "It resulted in mass migration to Europe",
+        "D": "It caused people to support the British colonial war effort"
+      },
+      "answer": "A",
+      "answer_text": "The knowledge that Netaji had crossed two war-torn oceans on a submarine electrified the Indian diaspora with boundless devotion.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "question": "How did Netaji articulate the difference between passive constitutionalism and armed revolutionary struggle during his Tokyo radio broadcasts?",
+      "options": {
+        "A": "He asserted that independence won through diplomatic begging was an illusion; freedom achieved by Indian blood and sacrifice alone could build an unshakeable sovereign nation",
+        "B": "He praised British parliamentary procedures",
+        "C": "He urged Indians to seek dominion status under the King",
+        "D": "He advocated waiting until the year 2000 for independence"
+      },
+      "answer": "A",
+      "answer_text": "Netaji declared: 'Freedom is not given, it is taken. It must be bought with our own blood.'",
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "question": "Why is the submarine transfer of 1943 regarded by naval historians as a milestone of wartime seamanship?",
+      "options": {
+        "A": "It required flawless dead-reckoning navigation, silent station-keeping in enemy-patrolled waters, and a boat-to-boat personnel transfer in heavy open sea swells without radio guidance",
+        "B": "It set a world speed record for passenger ships",
+        "C": "It was the first time submarines used nuclear propulsion",
+        "D": "It involved over 100 passenger ships"
+      },
+      "answer": "A",
+      "answer_text": "Naval historians acknowledge it as one of the most perilous and masterfully executed rendezvous in the annals of submarine warfare.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 38,
+      "type": "descriptive",
+      "question": "Critically analyze the strategic significance of the U-180 / I-29 submarine rendezvous in the geopolitical landscape of World War II.",
+      "reference_answer": "The submarine transfer was the crucial bridge linking European resistance with the Asian theater. By successfully executing this transfer without Allied interception, Netaji altered the balance in Southeast Asia, turning the INA into a direct existential threat to the British Raj.",
+      "key_concepts": [
+        "crucial bridge linking European and Asian theaters",
+        "without Allied interception",
+        "altered balance in Southeast Asia",
+        "direct existential threat to British Raj"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 39,
+      "type": "descriptive",
+      "question": "Examine how Netaji secured total operational autonomy for the Indian National Army during negotiations with the Japanese Imperial General Headquarters.",
+      "reference_answer": "Netaji insisted that the INA would fight as an independent sovereign ally, not as an auxiliary mercenary corps. He demanded that all liberated Indian territory be administered exclusively by the Provisional Government of Azad Hind under the Indian Tricolour.",
+      "key_concepts": [
+        "independent sovereign ally",
+        "not auxiliary mercenaries",
+        "liberated territory administered by Azad Hind",
+        "Indian Tricolour",
+        "total operational autonomy"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 40,
+      "type": "descriptive",
+      "question": "Assess the selfless patriotism of Rash Behari Bose in relinquishing leadership to Netaji in July 1943.",
+      "reference_answer": "Rash Behari Bose had dedicated decades in exile to building anti-colonial networks. When Netaji arrived, Rash Behari placed the nation above personal ego, declaring that Netaji's youthful dynamism and national stature made him India's true leader of destiny.",
+      "key_concepts": [
+        "decades in exile",
+        "placed nation above personal ego",
+        "relinquished leadership",
+        "youthful dynamism and stature",
+        "true leader of destiny"
+      ],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 41,
+      "type": "descriptive",
+      "question": "Evaluate how the slogan 'Dilli Chalo!' encapsulated the revolutionary philosophy and ultimate goal of the Azad Hind Fauj.",
+      "reference_answer": "'Dilli Chalo!' transformed the Indian independence struggle from a regional skirmish into an unstoppable march on the Red Fort in Delhi. It symbolized reclaiming India's ancient seat of power and hoisting the national Tricolour over the citadel of British imperialism.",
+      "key_concepts": [
+        "Dilli Chalo",
+        "march on Red Fort",
+        "reclaiming ancient seat of power",
+        "hoisting national Tricolour",
+        "citadel of British imperialism"
+      ],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 42,
+      "type": "speech",
+      "question": "Pronounce the Japanese submarine commander's vessel:",
+      "target_phrase": "Imperial Japanese Submarine I Twenty Nine",
+      "reference_answer": "Imperial Japanese Submarine I Twenty Nine",
+      "key_concepts": [
+        "Imperial",
+        "Japanese",
+        "Submarine",
+        "Twenty",
+        "Nine"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 43,
+      "type": "speech",
+      "question": "Pronounce the military campaign planned to march into India:",
+      "target_phrase": "Operation U Go Offensive",
+      "reference_answer": "Operation U Go Offensive",
+      "key_concepts": [
+        "Operation",
+        "U",
+        "Go",
+        "Offensive"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 44,
+      "type": "speech",
+      "question": "Pronounce the historic symbol of sovereign authority targeted by Netaji:",
+      "target_phrase": "Red Fort Citadel Of Delhi",
+      "reference_answer": "Red Fort Citadel Of Delhi",
+      "key_concepts": [
+        "Red",
+        "Fort",
+        "Citadel",
+        "Delhi"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 45,
+      "type": "speech",
+      "question": "Pronounce Netaji's immortal declaration of sovereign empowerment:",
+      "target_phrase": "Freedom Is Not Given It Is Taken",
+      "reference_answer": "Freedom Is Not Given It Is Taken",
+      "key_concepts": [
+        "Freedom",
+        "Given",
+        "Taken"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    }
+  ],
+  "sequence_test": {
+    "title": "Chronological Sequence of the Historic Submarine Transfer and Tokyo Arrival",
+    "description": "Trace the timeline of Netaji's underwater rendezvous in the Indian Ocean to his historic meeting with Hideki Tojo in Tokyo.",
+    "questions": [
+      {
+        "id": 46,
+        "type": "sequence_mcq",
+        "question": "What is the correct sequence of events during Netaji's submarine transfer and arrival in Asia?",
+        "options": {
+          "A": "Submarine U-180 arrives off Madagascar -> Rubber dinghy transfer to Japanese submarine I-29 -> Safe landing at Sabang Sumatra -> High-level diplomatic arrival in Tokyo",
+          "B": "Arrival in Tokyo -> Landing at Sabang -> Rubber dinghy transfer -> U-180 off Madagascar",
+          "C": "Landing at Sabang -> Arrival in Tokyo -> U-180 off Madagascar -> Rubber dinghy transfer",
+          "D": "Rubber dinghy transfer -> Arrival in Tokyo -> Landing at Sabang -> U-180 off Madagascar"
+        },
+        "answer": "A",
+        "answer_text": "Netaji met I-29 off Madagascar, crossed by rubber dinghy, landed at Sabang, and proceeded to Tokyo.",
+        "difficulty": "moderate",
+        "difficulty_percentage": 60,
+        "difficulty_level": "Curious Adventurer"
+      },
+      {
+        "id": 47,
+        "type": "sequence_mcq",
+        "question": "Arrange the leadership milestones in Asia during mid-1943 in their correct order:",
+        "options": {
+          "A": "Historic declaration of support by Prime Minister Tojo in Japanese Diet -> Arrival in Singapore -> Rash Behari Bose handing over leadership -> Mobilizing the Indian National Army with 'Dilli Chalo!'",
+          "B": "Dilli Chalo -> Arrival in Singapore -> Tojo declaration -> Rash Behari Bose handover",
+          "C": "Rash Behari handover -> Tojo declaration -> Dilli Chalo -> Arrival in Singapore",
+          "D": "Arrival in Singapore -> Dilli Chalo -> Rash Behari handover -> Tojo declaration"
+        },
+        "answer": "A",
+        "answer_text": "Tojo declared support in Tokyo, Netaji arrived in Singapore, received the leadership handover, and rallied the INA with 'Dilli Chalo!'.",
+        "difficulty": "hard",
+        "difficulty_percentage": 75,
+        "difficulty_level": "Challenger"
+      }
+    ]
+  },
+  "image_matching": [
+    {
+      "id": 48,
+      "type": "image_matching",
+      "question": "Match each historic vessel and location with its description:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/i29_submarine.jpg",
+          "label": "Submarine I-29"
+        },
+        {
+          "id": "img_2",
+          "file": "images/madagascar_transfer.jpg",
+          "label": "Madagascar Rendezvous"
+        },
+        {
+          "id": "img_3",
+          "file": "images/sabang_port.jpg",
+          "label": "Sabang Port"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "Imperial Japanese submarine that received Netaji on the high seas and transported him to Asia."
+        },
+        {
+          "id": "desc_2",
+          "text": "The open ocean coordinates in the Indian Ocean where the historic rubber dinghy transfer occurred."
+        },
+        {
+          "id": "desc_3",
+          "text": "The Indonesian island harbor where Netaji first set foot on Asian soil after leaving Europe."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 49,
+      "type": "image_matching",
+      "question": "Match each Asian leader and movement with their role:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/rash_behari_bose.jpg",
+          "label": "Rash Behari Bose"
+        },
+        {
+          "id": "img_2",
+          "file": "images/hideki_tojo.jpg",
+          "label": "Hideki Tojo"
+        },
+        {
+          "id": "img_3",
+          "file": "images/dilli_chalo.jpg",
+          "label": "Dilli Chalo Campaign"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "Visionary revolutionary who unified expatriate Indians and selflessly handed leadership to Netaji."
+        },
+        {
+          "id": "desc_2",
+          "text": "Japanese Prime Minister who pledged unconditional imperial support for Indian sovereignty."
+        },
+        {
+          "id": "desc_3",
+          "text": "Electrifying military slogan and mission to liberate India and march on the Red Fort in Delhi."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer"
+    }
+  ],
+  "scoring": {
+    "mcq": {
+      "points_per_correct_answer": 1
+    },
+    "descriptive": {
+      "method": "cosine_similarity",
+      "description": "Calculate embedding cosine similarity against reference concepts.",
+      "suggested_interpretation": {
+        "0.80-1.00": "Outstanding Mastery",
+        "0.65-0.79": "Good Conceptual Understanding",
+        "0.50-0.64": "Developing Understanding",
+        "0.00-0.49": "Needs Reinforcement"
+      }
+    },
+    "speech": {
+      "points_per_correct_answer": 1,
+      "min_pass_score": 60
+    },
+    "sequence_test": {
+      "points_per_correct_answer": 1
+    },
+    "image_matching": {
+      "points_per_correct_match": 1,
+      "total_points": 3
+    }
+  }
+}

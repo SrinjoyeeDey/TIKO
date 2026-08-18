@@ -1,0 +1,950 @@
+{
+  "title": "Protests in Kolkata, the Holwell Monument Movement, and CID Surveillance",
+  "section": {
+    "start": "01:34",
+    "end": "02:05",
+    "description": "Comprehensive 45-question pedagogical assessment for ages 3 to 15 spanning Easy, Moderate, and Hard difficulty levels."
+  },
+  "target_age": 12,
+  "age_range": "3-15 years",
+  "question_pattern": {
+    "main_questions": "45 progressive questions consisting of multi-tier MCQs, conceptual descriptive questions, and voice pronunciation speech questions.",
+    "difficulty_distribution": "15 Easy (Ages 3-7), 15 Moderate (Ages 8-11), 15 Hard (Ages 12-15)",
+    "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
+    "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
+    "sequence_test": "Chronological milestone ordering and timeline analysis.",
+    "image_matching": "Interactive visual matching connecting historical figures, artifacts, and descriptions."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "question": "In which city did Subhas Chandra Bose organize mass protests against British rule?",
+      "options": {
+        "A": "Kolkata",
+        "B": "London",
+        "C": "Paris",
+        "D": "Tokyo"
+      },
+      "answer": "A",
+      "answer_text": "Bose organized mass protests in Kolkata against colonial decisions.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "question": "What colonial monument did Netaji want removed from Dalhousie Square?",
+      "options": {
+        "A": "Holwell Monument",
+        "B": "Eiffel Tower",
+        "C": "Big Ben",
+        "D": "Statue of Liberty"
+      },
+      "answer": "A",
+      "answer_text": "Netaji called for the removal of the Holwell monument in Kolkata.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "question": "Where did the Holwell monument stand in Kolkata?",
+      "options": {
+        "A": "Dalhousie Square",
+        "B": "Eden Gardens",
+        "C": "Howrah Bridge",
+        "D": "Victoria Memorial"
+      },
+      "answer": "A",
+      "answer_text": "The Holwell monument stood at the corner of Dalhousie Square.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "question": "What did the British authorities do to Subhas after the protests?",
+      "options": {
+        "A": "Threw him into jail",
+        "B": "Gave him an award",
+        "C": "Invited him to dinner",
+        "D": "Sent him on vacation"
+      },
+      "answer": "A",
+      "answer_text": "British authorities arrested Subhas and threw him into jail.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "question": "How did Netaji protest inside the British jail?",
+      "options": {
+        "A": "By going on a hunger strike",
+        "B": "By writing poems",
+        "C": "By painting pictures",
+        "D": "By singing songs"
+      },
+      "answer": "A",
+      "answer_text": "Netaji went on a courageous hunger strike in jail.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "question": "How many days did Netaji's hunger strike in jail last?",
+      "options": {
+        "A": "7 days",
+        "B": "1 day",
+        "C": "100 days",
+        "D": "30 days"
+      },
+      "answer": "A",
+      "answer_text": "Netaji was released following a 7-day hunger strike.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "question": "Where was Netaji kept after his release from jail?",
+      "options": {
+        "A": "Under house arrest in his Kolkata house",
+        "B": "In a forest",
+        "C": "On a boat",
+        "D": "In a school"
+      },
+      "answer": "A",
+      "answer_text": "Netaji was kept under house arrest at his residence in Kolkata.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "question": "Which police agency kept Netaji's house under strict watch?",
+      "options": {
+        "A": "British CID",
+        "B": "Traffic Police",
+        "C": "Fire Brigade",
+        "D": "Forest Rangers"
+      },
+      "answer": "A",
+      "answer_text": "The British CID kept his Kolkata house under constant surveillance.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "question": "Was Netaji afraid of the British police watching his house?",
+      "options": {
+        "A": "No, he remained brave and determined",
+        "B": "Yes, he gave up",
+        "C": "He stopped fighting for India",
+        "D": "He decided to help the British"
+      },
+      "answer": "A",
+      "answer_text": "Netaji was fearless and never gave up on freeing India.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "question": "What does a hunger strike mean?",
+      "options": {
+        "A": "Refusing to eat food as a peaceful protest",
+        "B": "Eating lots of food",
+        "C": "Cooking meals for friends",
+        "D": "Buying snacks"
+      },
+      "answer": "A",
+      "answer_text": "A hunger strike means refusing to eat food as a powerful form of moral protest.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 11,
+      "type": "descriptive",
+      "question": "Why did Subhas Chandra Bose organize mass protests in Kolkata?",
+      "reference_answer": "Subhas Chandra Bose organized mass protests in Kolkata because the British declared war on India's behalf without consulting Indian leaders, and to remove the Holwell monument.",
+      "key_concepts": [
+        "mass protests",
+        "Kolkata",
+        "declared war",
+        "without consulting",
+        "Holwell monument"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 12,
+      "type": "descriptive",
+      "question": "What happened to Netaji when he was arrested and put into jail?",
+      "reference_answer": "Netaji went on a 7-day hunger strike in jail, which forced the British authorities to release him and place him under house arrest.",
+      "key_concepts": [
+        "jail",
+        "7-day hunger strike",
+        "released",
+        "house arrest",
+        "British authorities"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 13,
+      "type": "speech",
+      "question": "Say the name of the monument Netaji protested against:",
+      "target_phrase": "Holwell Monument",
+      "reference_answer": "Holwell Monument",
+      "key_concepts": [
+        "Holwell",
+        "Monument"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 14,
+      "type": "speech",
+      "question": "Say the method of protest Netaji used inside jail:",
+      "target_phrase": "Hunger Strike",
+      "reference_answer": "Hunger Strike",
+      "key_concepts": [
+        "Hunger",
+        "Strike"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 15,
+      "type": "speech",
+      "question": "Say the name of the square in Kolkata where the monument stood:",
+      "target_phrase": "Dalhousie Square",
+      "reference_answer": "Dalhousie Square",
+      "key_concepts": [
+        "Dalhousie",
+        "Square"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "question": "Why did the Holwell monument cause intense public outrage among Indian nationalists?",
+      "options": {
+        "A": "It commemorated a biased colonial narrative of the Black Hole of Calcutta insulting Indian history",
+        "B": "It blocked the roadway for street cars",
+        "C": "It was built from low quality bricks",
+        "D": "It had incorrect English spellings on its plaque"
+      },
+      "answer": "A",
+      "answer_text": "The Holwell Monument symbolized colonial falsehoods and British imperial arrogance in Bengal.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "question": "What political tactic did the British colonial government adopt after releasing Bose from jail?",
+      "options": {
+        "A": "Confinement under strict CID surveillance at his Elgin Road house",
+        "B": "Deporting him to the Andaman Cellular Jail",
+        "C": "Appointing him governor of Bengal",
+        "D": "Giving him a passport to travel abroad freely"
+      },
+      "answer": "A",
+      "answer_text": "The British placed Bose under strict house arrest with round-the-clock CID surveillance.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "question": "Why did the British government release Subhas from jail during his 7-day hunger strike?",
+      "options": {
+        "A": "They feared mass uprisings and riots across India if Netaji died in colonial custody",
+        "B": "They ran out of prison food",
+        "C": "The British judges apologized to him",
+        "D": "His prison term expired naturally"
+      },
+      "answer": "A",
+      "answer_text": "The British feared uncontrollable public fury if Bose died in custody.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "question": "What was the purpose of British CID surveillance around Netaji's residence?",
+      "options": {
+        "A": "To prevent him from communicating with revolutionaries and escaping the country",
+        "B": "To guard his family from thieves",
+        "C": "To deliver daily newspapers to his porch",
+        "D": "To record radio programs with him"
+      },
+      "answer": "A",
+      "answer_text": "CID surveillance aimed to isolate Netaji and block his contact with freedom fighters.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "question": "Which prominent location in Kolkata was Dalhousie Square, where the movement took place?",
+      "options": {
+        "A": "The administrative heart and power center of the British Raj in Kolkata (BBD Bagh)",
+        "B": "A quiet residential countryside suburb",
+        "C": "The main railway freight yard",
+        "D": "The botanical gardens across the river"
+      },
+      "answer": "A",
+      "answer_text": "Dalhousie Square was the political and commercial headquarters of British colonial authority.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "question": "How did Netaji's agitation for removing the Holwell Monument unite diverse communities?",
+      "options": {
+        "A": "It brought together Hindus and Muslims in common solidarity against colonial insults",
+        "B": "It only involved college professors",
+        "C": "It was supported by the British army officers",
+        "D": "It focused solely on businessmen"
+      },
+      "answer": "A",
+      "answer_text": "The Holwell movement forged strong Hindu-Muslim unity against imperialist symbols.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "question": "What did Netaji's willingness to undertake a hunger strike demonstrate about his resolve?",
+      "options": {
+        "A": "Supreme moral courage and readiness to sacrifice his life for Indian dignity",
+        "B": "Desire for medical attention",
+        "C": "Loss of interest in politics",
+        "D": "A test of hospital staff"
+      },
+      "answer": "A",
+      "answer_text": "His hunger strike proved his unwavering commitment to put national dignity above life itself.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "question": "In what year did the British declare India a belligerent in World War II without Indian consent?",
+      "options": {
+        "A": "1939",
+        "B": "1947",
+        "C": "1920",
+        "D": "1914"
+      },
+      "answer": "A",
+      "answer_text": "In September 1939, Britain dragged India into WWII without consulting Indian representatives.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 24,
+      "type": "descriptive",
+      "question": "Explain the significance of the Holwell Monument movement launched by Netaji in Kolkata.",
+      "reference_answer": "Netaji launched the Holwell Monument movement to remove a colonial symbol of humiliation at Dalhousie Square. It demonstrated anti-imperialist resistance and united Hindus and Muslims in common protest.",
+      "key_concepts": [
+        "Holwell Monument",
+        "Dalhousie Square",
+        "colonial symbol",
+        "anti-imperialist resistance",
+        "Hindu-Muslim unity"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 25,
+      "type": "descriptive",
+      "question": "Describe how Netaji's hunger strike in jail forced the British government to change their tactics.",
+      "reference_answer": "When Netaji was jailed, he began a fast unto death. The British feared massive civil unrest and violence if he died in prison, so they released him to house arrest under tight CID surveillance.",
+      "key_concepts": [
+        "fast unto death",
+        "hunger strike",
+        "civil unrest",
+        "house arrest",
+        "CID surveillance"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 26,
+      "type": "descriptive",
+      "question": "Why did the British CID place Netaji's residence under round-the-clock surveillance?",
+      "reference_answer": "The CID kept Netaji under continuous surveillance to monitor his movements, cut off his communication with revolutionary groups, and prevent him from escaping or mobilizing mass revolts.",
+      "key_concepts": [
+        "continuous surveillance",
+        "monitor movements",
+        "cut off communication",
+        "revolutionary groups",
+        "prevent escape"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 27,
+      "type": "speech",
+      "question": "Pronounce the police intelligence wing that monitored Netaji:",
+      "target_phrase": "British CID Surveillance",
+      "reference_answer": "British CID Surveillance",
+      "key_concepts": [
+        "British",
+        "CID",
+        "Surveillance"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 28,
+      "type": "speech",
+      "question": "Pronounce the duration of Netaji's historic prison protest:",
+      "target_phrase": "Seven Day Hunger Strike",
+      "reference_answer": "Seven Day Hunger Strike",
+      "key_concepts": [
+        "Seven",
+        "Day",
+        "Hunger",
+        "Strike"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 29,
+      "type": "speech",
+      "question": "Pronounce the historic Kolkata protest location:",
+      "target_phrase": "Dalhousie Square Kolkata",
+      "reference_answer": "Dalhousie Square Kolkata",
+      "key_concepts": [
+        "Dalhousie",
+        "Square",
+        "Kolkata"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 30,
+      "type": "speech",
+      "question": "Pronounce the condition Netaji was placed under at his residence:",
+      "target_phrase": "Strict House Arrest",
+      "reference_answer": "Strict House Arrest",
+      "key_concepts": [
+        "Strict",
+        "House",
+        "Arrest"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "question": "What strategic imperative compelled Netaji to challenge the Holwell monument in July 1940?",
+      "options": {
+        "A": "To synthesize anti-imperial sentiment and dismantle colonial psychological subjugation while Britain was weakened by World War II",
+        "B": "To facilitate commercial real estate development in central Calcutta",
+        "C": "To comply with municipal architectural renovation regulations",
+        "D": "To resolve a private legal dispute between local landlords"
+      },
+      "answer": "A",
+      "answer_text": "Netaji utilized the Holwell movement as a catalyst for a broader anti-colonial offensive during Britain's wartime vulnerability.",
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "question": "Under which draconian emergency legislation was Subhas Chandra Bose detained in July 1940?",
+      "options": {
+        "A": "Defense of India Rules",
+        "B": "Vernacular Press Act",
+        "C": "Rowlatt Act of 1919",
+        "D": "Indian Arms Act"
+      },
+      "answer": "A",
+      "answer_text": "Bose was arrested under the wartime Defense of India Rules to preempt his planned mass demonstration on July 3, 1940.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "question": "What profound philosophical statement did Netaji write to the Governor of Bengal during his hunger strike?",
+      "options": {
+        "A": "One individual may die for an idea, but that idea will, after his death, incarnate itself in a thousand lives",
+        "B": "All warfare is based on deception and patience",
+        "C": "A compromise is always better than persistent struggle",
+        "D": "Colonial rule can be reformed through gradual constitutional petitions"
+      },
+      "answer": "A",
+      "answer_text": "Netaji's famous prison letter proclaimed that one's sacrifice would reincarnate into the spirit of thousands fighting for freedom.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "question": "How did Netaji utilize his house arrest at Elgin Road between December 1940 and January 1941?",
+      "options": {
+        "A": "He feigned complete spiritual seclusion and silence while secretly orchestrating the logistics of his clandestine international escape",
+        "B": "He retired permanently from national politics",
+        "C": "He drafted legal briefs for the High Court of Calcutta",
+        "D": "He accepted an advisory post with the colonial administration"
+      },
+      "answer": "A",
+      "answer_text": "Netaji adopted a posture of religious seclusion, growing a beard and misleading British spies while planning the Great Escape.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "question": "Why did the British authorities eventually dismantle the Holwell Monument after Netaji's arrest?",
+      "options": {
+        "A": "To appease the intensifying nationwide agitation and prevent a total breakdown of law and order in the colonial capital",
+        "B": "Because it was damaged by lightning",
+        "C": "At the formal request of the King of England",
+        "D": "To replace it with a clock tower"
+      },
+      "answer": "A",
+      "answer_text": "Even with Bose behind bars, the momentum of his movement forced Governor Sir John Herbert to remove the monument.",
+      "difficulty": "hard",
+      "difficulty_percentage": 78,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "question": "What psychological dilemma confronted the British Raj regarding Subhas Bose's hunger strike?",
+      "options": {
+        "A": "Martyrdom in prison would spark uncontrollable revolution, whereas releasing him posed an enormous security risk to imperial wartime operations",
+        "B": "They could not find a medical doctor to examine him",
+        "C": "They were worried about international trade sanctions from neutral countries",
+        "D": "They lacked the legal authority to maintain prison facilities"
+      },
+      "answer": "A",
+      "answer_text": "The British were caught in a double bind: his death in custody would ignite mass revolt, but his release enabled anti-colonial leadership.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "question": "How did Netaji's actions during this crisis embody the forward-bloc revolutionary doctrine?",
+      "options": {
+        "A": "By proactively seizing the geopolitical window of Britain's war entanglement to demand immediate, unconditional independence",
+        "B": "By advocating passive neutrality and waiting for peace negotiations",
+        "C": "By lobbying British political parties for constitutional concessions",
+        "D": "By proposing partition of the subcontinent"
+      },
+      "answer": "A",
+      "answer_text": "Bose's Forward Bloc ideology demanded exploiting Britain's wartime vulnerability ('Britain's difficulty is India's opportunity').",
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 38,
+      "type": "descriptive",
+      "question": "Critically analyze why Netaji regarded Britain's unilateral entry of India into World War II as an intolerable assault on Indian sovereignty.",
+      "reference_answer": "Netaji asserted that dragging 400 million Indians into a destructive imperialist war without the consent of their representatives was the ultimate denial of sovereignty, requiring uncompromising mass resistance rather than cooperative compromise.",
+      "key_concepts": [
+        "unilateral entry",
+        "imperialist war",
+        "consent of representatives",
+        "denial of sovereignty",
+        "uncompromising mass resistance"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 39,
+      "type": "descriptive",
+      "question": "Examine the moral and political rationale behind Netaji's decision to stage a fast unto death in Presidency Jail.",
+      "reference_answer": "Netaji recognized that colonial incarceration was designed to immobilize him during a critical global crisis. His hunger strike was a calculated moral weapon demonstrating that life without freedom was worthless, placing moral culpability directly upon the British administration.",
+      "key_concepts": [
+        "moral weapon",
+        "calculated sacrifice",
+        "colonial incarceration",
+        "life without freedom",
+        "moral culpability"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 40,
+      "type": "descriptive",
+      "question": "Explain the strategic significance of the British CID surveillance network and how Netaji outmaneuvered it.",
+      "reference_answer": "The British deployed a dense network of CID agents around 38/2 Elgin Road. Netaji outmaneuvered them through psychological deception, adopting spiritual isolation, growing a beard, and preparing a clandestine motor escape right under their watch.",
+      "key_concepts": [
+        "CID surveillance network",
+        "Elgin Road",
+        "psychological deception",
+        "spiritual isolation",
+        "clandestine escape"
+      ],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 41,
+      "type": "descriptive",
+      "question": "Synthesize how the events of 1940 (Holwell agitation, imprisonment, hunger strike, house arrest) served as the prelude to Netaji's international crusade.",
+      "reference_answer": "These events convinced Netaji that constitutional protests and domestic civil disobedience inside India were insufficient to dislodge the British Empire. This realization directly compelled him to seek international military alliances abroad to liberate India by force of arms.",
+      "key_concepts": [
+        "domestic civil disobedience insufficient",
+        "dislodge British Empire",
+        "international military alliances",
+        "liberate by force of arms",
+        "prelude to international crusade"
+      ],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 42,
+      "type": "speech",
+      "question": "Pronounce Netaji's immortal prison conviction:",
+      "target_phrase": "One Individual May Die For An Idea",
+      "reference_answer": "One Individual May Die For An Idea",
+      "key_concepts": [
+        "Individual",
+        "Die",
+        "Idea"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 43,
+      "type": "speech",
+      "question": "Pronounce the historic slogan of strategic anti-colonial opportunity:",
+      "target_phrase": "Britain Difficulty Is India Opportunity",
+      "reference_answer": "Britain Difficulty Is India Opportunity",
+      "key_concepts": [
+        "Britain",
+        "Difficulty",
+        "India",
+        "Opportunity"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 44,
+      "type": "speech",
+      "question": "Pronounce the emergency legal regime under which Netaji was detained:",
+      "target_phrase": "Defense Of India Rules",
+      "reference_answer": "Defense Of India Rules",
+      "key_concepts": [
+        "Defense",
+        "India",
+        "Rules"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 45,
+      "type": "speech",
+      "question": "Pronounce the landmark residence where Netaji planned his defiance:",
+      "target_phrase": "Elgin Road Ancestral Residence",
+      "reference_answer": "Elgin Road Ancestral Residence",
+      "key_concepts": [
+        "Elgin",
+        "Road",
+        "Ancestral",
+        "Residence"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    }
+  ],
+  "sequence_test": {
+    "title": "Chronological Sequence of the Holwell Movement, Imprisonment, and House Arrest",
+    "description": "Evaluate the timeline of events from the mass protests in Kolkata to Netaji's confinement under CID surveillance.",
+    "questions": [
+      {
+        "id": 46,
+        "type": "sequence_mcq",
+        "question": "What is the correct sequence of events following the outbreak of WWII and Netaji's protests in Kolkata?",
+        "options": {
+          "A": "Mass protests for Holwell Monument removal -> Arrest under Defense of India Rules -> 7-Day Hunger Strike in prison -> Release to house arrest under CID surveillance",
+          "B": "House arrest -> Holwell Monument protests -> 7-Day Hunger Strike -> Arrest",
+          "C": "7-Day Hunger Strike -> House arrest -> Holwell protests -> Prison arrest",
+          "D": "CID surveillance -> 7-Day Hunger Strike -> Holwell protests -> Release"
+        },
+        "answer": "A",
+        "answer_text": "The sequence started with mass protests at Dalhousie Square, his subsequent arrest, his heroic 7-day hunger strike, and release into strict house arrest.",
+        "difficulty": "moderate",
+        "difficulty_percentage": 60,
+        "difficulty_level": "Curious Adventurer"
+      },
+      {
+        "id": 47,
+        "type": "sequence_mcq",
+        "question": "Arrange the strategic milestones of Netaji's resistance during 1940 in chronological order:",
+        "options": {
+          "A": "Demanding removal of colonial monuments -> Incarceration by colonial administration -> Fast unto death moral protest -> Tactical feigning of seclusion at Elgin Road",
+          "B": "Seclusion at Elgin Road -> Incarceration -> Monument removal -> Fast unto death",
+          "C": "Fast unto death -> Seclusion -> Monument removal -> Incarceration",
+          "D": "Incarceration -> Seclusion -> Monument removal -> Fast unto death"
+        },
+        "answer": "A",
+        "answer_text": "Netaji led the monument agitation, endured prison, won his release through a fast unto death, and established seclusion at Elgin Road.",
+        "difficulty": "hard",
+        "difficulty_percentage": 75,
+        "difficulty_level": "Challenger"
+      }
+    ]
+  },
+  "image_matching": [
+    {
+      "id": 48,
+      "type": "image_matching",
+      "question": "Match each historical site and movement with its correct description:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/holwell_monument.jpg",
+          "label": "Holwell Monument"
+        },
+        {
+          "id": "img_2",
+          "file": "images/dalhousie_square.jpg",
+          "label": "Dalhousie Square"
+        },
+        {
+          "id": "img_3",
+          "file": "images/elgin_road.jpg",
+          "label": "Elgin Road Residence"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "Colonial monument targeted by Netaji's mass protest movement in Kolkata in 1940."
+        },
+        {
+          "id": "desc_2",
+          "text": "The power center of British Bengal where mass demonstrations converged."
+        },
+        {
+          "id": "desc_3",
+          "text": "Netaji's ancestral home in Kolkata where he was placed under 24-hour CID surveillance."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 49,
+      "type": "image_matching",
+      "question": "Match the key elements of Netaji's 1940 struggle to their strategic significance:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/hunger_strike.jpg",
+          "label": "Hunger Strike"
+        },
+        {
+          "id": "img_2",
+          "file": "images/cid_surveillance.jpg",
+          "label": "CID Surveillance"
+        },
+        {
+          "id": "img_3",
+          "file": "images/mass_protest.jpg",
+          "label": "Mass Mobilization"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "Moral weapon used in Presidency Jail that forced the British to release Netaji from prison."
+        },
+        {
+          "id": "desc_2",
+          "text": "Extensive British intelligence cordon deployed to block Netaji's contact with revolutionaries."
+        },
+        {
+          "id": "desc_3",
+          "text": "Powerful coalition of student and citizen protests forging Hindu-Muslim anti-colonial unity."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer"
+    }
+  ],
+  "scoring": {
+    "mcq": {
+      "points_per_correct_answer": 1
+    },
+    "descriptive": {
+      "method": "cosine_similarity",
+      "description": "Calculate embedding cosine similarity against reference concepts.",
+      "suggested_interpretation": {
+        "0.80-1.00": "Outstanding Mastery",
+        "0.65-0.79": "Good Conceptual Understanding",
+        "0.50-0.64": "Developing Understanding",
+        "0.00-0.49": "Needs Reinforcement"
+      }
+    },
+    "speech": {
+      "points_per_correct_answer": 1,
+      "min_pass_score": 60
+    },
+    "sequence_test": {
+      "points_per_correct_answer": 1
+    },
+    "image_matching": {
+      "points_per_correct_match": 1,
+      "total_points": 3
+    }
+  }
+}

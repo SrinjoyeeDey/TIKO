@@ -1,0 +1,953 @@
+{
+  "title": "The Great Escape from Kolkata to Germany via Afghanistan and USSR",
+  "section": {
+    "start": "02:05",
+    "end": "02:30",
+    "description": "Comprehensive 45-question pedagogical assessment for ages 3 to 15 spanning Easy, Moderate, and Hard difficulty levels."
+  },
+  "target_age": 12,
+  "age_range": "3-15 years",
+  "question_pattern": {
+    "main_questions": "45 progressive questions consisting of multi-tier MCQs, conceptual descriptive questions, and voice pronunciation speech questions.",
+    "difficulty_distribution": "15 Easy (Ages 3-7), 15 Moderate (Ages 8-11), 15 Hard (Ages 12-15)",
+    "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
+    "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
+    "sequence_test": "Chronological milestone ordering and timeline analysis.",
+    "image_matching": "Interactive visual matching connecting historical figures, artifacts, and descriptions."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "question": "What is the famous secret journey of Netaji called in Indian history?",
+      "options": {
+        "A": "The Great Escape",
+        "B": "The Summer Holiday",
+        "C": "The Long Walk",
+        "D": "The Ocean Cruise"
+      },
+      "answer": "A",
+      "answer_text": "Netaji's secret journey out of British-watched Kolkata is celebrated as 'The Great Escape'.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "question": "Who helped Netaji escape from his house in a car in the middle of the night?",
+      "options": {
+        "A": "His nephew Sisir Kumar Bose",
+        "B": "A British guard",
+        "C": "A train conductor",
+        "D": "A hotel chef"
+      },
+      "answer": "A",
+      "answer_text": "His nephew Sisir Kumar Bose drove the car during the daring escape.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "question": "How did Netaji disguise himself so the police would not recognize him?",
+      "options": {
+        "A": "Dressed as a Pathan with a long beard",
+        "B": "Dressed as a king with a crown",
+        "C": "Dressed as a sailor",
+        "D": "Dressed as a clown"
+      },
+      "answer": "A",
+      "answer_text": "Netaji disguised himself as an insurance agent named Ziauddin, dressed as a Pathan with a long beard.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "question": "What vehicle did Netaji and his nephew use to leave Kolkata secretly?",
+      "options": {
+        "A": "A Wanderer car",
+        "B": "A bicycle",
+        "C": "A hot air balloon",
+        "D": "A steam locomotive"
+      },
+      "answer": "A",
+      "answer_text": "They used a German Wanderer car to slip away silently at midnight.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "question": "Which country did Netaji travel through on his way to Europe?",
+      "options": {
+        "A": "Afghanistan",
+        "B": "Canada",
+        "C": "Australia",
+        "D": "Brazil"
+      },
+      "answer": "A",
+      "answer_text": "Netaji crossed the mountains of Afghanistan during his secret trek.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "question": "Which other large country did Netaji cross before reaching Germany?",
+      "options": {
+        "A": "The Soviet Union (USSR)",
+        "B": "Mexico",
+        "C": "South Africa",
+        "D": "New Zealand"
+      },
+      "answer": "A",
+      "answer_text": "Netaji traveled through Moscow in the Soviet Union on his way to Berlin.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "question": "In which European capital city did Netaji arrive to build an army for India?",
+      "options": {
+        "A": "Berlin in Germany",
+        "B": "Madrid in Spain",
+        "C": "Athens in Greece",
+        "D": "Dublin in Ireland"
+      },
+      "answer": "A",
+      "answer_text": "Netaji reached Berlin, Germany in 1941.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "question": "Did the British police guarding his house know Netaji had escaped immediately?",
+      "options": {
+        "A": "No, they had no idea for several days",
+        "B": "Yes, they caught him at the gate",
+        "C": "They helped him pack",
+        "D": "They drove him to the airport"
+      },
+      "answer": "A",
+      "answer_text": "The British police were completely fooled and only realized he was gone days later.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "question": "Why did Netaji leave India secretly instead of staying at home?",
+      "options": {
+        "A": "To seek international help and build an army to liberate India",
+        "B": "To go on a sightseeing tour",
+        "C": "To buy souvenirs",
+        "D": "To avoid studying"
+      },
+      "answer": "A",
+      "answer_text": "Netaji went abroad to mobilize military power and international alliances to free India.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "question": "What name did Netaji adopt as his disguised identity?",
+      "options": {
+        "A": "Ziauddin",
+        "B": "Professor Smith",
+        "C": "Captain Jack",
+        "D": "Robin Hood"
+      },
+      "answer": "A",
+      "answer_text": "Netaji assumed the name and disguise of Maulvi Ziauddin.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 11,
+      "type": "descriptive",
+      "question": "Describe how Subhas Chandra Bose escaped from his Kolkata home.",
+      "reference_answer": "Subhas Chandra Bose disguised himself as a Pathan named Ziauddin with a long beard. With the help of his nephew Sisir Kumar Bose in a car, he slipped out of his Kolkata house unnoticed at midnight.",
+      "key_concepts": [
+        "disguised as Pathan",
+        "Ziauddin",
+        "long beard",
+        "nephew Sisir Kumar Bose",
+        "car",
+        "midnight"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 12,
+      "type": "descriptive",
+      "question": "Which countries did Netaji travel through during his Great Escape to reach Germany?",
+      "reference_answer": "Netaji traveled from Kolkata to Peshawar, then crossed through Afghanistan and the Soviet Union before reaching Germany.",
+      "key_concepts": [
+        "Kolkata",
+        "Peshawar",
+        "Afghanistan",
+        "Soviet Union",
+        "Germany"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 13,
+      "type": "speech",
+      "question": "Say the historic name of Netaji's secret departure:",
+      "target_phrase": "The Great Escape",
+      "reference_answer": "The Great Escape",
+      "key_concepts": [
+        "Great",
+        "Escape"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 14,
+      "type": "speech",
+      "question": "Say the disguise persona assumed by Netaji:",
+      "target_phrase": "Ziauddin The Pathan",
+      "reference_answer": "Ziauddin The Pathan",
+      "key_concepts": [
+        "Ziauddin",
+        "Pathan"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 15,
+      "type": "speech",
+      "question": "Say the name of Netaji's brave nephew who drove the escape car:",
+      "target_phrase": "Sisir Kumar Bose",
+      "reference_answer": "Sisir Kumar Bose",
+      "key_concepts": [
+        "Sisir",
+        "Kumar",
+        "Bose"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "question": "On which historic date did Netaji slip away from his Elgin Road house in Kolkata?",
+      "options": {
+        "A": "Night of January 16-17, 1941",
+        "B": "August 15, 1947",
+        "C": "October 2, 1930",
+        "D": "January 26, 1950"
+      },
+      "answer": "A",
+      "answer_text": "Netaji executed his Great Escape on the midnight of January 16-17, 1941.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "question": "To which railway station did Sisir Bose drive Netaji to catch the Delhi-Kalka Mail?",
+      "options": {
+        "A": "Gomoh railway station in Jharkhand",
+        "B": "Howrah Station",
+        "C": "Sealdah Station",
+        "D": "Mumbai Central"
+      },
+      "answer": "A",
+      "answer_text": "Sisir drove Netaji through the night to Gomoh railway station (now Netaji Subhas Chandra Bose Gomoh station).",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "question": "Who assisted Netaji in Peshawar with revolutionary contacts to cross into Afghanistan?",
+      "options": {
+        "A": "Mian Akbar Shah and Bhagat Ram Talwar",
+        "B": "The British police commissioner",
+        "C": "The Afghan royal guards",
+        "D": "A European tourist group"
+      },
+      "answer": "A",
+      "answer_text": "Comrades Mian Akbar Shah and Bhagat Ram Talwar (disguised as 'Rahmat Khan') guided Netaji across the tribal frontiers.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "question": "Under what Italian diplomatic passport name did Netaji travel through the Soviet Union to Berlin?",
+      "options": {
+        "A": "Count Orlando Mazzotta",
+        "B": "Marco Polo",
+        "C": "Christopher Columbus",
+        "D": "Leonardo Da Vinci"
+      },
+      "answer": "A",
+      "answer_text": "The Italian legation in Kabul issued Netaji a passport under the pseudonym 'Orlando Mazzotta'.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "question": "What psychological strategy did Netaji use to delay the discovery of his escape by the police?",
+      "options": {
+        "A": "His nephew and family continued to deliver food trays to his closed room and pretended he was meditating",
+        "B": "They set up a loud loudspeaker playing speeches",
+        "C": "They hired an actor to stand on the balcony",
+        "D": "They told the police he had gone for a morning walk"
+      },
+      "answer": "A",
+      "answer_text": "His family strictly maintained the illusion that Netaji was in deep solitary meditation for 10 days.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "question": "What hardships did Netaji endure while walking across the Afghan border mountains?",
+      "options": {
+        "A": "Freezing winter temperatures, difficult mountain treks on foot, and throat infections while pretending to be deaf and mute",
+        "B": "Extensive luxury car travel",
+        "C": "Staying in five-star mountain resorts",
+        "D": "Traveling by helicopter"
+      },
+      "answer": "A",
+      "answer_text": "Netaji endured harsh winter terrain on foot and posed as deaf-mute to prevent detection of his language.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "question": "What was Netaji's primary objective upon arriving in Berlin in April 1941?",
+      "options": {
+        "A": "To establish the Free India Center and recruit Indian prisoners of war into the Indian Legion",
+        "B": "To work as a university lecturer in philosophy",
+        "C": "To buy industrial manufacturing machinery",
+        "D": "To attend the Olympic Games"
+      },
+      "answer": "A",
+      "answer_text": "Netaji established the Free India Center and formed the Legion to fight for Indian independence.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "question": "From which station in Berlin did Netaji broadcast his patriotic messages to India?",
+      "options": {
+        "A": "Azad Hind Radio",
+        "B": "BBC London",
+        "C": "Radio Moscow",
+        "D": "All India Radio"
+      },
+      "answer": "A",
+      "answer_text": "Netaji set up Azad Hind Radio to broadcast uncensored truth and revolutionary motivation to India.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 24,
+      "type": "descriptive",
+      "question": "Explain the planning and execution of Netaji's Great Escape from Kolkata to Gomoh.",
+      "reference_answer": "Under cover of darkness on January 16-17, 1941, Netaji dressed as Ziauddin the Pathan. Sisir Kumar Bose drove him in a Wanderer car through Bengal and Bihar to Gomoh station, where Netaji boarded the train to Peshawar undetected.",
+      "key_concepts": [
+        "January 16-17 1941",
+        "Ziauddin",
+        "Sisir Kumar Bose",
+        "Wanderer car",
+        "Gomoh station",
+        "Peshawar train"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 25,
+      "type": "descriptive",
+      "question": "How did Netaji manage to cross from Afghanistan into the Soviet Union and then to Germany?",
+      "reference_answer": "In Kabul, with the help of revolutionary guide Bhagat Ram Talwar, Netaji secured Italian diplomatic assistance. He obtained an Italian passport under the alias Orlando Mazzotta, crossed the Soviet Union by train, and flew to Berlin.",
+      "key_concepts": [
+        "Kabul",
+        "Bhagat Ram Talwar",
+        "Italian passport",
+        "Orlando Mazzotta",
+        "Soviet Union",
+        "Berlin"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 26,
+      "type": "descriptive",
+      "question": "What key initiatives did Netaji establish in Berlin to support the Indian liberation struggle?",
+      "reference_answer": "In Berlin, Netaji established the Free India Center, launched regular broadcasts via Azad Hind Radio, and formed the Indian Legion (Free India Legion) from captured Indian soldiers to fight British rule.",
+      "key_concepts": [
+        "Free India Center",
+        "Azad Hind Radio",
+        "Indian Legion",
+        "Free India Legion",
+        "broadcasts",
+        "captured soldiers"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 27,
+      "type": "speech",
+      "question": "Pronounce the railway station where Netaji boarded his escape train:",
+      "target_phrase": "Gomoh Railway Station",
+      "reference_answer": "Gomoh Railway Station",
+      "key_concepts": [
+        "Gomoh",
+        "Railway",
+        "Station"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 28,
+      "type": "speech",
+      "question": "Pronounce the Italian passport alias used by Netaji:",
+      "target_phrase": "Count Orlando Mazzotta",
+      "reference_answer": "Count Orlando Mazzotta",
+      "key_concepts": [
+        "Orlando",
+        "Mazzotta"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 29,
+      "type": "speech",
+      "question": "Pronounce the revolutionary radio station founded in Berlin:",
+      "target_phrase": "Azad Hind Radio",
+      "reference_answer": "Azad Hind Radio",
+      "key_concepts": [
+        "Azad",
+        "Hind",
+        "Radio"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 30,
+      "type": "speech",
+      "question": "Pronounce the military unit raised in Germany by Netaji:",
+      "target_phrase": "Free India Legion",
+      "reference_answer": "Free India Legion",
+      "key_concepts": [
+        "Free",
+        "India",
+        "Legion"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "question": "What geopolitical reasoning prompted Netaji to orchestrate an international escape rather than lead underground resistance solely in India?",
+      "options": {
+        "A": "He recognized that Britain could only be defeated by opening a second military front with the backing of international powers fighting the British Empire",
+        "B": "He wanted to permanently settle in Europe",
+        "C": "He sought to establish a business trading company in Moscow",
+        "D": "He intended to avoid legal trials in Calcutta"
+      },
+      "answer": "A",
+      "answer_text": "Netaji understood that Indian independence required armed external military intervention synchronized with internal revolution.",
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "question": "Which North-West Frontier network provided the crucial logistics and safe passage for Netaji into Afghanistan?",
+      "options": {
+        "A": "The Forward Bloc and Kirti Kisan Party underground network organized by Akbar Shah and Bhagat Ram Talwar",
+        "B": "The British North-West Railway administration",
+        "C": "The Afghan Border Police regiment",
+        "D": "The American Diplomatic Mission in Delhi"
+      },
+      "answer": "A",
+      "answer_text": "The Kirti Kisan Party and Forward Bloc underground cadres facilitated safe transit through dangerous tribal territories.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "question": "Why did Netaji pose as a deaf-and-mute pilgrim during his arduous trek through the Pashtun tribal lands?",
+      "options": {
+        "A": "Because he did not speak the local Pashto dialect and speaking Hindustani or Bengali would have instantly exposed his identity to British spies",
+        "B": "Because of a temporary medical condition caused by cold air",
+        "C": "To observe a religious vow of silence",
+        "D": "At the command of the tribal chieftains"
+      },
+      "answer": "A",
+      "answer_text": "Posing as deaf and mute prevented local informants and British agents from detecting his non-Pashto linguistic accent.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "question": "What was the initial response of the Soviet leadership in Moscow when Netaji sought passage and support in early 1941?",
+      "options": {
+        "A": "The USSR, still adhering to the Molotov-Ribbentrop non-aggression pact, facilitated his transit to Berlin via the German diplomatic mission",
+        "B": "They arrested him and deported him to London",
+        "C": "They offered immediate Soviet infantry divisions to invade British India",
+        "D": "They refused him entry and turned him back to Kabul"
+      },
+      "answer": "A",
+      "answer_text": "The Soviet authorities maintained cautious neutrality and permitted his transit through Moscow to Berlin.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "question": "What ideological foundational pledge did Netaji institute among the Indian Legionaries in Berlin?",
+      "options": {
+        "A": "Total loyalty to the sacred cause of Indian liberation, transcending all barriers of caste, religion, and regional provincialism",
+        "B": "Loyalty to European imperial monarchies",
+        "C": "Conversion to European political parties",
+        "D": "Abandonment of Indian cultural heritage"
+      },
+      "answer": "A",
+      "answer_text": "The Legion was built on secular unity ('Ittehad, Itmad, Qurbani' - Unity, Faith, Sacrifice), uniting soldiers of all faiths.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "question": "Which historic national emblems and salutations were adopted at the Free India Center in Berlin in 1941?",
+      "options": {
+        "A": "'Jai Hind' as the national greeting, Tagore's 'Jana Gana Mana' as national anthem, and the Springing Tiger emblem on the Tricolour",
+        "B": "The Union Jack flag and British national anthem",
+        "C": "European coats of arms and royal crests",
+        "D": "Latin mottos and colonial insignia"
+      },
+      "answer": "A",
+      "answer_text": "At Berlin, Netaji formalized 'Jai Hind', 'Jana Gana Mana', and the Tricolour with the Springing Tiger insignia.",
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "question": "How did Netaji's Great Escape psychologically impact the British colonial establishment in India?",
+      "options": {
+        "A": "It dealt an immense humiliation to British intelligence, shook imperial prestige, and proved that colonial barriers could not contain the Indian revolution",
+        "B": "It was completely ignored by the British Viceroy",
+        "C": "It led to the immediate closing of all police stations in Bengal",
+        "D": "It caused the British to immediately grant dominion status"
+      },
+      "answer": "A",
+      "answer_text": "The escape was a monumental intelligence failure for the Raj that electrified Indian morale worldwide.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 38,
+      "type": "descriptive",
+      "question": "Critically analyze the strategic foresight demonstrated by Netaji in executing the Great Escape of 1941.",
+      "reference_answer": "Netaji foresaw that WWII presented a once-in-a-century window to liberate India. By breaking out of domestic confinement, he transformed India's freedom struggle from an internal colonial protest into an international geopolitical and military campaign.",
+      "key_concepts": [
+        "strategic foresight",
+        "WWII geopolitical window",
+        "once-in-a-century opportunity",
+        "internal colonial protest to international campaign",
+        "military alliances"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 39,
+      "type": "descriptive",
+      "question": "Examine the role of revolutionary solidarity and clandestine networks across India, Afghanistan, and the USSR in Netaji's transit.",
+      "reference_answer": "Netaji's transit relied on seamless coordination between the Forward Bloc in Bengal, Kirti Kisan revolutionaries in Punjab, tribal guides in the NWFP, and Italian diplomats in Kabul. This demonstrated remarkable transnational revolutionary solidarity.",
+      "key_concepts": [
+        "Forward Bloc",
+        "Kirti Kisan revolutionaries",
+        "NWFP tribal guides",
+        "Italian diplomats in Kabul",
+        "transnational revolutionary solidarity"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 40,
+      "type": "descriptive",
+      "question": "Assess how Netaji transformed Indian Prisoners of War in Germany into dedicated anti-colonial freedom fighters.",
+      "reference_answer": "Netaji visited PoW camps across Europe, inspiring Indian soldiers with visions of a free motherland. He dismantled British divide-and-rule communal divisions, establishing unified mess halls, common uniforms, and the sacred oath to liberate India.",
+      "key_concepts": [
+        "PoW camps across Europe",
+        "dismantled communal divisions",
+        "unified mess halls",
+        "sacred oath to liberate India",
+        "secular discipline"
+      ],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 41,
+      "type": "descriptive",
+      "question": "Evaluate the historic legacy of the Free India Center and Azad Hind Radio established by Netaji in Berlin.",
+      "reference_answer": "The Free India Center acted as a virtual diplomatic embassy for free India, establishing national symbols like 'Jai Hind' and 'Jana Gana Mana'. Azad Hind Radio shattered British war propaganda, providing a powerful voice of truth that galvanized the Quit India Movement.",
+      "key_concepts": [
+        "virtual diplomatic embassy",
+        "national symbols",
+        "Jai Hind and Jana Gana Mana",
+        "Azad Hind Radio",
+        "shattered British war propaganda",
+        "Quit India Movement"
+      ],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 42,
+      "type": "speech",
+      "question": "Pronounce the secular motto of the Azad Hind movement:",
+      "target_phrase": "Ittehad Itmad Qurbani",
+      "reference_answer": "Ittehad Itmad Qurbani",
+      "key_concepts": [
+        "Ittehad",
+        "Itmad",
+        "Qurbani"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 43,
+      "type": "speech",
+      "question": "Pronounce the national anthem adopted at the Free India Center:",
+      "target_phrase": "Jana Gana Mana Adhinayaka",
+      "reference_answer": "Jana Gana Mana Adhinayaka",
+      "key_concepts": [
+        "Jana",
+        "Gana",
+        "Mana"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 44,
+      "type": "speech",
+      "question": "Pronounce the diplomatic mission established by Netaji in Germany:",
+      "target_phrase": "Free India Center Berlin",
+      "reference_answer": "Free India Center Berlin",
+      "key_concepts": [
+        "Free",
+        "India",
+        "Center",
+        "Berlin"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 45,
+      "type": "speech",
+      "question": "Pronounce the historic car model used in the midnight escape:",
+      "target_phrase": "German Wanderer BLA 7169",
+      "reference_answer": "German Wanderer BLA 7169",
+      "key_concepts": [
+        "German",
+        "Wanderer",
+        "BLA"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    }
+  ],
+  "sequence_test": {
+    "title": "Chronological Sequence of Netaji's Great Escape and International Odyssey",
+    "description": "Trace the chronological trajectory of Netaji's daring breakout from Elgin Road to his arrival in Berlin in 1941.",
+    "questions": [
+      {
+        "id": 46,
+        "type": "sequence_mcq",
+        "question": "What is the correct chronological sequence of events during Netaji's Great Escape from Kolkata to Berlin?",
+        "options": {
+          "A": "Disguise as Pathan Ziauddin -> Midnight motor drive to Gomoh -> Crossing Afghanistan on foot -> Train journey across USSR to Berlin",
+          "B": "Crossing USSR -> Midnight drive to Gomoh -> Disguise as Ziauddin -> Reaching Berlin",
+          "C": "Reaching Berlin -> Crossing Afghanistan -> Gomoh train -> Disguise as Ziauddin",
+          "D": "Midnight drive -> Reaching Berlin -> Crossing Afghanistan -> Disguise as Ziauddin"
+        },
+        "answer": "A",
+        "answer_text": "Netaji disguised himself as Ziauddin, drove to Gomoh, trekked across Afghanistan, and transited the USSR to reach Berlin.",
+        "difficulty": "moderate",
+        "difficulty_percentage": 60,
+        "difficulty_level": "Curious Adventurer"
+      },
+      {
+        "id": 47,
+        "type": "sequence_mcq",
+        "question": "Arrange the organizational milestones achieved by Netaji in Europe during 1941-1942:",
+        "options": {
+          "A": "Securing Italian diplomatic passport in Kabul -> Arrival in Berlin -> Founding Free India Center and Azad Hind Radio -> Formation of the Free India Legion",
+          "B": "Formation of Legion -> Arrival in Berlin -> Italian passport -> Azad Hind Radio",
+          "C": "Azad Hind Radio -> Formation of Legion -> Arrival in Berlin -> Italian passport",
+          "D": "Arrival in Berlin -> Italian passport -> Formation of Legion -> Azad Hind Radio"
+        },
+        "answer": "A",
+        "answer_text": "After acquiring the passport in Kabul, Netaji reached Berlin, launched the Free India Center with Azad Hind Radio, and built the Legion.",
+        "difficulty": "hard",
+        "difficulty_percentage": 75,
+        "difficulty_level": "Challenger"
+      }
+    ]
+  },
+  "image_matching": [
+    {
+      "id": 48,
+      "type": "image_matching",
+      "question": "Match each key figure and artifact of the Great Escape with its role:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/sisir_bose.jpg",
+          "label": "Sisir Kumar Bose"
+        },
+        {
+          "id": "img_2",
+          "file": "images/wanderer_car.jpg",
+          "label": "Wanderer Car"
+        },
+        {
+          "id": "img_3",
+          "file": "images/ziauddin_disguise.jpg",
+          "label": "Ziauddin Disguise"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "Netaji's loyal nephew who drove the historic escape vehicle out of Kolkata past CID sentries."
+        },
+        {
+          "id": "desc_2",
+          "text": "The iconic automobile (BLA 7169) used in the secret midnight departure from Elgin Road."
+        },
+        {
+          "id": "desc_3",
+          "text": "The Pathan disguise persona with a long beard assumed by Netaji to bypass British surveillance."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 49,
+      "type": "image_matching",
+      "question": "Match each international station and entity with its historic significance:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/free_india_center.jpg",
+          "label": "Free India Center"
+        },
+        {
+          "id": "img_2",
+          "file": "images/azad_hind_radio.jpg",
+          "label": "Azad Hind Radio"
+        },
+        {
+          "id": "img_3",
+          "file": "images/indian_legion.jpg",
+          "label": "Indian Legion"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "Diplomatic and administrative headquarters of the Indian freedom movement established in Berlin."
+        },
+        {
+          "id": "desc_2",
+          "text": "Revolutionary broadcast station transmitting uncensored anti-colonial motivation to the Indian masses."
+        },
+        {
+          "id": "desc_3",
+          "text": "Armed military force raised by Netaji from Indian soldiers in Europe to fight British imperialism."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer"
+    }
+  ],
+  "scoring": {
+    "mcq": {
+      "points_per_correct_answer": 1
+    },
+    "descriptive": {
+      "method": "cosine_similarity",
+      "description": "Calculate embedding cosine similarity against reference concepts.",
+      "suggested_interpretation": {
+        "0.80-1.00": "Outstanding Mastery",
+        "0.65-0.79": "Good Conceptual Understanding",
+        "0.50-0.64": "Developing Understanding",
+        "0.00-0.49": "Needs Reinforcement"
+      }
+    },
+    "speech": {
+      "points_per_correct_answer": 1,
+      "min_pass_score": 60
+    },
+    "sequence_test": {
+      "points_per_correct_answer": 1
+    },
+    "image_matching": {
+      "points_per_correct_match": 1,
+      "total_points": 3
+    }
+  }
+}

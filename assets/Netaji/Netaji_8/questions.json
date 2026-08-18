@@ -1,0 +1,954 @@
+{
+  "title": "The Battle of Imphal & Kohima and the Liberation of Andaman & Nicobar",
+  "section": {
+    "start": "04:03",
+    "end": "04:32",
+    "description": "Comprehensive 45-question pedagogical assessment for ages 3 to 15 spanning Easy, Moderate, and Hard difficulty levels."
+  },
+  "target_age": 12,
+  "age_range": "3-15 years",
+  "question_pattern": {
+    "main_questions": "45 progressive questions consisting of multi-tier MCQs, conceptual descriptive questions, and voice pronunciation speech questions.",
+    "difficulty_distribution": "15 Easy (Ages 3-7), 15 Moderate (Ages 8-11), 15 Hard (Ages 12-15)",
+    "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
+    "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
+    "sequence_test": "Chronological milestone ordering and timeline analysis.",
+    "image_matching": "Interactive visual matching connecting historical figures, artifacts, and descriptions."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "question": "Which Indian islands were the first territory liberated by Netaji's government?",
+      "options": {
+        "A": "Andaman and Nicobar Islands",
+        "B": "Hawaiian Islands",
+        "C": "Canary Islands",
+        "D": "Fiji Islands"
+      },
+      "answer": "A",
+      "answer_text": "The Andaman and Nicobar Islands became the first liberated Indian soil.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "question": "What new patriotic names did Netaji give to the Andaman and Nicobar Islands?",
+      "options": {
+        "A": "Shaheed (Martyr) and Swaraj (Self-rule) Islands",
+        "B": "Diamond and Gold Islands",
+        "C": "Sunny and Green Islands",
+        "D": "Blue and White Islands"
+      },
+      "answer": "A",
+      "answer_text": "Netaji named them 'Shaheed' (Martyr) and 'Swaraj' (Self-rule) Islands.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "question": "In which beautiful northeastern Indian state did the INA advance to fight the British?",
+      "options": {
+        "A": "Manipur and Nagaland (Kohima and Imphal)",
+        "B": "Goa",
+        "C": "Kerala",
+        "D": "Punjab"
+      },
+      "answer": "A",
+      "answer_text": "The INA advanced to the northeastern frontier of Manipur and Nagaland.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "question": "What famous battle did the INA fight on the borders of India?",
+      "options": {
+        "A": "The Battle of Kohima and Imphal",
+        "B": "The Battle of Waterloo",
+        "C": "The Battle of Troy",
+        "D": "The Battle of Marathon"
+      },
+      "answer": "A",
+      "answer_text": "The INA fought courageously in the historic Battle of Kohima and Imphal.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "question": "Where was the Indian national Tricolour flag proudly hoisted on Indian soil at Moirang?",
+      "options": {
+        "A": "In Moirang, Manipur",
+        "B": "In London",
+        "C": "In Colombo",
+        "D": "In Paris"
+      },
+      "answer": "A",
+      "answer_text": "Colonel Shaukat Ali Malik hoisted the Tricolour at Moirang, Manipur.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "question": "What did the soldiers of the INA do when they finally stepped onto Indian soil?",
+      "options": {
+        "A": "They knelt down and kissed the sacred soil of mother India in tears of joy",
+        "B": "They ran away",
+        "C": "They sat down and complained",
+        "D": "They forgot where they were"
+      },
+      "answer": "A",
+      "answer_text": "INA soldiers knelt with tears in their eyes and kissed the motherland's soil.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "question": "What flag did Netaji hoist over Port Blair in the Andaman Islands in December 1943?",
+      "options": {
+        "A": "The Indian National Tricolour",
+        "B": "The British Flag",
+        "C": "The Pirate Flag",
+        "D": "A Plain White Flag"
+      },
+      "answer": "A",
+      "answer_text": "Netaji hoisted the Indian National Tricolour at the Gymkhana Ground in Port Blair.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "question": "Did the brave soldiers of the INA fight against hunger, heavy rains, and mountains?",
+      "options": {
+        "A": "Yes, they showed superhuman courage against all odds",
+        "B": "No, they had luxury hotels",
+        "C": "They stayed inside tents all the time",
+        "D": "They never saw rain"
+      },
+      "answer": "A",
+      "answer_text": "The INA soldiers fought through monsoon floods, dense jungles, and hunger with supreme bravery.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "question": "What did Netaji visit during his trip to Port Blair?",
+      "options": {
+        "A": "The historic Cellular Jail (Kalapani)",
+        "B": "An amusement park",
+        "C": "A movie theater",
+        "D": "A shopping mall"
+      },
+      "answer": "A",
+      "answer_text": "Netaji visited the Cellular Jail to pay homage to heroic Indian freedom fighters.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "question": "Who was appointed as the first Indian Governor of the liberated Andaman and Nicobar Islands?",
+      "options": {
+        "A": "Major General A.D. Loganathan",
+        "B": "A British Viceroy",
+        "C": "Lord Mountbatten",
+        "D": "Captain Hook"
+      },
+      "answer": "A",
+      "answer_text": "Netaji appointed Major General A.D. Loganathan as Chief Commissioner of the liberated islands.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 11,
+      "type": "descriptive",
+      "question": "What historic event took place in the Andaman and Nicobar Islands in December 1943?",
+      "reference_answer": "In December 1943, Netaji visited Port Blair, hoisted the Indian National Tricolour on liberated soil, visited the Cellular Jail, and renamed the islands 'Shaheed' and 'Swaraj' Islands.",
+      "key_concepts": [
+        "December 1943",
+        "Port Blair",
+        "hoisted Indian Tricolour",
+        "Cellular Jail",
+        "Shaheed and Swaraj Islands"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 12,
+      "type": "descriptive",
+      "question": "Describe what happened when the INA reached Moirang in Manipur in April 1944.",
+      "reference_answer": "On April 14, 1944, the INA advanced into Manipur and hoisted the Indian Tricolour flag at Moirang, liberating the area and establishing the Azad Hind administration on mainland Indian soil.",
+      "key_concepts": [
+        "April 14 1944",
+        "Manipur",
+        "hoisted Indian Tricolour",
+        "Moirang",
+        "liberated mainland Indian soil"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 13,
+      "type": "speech",
+      "question": "Say the patriotic names of the liberated islands:",
+      "target_phrase": "Shaheed And Swaraj Islands",
+      "reference_answer": "Shaheed And Swaraj Islands",
+      "key_concepts": [
+        "Shaheed",
+        "Swaraj",
+        "Islands"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 14,
+      "type": "speech",
+      "question": "Say the historic battle in Northeast India:",
+      "target_phrase": "Battle Of Kohima And Imphal",
+      "reference_answer": "Battle Of Kohima And Imphal",
+      "key_concepts": [
+        "Battle",
+        "Kohima",
+        "Imphal"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 15,
+      "type": "speech",
+      "question": "Say the historic town in Manipur where the Tricolour was hoisted:",
+      "target_phrase": "Moirang Manipur",
+      "reference_answer": "Moirang Manipur",
+      "key_concepts": [
+        "Moirang",
+        "Manipur"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "question": "On which date did Netaji officially hoist the National Tricolour at Port Blair, Andaman Islands?",
+      "options": {
+        "A": "December 30, 1943",
+        "B": "August 15, 1947",
+        "C": "January 26, 1930",
+        "D": "October 2, 1942"
+      },
+      "answer": "A",
+      "answer_text": "On December 30, 1943, Netaji hoisted the flag at the Gymkhana Ground in Port Blair.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "question": "Which INA commander led the Bahadur Group that captured Moirang and hoisted the Tricolour on April 14, 1944?",
+      "options": {
+        "A": "Colonel Shaukat Ali Malik",
+        "B": "General Mohan Singh",
+        "C": "Captain Lakshmi Sahgal",
+        "D": "Shah Nawaz Khan"
+      },
+      "answer": "A",
+      "answer_text": "Colonel Shaukat Ali Malik commanded the Bahadur Group in the liberation of Moirang.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "question": "Why did the British National Army Museum vote the Battle of Imphal and Kohima as 'Britain's Greatest Battle'?",
+      "options": {
+        "A": "Because it was the fiercest land battle fought by the British Empire, deciding the fate of British rule in India",
+        "B": "Because it was fought on ships in the ocean",
+        "C": "Because it lasted only one hour",
+        "D": "Because nobody fired any weapons"
+      },
+      "answer": "A",
+      "answer_text": "Historians voted Imphal and Kohima as greater and more ferocious than Waterloo and D-Day.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "question": "What extreme natural and logistical challenges undermined the INA and Japanese forces at Kohima and Imphal?",
+      "options": {
+        "A": "Torrential early monsoons that washed away mountain supply lines, causing starvation, malaria, and lack of air cover",
+        "B": "Extreme desert heat without sandstorms",
+        "C": "Lack of maps and compasses only",
+        "D": "Shortage of warm winter coats"
+      },
+      "answer": "A",
+      "answer_text": "Premature, unrelenting monsoon rains turned mountain trails into muddy torrents, cutting off food and ammunition.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "question": "What symbolic name did Netaji give to the first division of the INA that fought on the Indian front?",
+      "options": {
+        "A": "Subhas Brigade (1st Guerrilla Regiment)",
+        "B": "Royal Guard Division",
+        "C": "Imperial Lancers",
+        "D": "First Army Corps"
+      },
+      "answer": "A",
+      "answer_text": "The 1st Guerrilla Regiment was affectionately named the 'Subhas Brigade', commanded by Shah Nawaz Khan.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "question": "What other INA brigades were named after revered Indian freedom fighters?",
+      "options": {
+        "A": "Gandhi Brigade, Nehru Brigade, and Azad Brigade",
+        "B": "Churchill Brigade and Mountbatten Brigade",
+        "C": "Alexander Brigade and Caesar Brigade",
+        "D": "Napoleon Brigade and Nelson Brigade"
+      },
+      "answer": "A",
+      "answer_text": "Netaji named the brigades after Mahatma Gandhi, Jawaharlal Nehru, and Maulana Abul Kalam Azad.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "question": "How did local villagers in Manipur and the Naga hills welcome the liberating INA forces?",
+      "options": {
+        "A": "They welcomed them with open arms, shared their food, and served as scout guides through dense jungles",
+        "B": "They fled into the rivers",
+        "C": "They helped the British army rebuild roads",
+        "D": "They closed all village gates"
+      },
+      "answer": "A",
+      "answer_text": "Local Manipuris and Nagas welcomed the INA with patriotic joy, offering shelter and guidance.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "question": "What was the significance of the Cellular Jail in Port Blair that Netaji visited?",
+      "options": {
+        "A": "It was the infamous 'Kalapani' colonial prison where heroic Indian freedom fighters were tortured",
+        "B": "It was an ancient Buddhist monastery",
+        "C": "It was a trading warehouse",
+        "D": "It was a naval research center"
+      },
+      "answer": "A",
+      "answer_text": "The Cellular Jail was Britain's notorious fortress prison where freedom fighters endured harsh solitary confinement.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 24,
+      "type": "descriptive",
+      "question": "Explain the significance of the liberation and renaming of the Andaman and Nicobar Islands by Netaji.",
+      "reference_answer": "In December 1943, Netaji visited Port Blair and hoisted the Indian Tricolour, marking the first piece of Indian territory freed from British colonial rule. He renamed Andaman as 'Shaheed' (Martyr) and Nicobar as 'Swaraj' (Self-rule) Islands.",
+      "key_concepts": [
+        "December 1943",
+        "Port Blair",
+        "first freed Indian territory",
+        "Shaheed Island",
+        "Swaraj Island",
+        "hoisted Tricolour"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 25,
+      "type": "descriptive",
+      "question": "Describe the battle for Moirang and the hoisting of the Tricolour on mainland Indian soil.",
+      "reference_answer": "On April 14, 1944, the INA's Bahadur Group under Colonel Shaukat Ali Malik captured Moirang in Manipur. They proudly unfurled the Tricolour with the Springing Tiger emblem, establishing the Azad Hind civil headquarters in liberated mainland India.",
+      "key_concepts": [
+        "April 14 1944",
+        "Moirang Manipur",
+        "Colonel Shaukat Ali Malik",
+        "unfurled Tricolour",
+        "Springing Tiger emblem",
+        "Azad Hind headquarters"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 26,
+      "type": "descriptive",
+      "question": "What factors turned the tide against the INA and Japanese forces at the Battle of Kohima and Imphal?",
+      "reference_answer": "The INA fought valiantly and besieged Imphal, but premature monsoon deluges washed out mountain supply routes. Starvation, dysentery, malaria, and complete British air superiority forced a tactical withdrawal.",
+      "key_concepts": [
+        "besieged Imphal",
+        "premature monsoon deluges",
+        "washed out supply routes",
+        "starvation and malaria",
+        "British air superiority",
+        "tactical withdrawal"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 27,
+      "type": "speech",
+      "question": "Pronounce the historic colonial prison visited by Netaji:",
+      "target_phrase": "Cellular Jail Kalapani",
+      "reference_answer": "Cellular Jail Kalapani",
+      "key_concepts": [
+        "Cellular",
+        "Jail",
+        "Kalapani"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 28,
+      "type": "speech",
+      "question": "Pronounce the INA commander who hoisted the flag at Moirang:",
+      "target_phrase": "Colonel Shaukat Ali Malik",
+      "reference_answer": "Colonel Shaukat Ali Malik",
+      "key_concepts": [
+        "Colonel",
+        "Shaukat",
+        "Ali",
+        "Malik"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 29,
+      "type": "speech",
+      "question": "Pronounce the first INA brigade that fought on Indian soil:",
+      "target_phrase": "Subhas Guerrilla Brigade",
+      "reference_answer": "Subhas Guerrilla Brigade",
+      "key_concepts": [
+        "Subhas",
+        "Guerrilla",
+        "Brigade"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 30,
+      "type": "speech",
+      "question": "Pronounce the historic frontier capital besieged by the INA:",
+      "target_phrase": "Frontier Town Of Imphal",
+      "reference_answer": "Frontier Town Of Imphal",
+      "key_concepts": [
+        "Frontier",
+        "Town",
+        "Imphal"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "question": "What grand strategic objective was envisioned by Netaji and General Mutaguchi for the Imphal-Kohima offensive ('Operation U-Go')?",
+      "options": {
+        "A": "To smash the British 14th Army, sever the Bengal-Assam railway supplying China, capture the Brahmaputra valley, and spark a nationwide armed insurrection across India",
+        "B": "To capture rubber plantations in lower Burma only",
+        "C": "To establish a minor border observation post",
+        "D": "To negotiate trade terms with the Governor of Assam"
+      },
+      "answer": "A",
+      "answer_text": "Netaji anticipated that breaching the frontier would trigger an unstoppable mass revolution across the country against the British.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "question": "What heroic sacrifice is commemorated at the Kohima War Cemetery that reflects the ferocity of this epic battle?",
+      "options": {
+        "A": "'When you go home, tell them of us and say, for your tomorrow, we gave our today'",
+        "B": "'Peace at any price'",
+        "C": "'Victory belongs to the fastest runner'",
+        "D": "'To the conqueror go the spoils'"
+      },
+      "answer": "A",
+      "answer_text": "The famous Kohima Epitaph honors the fallen soldiers who fought hand-to-hand across the tennis court of the Deputy Commissioner's bungalow.",
+      "difficulty": "hard",
+      "difficulty_percentage": 78,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "question": "How did the INA's 1st Division under Major General Shah Nawaz Khan distinguish itself in the Chin Hills and Haka-Falam sector?",
+      "options": {
+        "A": "By executing daring guerrilla assaults, holding impassable ridge lines without rations, and winning the respect of British and Commonwealth adversaries",
+        "B": "By remaining in rear base camps",
+        "C": "By building naval dockyards",
+        "D": "By abandoning their weapons immediately"
+      },
+      "answer": "A",
+      "answer_text": "Shah Nawaz Khan's troops endured extreme hardships, surviving on grass and roots while heroically repelling British counterattacks.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "question": "What sovereign administrative measures were established by the Azad Hind Government in the liberated Moirang area of Manipur?",
+      "options": {
+        "A": "Food distribution, civilian policing, civil dispute courts, abolition of British colonial taxes, and introduction of Azad Hind currency",
+        "B": "Imposition of heavy military martial law taxes",
+        "C": "Closing down all local schools and markets",
+        "D": "Transferring land to foreign corporations"
+      },
+      "answer": "A",
+      "answer_text": "The Azad Hind civil administration provided benevolent governance, winning deep local loyalty in Manipur.",
+      "difficulty": "hard",
+      "difficulty_percentage": 82,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "question": "Why was the Battle of the Tennis Court in Kohima described as one of the most grueling close-quarter battles in military history?",
+      "options": {
+        "A": "Opposing forces fought across a distance of less than 20 yards separated only by the tennis court boundary, with relentless hand-to-hand combat",
+        "B": "It was an actual sports competition held during the war",
+        "C": "It was fought inside an underground coal mine",
+        "D": "It took place entirely in the dark without any weapons"
+      },
+      "answer": "A",
+      "answer_text": "The Battle of the Tennis Court at Kohima was a legendary confrontation of unmatched intensity and close-quarters savagery.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "question": "What military logistical miscalculation by the Japanese 15th Army commander severely compromised the INA's advance?",
+      "options": {
+        "A": "General Mutaguchi expected to capture British supply depots in Imphal within 3 weeks and failed to establish a sustainable monsoon supply chain",
+        "B": "He ordered the troops to march in the wrong geographical direction",
+        "C": "He refused to bring any artillery guns",
+        "D": "He forgot to issue military maps"
+      },
+      "answer": "A",
+      "answer_text": "The Japanese High Command gambled on a swift breakthrough; when the siege prolonged, the supply lines collapsed completely.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "question": "What profound moral legacy did the INA's assault on the northeastern frontier leave on the British Indian Army soldiers opposing them?",
+      "options": {
+        "A": "It shattered the psychological loyalty of Indian soldiers serving in the British Army, awakening their suppressed national consciousness",
+        "B": "It made them loyal to the British King forever",
+        "C": "It caused them to resign from the military permanently",
+        "D": "It had zero effect on Indian soldiers"
+      },
+      "answer": "A",
+      "answer_text": "Indian troops in the British Army realized the INA were not traitors but heroic patriots fighting for their motherland's freedom.",
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 38,
+      "type": "descriptive",
+      "question": "Critically analyze the strategic objective and military execution of the Imphal-Kohima Campaign by the INA.",
+      "reference_answer": "The Imphal-Kohima offensive was designed to breach British eastern defenses, capture the strategic logistical base at Imphal, and advance into Assam to ignite a nationwide anti-colonial uprising. Despite fighting with inferior equipment, the INA displayed legendary valor against entrenched imperial divisions.",
+      "key_concepts": [
+        "breach British eastern defenses",
+        "capture strategic base at Imphal",
+        "advance into Assam",
+        "ignite nationwide anti-colonial uprising",
+        "legendary valor against entrenched divisions"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 39,
+      "type": "descriptive",
+      "question": "Examine the governance and symbolic importance of the liberated Andaman and Nicobar Islands under the Azad Hind administration.",
+      "reference_answer": "Netaji established Indian sovereignty over the Andaman and Nicobar Islands on December 30, 1943. By renaming them 'Shaheed' and 'Swaraj', he redeemed the dark memory of the Cellular Jail and demonstrated to the world that free India was capable of sovereign territorial administration.",
+      "key_concepts": [
+        "established Indian sovereignty",
+        "December 30 1943",
+        "Shaheed and Swaraj",
+        "redeemed memory of Cellular Jail",
+        "sovereign territorial administration"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 40,
+      "type": "descriptive",
+      "question": "Assess the operational challenges that forced the retreat from Kohima and Imphal in mid-1944.",
+      "reference_answer": "The offensive was halted by the onset of catastrophic early monsoon rains, which destroyed supply roads across the Chindwin River. The INA suffered acute shortages of food, medicine, and ammunition, while Allied forces maintained complete air superiority and air-dropped reinforcements.",
+      "key_concepts": [
+        "catastrophic early monsoon rains",
+        "destroyed supply roads across Chindwin",
+        "acute shortages of food and ammunition",
+        "Allied air superiority and air-dropped reinforcements",
+        "tactical retreat"
+      ],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 41,
+      "type": "descriptive",
+      "question": "Evaluate how the Battle of Kohima and Imphal altered the psychological foundations of the British Raj in India.",
+      "reference_answer": "Although a tactical military defeat, Imphal and Kohima proved to the Indian masses and soldiers of the British Indian Army that an independent Indian army could challenge the British Empire on the battlefield. This psychological transformation directly triggered the 1946 Royal Indian Navy mutiny and sped up the departure of the British.",
+      "key_concepts": [
+        "tactical military defeat but psychological victory",
+        "independent Indian army challenged British Empire",
+        "shattered psychological loyalty of British Indian Army",
+        "triggered 1946 Royal Indian Navy mutiny",
+        "sped up British departure"
+      ],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 42,
+      "type": "speech",
+      "question": "Pronounce the historic battle in Nagaland:",
+      "target_phrase": "Epic Battle Of Kohima Ridge",
+      "reference_answer": "Epic Battle Of Kohima Ridge",
+      "key_concepts": [
+        "Epic",
+        "Battle",
+        "Kohima",
+        "Ridge"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 43,
+      "type": "speech",
+      "question": "Pronounce the famous Kohima memorial inscription:",
+      "target_phrase": "For Your Tomorrow We Gave Our Today",
+      "reference_answer": "For Your Tomorrow We Gave Our Today",
+      "key_concepts": [
+        "Tomorrow",
+        "Gave",
+        "Today"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 44,
+      "type": "speech",
+      "question": "Pronounce the chief commissioner appointed by Netaji:",
+      "target_phrase": "Major General A D Loganathan",
+      "reference_answer": "Major General A D Loganathan",
+      "key_concepts": [
+        "Major",
+        "General",
+        "Loganathan"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 45,
+      "type": "speech",
+      "question": "Pronounce the premier guerrilla regiment commander:",
+      "target_phrase": "Major General Shah Nawaz Khan",
+      "reference_answer": "Major General Shah Nawaz Khan",
+      "key_concepts": [
+        "Shah",
+        "Nawaz",
+        "Khan"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    }
+  ],
+  "sequence_test": {
+    "title": "Chronological Sequence of the Island Liberation and Manipur Campaign",
+    "description": "Trace the timeline from Netaji's historic flag hoisting in Port Blair to the heroic siege of Imphal and Kohima in 1944.",
+    "questions": [
+      {
+        "id": 46,
+        "type": "sequence_mcq",
+        "question": "What is the correct chronological sequence of events during the INA's advance onto Indian territory?",
+        "options": {
+          "A": "Hoisting Tricolour at Port Blair (Dec 1943) -> Renaming Shaheed & Swaraj Islands -> INA crossing Burma-India border -> Hoisting flag at Moirang, Manipur (April 1944)",
+          "B": "Hoisting flag at Moirang -> Hoisting flag at Port Blair -> Renaming islands -> Crossing border",
+          "C": "Crossing border -> Hoisting flag at Moirang -> Hoisting flag at Port Blair -> Renaming islands",
+          "D": "Renaming islands -> Hoisting flag at Moirang -> Crossing border -> Hoisting flag at Port Blair"
+        },
+        "answer": "A",
+        "answer_text": "Netaji hoisted the flag in Port Blair, renamed the islands, crossed the eastern border, and hoisted the Tricolour at Moirang.",
+        "difficulty": "moderate",
+        "difficulty_percentage": 60,
+        "difficulty_level": "Curious Adventurer"
+      },
+      {
+        "id": 47,
+        "type": "sequence_mcq",
+        "question": "Arrange the military phases of the Battle of Kohima and Imphal in chronological order:",
+        "options": {
+          "A": "Launch of Operation U-Go -> Surrounding British garrison at Imphal & Kohima -> Close-quarters Battle of Tennis Court -> Onset of torrential monsoons and tactical retreat",
+          "B": "Onset of monsoons -> Battle of Tennis Court -> Launch of Operation U-Go -> Surrounding Imphal",
+          "C": "Surrounding Imphal -> Onset of monsoons -> Launch of Operation U-Go -> Battle of Tennis Court",
+          "D": "Battle of Tennis Court -> Launch of Operation U-Go -> Onset of monsoons -> Surrounding Imphal"
+        },
+        "answer": "A",
+        "answer_text": "The offensive launched, besieged Kohima and Imphal, fought the Tennis Court battle, and withdrew due to monsoons.",
+        "difficulty": "hard",
+        "difficulty_percentage": 75,
+        "difficulty_level": "Challenger"
+      }
+    ]
+  },
+  "image_matching": [
+    {
+      "id": 48,
+      "type": "image_matching",
+      "question": "Match each historic battleground and monument with its description:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/port_blair_flag.jpg",
+          "label": "Port Blair Flag Hoisting"
+        },
+        {
+          "id": "img_2",
+          "file": "images/moirang_memorial.jpg",
+          "label": "Moirang INA Memorial"
+        },
+        {
+          "id": "img_3",
+          "file": "images/kohima_cemetery.jpg",
+          "label": "Kohima War Cemetery"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "Gymkhana Ground where Netaji unfurled the Tricolour on first liberated Indian territory in 1943."
+        },
+        {
+          "id": "desc_2",
+          "text": "Site in Manipur where Colonel Shaukat Ali Malik hoisted the flag on mainland Indian soil."
+        },
+        {
+          "id": "desc_3",
+          "text": "Memorial site marking the fiercest battle in British military history at Kohima ridge."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 49,
+      "type": "image_matching",
+      "question": "Match each military commander and unit with their heroic deed:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/shaukat_malik.jpg",
+          "label": "Col. Shaukat Ali Malik"
+        },
+        {
+          "id": "img_2",
+          "file": "images/shah_nawaz.jpg",
+          "label": "Maj. Gen. Shah Nawaz Khan"
+        },
+        {
+          "id": "img_3",
+          "file": "images/subhas_brigade.jpg",
+          "label": "Subhas Brigade"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "Bahadur Group commander who led the charge into Manipur and hoisted the Tricolour at Moirang."
+        },
+        {
+          "id": "desc_2",
+          "text": "Commander of the 1st INA Division who led legendary defense in the Chin Hills and Kohima sectors."
+        },
+        {
+          "id": "desc_3",
+          "text": "Elite guerrilla regiment that spearheaded the armed march across the Burmese frontier."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer"
+    }
+  ],
+  "scoring": {
+    "mcq": {
+      "points_per_correct_answer": 1
+    },
+    "descriptive": {
+      "method": "cosine_similarity",
+      "description": "Calculate embedding cosine similarity against reference concepts.",
+      "suggested_interpretation": {
+        "0.80-1.00": "Outstanding Mastery",
+        "0.65-0.79": "Good Conceptual Understanding",
+        "0.50-0.64": "Developing Understanding",
+        "0.00-0.49": "Needs Reinforcement"
+      }
+    },
+    "speech": {
+      "points_per_correct_answer": 1,
+      "min_pass_score": 60
+    },
+    "sequence_test": {
+      "points_per_correct_answer": 1
+    },
+    "image_matching": {
+      "points_per_correct_match": 1,
+      "total_points": 3
+    }
+  }
+}

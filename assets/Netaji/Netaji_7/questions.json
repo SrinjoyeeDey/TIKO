@@ -1,0 +1,953 @@
+{
+  "title": "Taking Command of the INA and the Historic Burma Proclamation",
+  "section": {
+    "start": "03:30",
+    "end": "04:03",
+    "description": "Comprehensive 45-question pedagogical assessment for ages 3 to 15 spanning Easy, Moderate, and Hard difficulty levels."
+  },
+  "target_age": 12,
+  "age_range": "3-15 years",
+  "question_pattern": {
+    "main_questions": "45 progressive questions consisting of multi-tier MCQs, conceptual descriptive questions, and voice pronunciation speech questions.",
+    "difficulty_distribution": "15 Easy (Ages 3-7), 15 Moderate (Ages 8-11), 15 Hard (Ages 12-15)",
+    "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
+    "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
+    "sequence_test": "Chronological milestone ordering and timeline analysis.",
+    "image_matching": "Interactive visual matching connecting historical figures, artifacts, and descriptions."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "question": "What is Netaji's most famous and inspiring quote of all time?",
+      "options": {
+        "A": "Give me blood, and I shall give you freedom!",
+        "B": "Have a nice day!",
+        "C": "Silence is golden!",
+        "D": "Work hard and play hard!"
+      },
+      "answer": "A",
+      "answer_text": "Netaji proclaimed: 'Give me blood, and I shall give you freedom!'",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "question": "In which year did Netaji take full command of the Indian National Army (INA)?",
+      "options": {
+        "A": "1943",
+        "B": "1910",
+        "C": "1850",
+        "D": "2000"
+      },
+      "answer": "A",
+      "answer_text": "In 1943, Netaji took supreme command of the Indian National Army.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "question": "In which city did Netaji deliver his famous 'Give me blood' speech on July 4, 1944?",
+      "options": {
+        "A": "In Burma (at a huge rally of Indians)",
+        "B": "In London",
+        "C": "In New York",
+        "D": "In Sydney"
+      },
+      "answer": "A",
+      "answer_text": "Netaji delivered this electrifying speech at a massive rally in Burma.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "question": "What is the Hindi name for the Indian National Army?",
+      "options": {
+        "A": "Azad Hind Fauj",
+        "B": "Shanti Sena",
+        "C": "Police Force",
+        "D": "Railway Guard"
+      },
+      "answer": "A",
+      "answer_text": "The Indian National Army is famously known as 'Azad Hind Fauj'.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "question": "Did the Indian people in Southeast Asia donate their gold and money to Netaji's army?",
+      "options": {
+        "A": "Yes, they gave their gold, jewelry, and money with immense joy",
+        "B": "No, they refused",
+        "C": "They hid their money",
+        "D": "They gave fake coins"
+      },
+      "answer": "A",
+      "answer_text": "Indian men and women donated all their jewelry and savings to the Azad Hind treasury.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "question": "What special women's regiment did Netaji create in the INA?",
+      "options": {
+        "A": "Rani of Jhansi Regiment",
+        "B": "Queen Victoria Regiment",
+        "C": "Cinderella Unit",
+        "D": "Florence Nightingale Corps"
+      },
+      "answer": "A",
+      "answer_text": "Netaji created the pioneering all-women 'Rani of Jhansi Regiment'.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "question": "What does the word 'Azad' mean in Azad Hind Fauj?",
+      "options": {
+        "A": "Free / Independent",
+        "B": "Silent",
+        "C": "Rich",
+        "D": "Small"
+      },
+      "answer": "A",
+      "answer_text": "'Azad' means Free, so Azad Hind Fauj means 'Free India Army'.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "question": "How did the soldiers feel when Netaji spoke to them?",
+      "options": {
+        "A": "Filled with bravery, pride, and patriotic courage",
+        "B": "Sleepy and bored",
+        "C": "Frightened of the enemies",
+        "D": "Disappointed"
+      },
+      "answer": "A",
+      "answer_text": "Netaji's voice ignited boundless courage and self-sacrifice in every soldier.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "question": "On which day in July 1944 was Netaji's famous speech delivered in Burma?",
+      "options": {
+        "A": "July 4th",
+        "B": "December 25th",
+        "C": "January 1st",
+        "D": "October 31st"
+      },
+      "answer": "A",
+      "answer_text": "The historic speech was delivered on July 4, 1944.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "question": "What government did Netaji establish in Singapore in October 1943?",
+      "options": {
+        "A": "Provisional Government of Free India (Arzi Hukumat-e-Azad Hind)",
+        "B": "British Colonial Council",
+        "C": "Merchant Shipping Board",
+        "D": "City Sports Committee"
+      },
+      "answer": "A",
+      "answer_text": "Netaji established the Provisional Government of Azad Hind in Singapore.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 11,
+      "type": "descriptive",
+      "question": "What is Netaji's famous quote of July 4, 1944, and what does it mean?",
+      "reference_answer": "Netaji's famous quote is 'Give me blood, and I shall give you freedom!' It means that complete independence for India requires total courage, sacrifice, and readiness to lay down one's life.",
+      "key_concepts": [
+        "Give me blood and I shall give you freedom",
+        "complete independence",
+        "total courage",
+        "sacrifice",
+        "lay down life"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 12,
+      "type": "descriptive",
+      "question": "How did overseas Indians in Southeast Asia support the Azad Hind Fauj?",
+      "reference_answer": "Overseas Indians supported the Azad Hind Fauj by enlisting in tens of thousands as soldiers and willingly donating their entire wealth, gold, and jewelry to finance the liberation struggle.",
+      "key_concepts": [
+        "enlisting in tens of thousands",
+        "soldiers",
+        "donating wealth",
+        "gold and jewelry",
+        "finance liberation struggle"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 13,
+      "type": "speech",
+      "question": "Say the immortal slogan of sacrifice:",
+      "target_phrase": "Give Me Blood And I Shall Give You Freedom",
+      "reference_answer": "Give Me Blood And I Shall Give You Freedom",
+      "key_concepts": [
+        "Blood",
+        "Freedom"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 14,
+      "type": "speech",
+      "question": "Say the Hindi name of the liberation army:",
+      "target_phrase": "Azad Hind Fauj",
+      "reference_answer": "Azad Hind Fauj",
+      "key_concepts": [
+        "Azad",
+        "Hind",
+        "Fauj"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 15,
+      "type": "speech",
+      "question": "Say the women's regiment of the INA:",
+      "target_phrase": "Rani Of Jhansi Regiment",
+      "reference_answer": "Rani Of Jhansi Regiment",
+      "key_concepts": [
+        "Rani",
+        "Jhansi",
+        "Regiment"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "question": "On which historic date did Netaji proclaim the Provisional Government of Azad Hind in Singapore?",
+      "options": {
+        "A": "October 21, 1943",
+        "B": "August 15, 1947",
+        "C": "January 26, 1950",
+        "D": "November 14, 1889"
+      },
+      "answer": "A",
+      "answer_text": "Netaji established the Arzi Hukumat-e-Azad Hind on October 21, 1943, at Cathay Cinema in Singapore.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "question": "How many sovereign nations granted official diplomatic recognition to Netaji's Azad Hind Government?",
+      "options": {
+        "A": "Nine sovereign nations (including Japan, Germany, Italy, Burma, Thailand, Philippines, Croatia, etc.)",
+        "B": "Only one nation",
+        "C": "Zero nations",
+        "D": "All 150 United Nations members"
+      },
+      "answer": "A",
+      "answer_text": "Nine sovereign nations extended full diplomatic recognition to the Provisional Government of Azad Hind.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "question": "Who was appointed commander of the groundbreaking all-women Rani of Jhansi Regiment?",
+      "options": {
+        "A": "Captain Lakshmi Sahgal (Lakshmi Swaminathan)",
+        "B": "Sarojini Naidu",
+        "C": "Annie Besant",
+        "D": "Matangini Hazra"
+      },
+      "answer": "A",
+      "answer_text": "Captain Lakshmi Sahgal was appointed commander and Minister of Women's Affairs in the Azad Hind Government.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "question": "What state-building institutions were founded by the Provisional Government of Azad Hind?",
+      "options": {
+        "A": "Azad Hind Bank, national currency, postage stamps, civil penal codes, and a national radio network",
+        "B": "Only a flag without institutions",
+        "C": "A trading guild only",
+        "D": "A movie production studio"
+      },
+      "answer": "A",
+      "answer_text": "The Azad Hind Government established the Azad Hind Bank in Rangoon, issued its own currency, and managed civil administration.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "question": "What total mobilization campaign did Netaji initiate in Burma and Malaya?",
+      "options": {
+        "A": "'Total Mobilization' demanding 'Karo Sab Nichhavar Bano Sab Fakir' (Sacrifice all, become ascetics for freedom)",
+        "B": "A voluntary sports league",
+        "C": "A tourism promotion campaign",
+        "D": "A factory privatization drive"
+      },
+      "answer": "A",
+      "answer_text": "Netaji's Total Mobilization campaign rallied the entire community to dedicate their lives, wealth, and labor.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "question": "What was the national song / anthem composed for the Azad Hind Fauj by Mumtaz Hussain and Capt. Ram Singh Thakuri?",
+      "options": {
+        "A": "Subh Sukh Chain (Sab Se Nyara Gulshan Hai Humara)",
+        "B": "Rule Britannia",
+        "C": "Auld Lang Syne",
+        "D": "La Marseillaise"
+      },
+      "answer": "A",
+      "answer_text": "'Subh Sukh Chain Ki Barkha Barse' was the official Hindi anthem set to music by Captain Ram Singh Thakuri.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "question": "What march song of the INA continues to be played by the Indian Armed Forces today?",
+      "options": {
+        "A": "Kadam Kadam Badhaye Ja",
+        "B": "Jingle Bells",
+        "C": "Yankee Doodle",
+        "D": "Greensleeves"
+      },
+      "answer": "A",
+      "answer_text": "'Kadam Kadam Badhaye Ja, Khushi Ke Geet Gaye Ja' remains one of India's most stirring military marches.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "question": "What prominent title of honor did Netaji bestow upon Mahatma Gandhi in a radio broadcast from Singapore in July 1944?",
+      "options": {
+        "A": "'Father of our Nation' (Rashtrapita)",
+        "B": "'Governor General'",
+        "C": "'Chief Justice'",
+        "D": "'Prime Minister'"
+      },
+      "answer": "A",
+      "answer_text": "Netaji was the very first person to address Mahatma Gandhi as the 'Father of our Nation'.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 24,
+      "type": "descriptive",
+      "question": "Explain the significance of the proclamation of the Provisional Government of Azad Hind on October 21, 1943.",
+      "reference_answer": "On October 21, 1943, Netaji proclaimed the Provisional Government of Azad Hind in Singapore. It established an official sovereign Indian state recognized by multiple nations, with its own army, treasury, bank, and diplomatic mandate to wage war against the British Empire.",
+      "key_concepts": [
+        "October 21 1943",
+        "Singapore",
+        "sovereign Indian state",
+        "diplomatic recognition",
+        "Azad Hind Bank",
+        "waged war against British Empire"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 25,
+      "type": "descriptive",
+      "question": "Describe the formation and role of the Rani of Jhansi Regiment in the Indian National Army.",
+      "reference_answer": "Formed in 1943 and commanded by Captain Lakshmi Sahgal, the Rani of Jhansi Regiment was one of Asia's first all-female combat infantry units. Indian women trained rigorously in rifle drill, bayonet fighting, and nursing to fight on the front lines.",
+      "key_concepts": [
+        "Captain Lakshmi Sahgal",
+        "all-female combat unit",
+        "rifle drill and bayonet fighting",
+        "Rani of Jhansi Regiment",
+        "frontline combat and nursing"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 26,
+      "type": "descriptive",
+      "question": "Analyze the emotional and motivational power of Netaji's Burma speech of July 4, 1944.",
+      "reference_answer": "Speaking to tens of thousands of Indians in Burma, Netaji demanded complete sacrifice: 'Give me blood, and I shall give you freedom!' His words transformed ordinary plantation workers and traders into fearless soldiers ready to die for India's independence.",
+      "key_concepts": [
+        "Burma speech",
+        "Give me blood and I shall give you freedom",
+        "complete sacrifice",
+        "transformed workers into soldiers",
+        "ready to die for freedom"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 27,
+      "type": "speech",
+      "question": "Pronounce the historic proclamation entity:",
+      "target_phrase": "Provisional Government Of Azad Hind",
+      "reference_answer": "Provisional Government Of Azad Hind",
+      "key_concepts": [
+        "Provisional",
+        "Government",
+        "Azad",
+        "Hind"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 28,
+      "type": "speech",
+      "question": "Pronounce the historic financial institution of free India:",
+      "target_phrase": "Azad Hind Bank Rangoon",
+      "reference_answer": "Azad Hind Bank Rangoon",
+      "key_concepts": [
+        "Azad",
+        "Hind",
+        "Bank",
+        "Rangoon"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 29,
+      "type": "speech",
+      "question": "Pronounce the legendary INA commander of the women's unit:",
+      "target_phrase": "Captain Lakshmi Sahgal",
+      "reference_answer": "Captain Lakshmi Sahgal",
+      "key_concepts": [
+        "Captain",
+        "Lakshmi",
+        "Sahgal"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 30,
+      "type": "speech",
+      "question": "Pronounce the immortal military march of the INA:",
+      "target_phrase": "Kadam Kadam Badhaye Ja",
+      "reference_answer": "Kadam Kadam Badhaye Ja",
+      "key_concepts": [
+        "Kadam",
+        "Badhaye"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "question": "What legal and constitutional significance did the proclamation of the Provisional Government of Azad Hind carry under international law?",
+      "options": {
+        "A": "It transformed the INA from an alleged 'rebel mutiny' into a recognized sovereign belligerent government with legal rights under the Geneva Conventions to wage war against Great Britain and the United States",
+        "B": "It was purely a cultural festival declaration without legal standing",
+        "C": "It allowed the INA to trade on the London Stock Exchange",
+        "D": "It established a joint protectorate with the British Crown"
+      },
+      "answer": "A",
+      "answer_text": "Under international law, sovereign proclamation and belligerent recognition granted INA soldiers lawful combatant status.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "question": "On what date did the Provisional Government of Azad Hind formally declare war on Great Britain and the United States?",
+      "options": {
+        "A": "Midnight of October 23-24, 1943",
+        "B": "August 15, 1947",
+        "C": "June 6, 1944",
+        "D": "January 1, 1945"
+      },
+      "answer": "A",
+      "answer_text": "The Cabinet of the Azad Hind Government voted unanimously to declare war on Britain and the USA on Oct 23-24, 1943.",
+      "difficulty": "hard",
+      "difficulty_percentage": 78,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "question": "What revolutionary concept of national gender empowerment did Netaji pioneer with the Rani of Jhansi Regiment in 1943?",
+      "options": {
+        "A": "Direct frontline armed combat roles for women with equal rank, pay, and command responsibilities, decades ahead of Western armies",
+        "B": "Restricting women strictly to sewing uniforms and cooking",
+        "C": "Employing women as temporary office typists only",
+        "D": "Disallowing women from wearing military uniforms"
+      },
+      "answer": "A",
+      "answer_text": "Netaji instituted full combat training for women, creating the first female infantry combat regiment in modern Asian history.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "question": "How did Netaji resolve communal and linguistic divides within the diverse Indian diaspora and army units?",
+      "options": {
+        "A": "He enforced Hindustani in Roman and Devanagari script, secular military codes, common dining ('Langar'), and promoted merit irrespective of religion or caste",
+        "B": "He divided soldiers into separate communal cantonments",
+        "C": "He required everyone to adopt a single religion",
+        "D": "He assigned command based on regional birthplaces"
+      },
+      "answer": "A",
+      "answer_text": "The INA achieved complete communal harmony with top generals comprising Muslims, Hindus, Sikhs, and Christians (Shah Nawaz, Sehgal, Dhillon, etc.).",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "question": "What profound message did Netaji broadcast to Mahatma Gandhi on July 6, 1944, over Azad Hind Radio?",
+      "options": {
+        "A": "Father of our Nation! In this holy war for India's liberation, we ask for your blessings and good wishes",
+        "B": "He criticized the Congress non-cooperation policy as outdated",
+        "C": "He asked Gandhi to surrender to British authorities",
+        "D": "He announced his retirement from military command"
+      },
+      "answer": "A",
+      "answer_text": "Netaji sought the moral blessings of the Father of the Nation, proving the ideological synergy of their shared goal.",
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "question": "What was the operational strength of the Indian National Army under Netaji's command by 1944?",
+      "options": {
+        "A": "Approximately 45,000 to 50,000 highly trained combat troops organized into three main divisions",
+        "B": "Less than 500 volunteers",
+        "C": "Over 2 million frontline soldiers",
+        "D": "50 bodyguards only"
+      },
+      "answer": "A",
+      "answer_text": "The INA comprised roughly 50,000 soldiers, including regular divisions, the Rani of Jhansi Regiment, and volunteer corps.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "question": "What financial sacrifice did wealthy expatriates like Habib Saheb make for the Azad Hind Government in Rangoon?",
+      "options": {
+        "A": "He donated his entire personal fortune worth over one crore rupees to Netaji, receiving the title 'Sevak-e-Hind'",
+        "B": "He loaned money at high commercial interest rates",
+        "C": "He bought British war bonds",
+        "D": "He fled to Europe with his wealth"
+      },
+      "answer": "A",
+      "answer_text": "Patriots like Bashir Ahmad and Habib Saheb surrendered their entire earthly wealth on the altar of India's freedom.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 38,
+      "type": "descriptive",
+      "question": "Critically analyze the constitutional framework and historical legitimacy of the Provisional Government of Azad Hind.",
+      "reference_answer": "Established on October 21, 1943, the Provisional Government functioned as a sovereign state under international law. It exercised administrative governance over liberated territories, maintained a central bank, issued currency, and commanded armed forces recognized by nine sovereign nations.",
+      "key_concepts": [
+        "sovereign state under international law",
+        "October 21 1943",
+        "governed liberated territories",
+        "Azad Hind Bank and currency",
+        "recognized by nine nations"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 39,
+      "type": "descriptive",
+      "question": "Examine how Netaji created a revolutionary model of communal harmony within the Indian National Army.",
+      "reference_answer": "Netaji dismantled communal compartmentalization by mandating mixed regiments, common dining in communal kitchens, and adopting 'Jai Hind' as a universal greeting. Leaders like Shah Nawaz Khan, Prem Sahgal, and G.S. Dhillon fought side-by-side as brothers in arms.",
+      "key_concepts": [
+        "dismantled communal compartmentalization",
+        "mixed regiments and common dining",
+        "universal Jai Hind greeting",
+        "Shah Nawaz, Sahgal, Dhillon",
+        "brothers in arms"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 40,
+      "type": "descriptive",
+      "question": "Assess the pioneering progressive impact of the Rani of Jhansi Regiment on women's empowerment in Asia.",
+      "reference_answer": "Formed decades before Western militaries permitted women in combat, the Rani of Jhansi Regiment provided women equal military status, tactical combat training, and senior officer commissions, permanently redefining gender roles in Indian society.",
+      "key_concepts": [
+        "decades before Western militaries",
+        "equal military combat status",
+        "tactical training and officer commissions",
+        "permanently redefined gender roles",
+        "Captain Lakshmi Sahgal"
+      ],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 41,
+      "type": "descriptive",
+      "question": "Synthesize the historical significance of Netaji addressing Mahatma Gandhi as 'Father of our Nation' in July 1944.",
+      "reference_answer": "By addressing Gandhi as 'Father of our Nation' and seeking his blessings, Netaji demonstrated profound magnanimity and political maturity. He affirmed that despite differing methodologies, their hearts beat as one for the sacred goal of complete independence.",
+      "key_concepts": [
+        "Father of our Nation",
+        "sought moral blessings",
+        "political maturity and magnanimity",
+        "differing methodologies shared sacred goal",
+        "sacred independence"
+      ],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 42,
+      "type": "speech",
+      "question": "Pronounce the historic proclamation institution:",
+      "target_phrase": "Arzi Hukumat E Azad Hind",
+      "reference_answer": "Arzi Hukumat E Azad Hind",
+      "key_concepts": [
+        "Arzi",
+        "Hukumat",
+        "Azad",
+        "Hind"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 43,
+      "type": "speech",
+      "question": "Pronounce the revered title given to Mahatma Gandhi:",
+      "target_phrase": "Father Of Our Nation Rashtrapita",
+      "reference_answer": "Father Of Our Nation Rashtrapita",
+      "key_concepts": [
+        "Father",
+        "Nation",
+        "Rashtrapita"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 44,
+      "type": "speech",
+      "question": "Pronounce the historic anthem of the Azad Hind Government:",
+      "target_phrase": "Subh Sukh Chain Ki Barkha Barse",
+      "reference_answer": "Subh Sukh Chain Ki Barkha Barse",
+      "key_concepts": [
+        "Subh",
+        "Sukh",
+        "Chain"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 45,
+      "type": "speech",
+      "question": "Pronounce the supreme command pledge of total sacrifice:",
+      "target_phrase": "Total Mobilization For Complete Freedom",
+      "reference_answer": "Total Mobilization For Complete Freedom",
+      "key_concepts": [
+        "Total",
+        "Mobilization",
+        "Complete",
+        "Freedom"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    }
+  ],
+  "sequence_test": {
+    "title": "Chronological Sequence of the Azad Hind Proclamation and Burma Rally",
+    "description": "Trace the milestone events from the establishment of the Provisional Government in Singapore to the historic proclamation in Burma in July 1944.",
+    "questions": [
+      {
+        "id": 46,
+        "type": "sequence_mcq",
+        "question": "What is the correct chronological sequence of events in the rise of the Azad Hind Government?",
+        "options": {
+          "A": "Proclamation of Provisional Government of Azad Hind (Oct 1943) -> Founding of Rani of Jhansi Regiment -> Establishing Azad Hind Bank in Rangoon -> 'Give me blood' speech in Burma (July 1944)",
+          "B": "'Give me blood' speech -> Proclamation of Provisional Government -> Rani of Jhansi Regiment -> Azad Hind Bank",
+          "C": "Azad Hind Bank -> 'Give me blood' speech -> Proclamation of Government -> Rani of Jhansi Regiment",
+          "D": "Rani of Jhansi Regiment -> 'Give me blood' speech -> Azad Hind Bank -> Proclamation of Government"
+        },
+        "answer": "A",
+        "answer_text": "Netaji proclaimed the Provisional Government, organized the women's combat regiment, established the Bank, and gave the historic Burma speech.",
+        "difficulty": "moderate",
+        "difficulty_percentage": 60,
+        "difficulty_level": "Curious Adventurer"
+      },
+      {
+        "id": 47,
+        "type": "sequence_mcq",
+        "question": "Arrange the diplomatic and military milestones achieved by the Azad Hind Government in 1943-1944:",
+        "options": {
+          "A": "Declaration of war on Britain and USA -> Acquisition of diplomatic recognition from 9 nations -> Shifting headquarters to Rangoon near Indian border -> Electrifying call of 'Give me blood and I shall give you freedom'",
+          "B": "Shifting headquarters -> Declaration of war -> 'Give me blood' -> Diplomatic recognition",
+          "C": "'Give me blood' -> Shifting headquarters -> Diplomatic recognition -> Declaration of war",
+          "D": "Diplomatic recognition -> 'Give me blood' -> Declaration of war -> Shifting headquarters"
+        },
+        "answer": "A",
+        "answer_text": "The Azad Hind cabinet declared war, secured recognition, advanced to Burma, and Netaji delivered the immortal declaration.",
+        "difficulty": "hard",
+        "difficulty_percentage": 75,
+        "difficulty_level": "Challenger"
+      }
+    ]
+  },
+  "image_matching": [
+    {
+      "id": 48,
+      "type": "image_matching",
+      "question": "Match each revolutionary institution and leader with their role:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/azad_hind_proclamation.jpg",
+          "label": "Azad Hind Proclamation"
+        },
+        {
+          "id": "img_2",
+          "file": "images/lakshmi_sahgal.jpg",
+          "label": "Capt. Lakshmi Sahgal"
+        },
+        {
+          "id": "img_3",
+          "file": "images/burma_speech.jpg",
+          "label": "Burma Rally 1944"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "Proclamation of Free India's sovereign government in Singapore on October 21, 1943."
+        },
+        {
+          "id": "desc_2",
+          "text": "Commander of the pioneering all-female combat Rani of Jhansi Regiment."
+        },
+        {
+          "id": "desc_3",
+          "text": "Historic mass assembly where Netaji declared 'Give me blood, and I shall give you freedom!'."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 49,
+      "type": "image_matching",
+      "question": "Match each Azad Hind institution with its significance:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/azad_hind_bank.jpg",
+          "label": "Azad Hind Bank"
+        },
+        {
+          "id": "img_2",
+          "file": "images/kadam_kadam.jpg",
+          "label": "Kadam Kadam Badhaye Ja"
+        },
+        {
+          "id": "img_3",
+          "file": "images/father_of_nation.jpg",
+          "label": "Father of the Nation"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "Central banking institution that managed the war chest and issued national promissory currency."
+        },
+        {
+          "id": "desc_2",
+          "text": "Stirring military march anthem composed by Capt. Ram Singh Thakuri for the liberation army."
+        },
+        {
+          "id": "desc_3",
+          "text": "Historic reverence and title bestowed upon Mahatma Gandhi by Netaji over Azad Hind Radio."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer"
+    }
+  ],
+  "scoring": {
+    "mcq": {
+      "points_per_correct_answer": 1
+    },
+    "descriptive": {
+      "method": "cosine_similarity",
+      "description": "Calculate embedding cosine similarity against reference concepts.",
+      "suggested_interpretation": {
+        "0.80-1.00": "Outstanding Mastery",
+        "0.65-0.79": "Good Conceptual Understanding",
+        "0.50-0.64": "Developing Understanding",
+        "0.00-0.49": "Needs Reinforcement"
+      }
+    },
+    "speech": {
+      "points_per_correct_answer": 1,
+      "min_pass_score": 60
+    },
+    "sequence_test": {
+      "points_per_correct_answer": 1
+    },
+    "image_matching": {
+      "points_per_correct_match": 1,
+      "total_points": 3
+    }
+  }
+}

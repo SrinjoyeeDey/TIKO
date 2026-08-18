@@ -1,0 +1,957 @@
+{
+  "title": "The Taipei Air Crash (18th August 1945) and Eternal Immortality",
+  "section": {
+    "start": "05:03",
+    "end": "05:25",
+    "description": "Comprehensive 45-question pedagogical assessment for ages 3 to 15 spanning Easy, Moderate, and Hard difficulty levels."
+  },
+  "target_age": 12,
+  "age_range": "3-15 years",
+  "question_pattern": {
+    "main_questions": "45 progressive questions consisting of multi-tier MCQs, conceptual descriptive questions, and voice pronunciation speech questions.",
+    "difficulty_distribution": "15 Easy (Ages 3-7), 15 Moderate (Ages 8-11), 15 Hard (Ages 12-15)",
+    "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
+    "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
+    "sequence_test": "Chronological milestone ordering and timeline analysis.",
+    "image_matching": "Interactive visual matching connecting historical figures, artifacts, and descriptions."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "question": "In which city did Netaji's airplane have an accident on August 18, 1945?",
+      "options": {
+        "A": "Taipei in Taiwan",
+        "B": "London",
+        "C": "New York",
+        "D": "Paris"
+      },
+      "answer": "A",
+      "answer_text": "The reported airplane accident took place at Matsuyama Airport in Taipei, Taiwan.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "question": "On which exact date did the historic air accident occur?",
+      "options": {
+        "A": "August 18, 1945",
+        "B": "January 1, 2000",
+        "C": "October 2, 1869",
+        "D": "December 25, 1990"
+      },
+      "answer": "A",
+      "answer_text": "The incident occurred on August 18, 1945.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "question": "What destination was Netaji flying towards when the airplane took off?",
+      "options": {
+        "A": "Tokyo",
+        "B": "The Moon",
+        "C": "Antarctica",
+        "D": "Australia"
+      },
+      "answer": "A",
+      "answer_text": "Netaji was flying en route to Tokyo via Taiwan.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "question": "What happened to the airplane engine during takeoff?",
+      "options": {
+        "A": "It had engine trouble and crashed",
+        "B": "It ran out of paint",
+        "C": "It turned into a boat",
+        "D": "It flew to outer space"
+      },
+      "answer": "A",
+      "answer_text": "The Mitsubishi bomber had severe engine trouble upon takeoff.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "question": "To which hospital was Netaji rushed after the crash in Taipei?",
+      "options": {
+        "A": "Nanmon Military Hospital",
+        "B": "City Zoo Hospital",
+        "C": "School Infirmary",
+        "D": "Airport Lounge"
+      },
+      "answer": "A",
+      "answer_text": "Netaji was rushed to the Nanmon Military Hospital in Taipei.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "question": "Who was Netaji's faithful Indian officer who was in the airplane with him?",
+      "options": {
+        "A": "Colonel Habibur Rahman",
+        "B": "A British guard",
+        "C": "A train conductor",
+        "D": "A movie director"
+      },
+      "answer": "A",
+      "answer_text": "Colonel Habibur Rahman was by Netaji's side in the aircraft.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "question": "What great legacy did Netaji leave for all Indians?",
+      "options": {
+        "A": "An immortal legacy of fearlessness, unity, and supreme patriotism",
+        "B": "A box of old stamps",
+        "C": "A collection of sports cards",
+        "D": "A map of toy shops"
+      },
+      "answer": "A",
+      "answer_text": "Netaji left an eternal legacy of selfless courage, unity, and sacrifice.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "question": "What is Netaji's birthday (January 23) celebrated as across India?",
+      "options": {
+        "A": "Parakram Diwas (Day of Courage)",
+        "B": "Children's Day",
+        "C": "Teachers Day",
+        "D": "New Year's Day"
+      },
+      "answer": "A",
+      "answer_text": "January 23 is officially celebrated as 'Parakram Diwas' (Day of Valour).",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "question": "Can true heroes like Netaji ever be forgotten?",
+      "options": {
+        "A": "Never! Their courage and love for India live forever in our hearts",
+        "B": "Yes, after a few days",
+        "C": "They are forgotten quickly",
+        "D": "Nobody cares"
+      },
+      "answer": "A",
+      "answer_text": "Netaji is immortal in the memory and soul of independent India.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "question": "What sacred national greeting created by Netaji is used by all Indians today?",
+      "options": {
+        "A": "Jai Hind!",
+        "B": "Good night",
+        "C": "Bye bye",
+        "D": "See you later"
+      },
+      "answer": "A",
+      "answer_text": "'Jai Hind!' is our glorious national salutation gifted by Netaji.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 11,
+      "type": "descriptive",
+      "question": "What event took place at Taipei Airport on August 18, 1945?",
+      "reference_answer": "On August 18, 1945, the military bomber carrying Netaji Subhas Chandra Bose and Colonel Habibur Rahman suffered engine trouble upon takeoff in Taipei, Taiwan, and crashed, severely injuring Netaji.",
+      "key_concepts": [
+        "August 18 1945",
+        "Taipei Taiwan",
+        "military bomber",
+        "engine trouble on takeoff",
+        "Colonel Habibur Rahman",
+        "severely injuring Netaji"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 12,
+      "type": "descriptive",
+      "question": "How does India honor Netaji's memory and sacrifice today?",
+      "reference_answer": "India honors Netaji as a supreme national hero. His birthday on January 23 is celebrated nationwide as Parakram Diwas (Day of Valour), and his slogan 'Jai Hind' is the national salutation of India.",
+      "key_concepts": [
+        "supreme national hero",
+        "January 23",
+        "Parakram Diwas",
+        "Day of Valour",
+        "Jai Hind national salutation"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 13,
+      "type": "speech",
+      "question": "Say the national day of courage celebrating Netaji:",
+      "target_phrase": "Parakram Diwas",
+      "reference_answer": "Parakram Diwas",
+      "key_concepts": [
+        "Parakram",
+        "Diwas"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 14,
+      "type": "speech",
+      "question": "Say the hospital in Taipei:",
+      "target_phrase": "Nanmon Military Hospital",
+      "reference_answer": "Nanmon Military Hospital",
+      "key_concepts": [
+        "Nanmon",
+        "Military",
+        "Hospital"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 15,
+      "type": "speech",
+      "question": "Say the eternal greeting of free India:",
+      "target_phrase": "Jai Hind",
+      "reference_answer": "Jai Hind",
+      "key_concepts": [
+        "Jai",
+        "Hind"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "question": "What model of aircraft was carrying Netaji when it crashed at Matsuyama Airport in Taipei?",
+      "options": {
+        "A": "Mitsubishi Ki-21 (Sally) twin-engine heavy bomber",
+        "B": "Boeing 747",
+        "C": "Spitfire fighter plane",
+        "D": "Concorde supersonic jet"
+      },
+      "answer": "A",
+      "answer_text": "The aircraft was an Imperial Japanese Army Mitsubishi Ki-21 heavy bomber.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "question": "What final words did Netaji speak to Colonel Habibur Rahman in the hospital before passing away?",
+      "options": {
+        "A": "'Habib, my end is near. I have fought for my country's freedom till the last. Go and tell my countrymen that they should continue the struggle for freedom.'",
+        "B": "'I want to rest now'",
+        "C": "'Where is my luggage?'",
+        "D": "'Tell them I changed my mind'"
+      },
+      "answer": "A",
+      "answer_text": "Netaji's dying words to Habibur Rahman were a sacred charge to the Indian people to never stop fighting for complete freedom.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "question": "In which temple in Tokyo, Japan, are Netaji's reported sacred ashes (relics) preserved with deep reverence?",
+      "options": {
+        "A": "Renkoji Temple (Renko-ji)",
+        "B": "Senso-ji Temple",
+        "C": "Meiji Shrine",
+        "D": "Kyoto Golden Pavilion"
+      },
+      "answer": "A",
+      "answer_text": "The sacred relics are preserved at Renkoji Temple in Suginami ward, Tokyo.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "question": "Who was the chief Japanese medical doctor who treated Netaji at Nanmon Military Hospital?",
+      "options": {
+        "A": "Dr. Toyoshi Tsuruta and Dr. Yoshimi",
+        "B": "Dr. Watson",
+        "C": "Dr. Livingstone",
+        "D": "Dr. Pasteur"
+      },
+      "answer": "A",
+      "answer_text": "Dr. Toyoshi Tsuruta and Dr. Taneyoshi Yoshimi attended to Netaji with profound respect.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "question": "What official inquiry commissions were formed by the Indian Government to investigate Netaji's death/disappearance?",
+      "options": {
+        "A": "Shah Nawaz Committee (1956), Khosla Commission (1970), and Justice Mukherjee Commission (1999)",
+        "B": "Warren Commission and 9/11 Commission",
+        "C": "Simon Commission and Hunter Commission",
+        "D": "League of Nations Council"
+      },
+      "answer": "A",
+      "answer_text": "Three high-level commissions investigated the circumstances of Netaji's reported death in Taipei.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "question": "Why has the mystery of Netaji's disappearance captured the imagination of generations of Indians?",
+      "options": {
+        "A": "Because of conflicting testimonies, secret intelligence reports, and beliefs that Netaji might have survived into the post-war era as an ascetic",
+        "B": "Because nobody knew who Netaji was",
+        "C": "Because no photographs existed of him",
+        "D": "Because it was an ancient mythological story"
+      },
+      "answer": "A",
+      "answer_text": "The lack of conclusive public photographs and declassified files created an enduring global mystery.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "question": "What grand holographic and granite statue was recently installed in New Delhi to honor Netaji?",
+      "options": {
+        "A": "A grand statue under the Grand Canopy at India Gate",
+        "B": "A statue inside Delhi Zoo",
+        "C": "A statue at the railway platform",
+        "D": "A statue inside a shopping mall"
+      },
+      "answer": "A",
+      "answer_text": "A monumental 28-foot granite statue of Netaji was installed beneath the historic canopy at India Gate.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "question": "What profound impact did Netaji's life have on international anti-colonial movements across Asia and Africa?",
+      "options": {
+        "A": "It proved that colonized nations could establish their own armies and defeat Western imperialist powers by force of arms",
+        "B": "It discouraged all other nations from seeking independence",
+        "C": "It caused people to avoid political organizing",
+        "D": "It had zero international impact"
+      },
+      "answer": "A",
+      "answer_text": "Netaji's fearless armed struggle inspired anti-imperialist freedom movements across the globe.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 24,
+      "type": "descriptive",
+      "question": "Describe what occurred at Nanmon Military Hospital in Taipei following the air crash on August 18, 1945.",
+      "reference_answer": "Netaji was brought to Nanmon Military Hospital suffering from severe third-degree burns. Attended by Japanese doctors and Col. Habibur Rahman, he remained conscious and calm, declaring his love for India before passing away late that evening.",
+      "key_concepts": [
+        "Nanmon Military Hospital",
+        "severe third-degree burns",
+        "Col. Habibur Rahman",
+        "Japanese doctors",
+        "remained conscious and calm",
+        "passed away late evening"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 25,
+      "type": "descriptive",
+      "question": "Explain the significance of the Renkoji Temple in Tokyo in relation to Netaji Subhas Chandra Bose.",
+      "reference_answer": "Renkoji Temple is a Buddhist temple in Tokyo, Japan, where the purported cremated ashes and sacred relics of Netaji have been safeguarded with continuous prayers and immense reverence since September 1945.",
+      "key_concepts": [
+        "Renkoji Temple Tokyo",
+        "Buddhist temple",
+        "cremated ashes and sacred relics",
+        "safeguarded with reverence",
+        "since September 1945"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 26,
+      "type": "descriptive",
+      "question": "Summarize the overarching historical legacy of Netaji Subhas Chandra Bose in India's independence movement.",
+      "reference_answer": "Netaji was the supreme revolutionary leader whose creation of the INA, secular unity, fearless diplomacy, and armed campaign shattered British imperial authority, directly delivering the final blow that won India's freedom in 1947.",
+      "key_concepts": [
+        "supreme revolutionary leader",
+        "creation of INA",
+        "secular unity",
+        "fearless diplomacy and armed campaign",
+        "final blow for 1947 freedom"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 27,
+      "type": "speech",
+      "question": "Pronounce the Tokyo temple housing the sacred relics:",
+      "target_phrase": "Renkoji Temple Tokyo",
+      "reference_answer": "Renkoji Temple Tokyo",
+      "key_concepts": [
+        "Renkoji",
+        "Temple",
+        "Tokyo"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 28,
+      "type": "speech",
+      "question": "Pronounce Netaji's trusted aide who survived the crash:",
+      "target_phrase": "Colonel Habibur Rahman",
+      "reference_answer": "Colonel Habibur Rahman",
+      "key_concepts": [
+        "Colonel",
+        "Habibur",
+        "Rahman"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 29,
+      "type": "speech",
+      "question": "Pronounce the national monument at India Gate:",
+      "target_phrase": "Grand Canopy At India Gate",
+      "reference_answer": "Grand Canopy At India Gate",
+      "key_concepts": [
+        "Grand",
+        "Canopy",
+        "India",
+        "Gate"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 30,
+      "type": "speech",
+      "question": "Pronounce the eternal character attribute of Netaji:",
+      "target_phrase": "Fearless Patriotism And Indomitable Will",
+      "reference_answer": "Fearless Patriotism And Indomitable Will",
+      "key_concepts": [
+        "Fearless",
+        "Patriotism",
+        "Indomitable",
+        "Will"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "question": "What technical mechanical failure caused the crash of the Mitsubishi Ki-21 bomber carrying Netaji immediately following takeoff from Taipei?",
+      "options": {
+        "A": "A catastrophic propeller blade separation and engine port malfunction caused severe asymmetric thrust, causing the bomber to stall and crash into the airfield periphery",
+        "B": "The pilot turned off the engine accidentally",
+        "C": "It collided with another airplane mid-air",
+        "D": "It ran out of fuel during high altitude cruise"
+      },
+      "answer": "A",
+      "answer_text": "Aviation reports cited port engine propeller failure causing catastrophic loss of climb velocity.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "question": "What was the official conclusion of the Justice Mukherjee Commission of Inquiry (1999-2005) regarding the Taipei crash?",
+      "options": {
+        "A": "It concluded that the air crash did not occur as alleged and that Netaji did not die in Taipei on August 18, 1945, though this finding was not accepted by the government",
+        "B": "It confirmed the crash with 100% photographic evidence",
+        "C": "It stated that Netaji lived in London after 1945",
+        "D": "It refused to submit any report"
+      },
+      "answer": "A",
+      "answer_text": "The Mukherjee Commission concluded the air crash was a staged diversion, though earlier commissions (Shah Nawaz and Khosla) affirmed the crash.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "question": "What notable Japanese military officer and pilot perished in the same Taipei aircraft crash alongside Netaji?",
+      "options": {
+        "A": "Lieutenant General Tsunamasa Shidei (Vice Chief of Staff of the Burma Area Army)",
+        "B": "General Hideki Tojo",
+        "C": "Admiral Isoroku Yamamoto",
+        "D": "General Tomoyuki Yamashita"
+      },
+      "answer": "A",
+      "answer_text": "Lt. Gen. Tsunamasa Shidei, a key liaison officer for Soviet negotiations, was killed instantly in the crash.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "question": "What was the final disposition of the gold and jewels carried in Netaji's baggage from Saigon?",
+      "options": {
+        "A": "Part of the melted treasure was recovered from the crash site and handed over by Col. Habibur Rahman to the Indian Mission in Tokyo in 1952 (now in the National Archives)",
+        "B": "It was stolen by British soldiers in Taipei",
+        "C": "It was lost at the bottom of the ocean",
+        "D": "It was donated to a European university"
+      },
+      "answer": "A",
+      "answer_text": "The recovered melted gold ornaments and charred relics were returned to the Government of India in 1952.",
+      "difficulty": "hard",
+      "difficulty_percentage": 82,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "question": "How did Netaji's philosophical synthesis of socialism, nationalism, and secularism shape modern Indian statecraft?",
+      "options": {
+        "A": "He championed state-led industrial planning (National Planning Committee 1938), complete gender equality, and fierce anti-communal secularism as the pillars of a progressive republic",
+        "B": "He advocated return to medieval feudal monarchies",
+        "C": "He supported unbridled colonial capitalism",
+        "D": "He opposed all scientific technology and modern industry"
+      },
+      "answer": "A",
+      "answer_text": "Netaji established the National Planning Committee with Nehru in 1938, pioneering modern economic planning for India.",
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "question": "Why is Netaji Subhas Chandra Bose revered by military historians as one of the greatest military strategists of the 20th century?",
+      "options": {
+        "A": "For raising, equipping, and deploying an army of 50,000 soldiers on foreign soil without sovereign territory, creating modern Asia's first female combat regiment, and forcing the collapse of the world's largest empire",
+        "B": "For writing military novels",
+        "C": "For inventing new artillery metals",
+        "D": "For organizing parade competitions only"
+      },
+      "answer": "A",
+      "answer_text": "His organizational genius in creating an army and state in exile with multi-faith harmony remains unmatched in military history.",
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "question": "What profound message does Netaji's life journey offer to future generations of citizens?",
+      "options": {
+        "A": "That unyielding moral courage, absolute selflessness, and fearless devotion to justice can overcome the most entrenched and powerful empires on earth",
+        "B": "That one should avoid taking any personal risks in life",
+        "C": "That material wealth is the only measure of success",
+        "D": "That compromises are always preferable to principles"
+      },
+      "answer": "A",
+      "answer_text": "Netaji's life remains the ultimate beacon of fearless patriotism, secular brotherhood, and uncompromising integrity.",
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 38,
+      "type": "descriptive",
+      "question": "Critically analyze the events of August 18, 1945, at Matsuyama Airport in Taipei and the ensuing medical emergency.",
+      "reference_answer": "Upon takeoff, the bomber's left engine failed catastrophically, plunging the plane into flames. Netaji's clothes caught fire as he escaped the fuselage. He was transported to Nanmon Hospital, where Dr. Tsuruta administered emergency resuscitation before Netaji succumbed to severe third-degree burns.",
+      "key_concepts": [
+        "Matsuyama Airport Taipei",
+        "left engine catastrophic failure",
+        "fuselage in flames",
+        "severe third-degree burns",
+        "Nanmon Hospital Dr. Tsuruta",
+        "succumbed late evening"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 39,
+      "type": "descriptive",
+      "question": "Examine the conflicting findings of the various Indian inquiry commissions regarding Netaji's disappearance.",
+      "reference_answer": "The Shah Nawaz Committee (1956) and Khosla Commission (1970) confirmed that Netaji died in the Taipei air crash. In contrast, the Justice Mukherjee Commission (2005) concluded that the air crash was a planned cover story to facilitate Netaji's escape to the USSR, though its findings were not accepted by the Government.",
+      "key_concepts": [
+        "Shah Nawaz Committee 1956",
+        "Khosla Commission 1970",
+        "confirmed Taipei crash death",
+        "Justice Mukherjee Commission 2005",
+        "concluded cover story for escape",
+        "unaccepted by Government"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 40,
+      "type": "descriptive",
+      "question": "Assess Netaji's pioneering contribution to modern socio-economic planning and gender equality in India.",
+      "reference_answer": "As Congress President in 1938, Netaji founded the National Planning Committee, creating the blueprint for India's post-independence industrial economy. In the INA, he instituted the Rani of Jhansi Regiment, proving that women could lead and fight as frontline equals, revolutionizing Indian social empowerment.",
+      "key_concepts": [
+        "National Planning Committee 1938",
+        "blueprint for industrial economy",
+        "Rani of Jhansi Regiment",
+        "frontline gender equality",
+        "revolutionary social empowerment"
+      ],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 41,
+      "type": "descriptive",
+      "question": "Synthesize the eternal legacy of Netaji Subhas Chandra Bose and his rightful place in world history.",
+      "reference_answer": "Netaji stands as a colossus of world history: a philosopher-warrior who dismantled British imperial hegemony through supreme courage, secular solidarity, and military genius. His sacrifice liberated 400 million people, and his motto 'Jai Hind' remains the beating heart of sovereign India.",
+      "key_concepts": [
+        "colossus of world history",
+        "philosopher-warrior",
+        "dismantled British imperial hegemony",
+        "secular solidarity and military genius",
+        "liberated 400 million people",
+        "Jai Hind beating heart of sovereign India"
+      ],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 42,
+      "type": "speech",
+      "question": "Pronounce the Japanese liaison general who perished in the crash:",
+      "target_phrase": "Lieutenant General Tsunamasa Shidei",
+      "reference_answer": "Lieutenant General Tsunamasa Shidei",
+      "key_concepts": [
+        "General",
+        "Tsunamasa",
+        "Shidei"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 43,
+      "type": "speech",
+      "question": "Pronounce the historic inquiry commission led by Justice Mukherjee:",
+      "target_phrase": "Justice Mukherjee Commission Of Inquiry",
+      "reference_answer": "Justice Mukherjee Commission Of Inquiry",
+      "key_concepts": [
+        "Justice",
+        "Mukherjee",
+        "Commission",
+        "Inquiry"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 44,
+      "type": "speech",
+      "question": "Pronounce the pioneering economic institution founded in 1938:",
+      "target_phrase": "National Planning Committee",
+      "reference_answer": "National Planning Committee",
+      "key_concepts": [
+        "National",
+        "Planning",
+        "Committee"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 45,
+      "type": "speech",
+      "question": "Pronounce the immortal tribute to Netaji's eternal spirit:",
+      "target_phrase": "Immortal Colossus Of Indian Freedom",
+      "reference_answer": "Immortal Colossus Of Indian Freedom",
+      "key_concepts": [
+        "Immortal",
+        "Colossus",
+        "Indian",
+        "Freedom"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    }
+  ],
+  "sequence_test": {
+    "title": "Chronological Sequence of the Taipei Accident, Relic Preservation, and Immortal Legacy",
+    "description": "Trace the timeline from Netaji's departure from Saigon to the air crash in Taipei, the preservation of relics at Renkoji, and his enduring national legacy.",
+    "questions": [
+      {
+        "id": 46,
+        "type": "sequence_mcq",
+        "question": "What is the chronological sequence of events surrounding Netaji's reported air crash in August 1945?",
+        "options": {
+          "A": "Departure from Tourane / Saigon -> Takeoff from Matsuyama Airport Taipei (Aug 18, 1945) -> Engine failure and crash -> Treatment at Nanmon Hospital -> Relics transferred to Renkoji Temple Tokyo",
+          "B": "Relics to Renkoji -> Engine failure -> Departure from Saigon -> Treatment at Nanmon Hospital",
+          "C": "Treatment at Nanmon Hospital -> Relics to Renkoji -> Engine failure -> Departure from Saigon",
+          "D": "Takeoff from Taipei -> Relics to Renkoji -> Departure from Saigon -> Treatment at Nanmon Hospital"
+        },
+        "answer": "A",
+        "answer_text": "Netaji boarded the plane in Saigon, took off in Taipei, crashed due to engine failure, received treatment at Nanmon, and relics were enshrined at Renkoji.",
+        "difficulty": "moderate",
+        "difficulty_percentage": 60,
+        "difficulty_level": "Curious Adventurer"
+      },
+      {
+        "id": 47,
+        "type": "sequence_mcq",
+        "question": "Arrange the national and historic commemorative milestones of Netaji's legacy in chronological order:",
+        "options": {
+          "A": "Preservation of sacred relics at Renkoji Temple (1945) -> Declassification of confidential files -> Declaration of January 23 as Parakram Diwas -> Installation of grand granite statue at India Gate Canopy",
+          "B": "Granite statue at India Gate -> Parakram Diwas -> Relics at Renkoji -> Declassification of files",
+          "C": "Parakram Diwas -> Granite statue -> Relics at Renkoji -> Declassification of files",
+          "D": "Declassification of files -> Granite statue -> Parakram Diwas -> Relics at Renkoji"
+        },
+        "answer": "A",
+        "answer_text": "Relics preserved at Renkoji, historical files declassified, January 23 declared Parakram Diwas, and the monumental statue unveiled at India Gate.",
+        "difficulty": "hard",
+        "difficulty_percentage": 75,
+        "difficulty_level": "Challenger"
+      }
+    ]
+  },
+  "image_matching": [
+    {
+      "id": 48,
+      "type": "image_matching",
+      "question": "Match each historic site and artifact with its description:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/taipei_crash_site.jpg",
+          "label": "Matsuyama Airport Taipei"
+        },
+        {
+          "id": "img_2",
+          "file": "images/renkoji_temple.jpg",
+          "label": "Renkoji Temple Tokyo"
+        },
+        {
+          "id": "img_3",
+          "file": "images/india_gate_statue.jpg",
+          "label": "India Gate Canopy Statue"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "The airfield in Taiwan where the tragic aircraft accident occurred on August 18, 1945."
+        },
+        {
+          "id": "desc_2",
+          "text": "Tokyo Buddhist temple where Netaji's sacred relics and memorial urn are preserved."
+        },
+        {
+          "id": "desc_3",
+          "text": "Grand 28-foot granite memorial in New Delhi honoring Netaji's supreme national leadership."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 49,
+      "type": "image_matching",
+      "question": "Match each commemorative institution with its significance:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/parakram_diwas.jpg",
+          "label": "Parakram Diwas"
+        },
+        {
+          "id": "img_2",
+          "file": "images/netaji_research_bureau.jpg",
+          "label": "Netaji Research Bureau"
+        },
+        {
+          "id": "img_3",
+          "file": "images/jai_hind_salutation.jpg",
+          "label": "Jai Hind Salutation"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "National Day of Valour celebrated annually on January 23 across India in Netaji's honor."
+        },
+        {
+          "id": "desc_2",
+          "text": "Historic ancestral institution at Elgin Road dedicated to preserving Netaji's archives and legacy."
+        },
+        {
+          "id": "desc_3",
+          "text": "The immortal national greeting of sovereign India created by Netaji's Azad Hind movement."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer"
+    }
+  ],
+  "scoring": {
+    "mcq": {
+      "points_per_correct_answer": 1
+    },
+    "descriptive": {
+      "method": "cosine_similarity",
+      "description": "Calculate embedding cosine similarity against reference concepts.",
+      "suggested_interpretation": {
+        "0.80-1.00": "Outstanding Mastery",
+        "0.65-0.79": "Good Conceptual Understanding",
+        "0.50-0.64": "Developing Understanding",
+        "0.00-0.49": "Needs Reinforcement"
+      }
+    },
+    "speech": {
+      "points_per_correct_answer": 1,
+      "min_pass_score": 60
+    },
+    "sequence_test": {
+      "points_per_correct_answer": 1
+    },
+    "image_matching": {
+      "points_per_correct_match": 1,
+      "total_points": 3
+    }
+  }
+}

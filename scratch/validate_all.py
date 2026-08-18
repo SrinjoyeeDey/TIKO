@@ -5,6 +5,14 @@ folders_to_check = [
     ("assets/Netaji/Netaji_0", True),
     ("assets/Netaji/Netaji_1", True),
     ("assets/Netaji/Netaji_2", True),
+    ("assets/Netaji/Netaji_3", True),
+    ("assets/Netaji/Netaji_4", True),
+    ("assets/Netaji/Netaji_5", True),
+    ("assets/Netaji/Netaji_6", True),
+    ("assets/Netaji/Netaji_7", True),
+    ("assets/Netaji/Netaji_8", True),
+    ("assets/Netaji/Netaji_9", True),
+    ("assets/Netaji/Netaji_10", True),
     ("assets/Bharatnatayam/bharatnatayam_0", True),
     ("assets/Bharatnatayam/bharatnatayam_1", True),
     ("assets/Bharatnatayam/bharatnatayam_2", True),
@@ -113,7 +121,7 @@ for folder, has_transcript in folders_to_check:
 
 if all_passed:
     print("\n==========================================")
-    print("ALL 8 MODULES FULLY VALIDATED AND PASSED!")
+    print(f"ALL {len(folders_to_check)} MODULES FULLY VALIDATED AND PASSED!")
     print("==========================================")
 else:
     print("\nVALIDATION FAILED WITH ERRORS!")

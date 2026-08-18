@@ -1,0 +1,949 @@
+{
+  "title": "The Indian Legion in Germany and the Historic Submarine Journey",
+  "section": {
+    "start": "02:30",
+    "end": "03:01",
+    "description": "Comprehensive 45-question pedagogical assessment for ages 3 to 15 spanning Easy, Moderate, and Hard difficulty levels."
+  },
+  "target_age": 12,
+  "age_range": "3-15 years",
+  "question_pattern": {
+    "main_questions": "45 progressive questions consisting of multi-tier MCQs, conceptual descriptive questions, and voice pronunciation speech questions.",
+    "difficulty_distribution": "15 Easy (Ages 3-7), 15 Moderate (Ages 8-11), 15 Hard (Ages 12-15)",
+    "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
+    "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
+    "sequence_test": "Chronological milestone ordering and timeline analysis.",
+    "image_matching": "Interactive visual matching connecting historical figures, artifacts, and descriptions."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "question": "What special group of soldiers did Netaji form in Germany to fight for India?",
+      "options": {
+        "A": "The Indian Legion (Free India Legion)",
+        "B": "The Royal Navy",
+        "C": "The Space Patrol",
+        "D": "The Forest Guards"
+      },
+      "answer": "A",
+      "answer_text": "Netaji formed the Indian Legion (Free India Legion) in Germany.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "question": "Who was the supreme leader of the Indian soldiers in the Indian Legion?",
+      "options": {
+        "A": "Subhas Chandra Bose (Netaji)",
+        "B": "A British general",
+        "C": "A French captain",
+        "D": "An American governor"
+      },
+      "answer": "A",
+      "answer_text": "Subhas Chandra Bose was the respected leader of the Indian Legion.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "question": "What special water vessel did Netaji board to travel secretly from Europe?",
+      "options": {
+        "A": "A submarine",
+        "B": "A rowboat",
+        "C": "A cruise ship",
+        "D": "A floating raft"
+      },
+      "answer": "A",
+      "answer_text": "Netaji slipped away secretly aboard an underwater submarine.",
+      "difficulty": "easy",
+      "difficulty_percentage": 20,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "question": "In what year did Netaji board the submarine to travel towards Asia?",
+      "options": {
+        "A": "1943",
+        "B": "1999",
+        "C": "1920",
+        "D": "2020"
+      },
+      "answer": "A",
+      "answer_text": "In early 1943, Netaji embarked on his historic submarine journey.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "question": "Why did Netaji travel by submarine under the sea?",
+      "options": {
+        "A": "To stay hidden from enemy British warships and airplanes",
+        "B": "To watch dolphins",
+        "C": "Because he liked scuba diving",
+        "D": "To look for treasure"
+      },
+      "answer": "A",
+      "answer_text": "Traveling underwater kept him safe and hidden from British naval patrols.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "question": "Were the soldiers of the Indian Legion proud to fight for their motherland India?",
+      "options": {
+        "A": "Yes, they were very proud and courageous",
+        "B": "No, they were sad",
+        "C": "They wanted to go home immediately",
+        "D": "They did not like Netaji"
+      },
+      "answer": "A",
+      "answer_text": "The Indian Legionaries were deeply proud and committed to freeing India.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "question": "Which big country was retreating during the war so it could not help Netaji in India?",
+      "options": {
+        "A": "Germany",
+        "B": "Canada",
+        "C": "Brazil",
+        "D": "Egypt"
+      },
+      "answer": "A",
+      "answer_text": "When the German army began retreating, it could no longer offer help to drive the British from India.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "question": "What greeting did the Indian soldiers in Germany use to salute each other?",
+      "options": {
+        "A": "Jai Hind",
+        "B": "Good afternoon",
+        "C": "Goodbye",
+        "D": "Cheerio"
+      },
+      "answer": "A",
+      "answer_text": "The soldiers proudly saluted each other with 'Jai Hind!'.",
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "question": "Where did Netaji decide to go after leaving Europe by submarine?",
+      "options": {
+        "A": "To Asia (Japan and Southeast Asia)",
+        "B": "To the North Pole",
+        "C": "To South America",
+        "D": "To New York"
+      },
+      "answer": "A",
+      "answer_text": "Netaji headed towards Southeast Asia and Japan to lead the army closer to India.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "question": "What is an army submarine?",
+      "options": {
+        "A": "A special vessel that can travel deep under water",
+        "B": "A flying kite",
+        "C": "A racing bicycle",
+        "D": "A hot air balloon"
+      },
+      "answer": "A",
+      "answer_text": "A submarine is a naval ship capable of operating submerged under the ocean.",
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 11,
+      "type": "descriptive",
+      "question": "What was the Indian Legion formed by Netaji in Germany?",
+      "reference_answer": "The Indian Legion was an armed military force of Indian soldiers raised by Subhas Chandra Bose in Germany, dedicated to fighting for India's freedom from British rule.",
+      "key_concepts": [
+        "Indian Legion",
+        "military force",
+        "Subhas Chandra Bose",
+        "Germany",
+        "freedom from British rule"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 12,
+      "type": "descriptive",
+      "question": "Why did Netaji decide to secretly leave Germany on a submarine in 1943?",
+      "reference_answer": "Netaji left Germany because the German army was retreating and could no longer help liberate India. He traveled to Asia by submarine to organize the struggle closer to India's borders.",
+      "key_concepts": [
+        "German army retreating",
+        "could not help",
+        "submarine",
+        "1943",
+        "Asia",
+        "closer to India"
+      ],
+      "cosine_similarity_threshold": 0.55,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 13,
+      "type": "speech",
+      "question": "Say the name of the military unit raised in Germany:",
+      "target_phrase": "Indian Legion",
+      "reference_answer": "Indian Legion",
+      "key_concepts": [
+        "Indian",
+        "Legion"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 14,
+      "type": "speech",
+      "question": "Say the secret vessel Netaji boarded in 1943:",
+      "target_phrase": "Military Submarine",
+      "reference_answer": "Military Submarine",
+      "key_concepts": [
+        "Military",
+        "Submarine"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 25,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 15,
+      "type": "speech",
+      "question": "Say the year Netaji departed Europe by submarine:",
+      "target_phrase": "Nineteen Forty Three",
+      "reference_answer": "Nineteen Forty Three",
+      "key_concepts": [
+        "Nineteen",
+        "Forty",
+        "Three"
+      ],
+      "min_score_threshold": 65,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter",
+      "target_age_group": "3-7 years"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "question": "Where were the soldiers of the Indian Legion recruited from in Europe?",
+      "options": {
+        "A": "Indian soldiers captured as Prisoners of War in North Africa and Europe",
+        "B": "Students attending German medical colleges only",
+        "C": "Sailors from commercial merchant ships in Hamburg",
+        "D": "Volunteers recruited through newspaper advertisements in London"
+      },
+      "answer": "A",
+      "answer_text": "They were recruited from Indian PoWs captured during the North African campaign.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "question": "What was the official German military designation of the Free India Legion?",
+      "options": {
+        "A": "Infantry Regiment 950 (Indische Legion)",
+        "B": "Royal Indian Artillery",
+        "C": "Bengal Hussars",
+        "D": "First Alpine Corps"
+      },
+      "answer": "A",
+      "answer_text": "The unit was formally designated as Infanterie-Regiment 950 (Indische Legion).",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "question": "What major military turning point in Europe convinced Netaji that Germany could not open a front towards India?",
+      "options": {
+        "A": "The German defeat at the Battle of Stalingrad in early 1943",
+        "B": "The landing at Normandy in 1944",
+        "C": "The Battle of Britain in 1940",
+        "D": "The invasion of Poland in 1939"
+      },
+      "answer": "A",
+      "answer_text": "The catastrophe at Stalingrad halted Axis eastward expansion, making European support for India impossible.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "question": "Who was the trusted Indian companion who accompanied Netaji on his secret submarine voyage?",
+      "options": {
+        "A": "Abid Hasan Safrani",
+        "B": "Captain Mohan Singh",
+        "C": "Rash Behari Bose",
+        "D": "Shah Nawaz Khan"
+      },
+      "answer": "A",
+      "answer_text": "Abid Hasan Safrani was Netaji's sole Indian companion throughout the 90-day perilous voyage.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "question": "From which German port did Netaji board the German submarine in February 1943?",
+      "options": {
+        "A": "Kiel port on the Baltic Sea",
+        "B": "Marseille in France",
+        "C": "Venice in Italy",
+        "D": "Rotterdam in Holland"
+      },
+      "answer": "A",
+      "answer_text": "Netaji and Abid Hasan departed from Kiel on February 8, 1943.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "question": "What was the German submarine model that carried Netaji across the Atlantic?",
+      "options": {
+        "A": "U-180 (Type IXD2 U-boat)",
+        "B": "HMS Titanic",
+        "C": "USS Nautilus",
+        "D": "Bismarck Battleship"
+      },
+      "answer": "A",
+      "answer_text": "The specialized long-range German U-boat U-180 was commanded by Werner Musenberg.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "question": "Why was Southeast Asia a far more advantageous theater for Netaji's liberation campaign?",
+      "options": {
+        "A": "Over 2 million patriotic Indians lived in Southeast Asia right next to India's eastern borders",
+        "B": "It was warmer and sunnier",
+        "C": "The British had no soldiers in Asia",
+        "D": "He wanted to learn Japanese calligraphy"
+      },
+      "answer": "A",
+      "answer_text": "Southeast Asia had a massive Indian diaspora and shared land borders with British-occupied India via Burma.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "question": "What did Netaji's decisive pivot from Germany to Asia reveal about his leadership?",
+      "options": {
+        "A": "Supreme pragmatism, strategic independence, and refusal to be bound to any foreign power's failing fortunes",
+        "B": "Indecisiveness and confusion",
+        "C": "Disinterest in the war outcome",
+        "D": "Desire for quick personal safety"
+      },
+      "answer": "A",
+      "answer_text": "Netaji prioritized India's freedom alone and adapted his geopolitical strategy fearlessly.",
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 24,
+      "type": "descriptive",
+      "question": "Explain the significance and composition of the Free India Legion in Germany.",
+      "reference_answer": "The Free India Legion was formed in Germany by Netaji from Indian prisoners of war captured in North Africa. It was a disciplined, multi-faith military unit united under the motto 'Ittehad, Itmad, Qurbani' and 'Jai Hind'.",
+      "key_concepts": [
+        "Indian prisoners of war",
+        "North Africa",
+        "multi-faith military unit",
+        "Ittehad Itmad Qurbani",
+        "Jai Hind"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 25,
+      "type": "descriptive",
+      "question": "Why did Netaji realize in early 1943 that remaining in Europe would not achieve India's liberation?",
+      "reference_answer": "Following the German defeat at Stalingrad, the Axis front in Europe collapsed into retreat. Netaji recognized that Germany could not launch an offensive toward India, whereas Southeast Asia offered millions of Indian expatriates and direct proximity to India.",
+      "key_concepts": [
+        "defeat at Stalingrad",
+        "Axis retreat",
+        "could not launch offensive",
+        "Southeast Asia",
+        "proximity to India"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 26,
+      "type": "descriptive",
+      "question": "Describe the dangers involved in Netaji's submarine departure from Europe in 1943.",
+      "reference_answer": "Departing on submarine U-180 meant navigating minefields, avoiding Allied anti-submarine aircraft, and sailing through hostile oceans around the Cape of Good Hope during the height of World War II.",
+      "key_concepts": [
+        "submarine U-180",
+        "Allied anti-submarine patrols",
+        "minefields",
+        "Cape of Good Hope",
+        "World War II oceans"
+      ],
+      "cosine_similarity_threshold": 0.6,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 27,
+      "type": "speech",
+      "question": "Pronounce the historic German port of departure:",
+      "target_phrase": "Port of Kiel Germany",
+      "reference_answer": "Port of Kiel Germany",
+      "key_concepts": [
+        "Port",
+        "Kiel",
+        "Germany"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 50,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 28,
+      "type": "speech",
+      "question": "Pronounce the name of Netaji's loyal companion on the submarine:",
+      "target_phrase": "Abid Hasan Safrani",
+      "reference_answer": "Abid Hasan Safrani",
+      "key_concepts": [
+        "Abid",
+        "Hasan",
+        "Safrani"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 29,
+      "type": "speech",
+      "question": "Pronounce the German U-boat designation:",
+      "target_phrase": "Submarine U One Eighty",
+      "reference_answer": "Submarine U One Eighty",
+      "key_concepts": [
+        "Submarine",
+        "U",
+        "Eighty"
+      ],
+      "min_score_threshold": 70,
+      "difficulty": "moderate",
+      "difficulty_percentage": 55,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 30,
+      "type": "speech",
+      "question": "Pronounce the decisive eastern battle that altered WWII strategy:",
+      "target_phrase": "Battle of Stalingrad",
+      "reference_answer": "Battle of Stalingrad",
+      "key_concepts": [
+        "Battle",
+        "Stalingrad"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer",
+      "target_age_group": "8-11 years"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "question": "How did Netaji navigate the delicate geopolitical relationship with the Nazi leadership while preserving total ideological autonomy for India?",
+      "options": {
+        "A": "He steadfastly refused to align India with Nazi racial doctrines, secured non-interference clauses for the Indian Legion, and demanded financial advances as formal loans to be repaid by free India",
+        "B": "He joined the German cabinet as an honorary minister",
+        "C": "He agreed to deploy Indian troops exclusively on the European Eastern Front",
+        "D": "He accepted German citizenship and gave up Indian nationality"
+      },
+      "answer": "A",
+      "answer_text": "Netaji maintained strict diplomatic sovereignty, insisting every pfennig received was an official loan from free India to be repaid in full.",
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "question": "What confrontational stand did Netaji take during his sole official meeting with Adolf Hitler on May 29, 1942?",
+      "options": {
+        "A": "He explicitly criticized Hitler's derogatory remarks about Indians in 'Mein Kampf' and challenged his lack of a clear public declaration for Indian independence",
+        "B": "He praised Hitler's racial theories",
+        "C": "He requested permission to permanently reside in Bavaria",
+        "D": "He agreed with British rule in South Asia"
+      },
+      "answer": "A",
+      "answer_text": "Netaji courageously challenged Hitler directly to his face regarding anti-Indian passages and demanded a declaration on Indian freedom.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "question": "Why was the oath taken by the Indian Legion unique compared to standard Wehrmacht oaths?",
+      "options": {
+        "A": "It stipulated that the soldiers were fighting under the leadership of Subhas Chandra Bose exclusively for the liberation of their motherland India",
+        "B": "It pledged eternal loyalty to the British Crown",
+        "C": "It was sworn in Latin to the Pope",
+        "D": "It forbade soldiers from ever returning to Asia"
+      },
+      "answer": "A",
+      "answer_text": "The oath affirmed Subhas Chandra Bose as their paramount leader in the fight for India's independence.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "question": "What secret diplomatic agreement paved the way for Netaji's submarine transfer to the Japanese sphere of influence?",
+      "options": {
+        "A": "High-level Axis naval coordination arranged through Japanese Ambassador Hiroshi Oshima and German Foreign Minister von Ribbentrop",
+        "B": "A public treaty signed in Geneva",
+        "C": "A radio negotiation broadcast over the BBC",
+        "D": "A resolution passed by the League of Nations"
+      },
+      "answer": "A",
+      "answer_text": "Japanese Ambassador Oshima coordinated the clandestine Axis tripartite naval transfer in the Indian Ocean.",
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "question": "What was the operational protocol code name under which Netaji was transferred onto U-180?",
+      "options": {
+        "A": "Operation Sabotage (Operation 'Sperrbrecher')",
+        "B": "Operation Barbarossa",
+        "C": "Operation Overlord",
+        "D": "Operation Market Garden"
+      },
+      "answer": "A",
+      "answer_text": "Netaji's clandestine transit and submarine deployment was treated as top secret Axis naval intelligence.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "question": "How did Netaji maintain troop morale and revolutionary spirit during his departure from the Legion in Germany?",
+      "options": {
+        "A": "He assured them that while he was departing for the Asian theater to open the main front, the Legion remained the vanguard of the European struggle",
+        "B": "He dissolved the unit immediately",
+        "C": "He ordered them to surrender to Allied forces",
+        "D": "He transferred all funds to personal bank accounts"
+      },
+      "answer": "A",
+      "answer_text": "Netaji addressed his officers and men, inspiring them to hold fast until the final synchronized assault on British power.",
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "question": "What profound insight into revolutionary warfare is reflected in Netaji's willingness to undertake a 90-day perilous underwater odyssey?",
+      "options": {
+        "A": "Unflinching audacity and the readiness to risk physical annihilation in order to reach the decisive battleground for India's freedom",
+        "B": "A desire to break international endurance records",
+        "C": "Avoidance of air travel due to weather",
+        "D": "Seeking scientific samples of marine life"
+      },
+      "answer": "A",
+      "answer_text": "Netaji's submarine voyage remains an unparalleled feat of revolutionary courage and dedication in world history.",
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 38,
+      "type": "descriptive",
+      "question": "Critically analyze Netaji's meeting with Adolf Hitler on May 29, 1942, and what it demonstrated about his diplomatic integrity.",
+      "reference_answer": "In his meeting with Hitler, Netaji maintained fearless diplomatic sovereignty. He challenged Hitler's racist remarks in 'Mein Kampf', rejected Nazi ideology, and demanded a formal pledge for Indian independence, proving he was an uncompromising patriot, not a proxy.",
+      "key_concepts": [
+        "fearless diplomatic sovereignty",
+        "challenged racist remarks in Mein Kampf",
+        "rejected Nazi ideology",
+        "formal pledge for Indian independence",
+        "uncompromising patriot not a proxy"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 75,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 39,
+      "type": "descriptive",
+      "question": "Examine how the Free India Legion established a groundbreaking model of secular and communal integration among Indian soldiers.",
+      "reference_answer": "The Free India Legion abolished British communal regiments (such as separate Sikh, Muslim, and Hindu units). Soldiers ate together, lived in shared barracks, trained together, and saluted with 'Jai Hind', creating a unified national identity.",
+      "key_concepts": [
+        "abolished communal regiments",
+        "ate together in shared barracks",
+        "multi-faith unity",
+        "Jai Hind salutation",
+        "unified national identity"
+      ],
+      "cosine_similarity_threshold": 0.7,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 40,
+      "type": "descriptive",
+      "question": "Analyze the strategic imperatives that compelled Netaji to transfer his operational base from Europe to Southeast Asia.",
+      "reference_answer": "Europe became a closed tactical cul-de-sac after the Battle of Stalingrad. In contrast, Southeast Asia offered over 2 million enthusiastic Indian expatriates, 40,000 captured Indian PoWs in Singapore, and a contiguous land border with India through Burma.",
+      "key_concepts": [
+        "Europe closed tactical cul-de-sac",
+        "Stalingrad turning point",
+        "2 million Indian expatriates",
+        "40000 PoWs in Singapore",
+        "contiguous land border through Burma"
+      ],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 41,
+      "type": "descriptive",
+      "question": "Synthesize the historical significance of the 90-day submarine voyage undertaken by Netaji aboard U-180 in 1943.",
+      "reference_answer": "Netaji's 90-day submarine journey across mine-infested Allied waters around Africa was a legendary feat of physical and moral courage. It successfully bridged European diplomacy with Asian military action, setting the stage for the INA's historic march on Delhi.",
+      "key_concepts": [
+        "90-day submarine journey",
+        "Allied minefields and patrols",
+        "legendary feat of courage",
+        "bridged European diplomacy with Asian action",
+        "march on Delhi"
+      ],
+      "cosine_similarity_threshold": 0.75,
+      "difficulty": "hard",
+      "difficulty_percentage": 90,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 42,
+      "type": "speech",
+      "question": "Pronounce the official German designation of the Legion:",
+      "target_phrase": "Infanterie Regiment Nine Fifty",
+      "reference_answer": "Infanterie Regiment Nine Fifty",
+      "key_concepts": [
+        "Infanterie",
+        "Regiment",
+        "Nine",
+        "Fifty"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 80,
+      "difficulty_level": "Challenger",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 43,
+      "type": "speech",
+      "question": "Pronounce the Japanese Ambassador who facilitated the submarine transfer:",
+      "target_phrase": "Ambassador Hiroshi Oshima",
+      "reference_answer": "Ambassador Hiroshi Oshima",
+      "key_concepts": [
+        "Ambassador",
+        "Hiroshi",
+        "Oshima"
+      ],
+      "min_score_threshold": 75,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 44,
+      "type": "speech",
+      "question": "Pronounce the historic naval rendezvous concept:",
+      "target_phrase": "Clandestine Submarine Rendezvous",
+      "reference_answer": "Clandestine Submarine Rendezvous",
+      "key_concepts": [
+        "Clandestine",
+        "Submarine",
+        "Rendezvous"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 85,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    },
+    {
+      "id": 45,
+      "type": "speech",
+      "question": "Pronounce the unyielding revolutionary maxim:",
+      "target_phrase": "Uncompromising Freedom For Motherland",
+      "reference_answer": "Uncompromising Freedom For Motherland",
+      "key_concepts": [
+        "Uncompromising",
+        "Freedom",
+        "Motherland"
+      ],
+      "min_score_threshold": 80,
+      "difficulty": "hard",
+      "difficulty_percentage": 88,
+      "difficulty_level": "Champion",
+      "target_age_group": "12-15 years"
+    }
+  ],
+  "sequence_test": {
+    "title": "Chronological Sequence of the Indian Legion and the Submarine Departure",
+    "description": "Trace Netaji's European military command and his historic submarine departure from Kiel in 1943.",
+    "questions": [
+      {
+        "id": 46,
+        "type": "sequence_mcq",
+        "question": "What is the correct sequence of events leading up to Netaji's departure from Europe?",
+        "options": {
+          "A": "Formation of the Indian Legion in Germany -> Meeting with Hitler in May 1942 -> Stalingrad retreat halting Axis eastward advance -> Boarding submarine U-180 at Kiel in Feb 1943",
+          "B": "Boarding U-180 -> Stalingrad retreat -> Formation of Legion -> Meeting with Hitler",
+          "C": "Meeting with Hitler -> Boarding U-180 -> Formation of Legion -> Stalingrad retreat",
+          "D": "Stalingrad retreat -> Boarding U-180 -> Meeting with Hitler -> Formation of Legion"
+        },
+        "answer": "A",
+        "answer_text": "Netaji raised the Legion, met Hitler, assessed the geopolitical turning point at Stalingrad, and embarked on U-180 at Kiel.",
+        "difficulty": "moderate",
+        "difficulty_percentage": 60,
+        "difficulty_level": "Curious Adventurer"
+      },
+      {
+        "id": 47,
+        "type": "sequence_mcq",
+        "question": "Arrange the strategic steps in Netaji's pivot to Southeast Asia in chronological order:",
+        "options": {
+          "A": "Recruiting Indian PoWs into Free India Legion -> Realizing European front limitations -> Axis diplomatic arrangements for transfer -> Clandestine departure from Kiel port",
+          "B": "Clandestine departure -> Recruiting PoWs -> Realizing limitations -> Axis arrangements",
+          "C": "Realizing limitations -> Clandestine departure -> Recruiting PoWs -> Axis arrangements",
+          "D": "Axis arrangements -> Recruiting PoWs -> Clandestine departure -> Realizing limitations"
+        },
+        "answer": "A",
+        "answer_text": "Netaji built the Legion, recognized tactical limits in Europe, secured Axis naval coordination, and departed Kiel.",
+        "difficulty": "hard",
+        "difficulty_percentage": 75,
+        "difficulty_level": "Challenger"
+      }
+    ]
+  },
+  "image_matching": [
+    {
+      "id": 48,
+      "type": "image_matching",
+      "question": "Match each European military element with its correct role:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/free_india_legion.jpg",
+          "label": "Free India Legion"
+        },
+        {
+          "id": "img_2",
+          "file": "images/u180_submarine.jpg",
+          "label": "U-180 Submarine"
+        },
+        {
+          "id": "img_3",
+          "file": "images/abid_hasan.jpg",
+          "label": "Abid Hasan Safrani"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "The armed military unit formed in Germany from Indian PoWs dedicated to India's freedom."
+        },
+        {
+          "id": "desc_2",
+          "text": "Long-range German naval submarine that carried Netaji through wartime oceans from Kiel."
+        },
+        {
+          "id": "desc_3",
+          "text": "Netaji's trusted lieutenant and sole Indian companion on the epic submarine voyage."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "easy",
+      "difficulty_percentage": 30,
+      "difficulty_level": "Gentle Starter"
+    },
+    {
+      "id": 49,
+      "type": "image_matching",
+      "question": "Match each strategic factor with its historical impact:",
+      "images": [
+        {
+          "id": "img_1",
+          "file": "images/stalingrad_impact.jpg",
+          "label": "Stalingrad Turning Point"
+        },
+        {
+          "id": "img_2",
+          "file": "images/axis_diplomacy.jpg",
+          "label": "Axis Naval Coordination"
+        },
+        {
+          "id": "img_3",
+          "file": "images/southeast_asia_pivot.jpg",
+          "label": "Southeast Asia Strategy"
+        }
+      ],
+      "descriptions": [
+        {
+          "id": "desc_1",
+          "text": "The military reversal that ended Axis eastward advance, compelling Netaji to seek victory in Asia."
+        },
+        {
+          "id": "desc_2",
+          "text": "Secret tripartite naval arrangements facilitating Netaji's trans-oceanic passage."
+        },
+        {
+          "id": "desc_3",
+          "text": "The master plan to raise a mass liberation army among millions of Indian expatriates near India's borders."
+        }
+      ],
+      "correct_matches": {
+        "img_1": "desc_1",
+        "img_2": "desc_2",
+        "img_3": "desc_3"
+      },
+      "points": 3,
+      "difficulty": "moderate",
+      "difficulty_percentage": 60,
+      "difficulty_level": "Curious Adventurer"
+    }
+  ],
+  "scoring": {
+    "mcq": {
+      "points_per_correct_answer": 1
+    },
+    "descriptive": {
+      "method": "cosine_similarity",
+      "description": "Calculate embedding cosine similarity against reference concepts.",
+      "suggested_interpretation": {
+        "0.80-1.00": "Outstanding Mastery",
+        "0.65-0.79": "Good Conceptual Understanding",
+        "0.50-0.64": "Developing Understanding",
+        "0.00-0.49": "Needs Reinforcement"
+      }
+    },
+    "speech": {
+      "points_per_correct_answer": 1,
+      "min_pass_score": 60
+    },
+    "sequence_test": {
+      "points_per_correct_answer": 1
+    },
+    "image_matching": {
+      "points_per_correct_match": 1,
+      "total_points": 3
+    }
+  }
+}
