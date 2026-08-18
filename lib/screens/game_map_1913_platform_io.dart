@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:webview_windows/webview_windows.dart';
@@ -42,13 +43,21 @@ class _WindowsGameMapViewState extends State<WindowsGameMapView> {
       // Resolve local asset path for Windows
       String executablePath = Platform.resolvedExecutable;
       String executableDir = p.dirname(executablePath);
-      String assetPath = p.join(executableDir, 'data', 'flutter_assets', 'assets', '1913-game-map', 'index.html');
+      String assetPath = p.join(executableDir, 'data', 'flutter_assets', 'assets', '1913-game-map', 'assets', 'index.html');
       
       if (!File(assetPath).existsSync()) {
         final currentDir = Directory.current.path;
-        final altPath = p.join(currentDir, 'assets', '1913-game-map', 'index.html');
-        if (File(altPath).existsSync()) {
-          assetPath = altPath;
+        final candidates = [
+          p.join(currentDir, 'assets', '1913-game-map', 'assets', 'index.html'),
+          p.join(currentDir, 'web', '1913-game-map', 'index.html'),
+          p.join(currentDir, 'assets', '1913-game-map', 'index.html'),
+          p.join(executableDir, 'data', 'flutter_assets', 'assets', '1913-game-map', 'index.html'),
+        ];
+        for (final cand in candidates) {
+          if (File(cand).existsSync()) {
+            assetPath = cand;
+            break;
+          }
         }
       }
       
@@ -59,9 +68,29 @@ class _WindowsGameMapViewState extends State<WindowsGameMapView> {
       _controller.webMessage.listen((message) {
         debugPrint("WEBVIEW MESSAGE RECEIVED: $message");
         final msgStr = message.toString();
-        if (msgStr == 'open_calcutta' || msgStr == '"open_calcutta"' || msgStr.contains('open_calcutta')) {
+        
+        String targetStateId = 'west_bengal';
+        bool shouldOpen = false;
+
+        try {
+          final decoded = jsonDecode(msgStr);
+          if (decoded is Map && (decoded['action'] == 'open_state' || decoded.containsKey('stateId'))) {
+            targetStateId = decoded['stateId']?.toString() ?? 'west_bengal';
+            shouldOpen = true;
+          }
+        } catch (_) {
+          if (msgStr.startsWith('open_state_')) {
+            targetStateId = msgStr.replaceFirst('open_state_', '');
+            shouldOpen = true;
+          } else if (msgStr == 'open_calcutta' || msgStr == '"open_calcutta"') {
+            targetStateId = 'west_bengal';
+            shouldOpen = true;
+          }
+        }
+
+        if (shouldOpen) {
           if (!mounted) return;
-          debugPrint("Navigating to West Bengal story collection...");
+          debugPrint("Navigating to state story collection for $targetStateId...");
           
           // Completely dispose and unmount webview to prevent Impeller from crashing 
           // when media_kit tries to composite a new DirectX texture!
@@ -77,7 +106,7 @@ class _WindowsGameMapViewState extends State<WindowsGameMapView> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => StateStoryCollectionScreen(
-                    stateId: 'west_bengal',
+                    stateId: targetStateId,
                     chapterId: widget.chapterId,
                   ),
                 ),

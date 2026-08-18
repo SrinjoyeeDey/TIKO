@@ -1,0 +1,867 @@
+import json
+import os
+
+def create_netaji_1():
+    data = {
+      "title": "Netaji's European Travels, Political Ideologies, and Rise to Congress Presidency",
+      "section": {
+        "start": "00:30",
+        "end": "01:05",
+        "description": "Comprehensive 45-question pedagogical assessment for ages 3 to 15 spanning Easy, Moderate, and Hard difficulty levels."
+      },
+      "target_age": 12,
+      "age_range": "3-15 years",
+      "question_pattern": {
+        "main_questions": "45 progressive questions consisting of multi-tier MCQs, conceptual descriptive questions, and voice pronunciation speech questions.",
+        "difficulty_distribution": "15 Easy (Ages 3-7), 15 Moderate (Ages 8-11), 15 Hard (Ages 12-15)",
+        "descriptive_evaluation": "Cosine similarity comparison against core semantic key concepts.",
+        "speech_evaluation": "Voice audio recognition calculating pronunciation accuracy and token alignment.",
+        "sequence_test": "Chronological milestone ordering and timeline analysis.",
+        "image_matching": "Interactive visual matching connecting historical figures, artifacts, and descriptions."
+      },
+      "questions": [
+        # EASY (1-15)
+        {
+          "id": 1,
+          "type": "mcq",
+          "question": "Where did Subhas Chandra Bose travel during the mid-1930s?",
+          "options": {
+            "A": "Europe",
+            "B": "Australia",
+            "C": "South America",
+            "D": "Antarctica"
+          },
+          "answer": "A",
+          "answer_text": "During the mid-1930s, Subhas Chandra Bose traveled across Europe.",
+          "difficulty": "easy",
+          "difficulty_percentage": 20,
+          "difficulty_level": "Gentle Starter",
+          "target_age_group": "3-7 years"
+        },
+        {
+          "id": 2,
+          "type": "mcq",
+          "question": "Who did Subhas Chandra Bose visit while traveling across Europe?",
+          "options": {
+            "A": "Indian students and European politicians",
+            "B": "Movie stars and athletes",
+            "C": "Circus performers",
+            "D": "Toy makers"
+          },
+          "answer": "A",
+          "answer_text": "In Europe, Bose visited Indian students and met European politicians.",
+          "difficulty": "easy",
+          "difficulty_percentage": 25,
+          "difficulty_level": "Gentle Starter",
+          "target_age_group": "3-7 years"
+        },
+        {
+          "id": 3,
+          "type": "mcq",
+          "question": "In which year did Subhas Chandra Bose become a leader of national stature and accept the Congress presidency?",
+          "options": {
+            "A": "1938",
+            "B": "1910",
+            "C": "1990",
+            "D": "2005"
+          },
+          "answer": "A",
+          "answer_text": "In 1938, Bose had become a leader of national stature and agreed to accept the nomination as Congress president.",
+          "difficulty": "easy",
+          "difficulty_percentage": 25,
+          "difficulty_level": "Gentle Starter",
+          "target_age_group": "3-7 years"
+        },
+        {
+          "id": 4,
+          "type": "mcq",
+          "question": "What major leadership position did Netaji agree to accept in 1938?",
+          "options": {
+            "A": "Congress President",
+            "B": "College Principal",
+            "C": "British Governor",
+            "D": "Mayor of London"
+          },
+          "answer": "A",
+          "answer_text": "Netaji agreed to accept the nomination as Congress president in 1938.",
+          "difficulty": "easy",
+          "difficulty_percentage": 25,
+          "difficulty_level": "Gentle Starter",
+          "target_age_group": "3-7 years"
+        },
+        {
+          "id": 5,
+          "type": "mcq",
+          "question": "Which European political leader is mentioned in the story that Bose met?",
+          "options": {
+            "A": "Mussolini",
+            "B": "George Washington",
+            "C": "Napoleon Bonaparte",
+            "D": "Julius Caesar"
+          },
+          "answer": "A",
+          "answer_text": "Bose visited European politicians including Mussolini.",
+          "difficulty": "easy",
+          "difficulty_percentage": 30,
+          "difficulty_level": "Gentle Starter",
+          "target_age_group": "3-7 years"
+        },
+        {
+          "id": 6,
+          "type": "mcq",
+          "question": "What did Netaji observe and study about political parties while in Europe?",
+          "options": {
+            "A": "Party organization",
+            "B": "Cooking recipes",
+            "C": "Musical instruments",
+            "D": "Sports games"
+          },
+          "answer": "A",
+          "answer_text": "Netaji observed party organization during his journey in Europe.",
+          "difficulty": "easy",
+          "difficulty_percentage": 30,
+          "difficulty_level": "Gentle Starter",
+          "target_age_group": "3-7 years"
+        },
+        {
+          "id": 7,
+          "type": "mcq",
+          "question": "From which famous Kolkata college had Subhas previously been rusticated for opposing anti-India comments?",
+          "options": {
+            "A": "Presidency College Kolkata",
+            "B": "Delhi University",
+            "C": "Oxford College",
+            "D": "Madras Christian College"
+          },
+          "answer": "A",
+          "answer_text": "He had previously been rusticated from Presidency College Kolkata for standing up against Professor Oaten.",
+          "difficulty": "easy",
+          "difficulty_percentage": 30,
+          "difficulty_level": "Gentle Starter",
+          "target_age_group": "3-7 years"
+        },
+        {
+          "id": 8,
+          "type": "mcq",
+          "question": "Did Subhas Chandra Bose travel to Europe to learn and help India's freedom movement?",
+          "options": {
+            "A": "Yes, he connected with students and studied political systems for India",
+            "B": "No, he went only to watch football",
+            "C": "He never left his hometown",
+            "D": "He went to buy toys"
+          },
+          "answer": "A",
+          "answer_text": "Yes, Bose traveled to Europe to meet Indian students, connect with politicians, and study organizational methods.",
+          "difficulty": "easy",
+          "difficulty_percentage": 25,
+          "difficulty_level": "Gentle Starter",
+          "target_age_group": "3-7 years"
+        },
+        {
+          "id": 9,
+          "type": "mcq",
+          "question": "Which political systems in action did Bose observe while visiting European nations?",
+          "options": {
+            "A": "Communism and fascism",
+            "B": "Ancient feudal kingdoms",
+            "C": "Space federations",
+            "D": "Pirate codes"
+          },
+          "answer": "A",
+          "answer_text": "Bose observed communism and fascism in action across Europe.",
+          "difficulty": "easy",
+          "difficulty_percentage": 30,
+          "difficulty_level": "Gentle Starter",
+          "target_age_group": "3-7 years"
+        },
+        {
+          "id": 10,
+          "type": "mcq",
+          "question": "How was Subhas Chandra Bose regarded across India by the year 1938?",
+          "options": {
+            "A": "As a leader of national stature",
+            "B": "As an unknown student",
+            "C": "As a British colonial officer",
+            "D": "As a quiet farmer"
+          },
+          "answer": "A",
+          "answer_text": "By 1938, Subhas Chandra Bose had become a leader of national stature across India.",
+          "difficulty": "easy",
+          "difficulty_percentage": 30,
+          "difficulty_level": "Gentle Starter",
+          "target_age_group": "3-7 years"
+        },
+        {
+          "id": 11,
+          "type": "descriptive",
+          "question": "Where did Subhas Chandra Bose travel in the mid-1930s and who did he visit?",
+          "reference_answer": "During the mid-1930s, Subhas Chandra Bose traveled to Europe, where he visited Indian students and European politicians including Mussolini.",
+          "key_concepts": ["Europe", "mid-1930s", "Indian students", "European politicians", "Mussolini"],
+          "cosine_similarity_threshold": 0.55,
+          "difficulty": "easy",
+          "difficulty_percentage": 30,
+          "difficulty_level": "Gentle Starter",
+          "target_age_group": "3-7 years"
+        },
+        {
+          "id": 12,
+          "type": "descriptive",
+          "question": "What important political position did Subhas Chandra Bose accept in 1938?",
+          "reference_answer": "In 1938, Subhas Chandra Bose had become a leader of national stature and agreed to accept the nomination as Congress president.",
+          "key_concepts": ["1938", "leader of national stature", "Congress president", "nomination"],
+          "cosine_similarity_threshold": 0.55,
+          "difficulty": "easy",
+          "difficulty_percentage": 30,
+          "difficulty_level": "Gentle Starter",
+          "target_age_group": "3-7 years"
+        },
+        {
+          "id": 13,
+          "type": "speech",
+          "question": "Say the high leadership title accepted by Netaji in 1938:",
+          "target_phrase": "Congress President",
+          "reference_answer": "Congress President",
+          "key_concepts": ["Congress", "President"],
+          "min_score_threshold": 65,
+          "difficulty": "easy",
+          "difficulty_percentage": 25,
+          "difficulty_level": "Gentle Starter",
+          "target_age_group": "3-7 years"
+        },
+        {
+          "id": 14,
+          "type": "speech",
+          "question": "Say the phrase describing Netaji's national importance by 1938:",
+          "target_phrase": "Leader of National Stature",
+          "reference_answer": "Leader of National Stature",
+          "key_concepts": ["Leader", "National", "Stature"],
+          "min_score_threshold": 65,
+          "difficulty": "easy",
+          "difficulty_percentage": 30,
+          "difficulty_level": "Gentle Starter",
+          "target_age_group": "3-7 years"
+        },
+        {
+          "id": 15,
+          "type": "speech",
+          "question": "Say where Netaji traveled during the mid-1930s:",
+          "target_phrase": "Traveled in Europe",
+          "reference_answer": "Traveled in Europe",
+          "key_concepts": ["Traveled", "Europe"],
+          "min_score_threshold": 65,
+          "difficulty": "easy",
+          "difficulty_percentage": 25,
+          "difficulty_level": "Gentle Starter",
+          "target_age_group": "3-7 years"
+        },
+
+        # MODERATE (16-30)
+        {
+          "id": 16,
+          "type": "mcq",
+          "question": "What was the significance of Bose visiting Indian students in Europe during the mid-1930s?",
+          "options": {
+            "A": "He mobilized the Indian student diaspora and raised international awareness for Indian independence",
+            "B": "He was helping them enroll in cooking classes",
+            "C": "He wanted them to give up their Indian citizenship",
+            "D": "He was opening a travel agency in London"
+          },
+          "answer": "A",
+          "answer_text": "Visiting Indian students in Europe allowed Bose to inspire patriotic feelings and build a supportive diaspora network for India's freedom.",
+          "difficulty": "moderate",
+          "difficulty_percentage": 50,
+          "difficulty_level": "Curious Adventurer",
+          "target_age_group": "8-11 years"
+        },
+        {
+          "id": 17,
+          "type": "mcq",
+          "question": "Why did Bose pay close attention to political party organization during his stay in Europe?",
+          "options": {
+            "A": "To understand how modern political parties built disciplined structures and mass mobilization methods",
+            "B": "To plan birthday parties for foreign dignitaries",
+            "C": "To learn how to run commercial private companies",
+            "D": "To write entertainment comedy scripts"
+          },
+          "answer": "A",
+          "answer_text": "Bose studied party organization to learn how disciplined political mobilization could be applied to liberate India from colonial rule.",
+          "difficulty": "moderate",
+          "difficulty_percentage": 55,
+          "difficulty_level": "Curious Adventurer",
+          "target_age_group": "8-11 years"
+        },
+        {
+          "id": 18,
+          "type": "mcq",
+          "question": "Which two major 20th-century political systems did Netaji observe directly in action in Europe?",
+          "options": {
+            "A": "Communism and fascism",
+            "B": "Feudalism and anarchy",
+            "C": "Absolute monarchy and tribalism",
+            "D": "Colonial slavery and direct democracy"
+          },
+          "answer": "A",
+          "answer_text": "Netaji closely observed both communism and fascism in action while visiting European countries.",
+          "difficulty": "moderate",
+          "difficulty_percentage": 50,
+          "difficulty_level": "Curious Adventurer",
+          "target_age_group": "8-11 years"
+        },
+        {
+          "id": 19,
+          "type": "mcq",
+          "question": "What does the term 'leader of national stature' mean when referring to Subhas Chandra Bose in 1938?",
+          "options": {
+            "A": "A leader whose popularity, influence, and respect extended across all communities and regions of India",
+            "B": "A local village council member",
+            "C": "An appointed British tax inspector",
+            "D": "A leader who only worked in foreign countries"
+          },
+          "answer": "A",
+          "answer_text": "Being a leader of national stature meant Bose had achieved widespread recognition, trust, and prominence across the whole of India.",
+          "difficulty": "moderate",
+          "difficulty_percentage": 55,
+          "difficulty_level": "Curious Adventurer",
+          "target_age_group": "8-11 years"
+        },
+        {
+          "id": 20,
+          "type": "mcq",
+          "question": "Why did Bose seek meetings with European politicians such as Mussolini during his travels?",
+          "options": {
+            "A": "To understand global diplomatic realities and explore international avenues for India's liberation",
+            "B": "To seek personal employment in European government offices",
+            "C": "To support European territorial conquests in Asia",
+            "D": "To negotiate commercial trade deals for private companies"
+          },
+          "answer": "A",
+          "answer_text": "Bose met European politicians to understand international geopolitical power structures and build global connections for India.",
+          "difficulty": "moderate",
+          "difficulty_percentage": 60,
+          "difficulty_level": "Curious Adventurer",
+          "target_age_group": "8-11 years"
+        },
+        {
+          "id": 21,
+          "type": "mcq",
+          "question": "What major political party in India nominated Subhas Chandra Bose as its president in 1938?",
+          "options": {
+            "A": "Indian National Congress",
+            "B": "British Labour Party",
+            "C": "League of Nations",
+            "D": "European Union Parliament"
+          },
+          "answer": "A",
+          "answer_text": "The Indian National Congress nominated Subhas Chandra Bose to be its president in 1938.",
+          "difficulty": "moderate",
+          "difficulty_percentage": 50,
+          "difficulty_level": "Curious Adventurer",
+          "target_age_group": "8-11 years"
+        },
+        {
+          "id": 22,
+          "type": "mcq",
+          "question": "How did Bose's travels in the mid-1930s prepare him for leading the Indian National Congress in 1938?",
+          "options": {
+            "A": "They broadened his strategic perspective on mass mobilization, international diplomacy, and organizational discipline",
+            "B": "They made him lose interest in Indian politics",
+            "C": "They forced him to stay in Europe forever",
+            "D": "They taught him to accept British rule without protest"
+          },
+          "answer": "A",
+          "answer_text": "His European journey provided deep insights into party organization, international relations, and mass political movements.",
+          "difficulty": "moderate",
+          "difficulty_percentage": 60,
+          "difficulty_level": "Curious Adventurer",
+          "target_age_group": "8-11 years"
+        },
+        {
+          "id": 23,
+          "type": "mcq",
+          "question": "What characteristic environment defined European politics in the mid-1930s when Bose was traveling?",
+          "options": {
+            "A": "Intense ideological competition, rising totalitarian movements, and active party organizations",
+            "B": "A time of universal global peace with no political parties",
+            "C": "An era dominated by medieval kingdoms and knights",
+            "D": "A period where no one discussed politics or freedom"
+          },
+          "answer": "A",
+          "answer_text": "The mid-1930s in Europe was marked by sharp ideological rivalry, the expansion of communism and fascism, and complex party structures.",
+          "difficulty": "moderate",
+          "difficulty_percentage": 60,
+          "difficulty_level": "Curious Adventurer",
+          "target_age_group": "8-11 years"
+        },
+        {
+          "id": 24,
+          "type": "descriptive",
+          "question": "Describe what Subhas Chandra Bose observed regarding political movements while traveling in Europe.",
+          "reference_answer": "While traveling in Europe during the mid-1930s, Bose met Indian students and European politicians including Mussolini, observed party organization, and witnessed communism and fascism in action.",
+          "key_concepts": ["Europe", "mid-1930s", "Indian students", "European politicians", "Mussolini", "party organization", "communism", "fascism in action"],
+          "cosine_similarity_threshold": 0.60,
+          "difficulty": "moderate",
+          "difficulty_percentage": 55,
+          "difficulty_level": "Curious Adventurer",
+          "target_age_group": "8-11 years"
+        },
+        {
+          "id": 25,
+          "type": "descriptive",
+          "question": "Explain the political rise and achievement of Subhas Chandra Bose by the year 1938.",
+          "reference_answer": "By 1938, Subhas Chandra Bose had achieved widespread prominence as a leader of national stature and agreed to accept the nomination as Congress president.",
+          "key_concepts": ["1938", "leader of national stature", "prominence", "nomination", "Congress president"],
+          "cosine_similarity_threshold": 0.60,
+          "difficulty": "moderate",
+          "difficulty_percentage": 55,
+          "difficulty_level": "Curious Adventurer",
+          "target_age_group": "8-11 years"
+        },
+        {
+          "id": 26,
+          "type": "descriptive",
+          "question": "Why was connecting with Indian students studying abroad valuable for Bose's mission?",
+          "reference_answer": "Connecting with Indian students in Europe helped Bose inspire patriotism among the youth diaspora and build international solidarity for India's freedom movement.",
+          "key_concepts": ["Indian students abroad", "Europe", "patriotism", "youth diaspora", "international solidarity", "freedom movement"],
+          "cosine_similarity_threshold": 0.60,
+          "difficulty": "moderate",
+          "difficulty_percentage": 60,
+          "difficulty_level": "Curious Adventurer",
+          "target_age_group": "8-11 years"
+        },
+        {
+          "id": 27,
+          "type": "speech",
+          "question": "Pronounce the term describing the structured management of political movements:",
+          "target_phrase": "Party Organization",
+          "reference_answer": "Party Organization",
+          "key_concepts": ["Party", "Organization"],
+          "min_score_threshold": 70,
+          "difficulty": "moderate",
+          "difficulty_percentage": 50,
+          "difficulty_level": "Curious Adventurer",
+          "target_age_group": "8-11 years"
+        },
+        {
+          "id": 28,
+          "type": "speech",
+          "question": "Pronounce the two political ideologies Bose observed in action in Europe:",
+          "target_phrase": "Communism and Fascism in Action",
+          "reference_answer": "Communism and Fascism in Action",
+          "key_concepts": ["Communism", "Fascism", "Action"],
+          "min_score_threshold": 70,
+          "difficulty": "moderate",
+          "difficulty_percentage": 55,
+          "difficulty_level": "Curious Adventurer",
+          "target_age_group": "8-11 years"
+        },
+        {
+          "id": 29,
+          "type": "speech",
+          "question": "Pronounce the name of the European leader Bose met during his journey:",
+          "target_phrase": "European Politician Mussolini",
+          "reference_answer": "European Politician Mussolini",
+          "key_concepts": ["European", "Politician", "Mussolini"],
+          "min_score_threshold": 75,
+          "difficulty": "moderate",
+          "difficulty_percentage": 55,
+          "difficulty_level": "Curious Adventurer",
+          "target_age_group": "8-11 years"
+        },
+        {
+          "id": 30,
+          "type": "speech",
+          "question": "Pronounce the year and title of Netaji's presidency:",
+          "target_phrase": "Nineteen Thirty Eight Congress President",
+          "reference_answer": "Nineteen Thirty Eight Congress President",
+          "key_concepts": ["Nineteen", "Thirty", "Eight", "Congress", "President"],
+          "min_score_threshold": 70,
+          "difficulty": "moderate",
+          "difficulty_percentage": 50,
+          "difficulty_level": "Curious Adventurer",
+          "target_age_group": "8-11 years"
+        },
+
+        # HARD (31-45)
+        {
+          "id": 31,
+          "type": "mcq",
+          "question": "How did Netaji's firsthand study of European political systems in the 1930s shape his pragmatic vision for India's freedom struggle?",
+          "options": {
+            "A": "It convinced him that overcoming British imperialism required rigorous organizational discipline, mass cadre mobilization, and astute geopolitical alliances",
+            "B": "It led him to believe that India should avoid all organized political structures",
+            "C": "It caused him to adopt unconditional loyalty to British colonial directives",
+            "D": "It convinced him that foreign diplomacy was completely useless for India"
+          },
+          "answer": "A",
+          "answer_text": "Bose's European experience reinforced his conviction that liberation required disciplined mass organization and strategic international diplomacy.",
+          "difficulty": "hard",
+          "difficulty_percentage": 75,
+          "difficulty_level": "Challenger",
+          "target_age_group": "12-15 years"
+        },
+        {
+          "id": 32,
+          "type": "mcq",
+          "question": "In analyzing Bose's diplomatic engagement with European politicians including Mussolini, what underlying strategic doctrine was evident?",
+          "options": {
+            "A": "Realpolitik diplomacy aimed at leveraging global power rivalries to weaken British colonial domination over India",
+            "B": "Uncritical acceptance of European imperialist expansion in Africa and Asia",
+            "C": "An attempt to merge the Indian independence movement into European political leagues",
+            "D": "A desire to abandon Indian cultural traditions in favor of European governance"
+          },
+          "answer": "A",
+          "answer_text": "Bose pursued a realpolitik approach, engaging foreign leaders to identify strategic leverage against British imperial hegemony.",
+          "difficulty": "hard",
+          "difficulty_percentage": 80,
+          "difficulty_level": "Challenger",
+          "target_age_group": "12-15 years"
+        },
+        {
+          "id": 33,
+          "type": "mcq",
+          "question": "What was the ideological significance of Subhas Chandra Bose accepting the Congress Presidency in 1938?",
+          "options": {
+            "A": "It signaled the ascendancy of the progressive, radical, and socialist youth wing advocating uncompromising demands for total independence",
+            "B": "It marked the surrender of the Congress to British dominion proposals",
+            "C": "It resulted in the dissolution of student and youth wings across India",
+            "D": "It turned the Congress into a purely religious organization"
+          },
+          "answer": "A",
+          "answer_text": "Bose's presidency represented the triumph of radical anti-imperialist forces demanding complete, unreserved swaraj and planned socioeconomic modernization.",
+          "difficulty": "hard",
+          "difficulty_percentage": 85,
+          "difficulty_level": "Champion",
+          "target_age_group": "12-15 years"
+        },
+        {
+          "id": 34,
+          "type": "mcq",
+          "question": "How did Bose's observations of communism and fascism in action in Europe influence his economic and political thought for post-colonial India?",
+          "options": {
+            "A": "He sought to synthesize effective state planning, rapid industrialization, and collective discipline while rejecting foreign imperialism",
+            "B": "He rejected all forms of modern industrial planning and economic development",
+            "C": "He decided that India should remain an agrarian colony permanently",
+            "D": "He supported the total privatization of all national resources under foreign companies"
+          },
+          "answer": "A",
+          "answer_text": "Bose analyzed European systems to formulate a model of state-led economic planning and national discipline tailored to India's reconstruction.",
+          "difficulty": "hard",
+          "difficulty_percentage": 85,
+          "difficulty_level": "Champion",
+          "target_age_group": "12-15 years"
+        },
+        {
+          "id": 35,
+          "type": "mcq",
+          "question": "What continuity of character connects Bose's defiance at Presidency College with his international stature in 1938?",
+          "options": {
+            "A": "An unyielding commitment to Indian national honor, fearlessness in challenging oppressive authorities, and refusal to sacrifice principles for personal safety",
+            "B": "A gradual transition from radical defiance to passive colonial collaboration",
+            "C": "A complete shift away from public service to private business",
+            "D": "An abandonment of student activism in favor of British bureaucratic honors"
+          },
+          "answer": "A",
+          "answer_text": "His unwavering moral courage and refusal to compromise national self-respect remained the core driving force throughout his political life.",
+          "difficulty": "hard",
+          "difficulty_percentage": 75,
+          "difficulty_level": "Challenger",
+          "target_age_group": "12-15 years"
+        },
+        {
+          "id": 36,
+          "type": "mcq",
+          "question": "Why was establishing an international network of Indian students in Europe vital to the anti-colonial struggle?",
+          "options": {
+            "A": "It mobilized educated expatriate youth as articulate ambassadors of India's freedom, countering British imperial propaganda on the global stage",
+            "B": "It was intended to prevent Indian students from ever returning to their homeland",
+            "C": "It served to assimilate Indian youth into British colonial administration",
+            "D": "It was designed to replace domestic protests with academic debates only"
+          },
+          "answer": "A",
+          "answer_text": "Bose recognized that the student diaspora in Europe could challenge colonial narratives, influence international public opinion, and champion Indian freedom globally.",
+          "difficulty": "hard",
+          "difficulty_percentage": 80,
+          "difficulty_level": "Challenger",
+          "target_age_group": "12-15 years"
+        },
+        {
+          "id": 37,
+          "type": "mcq",
+          "question": "Which historical geopolitical environment characterized the Europe Bose navigated during the mid-1930s?",
+          "options": {
+            "A": "The interwar crisis marked by ideological polarization, state militarism, and the impending collapse of the Versailles treaty system",
+            "B": "The peaceful post-Cold War era of European economic integration",
+            "C": "The Napoleonic Wars across Western Europe",
+            "D": "The era of the medieval Holy Roman Empire"
+          },
+          "answer": "A",
+          "answer_text": "The mid-1930s was a turbulent interwar era of ideological confrontation, economic depression, and shifting alliances leading up to World War II.",
+          "difficulty": "hard",
+          "difficulty_percentage": 90,
+          "difficulty_level": "Champion",
+          "target_age_group": "12-15 years"
+        },
+        {
+          "id": 38,
+          "type": "descriptive",
+          "question": "Critically analyze how Subhas Chandra Bose's travels in Europe during the mid-1930s influenced his strategic vision for the Indian freedom movement.",
+          "reference_answer": "Bose's European journey exposed him to modern party organization, ideological systems like communism and fascism, and high-level international diplomacy. This deepened his understanding of mass mobilization and geopolitical strategy, convincing him that India needed disciplined organization and global alliances to overthrow British colonial rule.",
+          "key_concepts": ["European journey", "mid-1930s", "party organization", "communism and fascism", "international diplomacy", "mass mobilization", "geopolitical strategy", "disciplined organization", "overthrow British colonial rule"],
+          "cosine_similarity_threshold": 0.70,
+          "difficulty": "hard",
+          "difficulty_percentage": 85,
+          "difficulty_level": "Champion",
+          "target_age_group": "12-15 years"
+        },
+        {
+          "id": 39,
+          "type": "descriptive",
+          "question": "Evaluate the significance of Subhas Chandra Bose becoming a leader of national stature and accepting the Congress presidency in 1938.",
+          "reference_answer": "Netaji's election as Congress President in 1938 reflected his immense national popularity and the rise of the radical, socialist wing of the freedom movement. It positioned him to advocate for complete and immediate swaraj, national planning, and uncompromising resistance against British imperialism.",
+          "key_concepts": ["1938 Congress Presidency", "national stature", "radical socialist wing", "complete and immediate swaraj", "national planning", "uncompromising resistance", "British imperialism"],
+          "cosine_similarity_threshold": 0.70,
+          "difficulty": "hard",
+          "difficulty_percentage": 80,
+          "difficulty_level": "Challenger",
+          "target_age_group": "12-15 years"
+        },
+        {
+          "id": 40,
+          "type": "descriptive",
+          "question": "Examine why Netaji studied party organization and political ideologies in action across Europe.",
+          "reference_answer": "Netaji studied party organization, communism, and fascism to analyze how modern mass movements achieved organizational cohesion, cadre discipline, and rapid social mobilization, seeking practical organizational insights that could be adapted to empower the Indian National Congress and liberate India.",
+          "key_concepts": ["studied party organization", "communism and fascism in action", "organizational cohesion", "cadre discipline", "social mobilization", "practical insights", "empower Indian National Congress", "liberate India"],
+          "cosine_similarity_threshold": 0.70,
+          "difficulty": "hard",
+          "difficulty_percentage": 75,
+          "difficulty_level": "Challenger",
+          "target_age_group": "12-15 years"
+        },
+        {
+          "id": 41,
+          "type": "descriptive",
+          "question": "Synthesize the leadership trajectory of Subhas Chandra Bose from his student rustication to national leadership in 1938.",
+          "reference_answer": "Bose's trajectory illustrates unbroken moral integrity and fearless defiance. Beginning with his refusal to tolerate colonial slurs at Presidency College, he channeled his patriotic resolve through international diplomacy in Europe, ultimately ascending to undisputed national leadership as Congress President in 1938.",
+          "key_concepts": ["leadership trajectory", "moral integrity", "fearless defiance", "Presidency College rustication", "patriotic resolve", "international diplomacy in Europe", "Congress President 1938"],
+          "cosine_similarity_threshold": 0.70,
+          "difficulty": "hard",
+          "difficulty_percentage": 80,
+          "difficulty_level": "Challenger",
+          "target_age_group": "12-15 years"
+        },
+        {
+          "id": 42,
+          "type": "speech",
+          "question": "Pronounce the phrase describing Netaji's global diplomatic vision:",
+          "target_phrase": "Transnational Diplomatic Strategy and Alliances",
+          "reference_answer": "Transnational Diplomatic Strategy and Alliances",
+          "key_concepts": ["Transnational", "Diplomatic", "Strategy", "Alliances"],
+          "min_score_threshold": 80,
+          "difficulty": "hard",
+          "difficulty_percentage": 80,
+          "difficulty_level": "Challenger",
+          "target_age_group": "12-15 years"
+        },
+        {
+          "id": 43,
+          "type": "speech",
+          "question": "Pronounce the term describing the rigorous cadre discipline Netaji observed:",
+          "target_phrase": "Disciplined Political Party Organization",
+          "reference_answer": "Disciplined Political Party Organization",
+          "key_concepts": ["Disciplined", "Political", "Party", "Organization"],
+          "min_score_threshold": 80,
+          "difficulty": "hard",
+          "difficulty_percentage": 85,
+          "difficulty_level": "Champion",
+          "target_age_group": "12-15 years"
+        },
+        {
+          "id": 44,
+          "type": "speech",
+          "question": "Pronounce the historical milestone achieved by Netaji in 1938:",
+          "target_phrase": "President of the Indian National Congress",
+          "reference_answer": "President of the Indian National Congress",
+          "key_concepts": ["President", "Indian", "National", "Congress"],
+          "min_score_threshold": 80,
+          "difficulty": "hard",
+          "difficulty_percentage": 75,
+          "difficulty_level": "Challenger",
+          "target_age_group": "12-15 years"
+        },
+        {
+          "id": 45,
+          "type": "speech",
+          "question": "Pronounce the supreme ideal that guided Netaji's national and international efforts:",
+          "target_phrase": "Uncompromising Fight for Complete Independence",
+          "reference_answer": "Uncompromising Fight for Complete Independence",
+          "key_concepts": ["Uncompromising", "Fight", "Complete", "Independence"],
+          "min_score_threshold": 85,
+          "difficulty": "hard",
+          "difficulty_percentage": 90,
+          "difficulty_level": "Champion",
+          "target_age_group": "12-15 years"
+        }
+      ],
+      "sequence_test": {
+        "title": "Chronological Sequence of Netaji's European Travels and Rise to Congress Presidency",
+        "description": "These questions test whether the learner understands the chronological sequence of Netaji's journey across Europe and his rise to national leadership in 1938.",
+        "questions": [
+          {
+            "id": 46,
+            "type": "sequence_mcq",
+            "question": "What is the correct chronological sequence of events in Subhas Chandra Bose's political journey from college to presidency?",
+            "options": {
+              "A": "Rustication from Presidency College -> European travels in mid-1930s -> Observing communism, fascism, and party organization -> Rising to national stature as Congress President in 1938",
+              "B": "Congress President in 1938 -> European travels -> Presidency College rustication -> Observing party organization",
+              "C": "Observing party organization -> Presidency College rustication -> Congress President in 1938 -> European travels",
+              "D": "European travels -> Congress President in 1938 -> Presidency College rustication -> Meeting Mussolini"
+            },
+            "answer": "A",
+            "answer_text": "The sequence begins with his college defiance and rustication, followed by his mid-1930s European travels to observe political systems, leading to his elevation to Congress President in 1938.",
+            "difficulty": "moderate",
+            "difficulty_percentage": 60,
+            "difficulty_level": "Curious Adventurer"
+          },
+          {
+            "id": 47,
+            "type": "sequence_mcq",
+            "question": "Arrange the key milestones of Netaji's activities during the 1930s in their correct order:",
+            "options": {
+              "A": "Visiting Indian students and European politicians abroad -> Observing party organization and ideological systems -> Gaining widespread recognition as a leader of national stature -> Agreeing to accept the nomination as Congress President",
+              "B": "Congress President nomination -> Meeting European politicians -> Visiting students abroad -> Observing communism",
+              "C": "National stature recognition -> Visiting students -> Congress nomination -> Observing European politics",
+              "D": "Observing party organization -> Congress nomination -> Visiting students -> National stature"
+            },
+            "answer": "A",
+            "answer_text": "Bose visited students and politicians abroad, studied political party machinery, rose to national stature, and accepted the nomination as Congress President in 1938.",
+            "difficulty": "hard",
+            "difficulty_percentage": 75,
+            "difficulty_level": "Challenger"
+          }
+        ]
+      },
+      "image_matching": [
+        {
+          "id": 48,
+          "type": "image_matching",
+          "question": "Match each historical milestone and location with its correct description:",
+          "images": [
+            {
+              "id": "img_1",
+              "file": "images/netaji.jpg",
+              "label": "Subhas Chandra Bose"
+            },
+            {
+              "id": "img_2",
+              "file": "images/europe_travel.jpg",
+              "label": "European Travels"
+            },
+            {
+              "id": "img_3",
+              "file": "images/congress_presidency.jpg",
+              "label": "Congress President 1938"
+            }
+          ],
+          "descriptions": [
+            {
+              "id": "desc_1",
+              "text": "A leader of national stature who traveled abroad, studied party organization, and accepted the Congress presidency."
+            },
+            {
+              "id": "desc_2",
+              "text": "Journey during the mid-1930s visiting Indian students and European politicians to build international support."
+            },
+            {
+              "id": "desc_3",
+              "text": "The highest office of the Indian national movement accepted by Netaji to champion the cause of complete freedom."
+            }
+          ],
+          "correct_matches": {
+            "img_1": "desc_1",
+            "img_2": "desc_2",
+            "img_3": "desc_3"
+          },
+          "points": 3,
+          "difficulty": "easy",
+          "difficulty_percentage": 30,
+          "difficulty_level": "Gentle Starter"
+        },
+        {
+          "id": 49,
+          "type": "image_matching",
+          "question": "Match each political concept and event from Netaji's European experience with its significance:",
+          "images": [
+            {
+              "id": "img_1",
+              "file": "images/party_org.jpg",
+              "label": "Party Organization"
+            },
+            {
+              "id": "img_2",
+              "file": "images/mussolini_meeting.jpg",
+              "label": "European Diplomacy"
+            },
+            {
+              "id": "img_3",
+              "file": "images/national_stature.jpg",
+              "label": "National Stature"
+            }
+          ],
+          "descriptions": [
+            {
+              "id": "desc_1",
+              "text": "The discipline, cadre structure, and mass mobilization methods studied by Netaji to empower India's liberation struggle."
+            },
+            {
+              "id": "desc_2",
+              "text": "High-level meetings with foreign leaders like Mussolini to explore geopolitical counterweights to British imperialism."
+            },
+            {
+              "id": "desc_3",
+              "text": "Widespread respect and popularity across India that culminated in Netaji's nomination as Congress President in 1938."
+            }
+          ],
+          "correct_matches": {
+            "img_1": "desc_1",
+            "img_2": "desc_2",
+            "img_3": "desc_3"
+          },
+          "points": 3,
+          "difficulty": "moderate",
+          "difficulty_percentage": 60,
+          "difficulty_level": "Curious Adventurer"
+        }
+      ],
+      "scoring": {
+        "mcq": {
+          "points_per_correct_answer": 1
+        },
+        "descriptive": {
+          "method": "cosine_similarity",
+          "description": "Calculate embedding cosine similarity against reference concepts.",
+          "suggested_interpretation": {
+            "0.80-1.00": "Outstanding Mastery",
+            "0.65-0.79": "Good Conceptual Understanding",
+            "0.50-0.64": "Developing Understanding",
+            "0.00-0.49": "Needs Reinforcement"
+          }
+        },
+        "speech": {
+          "points_per_correct_answer": 1,
+          "min_pass_score": 60
+        },
+        "sequence_test": {
+          "points_per_correct_answer": 1
+        },
+        "image_matching": {
+          "points_per_correct_match": 1,
+          "total_points": 3
+        }
+      }
+    }
+    with open("assets/Netaji/Netaji_1/questions.json", "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+    print("Netaji_1 questions.json created successfully!")
+
+if __name__ == "__main__":
+    create_netaji_1()
