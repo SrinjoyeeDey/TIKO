@@ -1,0 +1,150 @@
+# ==============================================================================
+# Gitignore for NIMO AI Services
+# Covers: Python (FastAPI / Uvicorn), LangChain / Groq, ElevenLabs TTS audio cache,
+#         Speech Recognition, OpenCV / Vision temp data, ML models, venvs & logs.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Environment Variables & Secrets (CRITICAL: Do NOT commit API keys)
+# ------------------------------------------------------------------------------
+.env
+.env.*
+*.env
+!.env.example
+!.env.template
+
+# ------------------------------------------------------------------------------
+# Audio & Media Caches (ElevenLabs TTS, Speech Recognition temp files)
+# ------------------------------------------------------------------------------
+.audio_cache/
+*.mp3
+*.wav
+*.ogg
+*.flac
+*.m4a
+*.aac
+*.webm
+
+# Temporary / uploaded media & frame dumps
+temp/
+tmp/
+.cache/
+captured_frames/
+recordings/
+uploads/
+
+# ------------------------------------------------------------------------------
+# Python & Bytecode
+# ------------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# ------------------------------------------------------------------------------
+# Virtual Environments
+# ------------------------------------------------------------------------------
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# ------------------------------------------------------------------------------
+# AI / ML Models, Weights & Datasets
+# ------------------------------------------------------------------------------
+models/
+weights/
+checkpoints/
+datasets/
+*.pt
+*.pth
+*.bin
+*.onnx
+*.tflite
+*.safetensors
+*.h5
+*.pkl
+*.pickle
+*.joblib
+
+# ------------------------------------------------------------------------------
+# Distribution, Packaging & Build
+# ------------------------------------------------------------------------------
+build/
+dist/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ------------------------------------------------------------------------------
+# Testing, Coverage & Linters
+# ------------------------------------------------------------------------------
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pytype/
+.hypothesis/
+.coverage
+.coverage.*
+nosetests.xml
+coverage.xml
+*.cover
+htmlcov/
+.tox/
+.nox/
+
+# ------------------------------------------------------------------------------
+# Logs & Databases
+# ------------------------------------------------------------------------------
+*.log
+*.log.*
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# ------------------------------------------------------------------------------
+# Operating System Files
+# ------------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*~
+*.swp
+*.swo
+
+# ------------------------------------------------------------------------------
+# IDEs and Code Editors
+# ------------------------------------------------------------------------------
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
