@@ -1,6 +1,6 @@
-# NIMO Python Model — Integration Contract API
+# Tiko Python Model — Integration Contract API
 
-> **For the NIMO backend team.**
+> **For the Tiko backend team.**
 > This folder is the **standardized output layer** for the Python AI/ML model.
 > The internal implementation (PyTorch, OpenCV, model files, preprocessing) is **not your concern**.
 > You only need to consume the JSON responses from the two endpoints below.
@@ -12,7 +12,7 @@
 ```
 nimo_contract_api/
 ├── main.py           ← FastAPI application entry point (port 8001)
-├── schemas.py        ← Pydantic models — exactly matching the NIMO contract
+├── schemas.py        ← Pydantic models — exactly matching the Tiko contract
 ├── requirements.txt  ← Python dependencies
 ├── README.md         ← This file
 └── routes/
@@ -177,7 +177,7 @@ curl -X POST http://localhost:8001/analyze/engagement \
 
 ## ⚠️ Integration Contract Rules
 
-1. **This model is an observation provider only.** It does NOT decide activity difficulty, next steps, or rewards. That is the NIMO Adaptive Engine's job.
+1. **This model is an observation provider only.** It does NOT decide activity difficulty, next steps, or rewards. That is the Tiko Adaptive Engine's job.
 2. **Never send raw camera frames/audio to backend.** This model returns processed metrics only.
 3. Field formats are strict:
    - `pronunciationScore` → integer, **0–100**
@@ -197,7 +197,7 @@ Camera / Microphone
         ↓
   Standardized JSON
         ↓
-  NIMO Backend
+  Tiko Backend
         ↓
   Adaptive Engine → Decisions
 ```

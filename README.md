@@ -1,4 +1,4 @@
-# TIKO — NIMO: The Warrior
+# TIKO — Tiko: The Warrior
 
 An adaptive, voice-guided learning game about Indian heritage, culture and history.
 
@@ -98,12 +98,12 @@ difficulty config, engine, models and widgets:
 
 | Activity | Skill trained |
 | --- | --- |
-| Catch NIMO | Attention, reaction time |
-| Remember NIMO | Visual memory |
-| Echo NIMO | Auditory sequencing |
-| Find NIMO | Spatial search |
+| Catch Tiko | Attention, reaction time |
+| Remember Tiko | Visual memory |
+| Echo Tiko | Auditory sequencing |
+| Find Tiko | Spatial search |
 | Category Sort | Semantic categorisation |
-| Turn NIMO | Turn-taking, motor control |
+| Turn Tiko | Turn-taking, motor control |
 
 ### Panda companion
 
@@ -195,7 +195,7 @@ telemetry aggregation.
         ▼                          ▼
 ┌───────────────────────┐   ┌──────────────────────────┐
 │ Python FastAPI :8001  │   │ Node + Express :3000     │
-│ "NIMO Contract API"   │   │ "peppa-backend"          │
+│ "Tiko Contract API"   │   │ "peppa-backend"          │
 │                       │   │                          │
 │ • STT / pronunciation │   │ • event ingest           │
 │ • OpenCV engagement   │──▶│ • scoring engine         │
